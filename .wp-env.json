@@ -1,12 +1,11 @@
 {
-  "core": "WordPress/WordPress#6.6.1",
   "plugins": [
-    "https://github.com/wpnuxt/wpnuxt-plugin/releases/download/v0.0.2/wpnuxt-plugin.zip",
+    "https://github.com/wpnuxt/wpnuxt-plugin/releases/download/v0.0.3/wpnuxt-plugin.zip",
     "https://downloads.wordpress.org/plugin/faustwp.zip",
-    "https://github.com/wpengine/wp-graphql-content-blocks/releases/download/v4.0.1/wp-graphql-content-blocks.zip",
+    "https://github.com/wpengine/wp-graphql-content-blocks/releases/download/v4.3.2/wp-graphql-content-blocks.zip",
     "https://downloads.wordpress.org/plugin/advanced-custom-fields.zip",
-    "https://downloads.wordpress.org/plugin/wpgraphql-acf.zip",
-    "https://downloads.wordpress.org/plugin/wp-graphql.zip"
+    "https://downloads.wordpress.org/plugin/wp-graphql.zip",
+    "https://downloads.wordpress.org/plugin/wpgraphql-acf.zip"
   ],
   "port": 4000,
   "config": {

@@ -1,6 +1,13 @@
 #!/bin/sh
 echo "-------------------- executing wpInstall script --------------------";
 
+#wp-env run cli update --yes;
+#wp-env run cli wp core update;
+cli_version=$(wp-env run cli wp --version);
+echo "WordPress cli version: $cli_version";
+wp_version=$(wp-env run cli wp core version);
+echo "WordPress version: $wp_version";
+
 if [ $(wp-env run cli wp option list --search=wpnuxt_installed --format=count) == 1 ]; then
   echo "WPNuxt is already installed.";
 else
@@ -15,6 +22,8 @@ else
   wp-env run cli wp option patch insert faustwp_settings enable_telemetry 1;
   wp-env run cli wp option patch insert faustwp_settings enable_image_source 1;
   wp-env run cli wp option patch insert faustwp_settings secret_key 64489e3c-1166-498a-9a6e-51cbb4c14ab2;
+
+  wp-env run cli wp theme delete --all;
 
   wp-env run cli wp menu create main;
   wp-env run cli wp menu item add-post main $(wp-env run cli wp post list --post_type=page --field="ID" --name="sample-page") --title="Sample Page";
