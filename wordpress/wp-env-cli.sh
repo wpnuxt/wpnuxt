@@ -11,6 +11,8 @@ echo "WordPress version: $wp_version";
 if [ $(wp-env run cli wp option list --search=wpnuxt_installed --format=count) == 1 ]; then
   echo "WPNuxt is already installed.";
 else
+  wp-env run cli wp option update blogname "WPNuxt Demo";
+
   wp-env run cli wp option add graphql_general_settings {} --format=json;
   wp-env run cli wp option patch insert graphql_general_settings public_introspection_enabled on;
   wp-env run cli wp option patch insert graphql_general_settings show_graphiql_link_in_admin_bar off;
