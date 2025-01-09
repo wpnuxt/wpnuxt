@@ -68,3 +68,5 @@ playground/.eslintcache
 docs/.eslintcache
 .queries
 schema.graphql
+playground/package-lock.json
+tests/fixtures/basic/package-lock.json
