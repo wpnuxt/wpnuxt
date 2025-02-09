@@ -1,7 +1,8 @@
 import { OperationTypeNode } from 'graphql'
 import { useWPContent } from './useWPContent'
 
-const _usePrevNextPost = async (currentPostSlug: string) => {
+const _usePrevNextPost = async (currentPostPath: string) => {
+  const currentPostSlug = currentPostPath.replaceAll('/', '')
   const allPosts = await getAllPosts()
   if (!allPosts) return { prev: null, next: null }
   const currentIndex: number = allPosts.slugs.findIndex((slug: string) => slug === currentPostSlug)
