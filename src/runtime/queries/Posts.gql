@@ -18,8 +18,15 @@ query PostById($id: ID!, $asPreview: Boolean = false) {
   }
 }
 
-query PostsByCategory($categoryName: String!, $limit: Int = 10) {
+query PostsByCategoryName($categoryName: String!, $limit: Int = 10) {
   posts(first: $limit, where: {categoryName: $categoryName}) {
+    nodes {
+      ...Post
+    }
+  }
+}
+query PostsByCategoryId($categoryId: Int!, $limit: Int = 10) {
+  posts(first: $limit, where: {categoryId: $categoryId}) {
     nodes {
       ...Post
     }
