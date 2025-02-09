@@ -1,26 +1,31 @@
 <script setup lang="ts">
 import type { GeneralSettingsFragment, PostFragment } from '#build/graphql-operations'
 import { useHead, ref, computed } from '#imports'
-import { useGeneralSettings, usePosts } from '#wpnuxt'
+import { useGeneralSettings, usePosts, usePostsByCategoryName } from '#wpnuxt'
 
 /* const { data: posts } = await useAsyncData('posts', () => usePosts())
 const { data: settings } = await useAsyncData('settings', () => useGeneralSettings())
-const { data: latestPost } = await useAsyncData('latestPost', () => usePosts({ limit: 1 })) */
+const { data: latestPost } = await useAsyncData('latestPost', () => usePosts({ limit: 1 }))
+const { data: postsByCategory } = await useAsyncData('postsByCategory', () => usePostsByCategory({ categoryName: 'Lorem Ipsum' }))
+*/
 
 const isLoading = ref(true)
 const posts = ref<PostFragment[]>([])
 const settings = ref<GeneralSettingsFragment | null>(null)
 const latestPost = ref<PostFragment | null>(null)
+const postsByCategory = ref<PostFragment[]>([])
 
 async function fetch() {
   isLoading.value = true
   const { data: postsData } = await usePosts()
   const { data: settingsData } = await useGeneralSettings()
   const { data: latestPostData } = await usePosts({ limit: 1 })
+  const { data: postsByCategoryData } = await usePostsByCategoryName({ categoryName: 'Lorem Ipsum' })
 
   posts.value = computed(() => postsData).value
   settings.value = computed(() => settingsData).value
   latestPost.value = computed(() => latestPostData?.[0] || null).value
+  postsByCategory.value = computed(() => postsByCategoryData).value
   isLoading.value = false
 }
 fetch()
@@ -76,8 +81,28 @@ useHead({
       </UPageGrid>
     </ULandingSection>
     <ULandingSection
+      v-if="!isLoading && postsByCategory.length > 0"
+      id="postsByCategory"
+      title="Posts by Category 'Lorem Ipsum'"
+    >
+      <ULandingCard
+        v-for="post, index in postsByCategory"
+        :key="index"
+        :title="post.title"
+        :description="post.date?.split('T')[0]"
+        :to="post.uri"
+      >
+        <img
+          v-if="post?.featuredImage?.node?.sourceUrl"
+          :src="post.featuredImage.node.sourceUrl"
+          class="w-full rounded-md"
+        >
+        <span v-sanitize="post.excerpt" />
+      </ULandingCard>
+    </ULandingSection>
+    <ULandingSection
       v-if="!isLoading"
-      id="posts"
+      id="latestPost"
       title="Latest Post"
     >
       <ULandingCard
