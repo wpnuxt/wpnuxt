@@ -180,13 +180,13 @@ if (import.meta.client) {
 }
 .bar-button.primary {
   --tw-ring-color: #999;
-  background-color: rgb(186 175 78 / var(--tw-text-opacity));;
+  background-color: rgb(186 175 78 / var(--tw-text-opacity));
 }
 .bar-button.primary:hover {
   color: white;
   stroke: white;
   --tw-ring-color: #666;
-  background-color: rgb(156 142 27 / var(--tw-text-opacity));;
+  background-color: rgb(156 142 27 / var(--tw-text-opacity));
   text-decoration: none;
 }
 .bar-button-wrapper {
