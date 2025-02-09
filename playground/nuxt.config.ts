@@ -1,23 +1,21 @@
 export default defineNuxtConfig({
-  extends: [
-    '@nuxt/ui-pro'
-  ],
-
   modules: [
     '@nuxt/eslint',
     '@nuxt/image',
-    '@nuxt/ui',
+    '@nuxt/ui-pro',
     '../src/module'
   ],
 
   devtools: { enabled: true },
 
+  css: ['~/assets/css/main.css'],
+
   ui: {
-    icons: ['heroicons', 'uil', 'mdi']
+    colorMode: true
   },
 
   routeRules: {
-    '/wp-content/**': { proxy: { to: 'http://localhost:10004/wp-content/**' } }
+    '/wp-content/**': { proxy: { to: 'http://localhost:4000/wp-content/**' } }
   },
 
   future: {
@@ -35,14 +33,6 @@ export default defineNuxtConfig({
     checker: {
       lintOnStart: true,
       fix: true
-    }
-  },
-
-  image: {
-    provider: 'twicpics',
-    domains: ['wordpress.wpnuxt.com'],
-    twicpics: {
-      baseURL: 'https://vernaillen.twic.pics/wpnuxt-demo'
     }
   },
 

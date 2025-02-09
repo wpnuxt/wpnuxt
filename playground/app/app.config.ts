@@ -1,6 +1,11 @@
+import { defineAppConfig } from '#imports'
+
 export default defineAppConfig({
   ui: {
-    primary: 'reefgold',
-    gray: 'neutral'
+    colors: {
+      primary: 'reefgold',
+      neutral: 'neutral',
+      gray: 'neutral'
+    }
   }
 })

@@ -16,16 +16,14 @@ const staging = await isStaging()
 </script>
 
 <template>
-  <div>
+  <UApp>
     <HeaderComponent />
     <UMain>
       <UContainer>
         <UPage>
-          <UPageError
-            :status="error.statusCode"
-            :name="error.statusMessage"
-            :message="error.message"
-          />
+          <UPageBody>
+            <UError :error="error" />
+          </UPageBody>
         </UPage>
       </UContainer>
     </UMain>
@@ -33,5 +31,5 @@ const staging = await isStaging()
     <StagingBanner
       v-if="staging"
     />
-  </div>
+  </UApp>
 </template>

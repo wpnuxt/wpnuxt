@@ -12,6 +12,7 @@ const { data: settings, error } = await useGeneralSettings()
 
 <template>
   <NuxtLayout>
+    <HeaderComponent />
     <UContainer class="prose dark:prose-invert pt-5">
       <h2>Examples how to use the generated composables</h2>
       <p>

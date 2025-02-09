@@ -1,36 +1,43 @@
 <script setup lang="ts">
-import type { MenuItemFragment } from '#wpnuxt'
-import { useMenu } from '#wpnuxt'
+import type { MenuItemFragment } from '#build/graphql-operations'
+import { useMenu, usePosts } from '#wpnuxt'
+import { computed, useAsyncData, useRoute } from '#imports'
 
-const { data: menu } = await useMenu({ name: 'main' })
+const route = useRoute()
+const { data: menu } = await useAsyncData('nav-menu', () => useMenu({ name: 'main' }))
+const { data: posts } = await useAsyncData('nav-posts', () => usePosts())
+const postSlugs = computed(() => posts.value?.data?.map(post => post.slug))
 
-let wpLinks: MenuItemFragment[] = []
-if (menu.value) {
-  wpLinks = menu.value?.map(link => ({
-    label: link.label,
-    to: link.uri
-  }))
-}
+const wpLinks: MenuItemFragment[] = menu.value?.data?.map(link => ({
+  label: link.label,
+  to: link.uri
+}))
 const links = [
   {
     label: 'Blog',
-    to: '/'
+    to: '/',
+    active: postSlugs.value?.includes(route.path.replaceAll('/', '')),
+    children: posts.value?.data?.map(post => ({
+      label: post.title,
+      to: post.uri
+    }))
   },
   ...wpLinks,
   {
-    label: 'WPNuxt info',
+    label: 'Tests',
+    active: route.path.startsWith('/test'),
     children: [
       {
         label: 'Composables',
-        to: '/composables'
+        to: '/test/composables'
       },
       {
         label: 'Config',
-        to: '/config'
+        to: '/test/config'
       },
       {
         label: 'Test Error Page',
-        to: '/errorPage'
+        to: '/test/error-page'
       }
     ]
   }
@@ -38,12 +45,23 @@ const links = [
 </script>
 
 <template>
-  <UHeader :links="links">
-    <template #logo>
+  <UHeader>
+    <UNavigationMenu
+      :items="links"
+      content-orientation="vertical"
+    />
+    <template #title>
       <WPNuxtLogo /> <span class="text-lg">playground</span>
     </template>
     <template #right>
       <UColorModeButton />
+    </template>
+    <template #content>
+      <UNavigationMenu
+        :items="links"
+        arrow
+        orientation="vertical"
+      />
     </template>
   </UHeader>
 </template>
