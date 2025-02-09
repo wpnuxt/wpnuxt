@@ -9,4 +9,12 @@ fragment Post on Post {
   ...NodeWithFeaturedImage
   ...NodeWithContentEditor
   title
+  categories {
+    nodes {
+      id
+      name
+      uri
+      description
+    }
+  }
 }
