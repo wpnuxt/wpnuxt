@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { useHead, useRoute, useNodeByUri, usePrevNextPost, createError, useAsyncData } from '#imports'
+import { useHead, useRoute, useNodeByUri, usePrevNextPost, useAsyncData } from '#imports'
 
 const route = useRoute()
-const { data: post } = await useAsyncData('post-' + route.path, () => useNodeByUri({ uri: route.path }))
-if (!post.value?.data) {
-  throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
-}
+const { data: post } = useAsyncData('post-' + route.path, () => useNodeByUri({ uri: route.path }))
+
 const { prev, next } = await usePrevNextPost(route.path)
 
 if (post.value?.data?.title) {
@@ -21,7 +19,7 @@ if (post.value?.data?.title) {
     <UContainer>
       <UPage v-if="post?.data">
         <UPageHeader :title="post.data.title" />
-        <UPageBody class="prose dark:prose-invert">
+        <UPageBody>
           <MDC :value="post.data.content" />
         </UPageBody>
         <template #left>
@@ -32,6 +30,7 @@ if (post.value?.data?.title) {
           />
         </template>
       </UPage>
+      <PagePlaceholder v-else />
     </UContainer>
   </NuxtLayout>
 </template>
