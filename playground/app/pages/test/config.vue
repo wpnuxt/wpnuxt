@@ -12,13 +12,13 @@ const wpNuxtConfig = config.public.wpNuxt
   <NuxtLayout>
     <HeaderComponent />
     <UContainer class="prose dark:prose-invert pt-5">
-      <h2>Examples of predefined composables</h2>
-      <h3>wpUri:</h3>
-      <pre>{{ wpUri }}</pre>
-      <h3>wpNuxtConfig:</h3>
-      <pre>{{ wpNuxtConfig }}</pre>
-      <h3>isStaging()</h3>
-      <pre>{{ staging }}</pre>
+      <ProseH2>Examples of predefined composables</ProseH2>
+      <ProseH3>wpUri:</ProseH3>
+      <ProsePre>{{ wpUri }}</ProsePre>
+      <ProseH3>wpNuxtConfig:</ProseH3>
+      <ProsePre>{{ wpNuxtConfig }}</ProsePre>
+      <ProseH3>isStaging()</ProseH3>
+      <ProsePre>{{ staging }}</ProsePre>
     </UContainer>
   </NuxtLayout>
 </template>

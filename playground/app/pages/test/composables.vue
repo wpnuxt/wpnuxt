@@ -14,44 +14,44 @@ const { data: settings, error } = await useGeneralSettings()
   <NuxtLayout>
     <HeaderComponent />
     <UContainer class="prose dark:prose-invert pt-5">
-      <h2>Examples how to use the generated composables</h2>
-      <p>
+      <ProseH2>Examples how to use the generated composables</ProseH2>
+      <ProseP>
         prefix for composables: {{ prefix }}
-      </p>
-      <h3>{{ prefix }}Posts()</h3>
-      <ul>
-        <li
+      </ProseP>
+      <ProseH3>{{ prefix }}Posts()</ProseH3>
+      <ProseUl>
+        <ProseLi
           v-for="post in posts"
           :key="post.id"
         >
           {{ post.title }}
-        </li>
-      </ul>
-      <h3>{{ prefix }}Posts({ limit: 1 })</h3>
-      <ul>
-        <li
+        </ProseLi>
+      </ProseUl>
+      <ProseH3>{{ prefix }}Posts({ limit: 1 })</ProseH3>
+      <ProseUl>
+        <ProseLi
           v-for="post in postsLimited"
           :key="post.id"
         >
           {{ post.title }}
-        </li>
-      </ul>
-      <h3>{{ prefix }}PostByUri({ uri: 'hello-world' })</h3>
-      <p>
+        </ProseLi>
+      </ProseUl>
+      <ProseH3>{{ prefix }}PostByUri({ uri: 'hello-world' })</ProseH3>
+      <ProseP>
         {{ postByUri?.title }}
-      </p>
-      <h3>{{ prefix }}GeneralSettings</h3>
-      <ul>
-        <li
+      </ProseP>
+      <ProseH3>{{ prefix }}GeneralSettings</ProseH3>
+      <ProseUl>
+        <ProseLi
           v-for="(value, key) in settings"
           :key="key"
         >
           <strong>{{ key }}:</strong> {{ value }}
-        </li>
-      </ul>
+        </ProseLi>
+      </ProseUl>
       The email field in GeneralSettings can't be fetched without authentication.<br>
       The other data (see above) is returned anyway, and an error is thrown about the mail field:<br>
-      <pre>{{ error }}</pre>
+      <ProsePre>{{ error }}</ProsePre>
     </UContainer>
   </NuxtLayout>
 </template>

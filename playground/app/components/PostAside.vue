@@ -17,13 +17,13 @@ defineProps<{
       next-button="Volgende"
     />
     <template v-if="post">
-      <div class="test-sm mt-5">
+      <div class="text-sm mt-5">
         published:<br>
         {{ post.date?.split('T')[0] }}
       </div>
       <div
         v-if="post.categories?.nodes"
-        class="test-sm mt-5"
+        class="text-sm mt-5"
       >
         <p>Categories:</p>
         <ul>
@@ -37,7 +37,7 @@ defineProps<{
       </div>
       <div
         v-if="post?.featuredImage?.node?.sourceUrl"
-        class="test-sm mt-5"
+        class="text-sm mt-5"
       >
         featured image:
         <img

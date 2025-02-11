@@ -21,6 +21,7 @@
     "vite-plugin-eslint2": "^5.0.3"
   },
   "dependencies": {
-    "@nuxt/ui-pro": "3.0.0-alpha.12"
+    "@nuxt/ui-pro": "3.0.0-alpha.12",
+    "tailwindcss": "^4.0.6"
   }
 }

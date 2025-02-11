@@ -22,7 +22,7 @@ if (post.value?.data?.title) {
       <UPage v-if="post?.data">
         <UPageHeader :title="post.data.title" />
         <UPageBody class="prose dark:prose-invert">
-          <WPContent :node="post.data" />
+          <MDC :value="post.data.content" />
         </UPageBody>
         <template #left>
           <PostAside

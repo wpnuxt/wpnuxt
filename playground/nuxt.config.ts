@@ -3,6 +3,7 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/image',
     '@nuxt/ui-pro',
+    '@nuxtjs/mdc',
     '../src/module'
   ],
 

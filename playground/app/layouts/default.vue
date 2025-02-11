@@ -5,10 +5,10 @@ const staging = await isStaging()
 </script>
 
 <template>
-  <div>
+  <UMain>
     <slot />
     <StagingBanner
       v-if="staging"
     />
-  </div>
+  </UMain>
 </template>

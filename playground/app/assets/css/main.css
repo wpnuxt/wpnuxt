@@ -1,11 +1,4 @@
-@layer theme, base, components, utilities;
-
-@import "tailwindcss/theme" layer(theme) theme(static);
-@import "tailwindcss/preflight" layer(base);
-@import "tailwindcss/utilities" layer(utilities);
-
-/* Then import "@nuxt/ui": */
-@import "@nuxt/ui";
+@import "tailwindcss";
 @import "@nuxt/ui-pro";
 
 @theme {
