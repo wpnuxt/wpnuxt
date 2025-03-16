@@ -1,6 +1,6 @@
 import type { H3Event } from 'h3'
 import { readBody } from 'h3'
-import { defineCachedEventHandler } from '#internal/nitro'
+import { defineCachedEventHandler } from '#imports'
 import type { GraphqlResponse } from '#graphql-documents'
 
 export default defineCachedEventHandler(async (event: H3Event) => {
