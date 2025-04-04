@@ -13,15 +13,22 @@ export default defineNuxtModule<WPNuxtConfig>({
     wordpressUrl: ''
   },
   async setup(options, nuxt) {
-    validateConfig(options)
+    // Runtime Config
+    const runtimeConfig = nuxt.options.runtimeConfig
 
-    const buildHash = randHashGenerator()
-    nuxt.options.runtimeConfig.buildHash = buildHash
+    runtimeConfig.wpNuxt = defu({
+      wordpressUrl: process.env.WPNUXT_WORDPRESS_URL
+    }, options) as WPNuxtConfig
+    validateConfig(runtimeConfig.wpNuxt)
+
+    runtimeConfig.buildHash = randHashGenerator()
 
     const { resolve } = createResolver(import.meta.url)
 
+    // Plugins
     addPlugin(resolve('./runtime/plugins/graphqlConfig'))
 
+    // Modules
     async function registerModule(name: string, key: string, options: Record<string, any>) {
       if (!hasNuxtModule(name)) {
         await installModule(name, options)
@@ -32,7 +39,7 @@ export default defineNuxtModule<WPNuxtConfig>({
 
     await registerModule('nuxt-graphql-middleware', 'graphql', {
       debug: true,
-      graphqlEndpoint: `${options.wordpressUrl}/graphql`,
+      graphqlEndpoint: `${runtimeConfig.wpNuxt.wordpressUrl}/graphql`,
       autoImportPatterns: [resolve('./runtime/queries/**/*.gql')],
       includeComposables: true,
       clientCache: {
