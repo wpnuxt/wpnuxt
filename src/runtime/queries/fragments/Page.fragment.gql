@@ -1,0 +1,12 @@
+fragment Page on Page {
+  ...ContentNode
+  ...NodeWithFeaturedImage
+  ...NodeWithContentEditor
+  isFrontPage
+  isPostsPage
+  isPreview
+  isPrivacyPage
+  isRestricted
+  isRevision
+  title
+}

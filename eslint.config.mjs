@@ -7,13 +7,29 @@ export default createConfigForNuxt({
     // Rules for module authors
     tooling: true,
     // Rules for formatting
-    stylistic: true,
+    stylistic: {
+      commaDangle: 'never',
+      braceStyle: '1tbs'
+    }
   },
   dirs: {
     src: [
       './playground',
-    ],
+      './src'
+    ]
+  }
+},
+{
+  rules: {
+    'vue/multi-word-component-names': 0
   },
+  ignores: [
+    'wordpress',
+    'dist',
+    'node_modules',
+    '.output',
+    '.nuxt'
+  ]
 })
   .append(
     // your custom flat config here...

@@ -1,0 +1,6 @@
+fragment NodeWithFeaturedImageToMediaItemConnectionEdge on NodeWithFeaturedImageToMediaItemConnectionEdge {
+  cursor
+  node {
+    ...MediaItem
+  }
+}

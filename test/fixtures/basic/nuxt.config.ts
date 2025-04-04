@@ -1,7 +1,10 @@
-import MyModule from '../../../src/module'
+import wpNuxt from '../../../src/module'
 
 export default defineNuxtConfig({
   modules: [
-    MyModule,
+    wpNuxt
   ],
+  wpNuxt: {
+    wordpressUrl: 'https://wordpress.wpnuxt.com'
+  }
 })

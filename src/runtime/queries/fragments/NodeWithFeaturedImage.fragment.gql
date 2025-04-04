@@ -1,0 +1,8 @@
+fragment NodeWithFeaturedImage on NodeWithFeaturedImage {
+  featuredImage {
+    ...NodeWithFeaturedImageToMediaItemConnectionEdge
+  }
+  featuredImageDatabaseId
+  featuredImageId
+  id
+}

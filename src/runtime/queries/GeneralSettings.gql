@@ -1,0 +1,5 @@
+query GeneralSettings {
+  generalSettings {
+    ...GeneralSettings
+  }
+}

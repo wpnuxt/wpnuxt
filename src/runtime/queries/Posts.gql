@@ -1,0 +1,32 @@
+query Posts($limit: Int = 10) {
+  posts(first: $limit) {
+    nodes {
+      ...Post
+    }
+  }
+}
+query PostByUri($uri: String!) {
+  nodeByUri(uri: $uri) {
+    ...Post
+  }
+}
+query PostById($id: ID!, $asPreview: Boolean = false) {
+  post(id: $id, idType: DATABASE_ID, asPreview: $asPreview) {
+    ...Post
+  }
+}
+
+query PostsByCategoryName($categoryName: String!, $limit: Int = 10) {
+  posts(first: $limit, where: {categoryName: $categoryName}) {
+    nodes {
+      ...Post
+    }
+  }
+}
+query PostsByCategoryId($categoryId: Int!, $limit: Int = 10) {
+  posts(first: $limit, where: {categoryId: $categoryId}) {
+    nodes {
+      ...Post
+    }
+  }
+}

@@ -1,0 +1,17 @@
+query Pages($limit: Int = 10) {
+  pages(first: $limit) {
+    nodes {
+      ...Page
+    }
+  }
+}
+query PageByUri($uri: String!) {
+  nodeByUri(uri: $uri) {
+    ...Page
+  }
+}
+query PageById($id: ID!) {
+  page(id: $id, idType: DATABASE_ID, asPreview: true) {
+    ...Page
+  }
+}

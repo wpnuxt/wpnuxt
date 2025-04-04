@@ -1,0 +1,6 @@
+query NodeByUri($uri: String!) {
+  nodeByUri(uri: $uri) {
+    ...Page
+    ...Post
+  }
+}

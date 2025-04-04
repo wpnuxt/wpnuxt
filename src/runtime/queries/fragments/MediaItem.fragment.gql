@@ -1,0 +1,52 @@
+fragment MediaItem on MediaItem {
+  altText
+  # ancestors
+  # author
+  authorDatabaseId
+  authorId
+  caption
+  # children
+  commentCount
+  commentStatus
+  # comments
+  # contentType
+  contentTypeName
+  databaseId
+  date
+  dateGmt
+  description
+  desiredSlug
+  # editingLockedBy
+  enclosure
+  # enqueuedScripts
+  # enqueuedStylesheets
+  fileSize
+  guid
+  id
+  isContentNode
+  isPreview
+  isRestricted
+  isTermNode
+  # lastEditedBy
+  link
+  # mediaDetails
+  mediaItemId
+  mediaItemUrl
+  mediaType
+  mimeType
+  modified
+  modifiedGmt
+  # parent
+  parentDatabaseId
+  parentId
+  previewRevisionDatabaseId
+  previewRevisionId
+  sizes
+  slug
+  sourceUrl
+  srcSet
+  status
+  # template
+  title
+  uri
+}

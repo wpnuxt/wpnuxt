@@ -1,0 +1,3 @@
+fragment NodeWithExcerpt on NodeWithExcerpt {
+  excerpt
+}

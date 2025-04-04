@@ -1,0 +1,15 @@
+fragment Post on Post {
+  ...NodeWithExcerpt
+  ...ContentNode
+  ...NodeWithFeaturedImage
+  ...NodeWithContentEditor
+  title
+  categories {
+    nodes {
+      id
+      name
+      uri
+      description
+    }
+  }
+}
