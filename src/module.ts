@@ -11,7 +11,7 @@ export default defineNuxtModule<WPNuxtConfig>({
     configKey: 'wpNuxt'
   },
   defaults: {
-    wordpressUrl: '',
+    wordpressUrl: undefined,
     downloadSchema: true
   },
   async setup(options, nuxt) {
@@ -33,10 +33,10 @@ export default defineNuxtModule<WPNuxtConfig>({
 })
 
 export function loadConfig(options: Partial<WPNuxtConfig>): WPNuxtConfig {
-  const config: WPNuxtConfig = defu(options, {
+  const config: WPNuxtConfig = defu({
     wordpressUrl: process.env.WPNUXT_WORDPRESS_URL,
-    downloadSchema: process.env.WPNUXT_DOWNLOAD_SCHEMA === 'true'
-  }) as WPNuxtConfig
+    downloadSchema: process.env.WPNUXT_DOWNLOAD_SCHEMA ? process.env.WPNUXT_DOWNLOAD_SCHEMA === 'true' : undefined
+  }, options) as WPNuxtConfig
 
   // validate config
   if (!config.wordpressUrl || config.wordpressUrl.length === 0) {
