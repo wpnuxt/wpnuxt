@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { defu } from 'defu'
-import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, useLogger } from '@nuxt/kit'
 import type { WPNuxtConfig } from './types/config'
 import { validateConfig, randHashGenerator } from './utils'
 
@@ -13,6 +13,9 @@ export default defineNuxtModule<WPNuxtConfig>({
     wordpressUrl: ''
   },
   async setup(options, nuxt) {
+    const startTime = new Date().getTime()
+    const logger = useLogger('wpnuxt')
+
     // Runtime Config
     const runtimeConfig = nuxt.options.runtimeConfig
 
@@ -38,10 +41,11 @@ export default defineNuxtModule<WPNuxtConfig>({
     }
 
     await registerModule('nuxt-graphql-middleware', 'graphql', {
-      debug: true,
+      debug: false,
       graphqlEndpoint: `${runtimeConfig.wpNuxt.wordpressUrl}/graphql`,
       autoImportPatterns: [resolve('./runtime/queries/**/*.gql')],
       includeComposables: true,
+      downloadSchema: false,
       clientCache: {
         // Enable or disable the caching feature.
         enabled: true,
@@ -50,5 +54,7 @@ export default defineNuxtModule<WPNuxtConfig>({
       }
     })
     await registerModule('@radya/nuxt-dompurify', 'dompurify', {})
+
+    logger.info(`WPNuxt Module loaded in ${new Date().getTime() - startTime}ms`)
   }
 })
