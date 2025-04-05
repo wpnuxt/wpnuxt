@@ -28,6 +28,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      WPNUXT_WORDPRESS_URL: ${{ secrets.WPNUXT_WORDPRESS_URL }}
+
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable
