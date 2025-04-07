@@ -10,7 +10,7 @@ const posts = computed(() => data.value?.data?.posts?.nodes)
     <UPage>
       <UPageHeader
         title="Posts"
-        :description="posts?.length ? `fetched ${posts.length} posts using the WordPress GraphQL API` : 'fetching posts...'"
+        :description="posts?.length ? `fetched ${posts.length} posts using the WordPress GraphQL API` : '...fetching posts'"
       />
       <UPageBody class="grid grid-cols-3 gap-5 my-10">
         <UPageCard

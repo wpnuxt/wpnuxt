@@ -12,10 +12,7 @@ const headerLinks = ref([{ label: 'Back to home', to: '/' }])
 <template>
   <UContainer>
     <UPage>
-      <UPageHeader
-        :title="post?.data?.nodeByUri?.title ? post.data.nodeByUri.title : ' '"
-        :links="headerLinks"
-      />
+      <PageHeader :post="post?.data.nodeByUri" />
       <UPageBody class="my-10">
         <MDC
           v-if="post?.data?.nodeByUri?.content"

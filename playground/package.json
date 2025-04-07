@@ -13,6 +13,7 @@
     "nuxt": "^3.16.2"
   },
   "devDependencies": {
+    "@iconify-json/lucide": "^1.2.35",
     "@iconify-json/svg-spinners": "^1.2.2"
   }
 }
