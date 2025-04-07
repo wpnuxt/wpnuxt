@@ -11,5 +11,8 @@
     "@nuxt/ui-pro": "^3.0.2",
     "@nuxtjs/mdc": "^0.16.1",
     "nuxt": "^3.16.2"
+  },
+  "devDependencies": {
+    "@iconify-json/svg-spinners": "^1.2.2"
   }
 }

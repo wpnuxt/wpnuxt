@@ -6,23 +6,22 @@ const { data: post } = useAsyncGraphqlQuery('PostByUri', {
   uri: route.path
 })
 
-const headerLinks = ref([
-  {
-    label: 'Back to home',
-    to: '/'
-  }
-])
+const headerLinks = ref([{ label: 'Back to home', to: '/' }])
 </script>
 
 <template>
-  <UContainer v-if="post?.data?.nodeByUri">
+  <UContainer>
     <UPage>
       <UPageHeader
-        :title="post.data.nodeByUri?.title"
+        :title="post?.data?.nodeByUri?.title ? post.data.nodeByUri.title : ' '"
         :links="headerLinks"
       />
       <UPageBody class="my-10">
-        <MDC :value="post.data.nodeByUri?.content" />
+        <MDC
+          v-if="post?.data?.nodeByUri?.content"
+          :value="post.data.nodeByUri.content"
+        />
+        <Loading v-else />
       </UPageBody>
     </UPage>
   </UContainer>

@@ -23,7 +23,7 @@ export default defineNuxtModule<WPNuxtConfig>({
     const resolver = createResolver(import.meta.url)
 
     // will be picked up by the graphqlConfig plugin and added to each GraphQL fetch request
-    nuxt.options.runtimeConfig.buildHash = randHashGenerator()
+    nuxt.options.runtimeConfig.public.buildHash = randHashGenerator()
     addPlugin(resolver.resolve('./runtime/plugins/graphqlConfig'))
 
     await registerModules(nuxt, resolver, wpNuxtConfig)

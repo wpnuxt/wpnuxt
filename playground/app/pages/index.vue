@@ -1,27 +1,23 @@
 <script setup lang="ts">
 import { useAsyncGraphqlQuery } from '#imports'
 
-const { data: posts } = useAsyncGraphqlQuery('Posts')
+const { data } = useAsyncGraphqlQuery('Posts')
+const posts = computed(() => data.value?.data?.posts?.nodes)
 
-const headerLinks = ref([
-  {
-    label: 'Documentation',
-    to: 'https://wpnuxt.com'
-  }
-])
+const headerLinks = ref([{ label: 'Documentation', to: 'https://wpnuxt.com' }])
 </script>
 
 <template>
-  <UContainer v-if="posts?.data?.posts?.nodes">
+  <UContainer>
     <UPage>
       <UPageHeader
         title="WPNuxt"
-        :description="posts.data.posts.nodes.length + ' posts fetched from WordPress using GraphQL'"
+        :description="posts?.length ? posts.length + ' posts fetched from WordPress using GraphQL' : 'fetching posts...'"
         :links="headerLinks"
       />
       <UPageBody class="grid grid-cols-3 gap-5 my-10">
         <UPageCard
-          v-for="post in posts.data.posts.nodes"
+          v-for="post in posts"
           :key="post.id"
           :title="post.title"
           :to="`/${post.slug}`"
@@ -40,6 +36,7 @@ const headerLinks = ref([
             </UButton>
           </template>
         </UPageCard>
+        <Loading v-if="!posts" />
       </UPageBody>
     </UPage>
   </UContainer>
