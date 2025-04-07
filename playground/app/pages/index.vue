@@ -12,13 +12,13 @@ const posts = computed(() => data.value?.data?.posts?.nodes)
         title="Posts"
         :description="posts?.length ? `fetched ${posts.length} posts using the WordPress GraphQL API` : '...fetching posts'"
       />
-      <UPageBody class="grid grid-cols-3 gap-5 my-10">
+      <UPageBody class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 my-10">
         <UPageCard
           v-for="post in posts"
           :key="post.id"
           :title="post.title"
           :to="`/${post.slug}`"
-          class="shadow-md"
+          class="shadow-md mb-0"
         >
           <template #description>
             <div v-sanitize-html="post.excerpt" />
