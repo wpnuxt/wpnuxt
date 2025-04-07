@@ -3,17 +3,14 @@ import { useAsyncGraphqlQuery } from '#imports'
 
 const { data } = useAsyncGraphqlQuery('Posts')
 const posts = computed(() => data.value?.data?.posts?.nodes)
-
-const headerLinks = ref([{ label: 'Documentation', to: 'https://wpnuxt.com' }])
 </script>
 
 <template>
   <UContainer>
     <UPage>
       <UPageHeader
-        title="WPNuxt"
-        :description="posts?.length ? posts.length + ' posts fetched from WordPress using GraphQL' : 'fetching posts...'"
-        :links="headerLinks"
+        title="Posts"
+        :description="posts?.length ? `fetched ${posts.length} posts using the WordPress GraphQL API` : 'fetching posts...'"
       />
       <UPageBody class="grid grid-cols-3 gap-5 my-10">
         <UPageCard
