@@ -1,18 +1,29 @@
 <script setup lang="ts">
-import { useGraphqlQuery } from '#imports'
+import { useAsyncGraphqlQuery } from '#imports'
 
-const { data } = await useGraphqlQuery('PostByUri', {
-  uri: useRoute().params.slug[0]
+const route = useRoute()
+const { data: post } = useAsyncGraphqlQuery('PostByUri', {
+  uri: route.path
 })
+
+const headerLinks = ref([
+  {
+    label: 'Back to home',
+    to: '/'
+  }
+])
 </script>
 
 <template>
-  <div v-if="data?.nodeByUri">
-    <h1>{{ data.nodeByUri.title }}</h1>
-    <div v-sanitize-html="data.nodeByUri.content" />
-    <br>
-    <NuxtLink to="/">
-      Back to home
-    </NuxtLink>
-  </div>
+  <UContainer v-if="post?.data?.nodeByUri">
+    <UPage>
+      <UPageHeader
+        :title="post.data.nodeByUri?.title"
+        :links="headerLinks"
+      />
+      <UPageBody class="my-10">
+        <MDC :value="post.data.nodeByUri?.content" />
+      </UPageBody>
+    </UPage>
+  </UContainer>
 </template>

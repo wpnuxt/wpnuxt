@@ -1,12 +1,18 @@
 export default defineNuxtConfig({
-  modules: ['../src/module'],
+  modules: [
+    '../src/module',
+    '@nuxt/ui-pro',
+    '@nuxtjs/mdc'
+  ],
 
   devtools: { enabled: true },
+
+  css: ['~/assets/css/main.css'],
 
   future: {
     compatibilityVersion: 4
   },
-  compatibilityDate: '2025-04-03',
+  compatibilityDate: '2025-04-07',
 
   wpNuxt: {
     wordpressUrl: 'https://wordpress.wpnuxt.com'

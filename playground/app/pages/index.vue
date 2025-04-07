@@ -1,20 +1,46 @@
 <script setup lang="ts">
-import { useGraphqlQuery } from '#imports'
+import { useAsyncGraphqlQuery } from '#imports'
 
-const { data } = await useGraphqlQuery('Posts')
+const { data: posts } = useAsyncGraphqlQuery('Posts')
+
+const headerLinks = ref([
+  {
+    label: 'Documentation',
+    to: 'https://wpnuxt.com'
+  }
+])
 </script>
 
 <template>
-  <div v-if="data?.posts?.nodes">
-    <div
-      v-for="post in data.posts.nodes"
-      :key="post.id"
-    >
-      <h2>{{ post.title }}</h2>
-      <div v-sanitize-html="post.excerpt" />
-      <NuxtLink :to="`/${post.slug}`">
-        Read More
-      </NuxtLink>
-    </div>
-  </div>
+  <UContainer v-if="posts?.data?.posts?.nodes">
+    <UPage>
+      <UPageHeader
+        title="WPNuxt"
+        :description="posts.data.posts.nodes.length + ' posts fetched from WordPress using GraphQL'"
+        :links="headerLinks"
+      />
+      <UPageBody class="grid grid-cols-3 gap-5 my-10">
+        <UPageCard
+          v-for="post in posts.data.posts.nodes"
+          :key="post.id"
+          :title="post.title"
+          :to="`/${post.slug}`"
+          class="shadow-md"
+        >
+          <template #description>
+            <div v-sanitize-html="post.excerpt" />
+          </template>
+          <template #footer>
+            <UButton
+              :to="`/${post.slug}`"
+              color="neutral"
+              variant="outline"
+            >
+              Read More
+            </UButton>
+          </template>
+        </UPageCard>
+      </UPageBody>
+    </UPage>
+  </UContainer>
 </template>

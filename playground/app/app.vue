@@ -1,5 +1,7 @@
 <template>
-  <div>
-    <NuxtPage />
-  </div>
+  <UApp>
+    <UMain>
+      <NuxtPage />
+    </UMain>
+  </UApp>
 </template>
