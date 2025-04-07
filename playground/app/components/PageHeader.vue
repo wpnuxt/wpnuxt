@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PostFragment, PageFragment } from '#graphql-operations';
+import type { PostFragment, PageFragment } from '#graphql-operations'
 
 defineProps<{
   post: PostFragment | PageFragment

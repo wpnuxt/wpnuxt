@@ -5,8 +5,6 @@ const route = useRoute()
 const { data: post } = useAsyncGraphqlQuery('PostByUri', {
   uri: route.path
 })
-
-const headerLinks = ref([{ label: 'Back to home', to: '/' }])
 </script>
 
 <template>
