@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { defu } from 'defu'
-import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, useLogger, type Resolver } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, useLogger, type Resolver, addComponentsDir } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
 import { randHashGenerator } from './utils'
 import type { WPNuxtConfig } from './types/config'
@@ -27,6 +27,13 @@ export default defineNuxtModule<WPNuxtConfig>({
     addPlugin(resolver.resolve('./runtime/plugins/graphqlConfig'))
 
     await registerModules(nuxt, resolver, wpNuxtConfig)
+
+    addComponentsDir({
+      path: resolver.resolve('./runtime/components'),
+      pathPrefix: false,
+      prefix: '',
+      global: true
+    })
 
     logger.info(`WPNuxt Module loaded in ${new Date().getTime() - startTime}ms`)
   }
