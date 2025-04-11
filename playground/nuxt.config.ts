@@ -2,7 +2,8 @@ export default defineNuxtConfig({
   modules: [
     '../src/module',
     '@nuxt/ui-pro',
-    '@nuxtjs/mdc'
+    '@nuxtjs/mdc',
+    'nuxt-time'
   ],
 
   devtools: { enabled: true },

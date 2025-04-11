@@ -11,16 +11,23 @@ const headerLinks = ref([{ label: 'Back to home', to: '/' }])
 <template>
   <UPageHeader
     :links="headerLinks"
-    :description="post?.date"
   >
     <template #title>
       <h1 v-if="post?.title">
         {{ post.title }}
       </h1>
       <div v-else>
-        <USkeleton class="h-8 w-[250px] mt-1" />
-        <USkeleton class="h-4 w-[400px] mt-6" />
+        <USkeleton class="h-9 w-[250px] mt-1" />
       </div>
+    </template>
+    <template #description>
+      <NuxtTime
+        v-if="post?.date"
+        :datetime="post.date"
+        month="long"
+        day="numeric"
+        year="numeric"
+      />
     </template>
   </UPageHeader>
 </template>
