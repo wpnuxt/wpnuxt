@@ -20,7 +20,9 @@
     "prepack": "nuxt-module-build build",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+    "dev:basic": "nuxi dev playground-basic",
+    "dev:basic:build": "nuxi build playground-basic",
+    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground && nuxi prepare playground-basic",
     "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint .",
     "test": "vitest run",
@@ -36,7 +38,7 @@
   "devDependencies": {
     "@nuxt/devtools": "^2.3.2",
     "@nuxt/eslint-config": "^1.3.0",
-    "@nuxt/module-builder": "^1.0.0",
+    "@nuxt/module-builder": "^1.0.1",
     "@nuxt/schema": "^3.16.2",
     "@nuxt/test-utils": "^3.17.2",
     "@types/node": "^22.14.0",
@@ -47,5 +49,5 @@
     "vitest": "^3.1.1",
     "vue-tsc": "^2.2.8"
   },
-  "packageManager": "pnpm@10.6.5+sha512.cdf928fca20832cd59ec53826492b7dc25dc524d4370b6b4adbf65803d32efaa6c1c88147c0ae4e8d579a6c9eec715757b50d4fa35eea179d868eada4ed043af"
+  "packageManager": "pnpm@10.8.0+sha512.0e82714d1b5b43c74610193cb20734897c1d00de89d0e18420aebc5977fa13d780a9cb05734624e81ebd81cc876cd464794850641c48b9544326b5622ca29971"
 }
