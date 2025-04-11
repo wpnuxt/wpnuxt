@@ -1,7 +1,5 @@
 export default defineNuxtConfig({
-  modules: [
-    '../src/module'
-  ],
+  modules: ['../src/module', '@nuxt/fonts'],
 
   devtools: { enabled: true },
 

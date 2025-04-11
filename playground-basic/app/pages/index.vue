@@ -6,24 +6,21 @@ const posts = computed(() => data.posts?.nodes)
 </script>
 
 <template>
-  <div>
-    <h1>Posts:</h1>
-    <div
-      v-for="post in posts"
-      :key="post.id"
-      :title="post.title"
+  <div
+    v-for="post in posts"
+    :key="post.id"
+    :title="post.title"
+    :to="`/${post.slug}`"
+    class="shadow-md mb-0"
+  >
+    <h2>{{ post.title }}</h2>
+    <div v-sanitize-html="post.excerpt" />
+    <NuxtLink
       :to="`/${post.slug}`"
-      class="shadow-md mb-0"
+      color="neutral"
+      variant="outline"
     >
-      <h2>{{ post.title }}</h2>
-      <div v-sanitize-html="post.excerpt" />
-      <NuxtLink
-        :to="`/${post.slug}`"
-        color="neutral"
-        variant="outline"
-      >
-        Read More
-      </NuxtLink>
-    </div>
+      Read More
+    </NuxtLink>
   </div>
 </template>
