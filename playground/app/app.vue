@@ -1,6 +1,9 @@
 <template>
   <UApp>
-    <UHeader title="WPNuxt">
+    <UHeader>
+      <template #title>
+        <WPNuxtLogo />
+      </template>
       <template #right>
         <UColorModeSwitch />
       </template>
