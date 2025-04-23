@@ -25,6 +25,7 @@ export function getLogger(): ConsolaInstance {
   return loggerRef.value
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function mergeQueries(nuxt: any, wpNuxtConfig: WPNuxtConfig) {
   const { resolve } = createResolver(import.meta.url)
   const resolveRuntimeModule = (path: string) => resolve('./runtime', path)

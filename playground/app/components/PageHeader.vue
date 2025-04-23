@@ -2,7 +2,7 @@
 import type { PostFragment, PageFragment } from '#graphql-operations'
 
 defineProps<{
-  post: PostFragment | PageFragment
+  post: PostFragment | PageFragment | undefined
 }>()
 
 const headerLinks = ref([{ label: 'Back to home', to: '/' }])

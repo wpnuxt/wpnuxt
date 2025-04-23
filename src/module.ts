@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { defu } from 'defu'
-import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, useLogger, type Resolver, addComponentsDir } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, type Resolver, addComponentsDir } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
 import { getLogger, initLogger, mergeQueries, randHashGenerator } from './utils'
 import type { WPNuxtConfig } from './types/config'
@@ -65,12 +64,12 @@ function loadConfig(options: Partial<WPNuxtConfig>): WPNuxtConfig {
 
 async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPNuxtConfig) {
   const logger = getLogger()
-  async function registerModule(name: string, key: string, options: Record<string, any>) {
+  async function registerModule(name: string, key: string, options: Record<string, unknown>) {
     if (!hasNuxtModule(name)) {
       await installModule(name, options)
     } else {
       logger.debug(`${name} module already registered, using the 'graphqlMiddleware' config from nuxt.config.ts`);
-      (nuxt.options as any)[key] = defu((nuxt.options as any)[key], options)
+      (nuxt.options as never)[key] = defu((nuxt.options as never)[key], options)
     }
   }
   const mergedQueriesFolder = await mergeQueries(nuxt, wpNuxtConfig)
