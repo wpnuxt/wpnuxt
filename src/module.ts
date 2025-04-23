@@ -2,8 +2,7 @@
 import { defu } from 'defu'
 import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, useLogger, type Resolver, addComponentsDir } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
-import type { ConsolaInstance } from 'consola'
-import { randHashGenerator } from './utils'
+import { getLogger, initLogger, mergeQueries, randHashGenerator } from './utils'
 import type { WPNuxtConfig } from './types/config'
 
 export default defineNuxtModule<WPNuxtConfig>({
@@ -14,14 +13,18 @@ export default defineNuxtModule<WPNuxtConfig>({
   defaults: {
     wordpressUrl: undefined,
     graphqlEndpoint: '/graphql',
+    queries: {
+      extendFolder: 'extend/queries/',
+      mergedOutputFolder: '.queries/'
+    },
     downloadSchema: true,
     debug: false
   },
   async setup(options, nuxt) {
     const startTime = new Date().getTime()
     const wpNuxtConfig = loadConfig(options) as WPNuxtConfig
+    const logger = initLogger(wpNuxtConfig.debug)
 
-    const logger = getLogger(wpNuxtConfig)
     logger.debug('Starting WPNuxt in debug mode')
 
     const resolver = createResolver(import.meta.url)
@@ -61,7 +64,7 @@ function loadConfig(options: Partial<WPNuxtConfig>): WPNuxtConfig {
 }
 
 async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPNuxtConfig) {
-  const logger = getLogger(wpNuxtConfig)
+  const logger = getLogger()
   async function registerModule(name: string, key: string, options: Record<string, any>) {
     if (!hasNuxtModule(name)) {
       await installModule(name, options)
@@ -70,11 +73,11 @@ async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPN
       (nuxt.options as any)[key] = defu((nuxt.options as any)[key], options)
     }
   }
-
+  const mergedQueriesFolder = await mergeQueries(nuxt, wpNuxtConfig)
   await registerModule('nuxt-graphql-middleware', 'graphql', {
     debug: wpNuxtConfig.debug,
     graphqlEndpoint: `${wpNuxtConfig.wordpressUrl}${wpNuxtConfig.graphqlEndpoint}`,
-    autoImportPatterns: [resolver.resolve('./runtime/queries/**/*.gql')],
+    autoImportPatterns: [mergedQueriesFolder],
     includeComposables: true,
     downloadSchema: wpNuxtConfig.downloadSchema,
     clientCache: {
@@ -85,8 +88,4 @@ async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPN
     }
   })
   await registerModule('@radya/nuxt-dompurify', 'dompurify', {})
-}
-
-function getLogger(wpNuxtConfig: WPNuxtConfig): ConsolaInstance {
-  return useLogger('wpnuxt', { level: wpNuxtConfig.debug ? 4 : 3 })
 }

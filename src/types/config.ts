@@ -1,4 +1,3 @@
-import type { ModuleOptions as GraphqlMiddlewareConfig } from 'nuxt-graphql-middleware'
 
 export interface WPNuxtConfig {
 
@@ -20,6 +19,22 @@ export interface WPNuxtConfig {
    */
   graphqlEndpoint: string
 
+  queries: {
+    /**
+     * Path to the folder containing the queries to extend the default WPNuxt queries
+     *
+     * @default '~/extend/queries/'
+     */
+    extendFolder: string
+
+    /**
+     * Path to the folder containing the merged queries
+     *
+     * @default '.queries/'
+     */
+    mergedOutputFolder: string
+  }
+
   /**
    * Whether to download the schema from the WordPress site and save it to disk
    * If downloadSchema is false, the file must be present at './schema.graphql' in order to generate types.
@@ -36,6 +51,4 @@ export interface WPNuxtConfig {
    * @default false
    */
   debug: boolean
-
-  graphqlMiddleware: GraphqlMiddlewareConfig
 }
