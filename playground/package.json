@@ -14,7 +14,7 @@
     "nuxt-time": "^1.0.3"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.2.35",
+    "@iconify-json/lucide": "^1.2.38",
     "@iconify-json/svg-spinners": "^1.2.2"
   }
 }

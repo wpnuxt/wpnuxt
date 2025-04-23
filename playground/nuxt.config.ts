@@ -1,3 +1,5 @@
+const IS_DEV = process.env.NODE_ENV === 'development'
+
 export default defineNuxtConfig({
   modules: [
     '../src/module',
@@ -13,9 +15,11 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4
   },
-  compatibilityDate: '2025-04-07',
+  compatibilityDate: '2025-04-23',
 
   wpNuxt: {
-    wordpressUrl: 'https://wordpress.wpnuxt.com'
+    wordpressUrl: 'https://wordpress.wpnuxt.com',
+    debug: IS_DEV,
+    downloadSchema: IS_DEV
   }
 })

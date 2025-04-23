@@ -2,6 +2,7 @@
 import { defu } from 'defu'
 import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, useLogger, type Resolver, addComponentsDir } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
+import type { ConsolaInstance } from 'consola'
 import { randHashGenerator } from './utils'
 import type { WPNuxtConfig } from './types/config'
 
@@ -12,13 +13,16 @@ export default defineNuxtModule<WPNuxtConfig>({
   },
   defaults: {
     wordpressUrl: undefined,
-    downloadSchema: true
+    graphqlEndpoint: '/graphql',
+    downloadSchema: true,
+    debug: false
   },
   async setup(options, nuxt) {
-    const logger = useLogger('wpnuxt')
     const startTime = new Date().getTime()
-
     const wpNuxtConfig = loadConfig(options) as WPNuxtConfig
+
+    const logger = getLogger(wpNuxtConfig)
+    logger.debug('Starting WPNuxt in debug mode')
 
     const resolver = createResolver(import.meta.url)
 
@@ -35,14 +39,16 @@ export default defineNuxtModule<WPNuxtConfig>({
       global: true
     })
 
-    logger.info(`WPNuxt Module loaded in ${new Date().getTime() - startTime}ms`)
+    logger.info(`WPNuxt module loaded in ${new Date().getTime() - startTime}ms`)
   }
 })
 
-export function loadConfig(options: Partial<WPNuxtConfig>): WPNuxtConfig {
+function loadConfig(options: Partial<WPNuxtConfig>): WPNuxtConfig {
   const config: WPNuxtConfig = defu({
     wordpressUrl: process.env.WPNUXT_WORDPRESS_URL,
-    downloadSchema: process.env.WPNUXT_DOWNLOAD_SCHEMA ? process.env.WPNUXT_DOWNLOAD_SCHEMA === 'true' : undefined
+    graphqlEndpoint: process.env.WPNUXT_GRAPHQL_ENDPOINT,
+    downloadSchema: process.env.WPNUXT_DOWNLOAD_SCHEMA ? process.env.WPNUXT_DOWNLOAD_SCHEMA === 'true' : undefined,
+    debug: process.env.WPNUXT_DEBUG ? process.env.WPNUXT_DEBUG === 'true' : undefined
   }, options) as WPNuxtConfig
 
   // validate config
@@ -55,17 +61,19 @@ export function loadConfig(options: Partial<WPNuxtConfig>): WPNuxtConfig {
 }
 
 async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPNuxtConfig) {
+  const logger = getLogger(wpNuxtConfig)
   async function registerModule(name: string, key: string, options: Record<string, any>) {
     if (!hasNuxtModule(name)) {
       await installModule(name, options)
     } else {
+      logger.debug(`${name} module already registered, using the 'graphqlMiddleware' config from nuxt.config.ts`);
       (nuxt.options as any)[key] = defu((nuxt.options as any)[key], options)
     }
   }
 
   await registerModule('nuxt-graphql-middleware', 'graphql', {
-    debug: false,
-    graphqlEndpoint: `${wpNuxtConfig.wordpressUrl}/graphql`,
+    debug: wpNuxtConfig.debug,
+    graphqlEndpoint: `${wpNuxtConfig.wordpressUrl}${wpNuxtConfig.graphqlEndpoint}`,
     autoImportPatterns: [resolver.resolve('./runtime/queries/**/*.gql')],
     includeComposables: true,
     downloadSchema: wpNuxtConfig.downloadSchema,
@@ -77,4 +85,8 @@ async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPN
     }
   })
   await registerModule('@radya/nuxt-dompurify', 'dompurify', {})
+}
+
+function getLogger(wpNuxtConfig: WPNuxtConfig): ConsolaInstance {
+  return useLogger('wpnuxt', { level: wpNuxtConfig.debug ? 4 : 3 })
 }

@@ -1,3 +1,5 @@
+import type { ModuleOptions as GraphqlMiddlewareConfig } from 'nuxt-graphql-middleware'
+
 export interface WPNuxtConfig {
 
   /**
@@ -10,6 +12,15 @@ export interface WPNuxtConfig {
   wordpressUrl: string
 
   /**
+   * The endpoint to use for the GraphQL API.
+   *
+   * (will be appended to the wordpressUrl)
+   *
+   * @default '/graphql'
+   */
+  graphqlEndpoint: string
+
+  /**
    * Whether to download the schema from the WordPress site and save it to disk
    * If downloadSchema is false, the file must be present at './schema.graphql' in order to generate types.
    *
@@ -18,4 +29,13 @@ export interface WPNuxtConfig {
    * @default true
    */
   downloadSchema: boolean
+
+  /**
+   * Whether to enable debug mode
+   *
+   * @default false
+   */
+  debug: boolean
+
+  graphqlMiddleware: GraphqlMiddlewareConfig
 }
