@@ -31,7 +31,7 @@ const findData = (data: unknown, nodes: string[]) => {
   if (nodes.length === 0) return data
   if (nodes.length > 0) {
     return nodes.reduce((acc, node) => {
-      return acc[node]
+      return acc[node] ?? acc
     }, data)
   }
 }
