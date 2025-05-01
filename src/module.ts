@@ -1,6 +1,7 @@
 import { defu } from 'defu'
 import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, type Resolver, addComponentsDir, addTemplate, addTypeTemplate, addImports } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
+import type { Import } from 'unimport'
 import type { WPNuxtConfig } from './types/config'
 import type { WPNuxtContext } from './types/queries'
 import { generateWPNuxtComposables } from './generate'
@@ -76,7 +77,7 @@ export default defineNuxtModule<WPNuxtConfig>({
       filename: 'wpnuxt/index.d.ts',
       getContents: () => ctx.generateDeclarations?.() || ''
     })
-    nuxt.hook('imports:extend', (autoimports: any) => {
+    nuxt.hook('imports:extend', (autoimports: Import[]) => {
       autoimports.push(...(ctx.fnImports || []))
     })
     logger.trace('Finished generating composables')
