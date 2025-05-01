@@ -9,17 +9,18 @@ export const useWPContent = async <T>(queryName: keyof Query, nodes: string[], f
   }
 }
 
-export const useAsyncWPContent = async <T>(queryName: keyof Query, nodes: string[], fixImagePaths: boolean, params?: T) => {
-  const { data, pending, refresh, execute, clear, error, status } = await useAsyncGraphqlQuery(queryName, params ? params : {})
-  return {
-    data: data.value ? transformData(data.value?.data, nodes, fixImagePaths) : undefined,
-    pending,
-    refresh,
-    execute,
-    clear,
-    error,
-    status
-  }
+export const useAsyncWPContent = <T>(queryName: keyof Query, nodes: string[], fixImagePaths: boolean, params?: T) => {
+  return useAsyncGraphqlQuery(queryName, params ? params : {}).then(({ data, pending, refresh, execute, clear, error, status }) => {
+    return {
+      data: data.value ? transformData(data.value?.data, nodes, fixImagePaths) : undefined,
+      pending,
+      refresh,
+      execute,
+      clear,
+      error,
+      status
+    }
+  })
 }
 
 const transformData = <T>(data: unknown, nodes: string[], fixImagePaths: boolean): T => {
