@@ -2,7 +2,7 @@ import { existsSync, cpSync, promises as fsp } from 'node:fs'
 import { createResolver, useLogger } from '@nuxt/kit'
 import { ref } from 'vue'
 import type { ConsolaInstance } from 'consola'
-import type { WPNuxtConfig } from './types/config'
+import type { WPNuxtConfig } from '../types/config'
 
 export function randHashGenerator(length = 12) {
   const randomChar = () => Math.floor(36 * Math.random()).toString(36)
@@ -28,7 +28,7 @@ export function getLogger(): ConsolaInstance {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function mergeQueries(nuxt: any, wpNuxtConfig: WPNuxtConfig) {
   const { resolve } = createResolver(import.meta.url)
-  const resolveRuntimeModule = (path: string) => resolve('./runtime', path)
+  const resolveRuntimeModule = (path: string) => resolve('../runtime', path)
   const logger = getLogger()
 
   const queryOutputPath = resolve((nuxt.options.srcDir || nuxt.options.rootDir) + '/' + wpNuxtConfig.queries.mergedOutputFolder)

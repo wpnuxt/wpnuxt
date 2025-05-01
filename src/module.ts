@@ -1,8 +1,10 @@
 import { defu } from 'defu'
-import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, type Resolver, addComponentsDir } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, type Resolver, addComponentsDir, addTemplate, addTypeTemplate, addImports } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
-import { getLogger, initLogger, mergeQueries, randHashGenerator } from './utils'
 import type { WPNuxtConfig } from './types/config'
+import type { WPNuxtContext } from './types/queries'
+import { generateWPNuxtComposables } from './generate'
+import { getLogger, initLogger, mergeQueries, randHashGenerator } from './utils/index'
 
 export default defineNuxtModule<WPNuxtConfig>({
   meta: {
@@ -32,14 +34,52 @@ export default defineNuxtModule<WPNuxtConfig>({
     nuxt.options.runtimeConfig.public.buildHash = randHashGenerator()
     addPlugin(resolver.resolve('./runtime/plugins/graphqlConfig'))
 
-    await registerModules(nuxt, resolver, wpNuxtConfig)
+    const mergedQueriesFolder = await mergeQueries(nuxt, wpNuxtConfig)
+    await registerModules(nuxt, resolver, wpNuxtConfig, mergedQueriesFolder)
 
+    addImports([
+      { name: 'useWPContent', as: 'useWPContent', from: resolver.resolve('./runtime/composables/useWPContent') },
+      { name: 'useAsyncWPContent', as: 'useAsyncWPContent', from: resolver.resolve('./runtime/composables/useWPContent') }
+    ])
     addComponentsDir({
       path: resolver.resolve('./runtime/components'),
       pathPrefix: false,
       prefix: '',
       global: true
     })
+
+    logger.trace('Start generating composables')
+
+    const ctx: WPNuxtContext = await {
+      fns: [],
+      fnImports: [],
+      composablesPrefix: 'use'
+    }
+    await generateWPNuxtComposables(ctx, mergedQueriesFolder, createResolver(nuxt.options.srcDir))
+
+    nuxt.options.alias['#wpnuxt'] = resolver.resolve(nuxt.options.buildDir, 'wpnuxt')
+    nuxt.options.alias['#wpnuxt/*'] = resolver.resolve(nuxt.options.buildDir, 'wpnuxt', '*')
+    nuxt.options.alias['#wpnuxt/types'] = resolver.resolve('./types')
+    nuxt.options.nitro.alias = nuxt.options.nitro.alias || {}
+    nuxt.options.nitro.alias['#wpnuxt/types'] = resolver.resolve('./types')
+
+    nuxt.options.nitro.externals = nuxt.options.nitro.externals || {}
+    nuxt.options.nitro.externals.inline = nuxt.options.nitro.externals.inline || []
+
+    addTemplate({
+      write: true,
+      filename: 'wpnuxt/index.mjs',
+      getContents: () => ctx.generateImports?.() || ''
+    })
+    addTypeTemplate({
+      write: true,
+      filename: 'wpnuxt/index.d.ts',
+      getContents: () => ctx.generateDeclarations?.() || ''
+    })
+    nuxt.hook('imports:extend', (autoimports: any) => {
+      autoimports.push(...(ctx.fnImports || []))
+    })
+    logger.trace('Finished generating composables')
 
     logger.info(`WPNuxt module loaded in ${new Date().getTime() - startTime}ms`)
   }
@@ -62,7 +102,7 @@ function loadConfig(options: Partial<WPNuxtConfig>): WPNuxtConfig {
   return config
 }
 
-async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPNuxtConfig) {
+async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPNuxtConfig, mergedQueriesFolder: string) {
   const logger = getLogger()
   async function registerModule(name: string, key: string, options: Record<string, unknown>) {
     if (!hasNuxtModule(name)) {
@@ -72,7 +112,6 @@ async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPN
       (nuxt.options as never)[key] = defu((nuxt.options as never)[key], options)
     }
   }
-  const mergedQueriesFolder = await mergeQueries(nuxt, wpNuxtConfig)
   await registerModule('nuxt-graphql-middleware', 'graphql', {
     debug: wpNuxtConfig.debug,
     graphqlEndpoint: `${wpNuxtConfig.wordpressUrl}${wpNuxtConfig.graphqlEndpoint}`,

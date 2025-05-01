@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import { useAsyncGraphqlQuery } from '#imports'
+import type { MenuItemFragment } from '#graphql-operations'
 
-const { data: items } = await useAsyncGraphqlQuery('Menu', { id: '1' }, {
-  transform: function (v) {
-    return v.data?.menu?.menuItems?.nodes.map(item => ({
-      label: item.label,
-      to: item.uri
-    }))
-  }
-})
+const { data } = await useMenu({ id: '1' })
+const menu = data.map((item: MenuItemFragment) => ({
+  label: item.label,
+  to: item.uri
+}))
 </script>
 
 <template>
@@ -20,7 +17,7 @@ const { data: items } = await useAsyncGraphqlQuery('Menu', { id: '1' }, {
       <template #right>
         <UColorModeSwitch />
       </template>
-      <UNavigationMenu :items="items" />
+      <UNavigationMenu :items="menu" />
     </UHeader>
     <UMain>
       <NuxtPage />
