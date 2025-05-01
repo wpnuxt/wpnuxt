@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { useGraphqlQuery } from '#imports'
-
 const route = useRoute()
-const { data } = await useGraphqlQuery('Pages')
-const pages = computed(() => data.pages?.nodes)
+const { data: pages } = await usePages()
 </script>
 
 <template>

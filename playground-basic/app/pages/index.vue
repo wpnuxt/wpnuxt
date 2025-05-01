@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { useGraphqlQuery } from '#imports'
-
-const { data } = await useGraphqlQuery('Posts')
-const posts = computed(() => data.posts?.nodes)
+const { data: posts } = await usePosts()
 </script>
 
 <template>
