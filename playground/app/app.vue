@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { MenuItemFragment } from '#graphql-operations'
 
-const { data } = await useMenu({ id: '1' })
+const { data } = await useAsyncMenu({ id: '1' })
 const menu = data.map((item: MenuItemFragment) => ({
   label: item.label,
   to: item.uri

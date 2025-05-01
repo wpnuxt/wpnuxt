@@ -65,7 +65,10 @@ export async function prepareContext(ctx: WPNuxtContext) {
     '}'
   ].join('\n')
 
-  ctx.fnImports = ctx.fns.map((fn): Import => ({ from: '#wpnuxt', name: fnName(fn.name) }))
+  ctx.fnImports = [
+    ...ctx.fns.map((fn): Import => ({ from: '#wpnuxt', name: fnName(fn.name) })),
+    ...ctx.fns.map((fn): Import => ({ from: '#wpnuxt', name: fnName('Async' + fn.name) }))
+  ]
 
   logger.debug('generated WPNuxt composables: ')
   ctx.fns.forEach(f => logger.debug(` ${fnName(f.name)}()`))

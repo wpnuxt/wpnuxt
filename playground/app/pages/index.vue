@@ -1,5 +1,12 @@
 <script setup lang="ts">
-const { data: posts } = await usePosts()
+import type { PostFragment } from '#graphql-operations'
+
+const posts = ref<PostFragment[]>([])
+
+onMounted(async () => {
+  const { data } = await useAsyncPosts()
+  posts.value = data
+})
 </script>
 
 <template>

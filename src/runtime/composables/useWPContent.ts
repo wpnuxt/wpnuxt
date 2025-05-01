@@ -12,7 +12,7 @@ export const useWPContent = async <T>(queryName: keyof Query, nodes: string[], f
 export const useAsyncWPContent = async <T>(queryName: keyof Query, nodes: string[], fixImagePaths: boolean, params?: T) => {
   const { data, error } = await useAsyncGraphqlQuery(queryName, params)
   return {
-    data: data ? transformData(data, nodes, fixImagePaths) : undefined,
+    data: data.value ? transformData(data.value?.data, nodes, fixImagePaths) : undefined,
     error
   }
 }
