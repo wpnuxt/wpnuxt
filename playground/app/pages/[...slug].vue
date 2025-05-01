@@ -2,10 +2,11 @@
 import type { PageFragment, PostFragment } from '#graphql-operations'
 
 const route = useRoute()
-const post = ref<PostFragment | PageFragment | undefined>(undefined)
+const post = ref<PageFragment | PostFragment | null>(null)
+const { data, refresh } = await useAsyncNodeByUri({ uri: route.path })
 
 onMounted(async () => {
-  const { data } = await useAsyncNodeByUri({ uri: route.path })
+  await refresh()
   post.value = data
 })
 </script>
