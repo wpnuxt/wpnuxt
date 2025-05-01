@@ -3,17 +3,22 @@ import type { Query } from '#nuxt-graphql-middleware/operation-types'
 import { useAsyncGraphqlQuery, useGraphqlQuery } from '#imports'
 
 export const useWPContent = async <T>(queryName: keyof Query, nodes: string[], fixImagePaths: boolean, params?: T) => {
-  const { data } = await useGraphqlQuery(queryName, params)
+  const { data } = await useGraphqlQuery(queryName, params ? params : {})
   return {
     data: data ? transformData(data, nodes, fixImagePaths) : undefined
   }
 }
 
 export const useAsyncWPContent = async <T>(queryName: keyof Query, nodes: string[], fixImagePaths: boolean, params?: T) => {
-  const { data, error } = await useAsyncGraphqlQuery(queryName, params)
+  const { data, pending, refresh, execute, clear, error, status } = await useAsyncGraphqlQuery(queryName, params ? params : {})
   return {
     data: data.value ? transformData(data.value?.data, nodes, fixImagePaths) : undefined,
-    error
+    pending,
+    refresh,
+    execute,
+    clear,
+    error,
+    status
   }
 }
 
