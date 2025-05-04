@@ -28,12 +28,12 @@ const _parseDoc = async (doc: string): Promise<WPNuxtQuery[]> => {
 
 function processSelections(selections: readonly SelectionNode[], level: number, query: WPNuxtQuery) {
   if (!selections || selections.length === 0) return
-  if (selections.length === 1 && selections[0].kind === 'Field') {
-    query.nodes.push(selections[0].name.value.trim())
+  if (selections.length === 1 && selections[0]?.kind === 'Field') {
+    query.nodes?.push(selections[0].name.value.trim())
   }
   selections.forEach((s) => {
     if (s.kind === 'FragmentSpread') {
-      query.fragments.push(s.name.value.trim())
+      query.fragments?.push(s.name.value.trim())
     } else if (s.selectionSet?.selections) {
       processSelections(s.selectionSet.selections, level + 1, query)
     }

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { defineNuxtModule, addComponentsDir, addServerHandler, createResolver, installModule, addTemplate, addTypeTemplate, addImports, type Resolver, addPlugin, hasNuxtModule } from '@nuxt/kit'
-import consola from 'consola'
+import { consola } from 'consola'
 import { name, version } from '../package.json'
 import type { WPNuxtConfig } from './types'
 import { initLogger, mergeQueries, validateConfig } from './utils'
@@ -112,16 +112,8 @@ export default defineNuxtModule<WPNuxtConfig>({
       graphqlEndpoint: `${publicWPNuxtConfig.wordpressUrl}/graphql`,
       downloadSchema: publicWPNuxtConfig.downloadSchema,
       codegenConfig: {
-        skipTypename: true,
-        useTypeImports: true,
-        // inlineFragmentTypes: 'combine',
-        dedupeFragments: true,
-        onlyOperationTypes: true,
-        avoidOptionals: false,
-        maybeValue: 'T | undefined',
-        namingConvention: {
-          enumValues: 'change-case-all#upperCaseFirst'
-        }
+        debugMode: publicWPNuxtConfig.logLevel ? publicWPNuxtConfig.logLevel > 3 : false,
+        useCache: false
       },
       codegenSchemaConfig: {
         urlSchemaOptions: {
