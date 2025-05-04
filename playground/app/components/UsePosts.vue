@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import { useAsyncData } from '#imports'
+import { onMounted, ref } from 'vue'
+import type { PostFragment } from '#graphql-operations'
 import { usePosts } from '#wpnuxt'
 
-const { data: posts } = await useAsyncData('posts', () => usePosts())
+const posts = ref<PostFragment[]>([])
+onMounted(async () => {
+  const { data } = await usePosts()
+  posts.value = data || []
+})
 </script>
 
 <template>
@@ -10,9 +15,9 @@ const { data: posts } = await useAsyncData('posts', () => usePosts())
     id="posts"
     title="Blog posts"
   >
-    <UPageGrid>
+    <UPageGrid v-if="posts && posts.length > 0">
       <UPageCard
-        v-for="post, index in posts?.data"
+        v-for="post, index in posts"
         :key="index"
         :title="post.title"
         :description="post.date?.split('T')[0]"
@@ -25,6 +30,12 @@ const { data: posts } = await useAsyncData('posts', () => usePosts())
         >
         <span v-sanitize="post.excerpt" />
       </UPageCard>
+    </UPageGrid>
+    <UPageGrid v-else>
+      <PostPlaceholder
+        v-for="i in 3"
+        :key="i"
+      />
     </UPageGrid>
   </UPageSection>
 </template>
