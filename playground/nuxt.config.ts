@@ -4,8 +4,7 @@ export default defineNuxtConfig({
   modules: [
     '../src/module',
     '@nuxt/ui-pro',
-    '@nuxtjs/mdc',
-    'nuxt-time'
+    '@nuxtjs/mdc'
   ],
 
   devtools: { enabled: true },
@@ -15,7 +14,7 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4
   },
-  compatibilityDate: '2025-04-23',
+  compatibilityDate: '2025-07-12',
 
   wpNuxt: {
     wordpressUrl: 'https://wordpress2.wpnuxt.com',

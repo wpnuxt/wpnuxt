@@ -10,11 +10,10 @@
   "dependencies": {
     "@nuxt/ui-pro": "^3.2.0",
     "@nuxtjs/mdc": "^0.17.0",
-    "nuxt": "4.0.0-rc.0",
-    "nuxt-time": "^1.0.3"
+    "nuxt": "4.0.0-rc.0"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.2.57",
+    "@iconify-json/logos": "^1.2.4",
     "@iconify-json/svg-spinners": "^1.2.2"
   }
 }

@@ -25,7 +25,7 @@ export default defineNuxtModule<WPNuxtConfig>({
   },
   async setup(options, nuxt) {
     const startTime = new Date().getTime()
-    const wpNuxtConfig = loadConfig(options) as WPNuxtConfig
+    const wpNuxtConfig = loadConfig(options, nuxt) as WPNuxtConfig
     const logger = initLogger(wpNuxtConfig.debug)
 
     logger.debug('Starting WPNuxt in debug mode')
@@ -87,13 +87,15 @@ export default defineNuxtModule<WPNuxtConfig>({
   }
 })
 
-function loadConfig(options: Partial<WPNuxtConfig>): WPNuxtConfig {
+function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig {
   const config: WPNuxtConfig = defu({
     wordpressUrl: process.env.WPNUXT_WORDPRESS_URL,
     graphqlEndpoint: process.env.WPNUXT_GRAPHQL_ENDPOINT,
     downloadSchema: process.env.WPNUXT_DOWNLOAD_SCHEMA ? process.env.WPNUXT_DOWNLOAD_SCHEMA === 'true' : undefined,
     debug: process.env.WPNUXT_DEBUG ? process.env.WPNUXT_DEBUG === 'true' : undefined
   }, options) as WPNuxtConfig
+
+  nuxt.options.runtimeConfig.public.wordpressUrl = config.wordpressUrl
 
   // validate config
   if (!config.wordpressUrl || config.wordpressUrl.length === 0) {
