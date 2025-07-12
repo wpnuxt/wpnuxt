@@ -1,5 +1,6 @@
 import { defu } from 'defu'
-import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, type Resolver, addComponentsDir, addTemplate, addTypeTemplate, addImports } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports } from '@nuxt/kit'
+import type { Resolver } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
 import type { Import } from 'unimport'
 import type { WPNuxtConfig } from './types/config'

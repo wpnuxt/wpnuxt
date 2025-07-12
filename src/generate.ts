@@ -1,5 +1,6 @@
 import { statSync, promises as fsp } from 'node:fs'
-import { type Resolver, resolveFiles } from '@nuxt/kit'
+import { resolveFiles } from '@nuxt/kit'
+import type { Resolver } from '@nuxt/kit'
 import { upperFirst } from 'scule'
 import type { Import } from 'unimport'
 import type { WPNuxtContext, WPNuxtQuery } from './types/queries'
