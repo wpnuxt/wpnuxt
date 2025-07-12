@@ -9,6 +9,6 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-04-10',
 
   wpNuxt: {
-    wordpressUrl: 'https://wordpress.wpnuxt.com'
+    wordpressUrl: 'https://wordpress2.wpnuxt.com'
   }
 })

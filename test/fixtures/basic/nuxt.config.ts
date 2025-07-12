@@ -5,6 +5,6 @@ export default defineNuxtConfig({
     wpNuxt
   ],
   wpNuxt: {
-    wordpressUrl: 'https://wordpress.wpnuxt.com'
+    wordpressUrl: 'https://wordpress2.wpnuxt.com'
   }
 })
