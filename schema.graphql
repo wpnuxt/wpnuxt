@@ -8,7 +8,7 @@ Avatars are profile images for users. WordPress by default uses the Gravatar ser
 """
 type Avatar {
   """
-  URL for the default image or a default type. Accepts &#039;404&#039; (return a 404 instead of a default image), &#039;retro&#039; (8bit), &#039;monsterid&#039; (monster), &#039;wavatar&#039; (cartoon face), &#039;indenticon&#039; (the &#039;quilt&#039;), &#039;mystery&#039;, &#039;mm&#039;, or &#039;mysteryman&#039; (The Oyster Man), &#039;blank&#039; (transparent GIF), or &#039;gravatar_default&#039; (the Gravatar logo).
+  TEST: URL for the default image or a default type. Accepts &#039;404&#039; (return a 404 instead of a default image), &#039;retro&#039; (8bit), &#039;monsterid&#039; (monster), &#039;wavatar&#039; (cartoon face), &#039;indenticon&#039; (the &#039;quilt&#039;), &#039;mystery&#039;, &#039;mm&#039;, or &#039;mysteryman&#039; (The Oyster Man), &#039;blank&#039; (transparent GIF), or &#039;gravatar_default&#039; (the Gravatar logo).
   """
   default: String
 
@@ -48,7 +48,7 @@ type Avatar {
 }
 
 """
-What rating to display avatars up to. Accepts 'G', 'PG', 'R', 'X', and are judged in that order. Default is the value of the 'avatar_rating' option
+Content rating filter for user avatars. Determines the maximum maturity level of avatars to display, following standard content rating classifications (G, PG, R, X).
 """
 enum AvatarRatingEnum {
   """Indicates a G level avatar rating level."""
@@ -76,7 +76,9 @@ interface BlockWithSupportsAnchor {
   anchor: String
 }
 
-"""The category type"""
+"""
+A taxonomy term that classifies content. Categories support hierarchy and can be used to create a nested structure.
+"""
 type Category implements DatabaseIdentifier & HierarchicalNode & HierarchicalTermNode & MenuItemLinkable & Node & TermNode & UniformResourceIdentifiable {
   """
   The ancestors of the node. Default ordered as lowest (closest to the child) to highest (closest to the root).
@@ -279,7 +281,9 @@ type Category implements DatabaseIdentifier & HierarchicalNode & HierarchicalTer
   uri: String
 }
 
-"""Connection to category Nodes"""
+"""
+A paginated collection of category Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of category Nodes
+"""
 interface CategoryConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected category Nodes
@@ -293,7 +297,9 @@ interface CategoryConnection implements Connection {
   pageInfo: CategoryConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected category"""
+"""
+Represents a connection to a category. Contains both the category Node and metadata about the relationship.
+"""
 interface CategoryConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -304,7 +310,9 @@ interface CategoryConnectionEdge implements Edge {
   node: Category!
 }
 
-"""Page Info on the connected CategoryConnectionEdge"""
+"""
+Pagination metadata specific to &quot;CategoryConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;CategoryConnectionEdge&quot; Nodes.
+"""
 interface CategoryConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -322,7 +330,9 @@ interface CategoryConnectionPageInfo implements PageInfo & WPPageInfo {
   startCursor: String
 }
 
-"""The Type of Identifier used to fetch a single resource. Default is ID."""
+"""
+Identifier types for retrieving a specific Category. Determines which unique property (global ID, database ID, slug, etc.) is used to locate the Category.
+"""
 enum CategoryIdType {
   """The Database ID for the node"""
   DATABASE_ID
@@ -361,7 +371,9 @@ type CategoryToAncestorsCategoryConnectionEdge implements CategoryConnectionEdge
   node: Category!
 }
 
-"""Page Info on the &quot;CategoryToAncestorsCategoryConnection&quot;"""
+"""
+Pagination metadata specific to &quot;CategoryToAncestorsCategoryConnection&quot; collections. Provides cursors and flags for navigating through sets of CategoryToAncestorsCategoryConnection Nodes.
+"""
 type CategoryToAncestorsCategoryConnectionPageInfo implements CategoryConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -400,7 +412,9 @@ type CategoryToCategoryConnectionEdge implements CategoryConnectionEdge & Edge {
   node: Category!
 }
 
-"""Page Info on the &quot;CategoryToCategoryConnection&quot;"""
+"""
+Pagination metadata specific to &quot;CategoryToCategoryConnection&quot; collections. Provides cursors and flags for navigating through sets of CategoryToCategoryConnection Nodes.
+"""
 type CategoryToCategoryConnectionPageInfo implements CategoryConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -524,7 +538,9 @@ type CategoryToContentNodeConnectionEdge implements ContentNodeConnectionEdge & 
   node: ContentNode!
 }
 
-"""Page Info on the &quot;CategoryToContentNodeConnection&quot;"""
+"""
+Pagination metadata specific to &quot;CategoryToContentNodeConnection&quot; collections. Provides cursors and flags for navigating through sets of CategoryToContentNodeConnection Nodes.
+"""
 type CategoryToContentNodeConnectionPageInfo implements ContentNodeConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -635,7 +651,9 @@ type CategoryToPostConnectionEdge implements Edge & PostConnectionEdge {
   node: Post!
 }
 
-"""Page Info on the &quot;CategoryToPostConnection&quot;"""
+"""
+Pagination metadata specific to &quot;CategoryToPostConnection&quot; collections. Provides cursors and flags for navigating through sets of CategoryToPostConnection Nodes.
+"""
 type CategoryToPostConnectionPageInfo implements PageInfo & PostConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -772,7 +790,9 @@ type CategoryToTaxonomyConnectionEdge implements Edge & OneToOneConnection & Tax
   node: Taxonomy!
 }
 
-"""A Comment object"""
+"""
+A response or reaction to content submitted by users. Comments are typically associated with a specific content entry.
+"""
 type Comment implements DatabaseIdentifier & Node & UniformResourceIdentifiable {
   """
   User agent used to post the comment. This field is equivalent to WP_Comment-&gt;comment_agent and the value matching the &quot;comment_agent&quot; column in SQL.
@@ -943,7 +963,9 @@ type CommentAuthor implements Commenter & DatabaseIdentifier & Node {
   url: String
 }
 
-"""Connection to Comment Nodes"""
+"""
+A paginated collection of Comment Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of Comment Nodes
+"""
 interface CommentConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected Comment Nodes
@@ -957,7 +979,9 @@ interface CommentConnection implements Connection {
   pageInfo: CommentConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected Comment"""
+"""
+Represents a connection to a Comment. Contains both the Comment Node and metadata about the relationship.
+"""
 interface CommentConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -968,7 +992,9 @@ interface CommentConnectionEdge implements Edge {
   node: Comment!
 }
 
-"""Page Info on the connected CommentConnectionEdge"""
+"""
+Pagination metadata specific to &quot;CommentConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;CommentConnectionEdge&quot; Nodes.
+"""
 interface CommentConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -987,7 +1013,7 @@ interface CommentConnectionPageInfo implements PageInfo & WPPageInfo {
 }
 
 """
-The Type of Identifier used to fetch a single comment node. Default is "ID". To be used along with the "id" field.
+Identifier types for retrieving a specific comment. Specifies which unique attribute is used to find a particular comment.
 """
 enum CommentNodeIdTypeEnum {
   """Identify a resource by the Database ID."""
@@ -997,7 +1023,9 @@ enum CommentNodeIdTypeEnum {
   ID
 }
 
-"""The status of the comment object."""
+"""
+Moderation state for user comments. Determines whether comments are publicly visible, pending approval, or marked as spam.
+"""
 enum CommentStatusEnum {
   """Comments with the Approved status"""
   APPROVE
@@ -1033,7 +1061,9 @@ type CommentToCommentConnectionEdge implements CommentConnectionEdge & Edge {
   node: Comment!
 }
 
-"""Page Info on the &quot;CommentToCommentConnection&quot;"""
+"""
+Pagination metadata specific to &quot;CommentToCommentConnection&quot; collections. Provides cursors and flags for navigating through sets of CommentToCommentConnection Nodes.
+"""
 type CommentToCommentConnectionPageInfo implements CommentConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -1296,7 +1326,9 @@ input CommentToParentCommentConnectionWhereArgs {
   userId: ID
 }
 
-"""The author of a comment"""
+"""
+A user or guest who has submitted a comment. Provides identification and contact information for the comment author.
+"""
 interface Commenter implements DatabaseIdentifier & Node {
   """
   Avatar object for user. The avatar object can be retrieved in different sizes by specifying the size argument.
@@ -1324,7 +1356,9 @@ interface Commenter implements DatabaseIdentifier & Node {
   url: String
 }
 
-"""Edge between a Node and a connected Commenter"""
+"""
+Represents a connection to a Commenter. Contains both the Commenter Node and metadata about the relationship.
+"""
 interface CommenterConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -1335,7 +1369,9 @@ interface CommenterConnectionEdge implements Edge {
   node: Commenter!
 }
 
-"""Options for ordering the connection"""
+"""
+Sorting attributes for comment collections. Specifies which comment property determines the order of results.
+"""
 enum CommentsConnectionOrderbyEnum {
   """Order by browser user agent of the commenter."""
   COMMENT_AGENT
@@ -1358,33 +1394,35 @@ enum CommentsConnectionOrderbyEnum {
   """Order by the comment contents."""
   COMMENT_CONTENT
 
-  """Order by date/time timestamp of the comment."""
+  """Chronological ordering by comment submission date."""
   COMMENT_DATE
 
-  """Order by GMT timezone date/time timestamp of the comment."""
+  """Chronological ordering by comment date in UTC/GMT time."""
   COMMENT_DATE_GMT
 
-  """Order by the globally unique identifier for the comment object"""
+  """Ordering by internal ID (typically reflects creation order)."""
   COMMENT_ID
 
-  """Order by the array list of comment IDs listed in the where clause."""
+  """Preserve custom order of IDs as specified in the query."""
   COMMENT_IN
 
   """Order by the comment karma score."""
   COMMENT_KARMA
 
-  """Order by the comment parent ID."""
+  """Ordering by parent comment relationship (threaded discussions)."""
   COMMENT_PARENT
 
-  """Order by the post object ID."""
+  """Ordering by associated content item ID."""
   COMMENT_POST_ID
 
   """
-  Order by the the type of comment, such as 'comment', 'pingback', or 'trackback'.
+  Ordering by comment classification (standard comments, pingbacks, etc.).
   """
   COMMENT_TYPE
 
-  """Order by the user ID."""
+  """
+  Ordering by the user account ID associated with the comment as the comment author.
+  """
   USER_ID
 }
 
@@ -1464,7 +1502,7 @@ type ConditionalTags {
 }
 
 """
-A plural connection from one Node Type in the Graph to another Node Type, with support for relational data via &quot;edges&quot;.
+A paginated relationship between objects. Supports cursor-based pagination with edges containing relationship metadata and nodes containing the related objects.
 """
 interface Connection {
   """A list of edges (relational context) between connected nodes"""
@@ -1477,7 +1515,9 @@ interface Connection {
   pageInfo: PageInfo!
 }
 
-"""Nodes used to manage content"""
+"""
+Base interface for content objects like posts, pages, and media items. Provides common fields available across these content types.
+"""
 interface ContentNode implements Node & UniformResourceIdentifiable {
   """"""
   conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
@@ -1620,7 +1660,9 @@ interface ContentNode implements Node & UniformResourceIdentifiable {
   uri: String
 }
 
-"""Connection to ContentNode Nodes"""
+"""
+A paginated collection of ContentNode Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of ContentNode Nodes
+"""
 interface ContentNodeConnection implements Connection {
   """
   A list of edges (relational context) between ContentType and connected ContentNode Nodes
@@ -1634,7 +1676,9 @@ interface ContentNodeConnection implements Connection {
   pageInfo: ContentNodeConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected ContentNode"""
+"""
+Represents a connection to a ContentNode. Contains both the ContentNode Node and metadata about the relationship.
+"""
 interface ContentNodeConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -1645,7 +1689,9 @@ interface ContentNodeConnectionEdge implements Edge {
   node: ContentNode!
 }
 
-"""Page Info on the connected ContentNodeConnectionEdge"""
+"""
+Pagination metadata specific to &quot;ContentNodeConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;ContentNodeConnectionEdge&quot; Nodes.
+"""
 interface ContentNodeConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -1663,7 +1709,9 @@ interface ContentNodeConnectionPageInfo implements PageInfo & WPPageInfo {
   startCursor: String
 }
 
-"""The Type of Identifier used to fetch a single resource. Default is ID."""
+"""
+Identifier types for retrieving specific content. Determines which property (global ID, database ID, URI) is used to locate content objects.
+"""
 enum ContentNodeIdTypeEnum {
   """Identify a resource by the Database ID."""
   DATABASE_ID
@@ -1732,7 +1780,9 @@ type ContentNodeToEnqueuedScriptConnectionEdge implements Edge & EnqueuedScriptC
   node: EnqueuedScript!
 }
 
-"""Page Info on the &quot;ContentNodeToEnqueuedScriptConnection&quot;"""
+"""
+Pagination metadata specific to &quot;ContentNodeToEnqueuedScriptConnection&quot; collections. Provides cursors and flags for navigating through sets of ContentNodeToEnqueuedScriptConnection Nodes.
+"""
 type ContentNodeToEnqueuedScriptConnectionPageInfo implements EnqueuedScriptConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -1773,7 +1823,9 @@ type ContentNodeToEnqueuedStylesheetConnectionEdge implements Edge & EnqueuedSty
   node: EnqueuedStylesheet!
 }
 
-"""Page Info on the &quot;ContentNodeToEnqueuedStylesheetConnection&quot;"""
+"""
+Pagination metadata specific to &quot;ContentNodeToEnqueuedStylesheetConnection&quot; collections. Provides cursors and flags for navigating through sets of ContentNodeToEnqueuedStylesheetConnection Nodes.
+"""
 type ContentNodeToEnqueuedStylesheetConnectionPageInfo implements EnqueuedStylesheetConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -1791,7 +1843,9 @@ type ContentNodeToEnqueuedStylesheetConnectionPageInfo implements EnqueuedStyles
   startCursor: String
 }
 
-"""The template assigned to a node of content"""
+"""
+A layout pattern that can help inform how content might be structured and displayed. Templates can define specialized layouts for different types of content.
+"""
 interface ContentTemplate {
   """The name of the template"""
   templateName: String
@@ -1962,7 +2016,9 @@ type ContentType implements Node & UniformResourceIdentifiable {
   uri: String
 }
 
-"""Connection to ContentType Nodes"""
+"""
+A paginated collection of ContentType Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of ContentType Nodes
+"""
 interface ContentTypeConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected ContentType Nodes
@@ -1976,7 +2032,9 @@ interface ContentTypeConnection implements Connection {
   pageInfo: ContentTypeConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected ContentType"""
+"""
+Represents a connection to a ContentType. Contains both the ContentType Node and metadata about the relationship.
+"""
 interface ContentTypeConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -1987,7 +2045,9 @@ interface ContentTypeConnectionEdge implements Edge {
   node: ContentType!
 }
 
-"""Page Info on the connected ContentTypeConnectionEdge"""
+"""
+Pagination metadata specific to &quot;ContentTypeConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;ContentTypeConnectionEdge&quot; Nodes.
+"""
 interface ContentTypeConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -2005,7 +2065,9 @@ interface ContentTypeConnectionPageInfo implements PageInfo & WPPageInfo {
   startCursor: String
 }
 
-"""Allowed Content Types"""
+"""
+Available content entity types that can be queried or filtered. Identifies the primary content structures available in the system.
+"""
 enum ContentTypeEnum {
   """The Type of Content object"""
   ATTACHMENT
@@ -2018,7 +2080,7 @@ enum ContentTypeEnum {
 }
 
 """
-The Type of Identifier used to fetch a single Content Type node. To be used along with the "id" field. Default is "ID".
+Identifier types for retrieving a specific content type definition. Determines whether to look up content types by ID or name.
 """
 enum ContentTypeIdTypeEnum {
   """The globally unique ID"""
@@ -2049,7 +2111,9 @@ type ContentTypeToContentNodeConnectionEdge implements ContentNodeConnectionEdge
   node: ContentNode!
 }
 
-"""Page Info on the &quot;ContentTypeToContentNodeConnection&quot;"""
+"""
+Pagination metadata specific to &quot;ContentTypeToContentNodeConnection&quot; collections. Provides cursors and flags for navigating through sets of ContentTypeToContentNodeConnection Nodes.
+"""
 type ContentTypeToContentNodeConnectionPageInfo implements ContentNodeConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -2151,7 +2215,9 @@ type ContentTypeToTaxonomyConnectionEdge implements Edge & TaxonomyConnectionEdg
   node: Taxonomy!
 }
 
-"""Page Info on the &quot;ContentTypeToTaxonomyConnection&quot;"""
+"""
+Pagination metadata specific to &quot;ContentTypeToTaxonomyConnection&quot; collections. Provides cursors and flags for navigating through sets of ContentTypeToTaxonomyConnection Nodes.
+"""
 type ContentTypeToTaxonomyConnectionPageInfo implements PageInfo & TaxonomyConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -2231,6 +2297,16 @@ type CoreArchivesAttributes {
   align: String
 
   """
+  The &quot;backgroundColor&quot; field on the &quot;CoreArchivesAttributes&quot; block or block attributes
+  """
+  backgroundColor: String
+
+  """
+  The &quot;borderColor&quot; field on the &quot;CoreArchivesAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
   The &quot;className&quot; field on the &quot;CoreArchivesAttributes&quot; block or block attributes
   """
   className: String
@@ -2249,6 +2325,11 @@ type CoreArchivesAttributes {
   The &quot;fontSize&quot; field on the &quot;CoreArchivesAttributes&quot; block or block attributes
   """
   fontSize: String
+
+  """
+  The &quot;gradient&quot; field on the &quot;CoreArchivesAttributes&quot; block or block attributes
+  """
+  gradient: String
 
   """
   The &quot;lock&quot; field on the &quot;CoreArchivesAttributes&quot; block or block attributes
@@ -2274,6 +2355,11 @@ type CoreArchivesAttributes {
   The &quot;style&quot; field on the &quot;CoreArchivesAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textColor&quot; field on the &quot;CoreArchivesAttributes&quot; block or block attributes
+  """
+  textColor: String
 
   """
   The &quot;type&quot; field on the &quot;CoreArchivesAttributes&quot; block or block attributes
@@ -2932,6 +3018,11 @@ type CoreCategoriesAttributes {
   align: String
 
   """
+  The &quot;backgroundColor&quot; field on the &quot;CoreCategoriesAttributes&quot; block or block attributes
+  """
+  backgroundColor: String
+
+  """
   The &quot;borderColor&quot; field on the &quot;CoreCategoriesAttributes&quot; block or block attributes
   """
   borderColor: String
@@ -2955,6 +3046,11 @@ type CoreCategoriesAttributes {
   The &quot;fontSize&quot; field on the &quot;CoreCategoriesAttributes&quot; block or block attributes
   """
   fontSize: String
+
+  """
+  The &quot;gradient&quot; field on the &quot;CoreCategoriesAttributes&quot; block or block attributes
+  """
+  gradient: String
 
   """
   The &quot;label&quot; field on the &quot;CoreCategoriesAttributes&quot; block or block attributes
@@ -3005,6 +3101,11 @@ type CoreCategoriesAttributes {
   The &quot;taxonomy&quot; field on the &quot;CoreCategoriesAttributes&quot; block or block attributes
   """
   taxonomy: String!
+
+  """
+  The &quot;textColor&quot; field on the &quot;CoreCategoriesAttributes&quot; block or block attributes
+  """
+  textColor: String
 }
 
 """A block used for editing the site"""
@@ -3965,6 +4066,11 @@ type CoreCommentsAttributes {
   backgroundColor: String
 
   """
+  The &quot;borderColor&quot; field on the &quot;CoreCommentsAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
   The &quot;className&quot; field on the &quot;CoreCommentsAttributes&quot; block or block attributes
   """
   className: String
@@ -4650,6 +4756,11 @@ type CoreCoverAttributes implements BlockWithSupportsAnchor {
   overlayColor: String
 
   """
+  The &quot;sizeSlug&quot; field on the &quot;CoreCoverAttributes&quot; block or block attributes
+  """
+  sizeSlug: String
+
+  """
   The &quot;style&quot; field on the &quot;CoreCoverAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
@@ -4676,7 +4787,10 @@ type CoreCoverAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreDetails implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreDetails implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+  """The anchor field for the block."""
+  anchor: String
+
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4712,11 +4826,19 @@ type CoreDetails implements EditorBlock & PageEditorBlock & PostEditorBlock {
 }
 
 """Attributes of the CoreDetails Block Type"""
-type CoreDetailsAttributes {
+type CoreDetailsAttributes implements BlockWithSupportsAnchor {
   """
   The &quot;align&quot; field on the &quot;CoreDetailsAttributes&quot; block or block attributes
   """
   align: String
+
+  """
+  The &quot;allowedBlocks&quot; field on the &quot;CoreDetailsAttributes&quot; block or block attributes
+  """
+  allowedBlocks: BlockAttributesArray
+
+  """The anchor field for the block."""
+  anchor: String
 
   """
   The &quot;backgroundColor&quot; field on the &quot;CoreDetailsAttributes&quot; block or block attributes
@@ -4762,6 +4884,16 @@ type CoreDetailsAttributes {
   The &quot;metadata&quot; field on the &quot;CoreDetailsAttributes&quot; block or block attributes
   """
   metadata: BlockAttributesObject
+
+  """
+  The &quot;name&quot; field on the &quot;CoreDetailsAttributes&quot; block or block attributes
+  """
+  name: String
+
+  """
+  The &quot;placeholder&quot; field on the &quot;CoreDetailsAttributes&quot; block or block attributes
+  """
+  placeholder: String
 
   """
   The &quot;showContent&quot; field on the &quot;CoreDetailsAttributes&quot; block or block attributes
@@ -5399,6 +5531,11 @@ type CoreGroupAttributes implements BlockWithSupportsAnchor {
 
   """The anchor field for the block."""
   anchor: String
+
+  """
+  The &quot;ariaLabel&quot; field on the &quot;CoreGroupAttributes&quot; block or block attributes
+  """
+  ariaLabel: String
 
   """
   The &quot;backgroundColor&quot; field on the &quot;CoreGroupAttributes&quot; block or block attributes
@@ -6058,6 +6195,11 @@ type CoreLatestPostsAttributes {
   The &quot;backgroundColor&quot; field on the &quot;CoreLatestPostsAttributes&quot; block or block attributes
   """
   backgroundColor: String
+
+  """
+  The &quot;borderColor&quot; field on the &quot;CoreLatestPostsAttributes&quot; block or block attributes
+  """
+  borderColor: String
 
   """
   The &quot;categories&quot; field on the &quot;CoreLatestPostsAttributes&quot; block or block attributes
@@ -6940,6 +7082,11 @@ type CoreNavigationAttributes {
   align: String
 
   """
+  The &quot;ariaLabel&quot; field on the &quot;CoreNavigationAttributes&quot; block or block attributes
+  """
+  ariaLabel: String
+
+  """
   The &quot;backgroundColor&quot; field on the &quot;CoreNavigationAttributes&quot; block or block attributes
   """
   backgroundColor: String
@@ -7391,6 +7538,16 @@ type CorePageList implements EditorBlock & PageEditorBlock & PostEditorBlock {
 """Attributes of the CorePageList Block Type"""
 type CorePageListAttributes {
   """
+  The &quot;backgroundColor&quot; field on the &quot;CorePageListAttributes&quot; block or block attributes
+  """
+  backgroundColor: String
+
+  """
+  The &quot;borderColor&quot; field on the &quot;CorePageListAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
   The &quot;className&quot; field on the &quot;CorePageListAttributes&quot; block or block attributes
   """
   className: String
@@ -7404,6 +7561,11 @@ type CorePageListAttributes {
   The &quot;fontSize&quot; field on the &quot;CorePageListAttributes&quot; block or block attributes
   """
   fontSize: String
+
+  """
+  The &quot;gradient&quot; field on the &quot;CorePageListAttributes&quot; block or block attributes
+  """
+  gradient: String
 
   """
   The &quot;isNested&quot; field on the &quot;CorePageListAttributes&quot; block or block attributes
@@ -7429,6 +7591,11 @@ type CorePageListAttributes {
   The &quot;style&quot; field on the &quot;CorePageListAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textColor&quot; field on the &quot;CorePageListAttributes&quot; block or block attributes
+  """
+  textColor: String
 }
 
 """A block used for editing the site"""
@@ -8243,6 +8410,11 @@ type CorePostContentAttributes {
   backgroundColor: String
 
   """
+  The &quot;borderColor&quot; field on the &quot;CorePostContentAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
   The &quot;className&quot; field on the &quot;CorePostContentAttributes&quot; block or block attributes
   """
   className: String
@@ -8808,6 +8980,11 @@ type CorePostTemplateAttributes {
   backgroundColor: String
 
   """
+  The &quot;borderColor&quot; field on the &quot;CorePostTemplateAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
   The &quot;className&quot; field on the &quot;CorePostTemplateAttributes&quot; block or block attributes
   """
   className: String
@@ -9027,7 +9204,9 @@ type CorePostTermsToTermNodeConnectionEdge implements Edge & TermNodeConnectionE
   node: TermNode!
 }
 
-"""Page Info on the &quot;CorePostTermsToTermNodeConnection&quot;"""
+"""
+Pagination metadata specific to &quot;CorePostTermsToTermNodeConnection&quot; collections. Provides cursors and flags for navigating through sets of CorePostTermsToTermNodeConnection Nodes.
+"""
 type CorePostTermsToTermNodeConnectionPageInfo implements PageInfo & TermNodeConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -10043,6 +10222,105 @@ type CoreQueryTitleAttributes {
 }
 
 """A block used for editing the site"""
+type CoreQueryTotal implements EditorBlock & PageEditorBlock & PostEditorBlock {
+  """The API version of the Gutenberg Block"""
+  apiVersion: Int
+
+  """Attributes of the CoreQueryTotal Block Type"""
+  attributes: CoreQueryTotalAttributes
+
+  """The name of the category the Block belongs to"""
+  blockEditorCategoryName: String
+
+  """The id of the Block"""
+  clientId: String
+
+  """CSS Classnames to apply to the block"""
+  cssClassNames: [String]
+
+  """The inner blocks of the Block"""
+  innerBlocks: [EditorBlock]
+
+  """Whether the block is Dynamic (server rendered)"""
+  isDynamic: Boolean!
+
+  """The name of the block"""
+  name: String
+
+  """The parent id of the Block"""
+  parentClientId: String
+
+  """The rendered HTML for the block"""
+  renderedHtml: String
+
+  """The (GraphQL) type of the block"""
+  type: String
+}
+
+"""Attributes of the CoreQueryTotal Block Type"""
+type CoreQueryTotalAttributes {
+  """
+  The &quot;align&quot; field on the &quot;CoreQueryTotalAttributes&quot; block or block attributes
+  """
+  align: String
+
+  """
+  The &quot;backgroundColor&quot; field on the &quot;CoreQueryTotalAttributes&quot; block or block attributes
+  """
+  backgroundColor: String
+
+  """
+  The &quot;borderColor&quot; field on the &quot;CoreQueryTotalAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
+  The &quot;className&quot; field on the &quot;CoreQueryTotalAttributes&quot; block or block attributes
+  """
+  className: String
+
+  """
+  The &quot;displayType&quot; field on the &quot;CoreQueryTotalAttributes&quot; block or block attributes
+  """
+  displayType: String!
+
+  """
+  The &quot;fontFamily&quot; field on the &quot;CoreQueryTotalAttributes&quot; block or block attributes
+  """
+  fontFamily: String
+
+  """
+  The &quot;fontSize&quot; field on the &quot;CoreQueryTotalAttributes&quot; block or block attributes
+  """
+  fontSize: String
+
+  """
+  The &quot;gradient&quot; field on the &quot;CoreQueryTotalAttributes&quot; block or block attributes
+  """
+  gradient: String
+
+  """
+  The &quot;lock&quot; field on the &quot;CoreQueryTotalAttributes&quot; block or block attributes
+  """
+  lock: BlockAttributesObject
+
+  """
+  The &quot;metadata&quot; field on the &quot;CoreQueryTotalAttributes&quot; block or block attributes
+  """
+  metadata: BlockAttributesObject
+
+  """
+  The &quot;style&quot; field on the &quot;CoreQueryTotalAttributes&quot; block or block attributes
+  """
+  style: BlockAttributesObject
+
+  """
+  The &quot;textColor&quot; field on the &quot;CoreQueryTotalAttributes&quot; block or block attributes
+  """
+  textColor: String
+}
+
+"""A block used for editing the site"""
 type CoreQuote implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
@@ -10310,9 +10588,19 @@ type CoreRssAttributes {
   align: String
 
   """
+  The &quot;backgroundColor&quot; field on the &quot;CoreRssAttributes&quot; block or block attributes
+  """
+  backgroundColor: String
+
+  """
   The &quot;blockLayout&quot; field on the &quot;CoreRssAttributes&quot; block or block attributes
   """
   blockLayout: String!
+
+  """
+  The &quot;borderColor&quot; field on the &quot;CoreRssAttributes&quot; block or block attributes
+  """
+  borderColor: String
 
   """
   The &quot;className&quot; field on the &quot;CoreRssAttributes&quot; block or block attributes
@@ -10350,6 +10638,11 @@ type CoreRssAttributes {
   feedURL: String!
 
   """
+  The &quot;gradient&quot; field on the &quot;CoreRssAttributes&quot; block or block attributes
+  """
+  gradient: String
+
+  """
   The &quot;itemsToShow&quot; field on the &quot;CoreRssAttributes&quot; block or block attributes
   """
   itemsToShow: Float!
@@ -10363,6 +10656,16 @@ type CoreRssAttributes {
   The &quot;metadata&quot; field on the &quot;CoreRssAttributes&quot; block or block attributes
   """
   metadata: BlockAttributesObject
+
+  """
+  The &quot;style&quot; field on the &quot;CoreRssAttributes&quot; block or block attributes
+  """
+  style: BlockAttributesObject
+
+  """
+  The &quot;textColor&quot; field on the &quot;CoreRssAttributes&quot; block or block attributes
+  """
+  textColor: String
 }
 
 """A block used for editing the site"""
@@ -10597,6 +10900,11 @@ type CoreSeparatorAttributes implements BlockWithSupportsAnchor {
   The &quot;style&quot; field on the &quot;CoreSeparatorAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;tagName&quot; field on the &quot;CoreSeparatorAttributes&quot; block or block attributes
+  """
+  tagName: String!
 }
 
 """A block used for editing the site"""
@@ -12522,7 +12830,7 @@ input CreateUserInput {
   """A string containing the user's email address."""
   email: String
 
-  """	The user's first name."""
+  """The user's first name."""
   firstName: String
 
   """User's Jabber account."""
@@ -12577,7 +12885,9 @@ type CreateUserPayload {
   user: User
 }
 
-"""Object that can be identified with a Database ID"""
+"""
+An object that has a unique numeric identifier in the database. Provides consistent access to the database ID across different object types.
+"""
 interface DatabaseIdentifier {
   """The unique identifier stored in the database"""
   databaseId: Int!
@@ -12883,7 +13193,9 @@ type DiscussionSettings {
   defaultPingStatus: String
 }
 
-"""Relational context between connected nodes"""
+"""
+Represents a connection between two objects. Contains both the related object (node) and metadata about the relationship (cursor).
+"""
 interface Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -12927,7 +13239,9 @@ interface EditorBlock {
   type: String
 }
 
-"""Asset enqueued by the CMS"""
+"""
+A script or stylesheet resource that should be loaded by the client. Contains information about the resource&#039;s location, dependencies, and loading behavior.
+"""
 interface EnqueuedAsset {
   """The inline code to be run after the asset is loaded."""
   after: [String]
@@ -13012,7 +13326,9 @@ type EnqueuedScript implements EnqueuedAsset & Node {
   version: String
 }
 
-"""Connection to EnqueuedScript Nodes"""
+"""
+A paginated collection of EnqueuedScript Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of EnqueuedScript Nodes
+"""
 interface EnqueuedScriptConnection implements Connection {
   """
   A list of edges (relational context) between ContentNode and connected EnqueuedScript Nodes
@@ -13026,7 +13342,9 @@ interface EnqueuedScriptConnection implements Connection {
   pageInfo: EnqueuedScriptConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected EnqueuedScript"""
+"""
+Represents a connection to a EnqueuedScript. Contains both the EnqueuedScript Node and metadata about the relationship.
+"""
 interface EnqueuedScriptConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -13037,7 +13355,9 @@ interface EnqueuedScriptConnectionEdge implements Edge {
   node: EnqueuedScript!
 }
 
-"""Page Info on the connected EnqueuedScriptConnectionEdge"""
+"""
+Pagination metadata specific to &quot;EnqueuedScriptConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;EnqueuedScriptConnectionEdge&quot; Nodes.
+"""
 interface EnqueuedScriptConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -13115,7 +13435,9 @@ type EnqueuedStylesheet implements EnqueuedAsset & Node {
   version: String
 }
 
-"""Connection to EnqueuedStylesheet Nodes"""
+"""
+A paginated collection of EnqueuedStylesheet Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of EnqueuedStylesheet Nodes
+"""
 interface EnqueuedStylesheetConnection implements Connection {
   """
   A list of edges (relational context) between ContentNode and connected EnqueuedStylesheet Nodes
@@ -13129,7 +13451,9 @@ interface EnqueuedStylesheetConnection implements Connection {
   pageInfo: EnqueuedStylesheetConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected EnqueuedStylesheet"""
+"""
+Represents a connection to a EnqueuedStylesheet. Contains both the EnqueuedStylesheet Node and metadata about the relationship.
+"""
 interface EnqueuedStylesheetConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -13140,7 +13464,9 @@ interface EnqueuedStylesheetConnectionEdge implements Edge {
   node: EnqueuedStylesheet!
 }
 
-"""Page Info on the connected EnqueuedStylesheetConnectionEdge"""
+"""
+Pagination metadata specific to &quot;EnqueuedStylesheetConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;EnqueuedStylesheetConnectionEdge&quot; Nodes.
+"""
 interface EnqueuedStylesheetConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -13221,13 +13547,22 @@ type GenerateAuthorizationCodePayload {
 
 """Types of styles to load"""
 enum GlobalStylesheetTypesEnum {
+  """"""
   BASE_LAYOUT_STYLES
+
+  """"""
   PRESETS
+
+  """"""
   STYLES
+
+  """"""
   VARIABLES
 }
 
-"""Content node with hierarchical (parent/child) relationships"""
+"""
+Content that can be organized in a parent-child structure. Provides fields for navigating up and down the hierarchy and maintaining structured relationships.
+"""
 interface HierarchicalContentNode implements ContentNode & DatabaseIdentifier & HierarchicalNode & Node & UniformResourceIdentifiable {
   """
   Returns ancestors of the node. Default ordered as lowest (closest to the child) to highest (closest to the root).
@@ -13453,7 +13788,7 @@ type HierarchicalContentNodeToContentNodeAncestorsConnectionEdge implements Cont
 }
 
 """
-Page Info on the &quot;HierarchicalContentNodeToContentNodeAncestorsConnection&quot;
+Pagination metadata specific to &quot;HierarchicalContentNodeToContentNodeAncestorsConnection&quot; collections. Provides cursors and flags for navigating through sets of HierarchicalContentNodeToContentNodeAncestorsConnection Nodes.
 """
 type HierarchicalContentNodeToContentNodeAncestorsConnectionPageInfo implements ContentNodeConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
@@ -13561,7 +13896,7 @@ type HierarchicalContentNodeToContentNodeChildrenConnectionEdge implements Conte
 }
 
 """
-Page Info on the &quot;HierarchicalContentNodeToContentNodeChildrenConnection&quot;
+Pagination metadata specific to &quot;HierarchicalContentNodeToContentNodeChildrenConnection&quot; collections. Provides cursors and flags for navigating through sets of HierarchicalContentNodeToContentNodeChildrenConnection Nodes.
 """
 type HierarchicalContentNodeToContentNodeChildrenConnectionPageInfo implements ContentNodeConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
@@ -13656,7 +13991,9 @@ type HierarchicalContentNodeToParentContentNodeConnectionEdge implements Content
   node: ContentNode!
 }
 
-"""Node with hierarchical (parent/child) relationships"""
+"""
+Content that can exist in a parent-child structure. Provides fields for navigating up (parent) and down (children) through the hierarchy.
+"""
 interface HierarchicalNode implements DatabaseIdentifier & Node {
   """The unique identifier stored in the database"""
   databaseId: Int!
@@ -13802,7 +14139,9 @@ type MediaDetails {
   width: Int
 }
 
-"""The mediaItem type"""
+"""
+Represents uploaded media, including images, videos, documents, and audio files.
+"""
 type MediaItem implements ContentNode & DatabaseIdentifier & HierarchicalContentNode & HierarchicalNode & Node & NodeWithAuthor & NodeWithComments & NodeWithTemplate & NodeWithTitle & UniformResourceIdentifiable {
   """Alternative text to display when resource is not displayed"""
   altText: String
@@ -14125,7 +14464,9 @@ type MediaItem implements ContentNode & DatabaseIdentifier & HierarchicalContent
   uri: String
 }
 
-"""Connection to mediaItem Nodes"""
+"""
+A paginated collection of mediaItem Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of mediaItem Nodes
+"""
 interface MediaItemConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected mediaItem Nodes
@@ -14139,7 +14480,9 @@ interface MediaItemConnection implements Connection {
   pageInfo: MediaItemConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected mediaItem"""
+"""
+Represents a connection to a mediaItem. Contains both the mediaItem Node and metadata about the relationship.
+"""
 interface MediaItemConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -14150,7 +14493,9 @@ interface MediaItemConnectionEdge implements Edge {
   node: MediaItem!
 }
 
-"""Page Info on the connected MediaItemConnectionEdge"""
+"""
+Pagination metadata specific to &quot;MediaItemConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;MediaItemConnectionEdge&quot; Nodes.
+"""
 interface MediaItemConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -14168,7 +14513,9 @@ interface MediaItemConnectionPageInfo implements PageInfo & WPPageInfo {
   startCursor: String
 }
 
-"""The Type of Identifier used to fetch a single resource. Default is ID."""
+"""
+Identifier types for retrieving a specific MediaItem. Specifies which unique attribute is used to find an exact MediaItem.
+"""
 enum MediaItemIdType {
   """Identify a resource by the Database ID."""
   DATABASE_ID
@@ -14229,42 +14576,50 @@ type MediaItemMeta {
   title: String
 }
 
-"""The size of the media item object."""
+"""
+Predefined image size variations. Represents the standard image dimensions available for media assets.
+"""
 enum MediaItemSizeEnum {
-  """MediaItem with the large size"""
+  """Large image preview suitable for detail views. (1024x1024)"""
   LARGE
 
-  """MediaItem with the medium size"""
+  """
+  Medium image preview typically suitable for listings and detail views. (300x300)
+  """
   MEDIUM
 
-  """MediaItem with the medium_large size"""
+  """
+  Medium-to-large image preview suitable for listings and detail views. (768x0)
+  """
   MEDIUM_LARGE
 
-  """MediaItem with the post-thumbnail size"""
+  """Custom Image Size. (1568x9999)"""
   POST_THUMBNAIL
 
-  """MediaItem with the thumbnail size"""
+  """Small image preview suitable for thumbnails and listings. (150x150)"""
   THUMBNAIL
 
-  """MediaItem with the 1536x1536 size"""
+  """Custom Image Size. (1536x1536)"""
   _1536X1536
 
-  """MediaItem with the 2048x2048 size"""
+  """Custom Image Size. (2048x2048)"""
   _2048X2048
 }
 
-"""The status of the media item object."""
+"""
+Publication status for media items. Controls whether media is publicly accessible, private, or in another state.
+"""
 enum MediaItemStatusEnum {
-  """Objects with the auto-draft status"""
+  """Automatically created media that has not been finalized"""
   AUTO_DRAFT
 
-  """Objects with the inherit status"""
+  """Media that inherits its publication status from the parent content"""
   INHERIT
 
-  """Objects with the private status"""
+  """Media visible only to users with appropriate permissions"""
   PRIVATE
 
-  """Objects with the trash status"""
+  """Media marked for deletion but still recoverable"""
   TRASH
 }
 
@@ -14289,7 +14644,9 @@ type MediaItemToCommentConnectionEdge implements CommentConnectionEdge & Edge {
   node: Comment!
 }
 
-"""Page Info on the &quot;MediaItemToCommentConnection&quot;"""
+"""
+Pagination metadata specific to &quot;MediaItemToCommentConnection&quot; collections. Provides cursors and flags for navigating through sets of MediaItemToCommentConnection Nodes.
+"""
 type MediaItemToCommentConnectionPageInfo implements CommentConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -14433,7 +14790,7 @@ type MediaSize {
 }
 
 """
-Menus are the containers for navigation items. Menus can be assigned to menu locations, which are typically registered by the active theme.
+Collections of navigation links. Menus can be assigned to designated locations and used to build site navigation structures.
 """
 type Menu implements DatabaseIdentifier & Node {
   """The number of items in the menu"""
@@ -14483,7 +14840,9 @@ type Menu implements DatabaseIdentifier & Node {
   slug: String
 }
 
-"""Connection to Menu Nodes"""
+"""
+A paginated collection of Menu Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of Menu Nodes
+"""
 interface MenuConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected Menu Nodes
@@ -14497,7 +14856,9 @@ interface MenuConnection implements Connection {
   pageInfo: MenuConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected Menu"""
+"""
+Represents a connection to a Menu. Contains both the Menu Node and metadata about the relationship.
+"""
 interface MenuConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -14508,7 +14869,9 @@ interface MenuConnectionEdge implements Edge {
   node: Menu!
 }
 
-"""Page Info on the connected MenuConnectionEdge"""
+"""
+Pagination metadata specific to &quot;MenuConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;MenuConnectionEdge&quot; Nodes.
+"""
 interface MenuConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -14615,7 +14978,9 @@ type MenuItem implements DatabaseIdentifier & Node {
   url: String
 }
 
-"""Connection to MenuItem Nodes"""
+"""
+A paginated collection of MenuItem Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of MenuItem Nodes
+"""
 interface MenuItemConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected MenuItem Nodes
@@ -14629,7 +14994,9 @@ interface MenuItemConnection implements Connection {
   pageInfo: MenuItemConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected MenuItem"""
+"""
+Represents a connection to a MenuItem. Contains both the MenuItem Node and metadata about the relationship.
+"""
 interface MenuItemConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -14640,7 +15007,9 @@ interface MenuItemConnectionEdge implements Edge {
   node: MenuItem!
 }
 
-"""Page Info on the connected MenuItemConnectionEdge"""
+"""
+Pagination metadata specific to &quot;MenuItemConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;MenuItemConnectionEdge&quot; Nodes.
+"""
 interface MenuItemConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -14658,7 +15027,9 @@ interface MenuItemConnectionPageInfo implements PageInfo & WPPageInfo {
   startCursor: String
 }
 
-"""Nodes that can be linked to as Menu Items"""
+"""
+Content that can be referenced by navigation menu items. Provides the essential fields needed to create links within navigation structures.
+"""
 interface MenuItemLinkable implements DatabaseIdentifier & Node & UniformResourceIdentifiable {
   """"""
   conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
@@ -14691,7 +15062,9 @@ interface MenuItemLinkable implements DatabaseIdentifier & Node & UniformResourc
   uri: String
 }
 
-"""Edge between a Node and a connected MenuItemLinkable"""
+"""
+Represents a connection to a MenuItemLinkable. Contains both the MenuItemLinkable Node and metadata about the relationship.
+"""
 interface MenuItemLinkableConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -14703,7 +15076,7 @@ interface MenuItemLinkableConnectionEdge implements Edge {
 }
 
 """
-The Type of Identifier used to fetch a single node. Default is "ID". To be used along with the "id" field.
+Identifier types for retrieving a specific menu item. Determines whether to look up menu items by global ID or database ID.
 """
 enum MenuItemNodeIdTypeEnum {
   """Identify a resource by the Database ID."""
@@ -14748,7 +15121,9 @@ type MenuItemToMenuItemConnectionEdge implements Edge & MenuItemConnectionEdge {
   node: MenuItem!
 }
 
-"""Page Info on the &quot;MenuItemToMenuItemConnection&quot;"""
+"""
+Pagination metadata specific to &quot;MenuItemToMenuItemConnection&quot; collections. Provides cursors and flags for navigating through sets of MenuItemToMenuItemConnection Nodes.
+"""
 type MenuItemToMenuItemConnectionPageInfo implements MenuItemConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -14792,7 +15167,9 @@ type MenuItemToMenuItemLinkableConnectionEdge implements Edge & MenuItemLinkable
   node: MenuItemLinkable!
 }
 
-"""Registered menu locations"""
+"""
+Designated areas where navigation menus can be displayed. Represents the named regions in the interface where menus can be assigned.
+"""
 enum MenuLocationEnum {
   """Put the menu in the footer location"""
   FOOTER
@@ -14802,7 +15179,7 @@ enum MenuLocationEnum {
 }
 
 """
-The Type of Identifier used to fetch a single node. Default is "ID". To be used along with the "id" field.
+Identifier types for retrieving a specific navigation menu. Specifies which property (ID, name, location) is used to locate a particular menu.
 """
 enum MenuNodeIdTypeEnum {
   """Identify a menu node by the Database ID."""
@@ -14844,7 +15221,9 @@ type MenuToMenuItemConnectionEdge implements Edge & MenuItemConnectionEdge {
   node: MenuItem!
 }
 
-"""Page Info on the &quot;MenuToMenuItemConnection&quot;"""
+"""
+Pagination metadata specific to &quot;MenuToMenuItemConnection&quot; collections. Provides cursors and flags for navigating through sets of MenuToMenuItemConnection Nodes.
+"""
 type MenuToMenuItemConnectionPageInfo implements MenuItemConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -14877,7 +15256,9 @@ input MenuToMenuItemConnectionWhereArgs {
   parentId: ID
 }
 
-"""The MimeType of the object"""
+"""
+Media file type classification based on MIME standards. Used to identify and filter media items by their format and content type.
+"""
 enum MimeTypeEnum {
   """application/java mime type."""
   APPLICATION_JAVA
@@ -15175,13 +15556,17 @@ enum MimeTypeEnum {
   VIDEO_X_MS_WMX
 }
 
-"""An object with an ID"""
+"""
+An object with a globally unique identifier. All objects that can be identified by a unique ID implement this interface.
+"""
 interface Node {
   """The globally unique ID for the object"""
   id: ID!
 }
 
-"""A node that can have an author assigned to it"""
+"""
+Content that can be attributed to a specific user. Provides fields for accessing the author&#039;s information and establishing content ownership.
+"""
 interface NodeWithAuthor implements Node {
   """Connection between the NodeWithAuthor type and the User type"""
   author: NodeWithAuthorToUserConnectionEdge
@@ -15207,7 +15592,9 @@ type NodeWithAuthorToUserConnectionEdge implements Edge & OneToOneConnection & U
   node: User!
 }
 
-"""A node that can have comments associated with it"""
+"""
+Content that can receive and display user-submitted comments. Provides fields for accessing comment counts and managing comment status.
+"""
 interface NodeWithComments implements Node {
   """
   The number of comments. Even though WPGraphQL denotes this field as an integer, in WordPress this field should be saved as a numeric string for compatibility.
@@ -15221,7 +15608,9 @@ interface NodeWithComments implements Node {
   id: ID!
 }
 
-"""A node that supports the content editor"""
+"""
+Content that has a main body field which can contain formatted text and media. Provides access to both raw (with appropriate permissions) and rendered versions of the content.
+"""
 interface NodeWithContentEditor implements Node {
   """The content of the post."""
   content(
@@ -15242,7 +15631,9 @@ interface NodeWithEditorBlocks {
   ): [EditorBlock]
 }
 
-"""A node that can have an excerpt"""
+"""
+A node which provides an excerpt field, which is a condensed summary of the main content. Excerpts can be manually created or automatically generated and are often used in content listings and search results.
+"""
 interface NodeWithExcerpt implements Node {
   """The excerpt of the post."""
   excerpt(
@@ -15254,7 +15645,9 @@ interface NodeWithExcerpt implements Node {
   id: ID!
 }
 
-"""A node that can have a featured image set"""
+"""
+Content that can have a primary image attached. This image is typically used for thumbnails, social sharing, and prominent display in the presentation layer.
+"""
 interface NodeWithFeaturedImage implements Node {
   """
   Connection between the NodeWithFeaturedImage type and the MediaItem type
@@ -15286,7 +15679,9 @@ type NodeWithFeaturedImageToMediaItemConnectionEdge implements Edge & MediaItemC
   node: MediaItem!
 }
 
-"""A node that can have page attributes"""
+"""
+Content that supports ordering metadata. Includes a menu order field which can be used for custom sorting in navigation menus and other ordered collections.
+"""
 interface NodeWithPageAttributes implements Node {
   """The globally unique ID for the object"""
   id: ID!
@@ -15315,7 +15710,9 @@ interface NodeWithPostEditorBlocks implements NodeWithEditorBlocks {
   ): [PostEditorBlock]
 }
 
-"""A node that can have revisions"""
+"""
+Content that maintains a history of changes. Provides access to previous versions of the content and the ability to restore earlier revisions.
+"""
 interface NodeWithRevisions implements Node {
   """The globally unique ID for the object"""
   id: ID!
@@ -15340,7 +15737,9 @@ type NodeWithRevisionsToContentNodeConnectionEdge implements ContentNodeConnecti
   node: ContentNode!
 }
 
-"""A node that can have a template associated with it"""
+"""
+Content that provides template metadata. The template can help inform how the content is might be structured, styled, and presented to the user.
+"""
 interface NodeWithTemplate implements Node {
   """The globally unique ID for the object"""
   id: ID!
@@ -15349,7 +15748,9 @@ interface NodeWithTemplate implements Node {
   template: ContentTemplate
 }
 
-"""A node that NodeWith a title"""
+"""
+Content with a dedicated title field. The title typically serves as the main heading and identifier for the content.
+"""
 interface NodeWithTitle implements Node {
   """The globally unique ID for the object"""
   id: ID!
@@ -15366,7 +15767,9 @@ interface NodeWithTitle implements Node {
   ): String
 }
 
-"""A node that can have trackbacks and pingbacks"""
+"""
+Content that supports cross-site notifications when linked to by other sites. Includes fields for pingback status and linked URLs.
+"""
 interface NodeWithTrackbacks implements Node {
   """The globally unique ID for the object"""
   id: ID!
@@ -15382,7 +15785,7 @@ interface NodeWithTrackbacks implements Node {
 }
 
 """
-A singular connection from one Node to another, with support for relational data on the &quot;edge&quot; of the connection.
+A direct one-to-one relationship between objects. Unlike plural connections, this represents a single related object rather than a collection.
 """
 interface OneToOneConnection implements Edge {
   """
@@ -15394,16 +15797,24 @@ interface OneToOneConnection implements Edge {
   node: Node!
 }
 
-"""The cardinality of the connection order"""
+"""
+Sort direction for ordered results. Determines whether items are returned in ascending or descending order.
+"""
 enum OrderEnum {
-  """Sort the query result set in an ascending order"""
+  """
+  Results ordered from lowest to highest values (i.e. A-Z, oldest-newest)
+  """
   ASC
 
-  """Sort the query result set in a descending order"""
+  """
+  Results ordered from highest to lowest values (i.e. Z-A, newest-oldest)
+  """
   DESC
 }
 
-"""The page type"""
+"""
+A standalone content entry generally used for static, non-chronological content such as &quot;About Us&quot; or &quot;Contact&quot; pages.
+"""
 type Page implements ContentNode & DatabaseIdentifier & HierarchicalContentNode & HierarchicalNode & MenuItemLinkable & Node & NodeWithAuthor & NodeWithComments & NodeWithContentEditor & NodeWithEditorBlocks & NodeWithFeaturedImage & NodeWithPageAttributes & NodeWithPageEditorBlocks & NodeWithRevisions & NodeWithTemplate & NodeWithTitle & Previewable & UniformResourceIdentifiable {
   """
   Returns ancestors of the node. Default ordered as lowest (closest to the child) to highest (closest to the root).
@@ -15725,7 +16136,9 @@ type Page implements ContentNode & DatabaseIdentifier & HierarchicalContentNode 
   uri: String
 }
 
-"""Connection to page Nodes"""
+"""
+A paginated collection of page Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of page Nodes
+"""
 interface PageConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected page Nodes
@@ -15739,7 +16152,9 @@ interface PageConnection implements Connection {
   pageInfo: PageConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected page"""
+"""
+Represents a connection to a page. Contains both the page Node and metadata about the relationship.
+"""
 interface PageConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -15750,7 +16165,9 @@ interface PageConnectionEdge implements Edge {
   node: Page!
 }
 
-"""Page Info on the connected PageConnectionEdge"""
+"""
+Pagination metadata specific to &quot;PageConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;PageConnectionEdge&quot; Nodes.
+"""
 interface PageConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -15801,7 +16218,9 @@ interface PageEditorBlock implements EditorBlock {
   type: String
 }
 
-"""The Type of Identifier used to fetch a single resource. Default is ID."""
+"""
+Identifier types for retrieving a specific Page. Specifies which unique attribute is used to find an exact Page.
+"""
 enum PageIdType {
   """Identify a resource by the Database ID."""
   DATABASE_ID
@@ -15813,7 +16232,9 @@ enum PageIdType {
   URI
 }
 
-"""Information about pagination in a connection."""
+"""
+Metadata for cursor-based pagination. Provides cursors for continuing pagination and boolean flags indicating if more items exist in either direction.
+"""
 interface PageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -15849,7 +16270,9 @@ type PageToCommentConnectionEdge implements CommentConnectionEdge & Edge {
   node: Comment!
 }
 
-"""Page Info on the &quot;PageToCommentConnection&quot;"""
+"""
+Pagination metadata specific to &quot;PageToCommentConnection&quot; collections. Provides cursors and flags for navigating through sets of PageToCommentConnection Nodes.
+"""
 type PageToCommentConnectionPageInfo implements CommentConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -15997,7 +16420,9 @@ type PageToRevisionConnectionEdge implements Edge & PageConnectionEdge {
   node: Page!
 }
 
-"""Page Info on the &quot;PageToRevisionConnection&quot;"""
+"""
+Pagination metadata specific to &quot;PageToRevisionConnection&quot; collections. Provides cursors and flags for navigating through sets of PageToRevisionConnection Nodes.
+"""
 type PageToRevisionConnectionPageInfo implements PageConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -16121,7 +16546,9 @@ type Plugin implements Node {
   version: String
 }
 
-"""Connection to Plugin Nodes"""
+"""
+A paginated collection of Plugin Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of Plugin Nodes
+"""
 interface PluginConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected Plugin Nodes
@@ -16135,7 +16562,9 @@ interface PluginConnection implements Connection {
   pageInfo: PluginConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected Plugin"""
+"""
+Represents a connection to a Plugin. Contains both the Plugin Node and metadata about the relationship.
+"""
 interface PluginConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -16146,7 +16575,9 @@ interface PluginConnectionEdge implements Edge {
   node: Plugin!
 }
 
-"""Page Info on the connected PluginConnectionEdge"""
+"""
+Pagination metadata specific to &quot;PluginConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;PluginConnectionEdge&quot; Nodes.
+"""
 interface PluginConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -16164,7 +16595,9 @@ interface PluginConnectionPageInfo implements PageInfo & WPPageInfo {
   startCursor: String
 }
 
-"""The status of the WordPress plugin."""
+"""
+Operational status of a plugin. Indicates whether a plugin is active, inactive, or in another state that affects its functionality.
+"""
 enum PluginStatusEnum {
   """The plugin is currently active."""
   ACTIVE
@@ -16188,7 +16621,9 @@ enum PluginStatusEnum {
   UPGRADE
 }
 
-"""The post type"""
+"""
+A chronological content entry typically used for blog posts, news articles, or similar date-based content.
+"""
 type Post implements ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithAuthor & NodeWithComments & NodeWithContentEditor & NodeWithEditorBlocks & NodeWithExcerpt & NodeWithFeaturedImage & NodeWithPostEditorBlocks & NodeWithRevisions & NodeWithTemplate & NodeWithTitle & NodeWithTrackbacks & Previewable & UniformResourceIdentifiable {
   """The ancestors of the content node."""
   ancestors(
@@ -16609,7 +17044,9 @@ input PostCategoriesNodeInput {
   slug: String
 }
 
-"""Connection to post Nodes"""
+"""
+A paginated collection of post Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of post Nodes
+"""
 interface PostConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected post Nodes
@@ -16623,7 +17060,9 @@ interface PostConnection implements Connection {
   pageInfo: PostConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected post"""
+"""
+Represents a connection to a post. Contains both the post Node and metadata about the relationship.
+"""
 interface PostConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -16634,7 +17073,9 @@ interface PostConnectionEdge implements Edge {
   node: Post!
 }
 
-"""Page Info on the connected PostConnectionEdge"""
+"""
+Pagination metadata specific to &quot;PostConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;PostConnectionEdge&quot; Nodes.
+"""
 interface PostConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -16685,7 +17126,9 @@ interface PostEditorBlock implements EditorBlock {
   type: String
 }
 
-"""The postFormat type"""
+"""
+A standardized classification system for content presentation styles. These formats can be used to display content differently based on type, such as &quot;standard&quot;, &quot;gallery&quot;, &quot;video&quot;, etc.
+"""
 type PostFormat implements DatabaseIdentifier & MenuItemLinkable & Node & TermNode & UniformResourceIdentifiable {
   """"""
   conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
@@ -16836,7 +17279,9 @@ type PostFormat implements DatabaseIdentifier & MenuItemLinkable & Node & TermNo
   uri: String
 }
 
-"""Connection to postFormat Nodes"""
+"""
+A paginated collection of postFormat Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of postFormat Nodes
+"""
 interface PostFormatConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected postFormat Nodes
@@ -16850,7 +17295,9 @@ interface PostFormatConnection implements Connection {
   pageInfo: PostFormatConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected postFormat"""
+"""
+Represents a connection to a postFormat. Contains both the postFormat Node and metadata about the relationship.
+"""
 interface PostFormatConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -16861,7 +17308,9 @@ interface PostFormatConnectionEdge implements Edge {
   node: PostFormat!
 }
 
-"""Page Info on the connected PostFormatConnectionEdge"""
+"""
+Pagination metadata specific to &quot;PostFormatConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;PostFormatConnectionEdge&quot; Nodes.
+"""
 interface PostFormatConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -16879,7 +17328,9 @@ interface PostFormatConnectionPageInfo implements PageInfo & WPPageInfo {
   startCursor: String
 }
 
-"""The Type of Identifier used to fetch a single resource. Default is ID."""
+"""
+Identifier types for retrieving a specific PostFormat. Determines which unique property (global ID, database ID, slug, etc.) is used to locate the PostFormat.
+"""
 enum PostFormatIdType {
   """The Database ID for the node"""
   DATABASE_ID
@@ -16918,7 +17369,9 @@ type PostFormatToContentNodeConnectionEdge implements ContentNodeConnectionEdge 
   node: ContentNode!
 }
 
-"""Page Info on the &quot;PostFormatToContentNodeConnection&quot;"""
+"""
+Pagination metadata specific to &quot;PostFormatToContentNodeConnection&quot; collections. Provides cursors and flags for navigating through sets of PostFormatToContentNodeConnection Nodes.
+"""
 type PostFormatToContentNodeConnectionPageInfo implements ContentNodeConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -17020,7 +17473,9 @@ type PostFormatToPostConnectionEdge implements Edge & PostConnectionEdge {
   node: Post!
 }
 
-"""Page Info on the &quot;PostFormatToPostConnection&quot;"""
+"""
+Pagination metadata specific to &quot;PostFormatToPostConnection&quot; collections. Provides cursors and flags for navigating through sets of PostFormatToPostConnection Nodes.
+"""
 type PostFormatToPostConnectionPageInfo implements PageInfo & PostConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -17157,7 +17612,9 @@ type PostFormatToTaxonomyConnectionEdge implements Edge & OneToOneConnection & T
   node: Taxonomy!
 }
 
-"""The Type of Identifier used to fetch a single resource. Default is ID."""
+"""
+Identifier types for retrieving a specific Post. Specifies which unique attribute is used to find an exact Post.
+"""
 enum PostIdType {
   """Identify a resource by the Database ID."""
   DATABASE_ID
@@ -17174,18 +17631,24 @@ enum PostIdType {
   URI
 }
 
-"""The format of post field data."""
+"""
+Content field rendering options. Determines whether content fields are returned as raw data or with applied formatting and transformations. Default is RENDERED.
+"""
 enum PostObjectFieldFormatEnum {
   """
-  Provide the field value directly from database. Null on unauthenticated requests.
+  Unprocessed content exactly as stored in the database, requires appropriate permissions.
   """
   RAW
 
-  """Provide the field value as rendered by WordPress. Default."""
+  """
+  Content with all formatting and transformations applied, ready for display.
+  """
   RENDERED
 }
 
-"""The column to use when filtering by date"""
+"""
+Date field selectors for content filtering. Specifies which date attribute (creation date, modification date) should be used for date-based queries.
+"""
 enum PostObjectsConnectionDateColumnEnum {
   """The date the comment was created in local time."""
   DATE
@@ -17194,36 +17657,42 @@ enum PostObjectsConnectionDateColumnEnum {
   MODIFIED
 }
 
-"""Field to order the connection by"""
+"""
+Content sorting attributes for post-type objects. Identifies which content property should be used to determine result order.
+"""
 enum PostObjectsConnectionOrderbyEnum {
-  """Order by author"""
+  """Ordering by content author (typically by author name)."""
   AUTHOR
 
-  """Order by the number of comments it has acquired"""
+  """Ordering by popularity based on number of comments."""
   COMMENT_COUNT
 
-  """Order by publish date"""
+  """Chronological ordering by publication date."""
   DATE
 
-  """Preserve the ID order given in the IN array"""
+  """
+  Maintain custom order of IDs exactly as specified in the query with the IN field.
+  """
   IN
 
-  """Order by the menu order value"""
+  """Ordering by manually defined sort position."""
   MENU_ORDER
 
-  """Order by last modified date"""
+  """Chronological ordering by modified date."""
   MODIFIED
 
-  """Preserve slug order given in the NAME_IN array"""
+  """
+  Maintain custom order of IDs exactly as specified in the query with the NAME_IN field.
+  """
   NAME_IN
 
-  """Order by parent ID"""
+  """Ordering by parent-child relationship in hierarchical content."""
   PARENT
 
-  """Order by slug"""
+  """Alphabetical ordering by URL-friendly name."""
   SLUG
 
-  """Order by title"""
+  """Alphabetical ordering by content title"""
   TITLE
 }
 
@@ -17272,27 +17741,29 @@ input PostPostFormatsNodeInput {
   slug: String
 }
 
-"""The status of the object."""
+"""
+Publishing status that controls the visibility and editorial state of content. Determines whether content is published, pending review, in draft state, or private.
+"""
 enum PostStatusEnum {
-  """Objects with the auto-draft status"""
+  """Automatically saved content that has not been manually saved"""
   AUTO_DRAFT
 
-  """Objects with the draft status"""
+  """Content that is saved but not yet published or visible to the public"""
   DRAFT
 
   """Objects with the future status"""
   FUTURE
 
-  """Objects with the inherit status"""
+  """Content that inherits its status from a parent object"""
   INHERIT
 
-  """Objects with the pending status"""
+  """Content awaiting review before publication"""
   PENDING
 
-  """Objects with the private status"""
+  """Content only visible to authorized users with appropriate permissions"""
   PRIVATE
 
-  """Objects with the publish status"""
+  """Content that is publicly visible to all visitors"""
   PUBLISH
 
   """Objects with the request-completed status"""
@@ -17307,7 +17778,7 @@ enum PostStatusEnum {
   """Objects with the request-pending status"""
   REQUEST_PENDING
 
-  """Objects with the trash status"""
+  """Content marked for deletion but still recoverable"""
   TRASH
 }
 
@@ -17371,7 +17842,9 @@ type PostToCategoryConnectionEdge implements CategoryConnectionEdge & Edge {
   node: Category!
 }
 
-"""Page Info on the &quot;PostToCategoryConnection&quot;"""
+"""
+Pagination metadata specific to &quot;PostToCategoryConnection&quot; collections. Provides cursors and flags for navigating through sets of PostToCategoryConnection Nodes.
+"""
 type PostToCategoryConnectionPageInfo implements CategoryConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -17495,7 +17968,9 @@ type PostToCommentConnectionEdge implements CommentConnectionEdge & Edge {
   node: Comment!
 }
 
-"""Page Info on the &quot;PostToCommentConnection&quot;"""
+"""
+Pagination metadata specific to &quot;PostToCommentConnection&quot; collections. Provides cursors and flags for navigating through sets of PostToCommentConnection Nodes.
+"""
 type PostToCommentConnectionPageInfo implements CommentConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -17643,7 +18118,9 @@ type PostToPostConnectionEdge implements Edge & PostConnectionEdge {
   node: Post! @deprecated(reason: "This content type is not hierarchical and typically will not have ancestors")
 }
 
-"""Page Info on the &quot;PostToPostConnection&quot;"""
+"""
+Pagination metadata specific to &quot;PostToPostConnection&quot; collections. Provides cursors and flags for navigating through sets of PostToPostConnection Nodes.
+"""
 type PostToPostConnectionPageInfo implements PageInfo & PostConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -17685,7 +18162,9 @@ type PostToPostFormatConnectionEdge implements Edge & PostFormatConnectionEdge {
   node: PostFormat!
 }
 
-"""Page Info on the &quot;PostToPostFormatConnection&quot;"""
+"""
+Pagination metadata specific to &quot;PostToPostFormatConnection&quot; collections. Provides cursors and flags for navigating through sets of PostToPostFormatConnection Nodes.
+"""
 type PostToPostFormatConnectionPageInfo implements PageInfo & PostFormatConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -17820,7 +18299,9 @@ type PostToRevisionConnectionEdge implements Edge & PostConnectionEdge {
   node: Post!
 }
 
-"""Page Info on the &quot;PostToRevisionConnection&quot;"""
+"""
+Pagination metadata specific to &quot;PostToRevisionConnection&quot; collections. Provides cursors and flags for navigating through sets of PostToRevisionConnection Nodes.
+"""
 type PostToRevisionConnectionPageInfo implements PageInfo & PostConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -17970,7 +18451,9 @@ type PostToTagConnectionEdge implements Edge & TagConnectionEdge {
   node: Tag!
 }
 
-"""Page Info on the &quot;PostToTagConnection&quot;"""
+"""
+Pagination metadata specific to &quot;PostToTagConnection&quot; collections. Provides cursors and flags for navigating through sets of PostToTagConnection Nodes.
+"""
 type PostToTagConnectionPageInfo implements PageInfo & TagConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -18094,7 +18577,9 @@ type PostToTermNodeConnectionEdge implements Edge & TermNodeConnectionEdge {
   node: TermNode!
 }
 
-"""Page Info on the &quot;PostToTermNodeConnection&quot;"""
+"""
+Pagination metadata specific to &quot;PostToTermNodeConnection&quot; collections. Provides cursors and flags for navigating through sets of PostToTermNodeConnection Nodes.
+"""
 type PostToTermNodeConnectionPageInfo implements PageInfo & TermNodeConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -18355,7 +18840,9 @@ type PostTypeSEO {
   twitterTitle: String
 }
 
-"""Nodes that can be seen in a preview (unpublished) state."""
+"""
+Content that supports a draft preview mode. Allows viewing unpublished changes before they are made publicly available. Previewing unpublished changes requires appropriate permissions.
+"""
 interface Previewable {
   """Whether the object is a node in the preview state"""
   isPreview: Boolean
@@ -18403,7 +18890,7 @@ input RegisterUserInput {
   """A string containing the user's email address."""
   email: String
 
-  """	The user's first name."""
+  """The user's first name."""
   firstName: String
 
   """User's Jabber account."""
@@ -18456,17 +18943,13 @@ type RegisterUserPayload {
 }
 
 """
-The logical relation between each item in the array when there are more than one.
+Logical operators for filter conditions. Determines whether multiple filtering criteria should be combined with AND (all must match) or OR (any can match).
 """
 enum RelationEnum {
-  """
-  The logical AND condition returns true if both operands are true, otherwise, it returns false.
-  """
+  """All conditions must match (more restrictive filtering)"""
   AND
 
-  """
-  The logical OR condition returns false if both operands are false, otherwise, it returns true.
-  """
+  """Any condition can match (more inclusive filtering)"""
   OR
 }
 
@@ -19427,7 +19910,9 @@ type RootQueryToCategoryConnectionEdge implements CategoryConnectionEdge & Edge 
   node: Category!
 }
 
-"""Page Info on the &quot;RootQueryToCategoryConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToCategoryConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToCategoryConnection Nodes.
+"""
 type RootQueryToCategoryConnectionPageInfo implements CategoryConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -19551,7 +20036,9 @@ type RootQueryToCommentConnectionEdge implements CommentConnectionEdge & Edge {
   node: Comment!
 }
 
-"""Page Info on the &quot;RootQueryToCommentConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToCommentConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToCommentConnection Nodes.
+"""
 type RootQueryToCommentConnectionPageInfo implements CommentConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -19688,7 +20175,9 @@ type RootQueryToContentNodeConnectionEdge implements ContentNodeConnectionEdge &
   node: ContentNode!
 }
 
-"""Page Info on the &quot;RootQueryToContentNodeConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToContentNodeConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToContentNodeConnection Nodes.
+"""
 type RootQueryToContentNodeConnectionPageInfo implements ContentNodeConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -19790,7 +20279,9 @@ type RootQueryToContentTypeConnectionEdge implements ContentTypeConnectionEdge &
   node: ContentType!
 }
 
-"""Page Info on the &quot;RootQueryToContentTypeConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToContentTypeConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToContentTypeConnection Nodes.
+"""
 type RootQueryToContentTypeConnectionPageInfo implements ContentTypeConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -19829,7 +20320,9 @@ type RootQueryToEnqueuedScriptConnectionEdge implements Edge & EnqueuedScriptCon
   node: EnqueuedScript!
 }
 
-"""Page Info on the &quot;RootQueryToEnqueuedScriptConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToEnqueuedScriptConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToEnqueuedScriptConnection Nodes.
+"""
 type RootQueryToEnqueuedScriptConnectionPageInfo implements EnqueuedScriptConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -19868,7 +20361,9 @@ type RootQueryToEnqueuedStylesheetConnectionEdge implements Edge & EnqueuedStyle
   node: EnqueuedStylesheet!
 }
 
-"""Page Info on the &quot;RootQueryToEnqueuedStylesheetConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToEnqueuedStylesheetConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToEnqueuedStylesheetConnection Nodes.
+"""
 type RootQueryToEnqueuedStylesheetConnectionPageInfo implements EnqueuedStylesheetConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -19907,7 +20402,9 @@ type RootQueryToMediaItemConnectionEdge implements Edge & MediaItemConnectionEdg
   node: MediaItem!
 }
 
-"""Page Info on the &quot;RootQueryToMediaItemConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToMediaItemConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToMediaItemConnection Nodes.
+"""
 type RootQueryToMediaItemConnectionPageInfo implements MediaItemConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -20020,7 +20517,9 @@ type RootQueryToMenuConnectionEdge implements Edge & MenuConnectionEdge {
   node: Menu!
 }
 
-"""Page Info on the &quot;RootQueryToMenuConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToMenuConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToMenuConnection Nodes.
+"""
 type RootQueryToMenuConnectionPageInfo implements MenuConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -20071,7 +20570,9 @@ type RootQueryToMenuItemConnectionEdge implements Edge & MenuItemConnectionEdge 
   node: MenuItem!
 }
 
-"""Page Info on the &quot;RootQueryToMenuItemConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToMenuItemConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToMenuItemConnection Nodes.
+"""
 type RootQueryToMenuItemConnectionPageInfo implements MenuItemConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -20125,7 +20626,9 @@ type RootQueryToPageConnectionEdge implements Edge & PageConnectionEdge {
   node: Page!
 }
 
-"""Page Info on the &quot;RootQueryToPageConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToPageConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToPageConnection Nodes.
+"""
 type RootQueryToPageConnectionPageInfo implements PageConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -20238,7 +20741,9 @@ type RootQueryToPluginConnectionEdge implements Edge & PluginConnectionEdge {
   node: Plugin!
 }
 
-"""Page Info on the &quot;RootQueryToPluginConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToPluginConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToPluginConnection Nodes.
+"""
 type RootQueryToPluginConnectionPageInfo implements PageInfo & PluginConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -20289,7 +20794,9 @@ type RootQueryToPostConnectionEdge implements Edge & PostConnectionEdge {
   node: Post!
 }
 
-"""Page Info on the &quot;RootQueryToPostConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToPostConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToPostConnection Nodes.
+"""
 type RootQueryToPostConnectionPageInfo implements PageInfo & PostConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -20436,7 +20943,9 @@ type RootQueryToPostFormatConnectionEdge implements Edge & PostFormatConnectionE
   node: PostFormat!
 }
 
-"""Page Info on the &quot;RootQueryToPostFormatConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToPostFormatConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToPostFormatConnection Nodes.
+"""
 type RootQueryToPostFormatConnectionPageInfo implements PageInfo & PostFormatConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -20560,7 +21069,9 @@ type RootQueryToRevisionsConnectionEdge implements ContentNodeConnectionEdge & E
   node: ContentNode!
 }
 
-"""Page Info on the &quot;RootQueryToRevisionsConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToRevisionsConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToRevisionsConnection Nodes.
+"""
 type RootQueryToRevisionsConnectionPageInfo implements ContentNodeConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -20660,7 +21171,9 @@ type RootQueryToTagConnectionEdge implements Edge & TagConnectionEdge {
   node: Tag!
 }
 
-"""Page Info on the &quot;RootQueryToTagConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToTagConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToTagConnection Nodes.
+"""
 type RootQueryToTagConnectionPageInfo implements PageInfo & TagConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -20784,7 +21297,9 @@ type RootQueryToTaxonomyConnectionEdge implements Edge & TaxonomyConnectionEdge 
   node: Taxonomy!
 }
 
-"""Page Info on the &quot;RootQueryToTaxonomyConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToTaxonomyConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToTaxonomyConnection Nodes.
+"""
 type RootQueryToTaxonomyConnectionPageInfo implements PageInfo & TaxonomyConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -20823,7 +21338,9 @@ type RootQueryToTermNodeConnectionEdge implements Edge & TermNodeConnectionEdge 
   node: TermNode!
 }
 
-"""Page Info on the &quot;RootQueryToTermNodeConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToTermNodeConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToTermNodeConnection Nodes.
+"""
 type RootQueryToTermNodeConnectionPageInfo implements PageInfo & TermNodeConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -20950,7 +21467,9 @@ type RootQueryToThemeConnectionEdge implements Edge & ThemeConnectionEdge {
   node: Theme!
 }
 
-"""Page Info on the &quot;RootQueryToThemeConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToThemeConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToThemeConnection Nodes.
+"""
 type RootQueryToThemeConnectionPageInfo implements PageInfo & ThemeConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -20989,7 +21508,9 @@ type RootQueryToUserConnectionEdge implements Edge & UserConnectionEdge {
   node: User!
 }
 
-"""Page Info on the &quot;RootQueryToUserConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToUserConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToUserConnection Nodes.
+"""
 type RootQueryToUserConnectionPageInfo implements PageInfo & UserConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -21096,7 +21617,9 @@ type RootQueryToUserRoleConnectionEdge implements Edge & UserRoleConnectionEdge 
   node: UserRole!
 }
 
-"""Page Info on the &quot;RootQueryToUserRoleConnection&quot;"""
+"""
+Pagination metadata specific to &quot;RootQueryToUserRoleConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToUserRoleConnection Nodes.
+"""
 type RootQueryToUserRoleConnectionPageInfo implements PageInfo & UserRoleConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -21146,7 +21669,10 @@ type SEOBreadcrumbs {
 
 """Types of cards"""
 enum SEOCardType {
+  """"""
   summary
+
+  """"""
   summary_large_image
 }
 
@@ -21601,23 +22127,33 @@ type SEOWebmaster {
   yandexVerify: String
 }
 
-"""Location in the document where the script to be loaded"""
+"""
+Script insertion positions in the document structure. Determines whether scripts are placed in the document head or before the closing body tag.
+"""
 enum ScriptLoadingGroupLocationEnum {
   """
-  A script to be loaded in document at right before the closing `<body>` tag
+  Delayed loading at end of document, right before the closing `<body>` tag. (allows content to render first)
   """
   FOOTER
 
-  """A script to be loaded in document `<head>` tag"""
+  """
+  Early loading in document `<head>` tag. (executes before page content renders)
+  """
   HEADER
 }
 
-"""The strategy to use when loading the script"""
+"""
+Script loading optimization attributes. Controls browser behavior for script loading to improve page performance (async or defer).
+"""
 enum ScriptLoadingStrategyEnum {
-  """Use the script `async` attribute"""
+  """
+  Load script in parallel with page rendering, executing as soon as downloaded
+  """
   ASYNC
 
-  """Use the script `defer` attribute"""
+  """
+  Download script in parallel but defer execution until page is fully parsed
+  """
   DEFER
 }
 
@@ -21705,7 +22241,9 @@ type Settings {
   writingSettingsUseSmilies: Boolean
 }
 
-"""The tag type"""
+"""
+A taxonomy term used to organize and classify content. Tags do not have a hierarchy and are generally used for more specific classifications.
+"""
 type Tag implements DatabaseIdentifier & MenuItemLinkable & Node & TermNode & UniformResourceIdentifiable {
   """"""
   conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
@@ -21856,7 +22394,9 @@ type Tag implements DatabaseIdentifier & MenuItemLinkable & Node & TermNode & Un
   uri: String
 }
 
-"""Connection to tag Nodes"""
+"""
+A paginated collection of tag Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of tag Nodes
+"""
 interface TagConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected tag Nodes
@@ -21870,7 +22410,9 @@ interface TagConnection implements Connection {
   pageInfo: TagConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected tag"""
+"""
+Represents a connection to a tag. Contains both the tag Node and metadata about the relationship.
+"""
 interface TagConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -21881,7 +22423,9 @@ interface TagConnectionEdge implements Edge {
   node: Tag!
 }
 
-"""Page Info on the connected TagConnectionEdge"""
+"""
+Pagination metadata specific to &quot;TagConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;TagConnectionEdge&quot; Nodes.
+"""
 interface TagConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -21899,7 +22443,9 @@ interface TagConnectionPageInfo implements PageInfo & WPPageInfo {
   startCursor: String
 }
 
-"""The Type of Identifier used to fetch a single resource. Default is ID."""
+"""
+Identifier types for retrieving a specific Tag. Determines which unique property (global ID, database ID, slug, etc.) is used to locate the Tag.
+"""
 enum TagIdType {
   """The Database ID for the node"""
   DATABASE_ID
@@ -21938,7 +22484,9 @@ type TagToContentNodeConnectionEdge implements ContentNodeConnectionEdge & Edge 
   node: ContentNode!
 }
 
-"""Page Info on the &quot;TagToContentNodeConnection&quot;"""
+"""
+Pagination metadata specific to &quot;TagToContentNodeConnection&quot; collections. Provides cursors and flags for navigating through sets of TagToContentNodeConnection Nodes.
+"""
 type TagToContentNodeConnectionPageInfo implements ContentNodeConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -22038,7 +22586,9 @@ type TagToPostConnectionEdge implements Edge & PostConnectionEdge {
   node: Post!
 }
 
-"""Page Info on the &quot;TagToPostConnection&quot;"""
+"""
+Pagination metadata specific to &quot;TagToPostConnection&quot; collections. Provides cursors and flags for navigating through sets of TagToPostConnection Nodes.
+"""
 type TagToPostConnectionPageInfo implements PageInfo & PostConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -22287,7 +22837,9 @@ type Taxonomy implements Node {
   showUi: Boolean
 }
 
-"""Connection to Taxonomy Nodes"""
+"""
+A paginated collection of Taxonomy Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of Taxonomy Nodes
+"""
 interface TaxonomyConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected Taxonomy Nodes
@@ -22301,7 +22853,9 @@ interface TaxonomyConnection implements Connection {
   pageInfo: TaxonomyConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected Taxonomy"""
+"""
+Represents a connection to a Taxonomy. Contains both the Taxonomy Node and metadata about the relationship.
+"""
 interface TaxonomyConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -22312,7 +22866,9 @@ interface TaxonomyConnectionEdge implements Edge {
   node: Taxonomy!
 }
 
-"""Page Info on the connected TaxonomyConnectionEdge"""
+"""
+Pagination metadata specific to &quot;TaxonomyConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;TaxonomyConnectionEdge&quot; Nodes.
+"""
 interface TaxonomyConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -22330,7 +22886,9 @@ interface TaxonomyConnectionPageInfo implements PageInfo & WPPageInfo {
   startCursor: String
 }
 
-"""Allowed taxonomies"""
+"""
+Available classification systems for organizing content. Identifies the different taxonomy types that can be used for content categorization.
+"""
 enum TaxonomyEnum {
   """Taxonomy enum category"""
   CATEGORY
@@ -22343,7 +22901,7 @@ enum TaxonomyEnum {
 }
 
 """
-The Type of Identifier used to fetch a single Taxonomy node. To be used along with the "id" field. Default is "ID".
+Identifier types for retrieving a taxonomy definition. Determines whether to look up taxonomies by ID or name.
 """
 enum TaxonomyIdTypeEnum {
   """The globally unique ID"""
@@ -22448,7 +23006,9 @@ type TaxonomyToContentTypeConnectionEdge implements ContentTypeConnectionEdge & 
   node: ContentType!
 }
 
-"""Page Info on the &quot;TaxonomyToContentTypeConnection&quot;"""
+"""
+Pagination metadata specific to &quot;TaxonomyToContentTypeConnection&quot; collections. Provides cursors and flags for navigating through sets of TaxonomyToContentTypeConnection Nodes.
+"""
 type TaxonomyToContentTypeConnectionPageInfo implements ContentTypeConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -22487,7 +23047,9 @@ type TaxonomyToTermNodeConnectionEdge implements Edge & TermNodeConnectionEdge {
   node: TermNode!
 }
 
-"""Page Info on the &quot;TaxonomyToTermNodeConnection&quot;"""
+"""
+Pagination metadata specific to &quot;TaxonomyToTermNodeConnection&quot; collections. Provides cursors and flags for navigating through sets of TaxonomyToTermNodeConnection Nodes.
+"""
 type TaxonomyToTermNodeConnectionPageInfo implements PageInfo & TermNodeConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -22506,7 +23068,7 @@ type TaxonomyToTermNodeConnectionPageInfo implements PageInfo & TermNodeConnecti
 }
 
 """
-Terms are nodes within a Taxonomy, used to group and relate other nodes.
+Base interface for taxonomy terms such as categories and tags. Terms are used to organize and classify content.
 """
 interface TermNode implements Node & UniformResourceIdentifiable {
   """"""
@@ -22605,7 +23167,9 @@ interface TermNode implements Node & UniformResourceIdentifiable {
   uri: String
 }
 
-"""Connection to TermNode Nodes"""
+"""
+A paginated collection of TermNode Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of TermNode Nodes
+"""
 interface TermNodeConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected TermNode Nodes
@@ -22619,7 +23183,9 @@ interface TermNodeConnection implements Connection {
   pageInfo: TermNodeConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected TermNode"""
+"""
+Represents a connection to a TermNode. Contains both the TermNode Node and metadata about the relationship.
+"""
 interface TermNodeConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -22630,7 +23196,9 @@ interface TermNodeConnectionEdge implements Edge {
   node: TermNode!
 }
 
-"""Page Info on the connected TermNodeConnectionEdge"""
+"""
+Pagination metadata specific to &quot;TermNodeConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;TermNodeConnectionEdge&quot; Nodes.
+"""
 interface TermNodeConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -22689,7 +23257,9 @@ type TermNodeToEnqueuedScriptConnectionEdge implements Edge & EnqueuedScriptConn
   node: EnqueuedScript!
 }
 
-"""Page Info on the &quot;TermNodeToEnqueuedScriptConnection&quot;"""
+"""
+Pagination metadata specific to &quot;TermNodeToEnqueuedScriptConnection&quot; collections. Provides cursors and flags for navigating through sets of TermNodeToEnqueuedScriptConnection Nodes.
+"""
 type TermNodeToEnqueuedScriptConnectionPageInfo implements EnqueuedScriptConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -22728,7 +23298,9 @@ type TermNodeToEnqueuedStylesheetConnectionEdge implements Edge & EnqueuedStyles
   node: EnqueuedStylesheet!
 }
 
-"""Page Info on the &quot;TermNodeToEnqueuedStylesheetConnection&quot;"""
+"""
+Pagination metadata specific to &quot;TermNodeToEnqueuedStylesheetConnection&quot; collections. Provides cursors and flags for navigating through sets of TermNodeToEnqueuedStylesheetConnection Nodes.
+"""
 type TermNodeToEnqueuedStylesheetConnectionPageInfo implements EnqueuedStylesheetConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -22746,27 +23318,29 @@ type TermNodeToEnqueuedStylesheetConnectionPageInfo implements EnqueuedStyleshee
   startCursor: String
 }
 
-"""Options for ordering the connection by"""
+"""
+Sorting attributes for taxonomy term collections. Determines which property of taxonomy terms is used for ordering results.
+"""
 enum TermObjectsConnectionOrderbyEnum {
-  """Order the connection by item count."""
+  """Ordering by number of associated content items."""
   COUNT
 
-  """Order the connection by description."""
+  """Alphabetical ordering by term description text."""
   DESCRIPTION
 
-  """Order the connection by name."""
+  """Alphabetical ordering by term name."""
   NAME
 
-  """Order the connection by slug."""
+  """Alphabetical ordering by URL-friendly name."""
   SLUG
 
-  """Order the connection by term group."""
+  """Ordering by assigned term grouping value."""
   TERM_GROUP
 
-  """Order the connection by term id."""
+  """Ordering by internal identifier."""
   TERM_ID
 
-  """Order the connection by term order."""
+  """Ordering by manually defined sort position."""
   TERM_ORDER
 }
 
@@ -22824,7 +23398,9 @@ type Theme implements Node {
   version: String
 }
 
-"""Connection to Theme Nodes"""
+"""
+A paginated collection of Theme Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of Theme Nodes
+"""
 interface ThemeConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected Theme Nodes
@@ -22838,7 +23414,9 @@ interface ThemeConnection implements Connection {
   pageInfo: ThemeConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected Theme"""
+"""
+Represents a connection to a Theme. Contains both the Theme Node and metadata about the relationship.
+"""
 interface ThemeConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -22849,7 +23427,9 @@ interface ThemeConnectionEdge implements Edge {
   node: Theme!
 }
 
-"""Page Info on the connected ThemeConnectionEdge"""
+"""
+Pagination metadata specific to &quot;ThemeConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;ThemeConnectionEdge&quot; Nodes.
+"""
 interface ThemeConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -22867,7 +23447,9 @@ interface ThemeConnectionPageInfo implements PageInfo & WPPageInfo {
   startCursor: String
 }
 
-"""Any node that has a URI"""
+"""
+An interface for content that can be accessed via a unique URI/URL path. Implemented by content types that have their own permalinks.
+"""
 interface UniformResourceIdentifiable implements Node {
   """"""
   conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
@@ -23379,7 +23961,7 @@ input UpdateUserInput {
   """A string containing the user's email address."""
   email: String
 
-  """	The user's first name."""
+  """The user's first name."""
   firstName: String
 
   """The ID of the user"""
@@ -23434,7 +24016,9 @@ type UpdateUserPayload {
   user: User
 }
 
-"""A User object"""
+"""
+A registered user account. Users can be assigned roles, author content, and have various capabilities within the site.
+"""
 type User implements Commenter & DatabaseIdentifier & Node & UniformResourceIdentifiable {
   """
   Avatar object for user. The avatar object can be retrieved in different sizes by specifying the size argument.
@@ -23736,7 +24320,9 @@ type User implements Commenter & DatabaseIdentifier & Node & UniformResourceIden
   username: String
 }
 
-"""Connection to User Nodes"""
+"""
+A paginated collection of User Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of User Nodes
+"""
 interface UserConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected User Nodes
@@ -23750,7 +24336,9 @@ interface UserConnection implements Connection {
   pageInfo: UserConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected User"""
+"""
+Represents a connection to a User. Contains both the User Node and metadata about the relationship.
+"""
 interface UserConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -23761,7 +24349,9 @@ interface UserConnectionEdge implements Edge {
   node: User!
 }
 
-"""Page Info on the connected UserConnectionEdge"""
+"""
+Pagination metadata specific to &quot;UserConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;UserConnectionEdge&quot; Nodes.
+"""
 interface UserConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -23780,7 +24370,7 @@ interface UserConnectionPageInfo implements PageInfo & WPPageInfo {
 }
 
 """
-The Type of Identifier used to fetch a single User node. To be used along with the "id" field. Default is "ID".
+Identifier types for retrieving a specific user. Determines whether to look up users by ID, email, username, or other unique properties.
 """
 enum UserNodeIdTypeEnum {
   """The Database ID for the node"""
@@ -23820,7 +24410,9 @@ type UserRole implements Node {
   name: String
 }
 
-"""Connection to UserRole Nodes"""
+"""
+A paginated collection of UserRole Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of UserRole Nodes
+"""
 interface UserRoleConnection implements Connection {
   """
   A list of edges (relational context) between RootQuery and connected UserRole Nodes
@@ -23834,7 +24426,9 @@ interface UserRoleConnection implements Connection {
   pageInfo: UserRoleConnectionPageInfo!
 }
 
-"""Edge between a Node and a connected UserRole"""
+"""
+Represents a connection to a UserRole. Contains both the UserRole Node and metadata about the relationship.
+"""
 interface UserRoleConnectionEdge implements Edge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -23845,7 +24439,9 @@ interface UserRoleConnectionEdge implements Edge {
   node: UserRole!
 }
 
-"""Page Info on the connected UserRoleConnectionEdge"""
+"""
+Pagination metadata specific to &quot;UserRoleConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;UserRoleConnectionEdge&quot; Nodes.
+"""
 interface UserRoleConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -23863,7 +24459,9 @@ interface UserRoleConnectionPageInfo implements PageInfo & WPPageInfo {
   startCursor: String
 }
 
-"""Names of available user roles"""
+"""
+Permission levels for user accounts. Defines the standard access levels that control what actions users can perform within the system.
+"""
 enum UserRoleEnum {
   """User role with specific capabilities"""
   ADMINISTRATOR
@@ -23908,7 +24506,9 @@ type UserToCommentConnectionEdge implements CommentConnectionEdge & Edge {
   node: Comment!
 }
 
-"""Page Info on the &quot;UserToCommentConnection&quot;"""
+"""
+Pagination metadata specific to &quot;UserToCommentConnection&quot; collections. Provides cursors and flags for navigating through sets of UserToCommentConnection Nodes.
+"""
 type UserToCommentConnectionPageInfo implements CommentConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -24045,7 +24645,9 @@ type UserToEnqueuedScriptConnectionEdge implements Edge & EnqueuedScriptConnecti
   node: EnqueuedScript!
 }
 
-"""Page Info on the &quot;UserToEnqueuedScriptConnection&quot;"""
+"""
+Pagination metadata specific to &quot;UserToEnqueuedScriptConnection&quot; collections. Provides cursors and flags for navigating through sets of UserToEnqueuedScriptConnection Nodes.
+"""
 type UserToEnqueuedScriptConnectionPageInfo implements EnqueuedScriptConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -24084,7 +24686,9 @@ type UserToEnqueuedStylesheetConnectionEdge implements Edge & EnqueuedStylesheet
   node: EnqueuedStylesheet!
 }
 
-"""Page Info on the &quot;UserToEnqueuedStylesheetConnection&quot;"""
+"""
+Pagination metadata specific to &quot;UserToEnqueuedStylesheetConnection&quot; collections. Provides cursors and flags for navigating through sets of UserToEnqueuedStylesheetConnection Nodes.
+"""
 type UserToEnqueuedStylesheetConnectionPageInfo implements EnqueuedStylesheetConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -24123,7 +24727,9 @@ type UserToMediaItemConnectionEdge implements Edge & MediaItemConnectionEdge {
   node: MediaItem!
 }
 
-"""Page Info on the &quot;UserToMediaItemConnection&quot;"""
+"""
+Pagination metadata specific to &quot;UserToMediaItemConnection&quot; collections. Provides cursors and flags for navigating through sets of UserToMediaItemConnection Nodes.
+"""
 type UserToMediaItemConnectionPageInfo implements MediaItemConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -24236,7 +24842,9 @@ type UserToPageConnectionEdge implements Edge & PageConnectionEdge {
   node: Page!
 }
 
-"""Page Info on the &quot;UserToPageConnection&quot;"""
+"""
+Pagination metadata specific to &quot;UserToPageConnection&quot; collections. Provides cursors and flags for navigating through sets of UserToPageConnection Nodes.
+"""
 type UserToPageConnectionPageInfo implements PageConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -24349,7 +24957,9 @@ type UserToPostConnectionEdge implements Edge & PostConnectionEdge {
   node: Post!
 }
 
-"""Page Info on the &quot;UserToPostConnection&quot;"""
+"""
+Pagination metadata specific to &quot;UserToPostConnection&quot; collections. Provides cursors and flags for navigating through sets of UserToPostConnection Nodes.
+"""
 type UserToPostConnectionPageInfo implements PageInfo & PostConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -24496,7 +25106,9 @@ type UserToRevisionsConnectionEdge implements ContentNodeConnectionEdge & Edge {
   node: ContentNode!
 }
 
-"""Page Info on the &quot;UserToRevisionsConnection&quot;"""
+"""
+Pagination metadata specific to &quot;UserToRevisionsConnection&quot; collections. Provides cursors and flags for navigating through sets of UserToRevisionsConnection Nodes.
+"""
 type UserToRevisionsConnectionPageInfo implements ContentNodeConnectionPageInfo & PageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -24596,7 +25208,9 @@ type UserToUserRoleConnectionEdge implements Edge & UserRoleConnectionEdge {
   node: UserRole!
 }
 
-"""Page Info on the &quot;UserToUserRoleConnection&quot;"""
+"""
+Pagination metadata specific to &quot;UserToUserRoleConnection&quot; collections. Provides cursors and flags for navigating through sets of UserToUserRoleConnection Nodes.
+"""
 type UserToUserRoleConnectionPageInfo implements PageInfo & UserRoleConnectionPageInfo & WPPageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
@@ -24614,7 +25228,9 @@ type UserToUserRoleConnectionPageInfo implements PageInfo & UserRoleConnectionPa
   startCursor: String
 }
 
-"""Field to order the connection by"""
+"""
+User attribute sorting options. Determines which property of user accounts is used for ordering user listings.
+"""
 enum UsersConnectionOrderbyEnum {
   """Order by display name"""
   DISPLAY_NAME
@@ -24650,7 +25266,9 @@ input UsersConnectionOrderbyInput {
   order: OrderEnum
 }
 
-"""Column used for searching for users."""
+"""
+User properties that can be targeted in search operations. Defines which user attributes can be searched when looking for specific users.
+"""
 enum UsersConnectionSearchColumnEnum {
   """The user's email address."""
   EMAIL
@@ -24668,7 +25286,9 @@ enum UsersConnectionSearchColumnEnum {
   URL
 }
 
-"""Information about pagination in a connection."""
+"""
+Metadata for cursor-based pagination. Provides cursors for continuing pagination and boolean flags indicating if more items exist in either direction.
+"""
 interface WPPageInfo implements PageInfo {
   """When paginating forwards, the cursor to continue."""
   endCursor: String
