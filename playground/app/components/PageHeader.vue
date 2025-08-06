@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import type { PostFragment, PageFragment } from '#graphql-operations'
 
+const route = useRoute()
 defineProps<{
   post: PostFragment | PageFragment | undefined
 }>()
 
-const headerLinks = ref([{ label: 'Back to home', to: '/' }])
+const headerLinks = ref([{
+  label: route.path.startsWith('/async') ? 'Back to Async Home' : 'Back to Home',
+  to: route.path.startsWith('/async') ? '/async' : '/'
+}])
 </script>
 
 <template>

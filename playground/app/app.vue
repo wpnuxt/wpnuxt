@@ -4,10 +4,21 @@ import type { MenuItemFragment } from '#graphql-operations'
 const { data } = await useMenu({ id: '1' })
 
 const menu = computed(() => {
-  return data?.map((item: MenuItemFragment) => ({
+  const wordPressPages = data?.map((item: MenuItemFragment) => ({
     label: item.label,
     to: item.uri
   }))
+  return [
+    {
+      label: 'Home',
+      to: '/'
+    },
+    {
+      label: 'Async',
+      to: '/async'
+    },
+    ...wordPressPages
+  ]
 })
 </script>
 

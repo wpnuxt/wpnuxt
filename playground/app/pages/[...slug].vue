@@ -1,24 +1,15 @@
 <script setup lang="ts">
-import type { PageFragment, PostFragment } from '#graphql-operations'
-
-const route = useRoute()
-const post = ref<PageFragment | PostFragment | null>(null)
-const { data, refresh } = await useAsyncNodeByUri({ uri: route.path })
-
-onMounted(async () => {
-  await refresh()
-  post.value = data
-})
+const post = await useNodeByUri({ uri: useRoute().path })
 </script>
 
 <template>
   <UContainer>
     <UPage>
-      <PageHeader :post="post" />
+      <PageHeader :post="post.data" />
       <UPageBody class="my-10">
         <MDC
-          v-if="post?.content"
-          :value="post.content"
+          v-if="post?.data?.content"
+          :value="post.data.content"
         />
         <Loading v-else />
       </UPageBody>
