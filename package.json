@@ -30,7 +30,7 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "4.0.0-rc.0",
+    "@nuxt/kit": "4.0.3",
     "@radya/nuxt-dompurify": "^1.0.5",
     "defu": "^6.1.4",
     "graphql": "^16.11.0",
@@ -39,17 +39,17 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.6.2",
-    "@nuxt/eslint-config": "^1.5.2",
-    "@nuxt/module-builder": "^1.0.1",
-    "@nuxt/schema": "^3.17.6",
+    "@nuxt/eslint-config": "^1.7.1",
+    "@nuxt/module-builder": "^1.0.2",
+    "@nuxt/schema": "4.0.3",
     "@nuxt/test-utils": "^3.19.2",
-    "@types/node": "^24.0.13",
+    "@types/node": "^24.2.0",
     "changelogen": "^0.6.2",
-    "eslint": "^9.31.0",
-    "nuxt": "4.0.0-rc.0",
-    "typescript": "~5.8.3",
+    "eslint": "^9.32.0",
+    "nuxt": "4.0.3",
+    "typescript": "~5.9.2",
     "vitest": "^3.2.4",
-    "vue-tsc": "^3.0.1"
+    "vue-tsc": "^3.0.5"
   },
   "packageManager": "pnpm@10.8.0+sha512.0e82714d1b5b43c74610193cb20734897c1d00de89d0e18420aebc5977fa13d780a9cb05734624e81ebd81cc876cd464794850641c48b9544326b5622ca29971"
 }
