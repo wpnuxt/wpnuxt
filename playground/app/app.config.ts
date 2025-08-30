@@ -5,9 +5,7 @@ export default defineAppConfig({
     colors: {
       neutral: 'neutral',
       gray: 'neutral'
-    }
-  },
-  uiPro: {
+    },
     pageGrid: {
       base: 'my-10'
     }

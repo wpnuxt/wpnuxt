@@ -3,7 +3,7 @@ const IS_DEV = process.env.NODE_ENV === 'development'
 export default defineNuxtConfig({
   modules: [
     '../src/module',
-    '@nuxt/ui-pro',
+    '@nuxt/ui',
     '@nuxtjs/mdc'
   ],
 

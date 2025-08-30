@@ -8,12 +8,13 @@
     "generate": "nuxi generate"
   },
   "dependencies": {
-    "@nuxt/ui-pro": "^3.3.0",
+    "@nuxt/ui": "4.0.0-alpha.0",
     "@nuxtjs/mdc": "^0.17.2",
     "nuxt": "4.0.3"
   },
   "devDependencies": {
-    "@iconify-json/logos": "^1.2.5",
-    "@iconify-json/svg-spinners": "^1.2.2"
+    "@iconify-json/logos": "^1.2.9",
+    "@iconify-json/lucide": "^1.2.65",
+    "@iconify-json/svg-spinners": "^1.2.4"
   }
 }
