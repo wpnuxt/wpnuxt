@@ -1,36 +1,56 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { existsSync, cpSync, promises as fsp } from 'node:fs'
-import { type LogLevel, createConsola } from 'consola'
-import { ref } from 'vue'
-import { hasNuxtModule, addTemplate, createResolver } from '@nuxt/kit'
+import { existsSync, promises as fsp } from 'node:fs'
+import { type LogLevel, createConsola, type ConsolaInstance } from 'consola'
+import { hasNuxtModule, addTemplate, createResolver, type Nuxt } from '@nuxt/kit'
 import { join } from 'pathe'
 import type { WPNuxtConfig } from './types'
 
-const loggerRef = ref()
-
-export const initLogger = (logLevel: LogLevel | undefined) => {
-  loggerRef.value = createConsola({
-    level: logLevel ? logLevel : 3,
-    formatOptions: {
-      colors: true,
-      compact: true,
-      date: true,
-      fancy: true
-    }
-  }).withTag('wpnuxt')
-  return loggerRef.value
+interface InstalledModule {
+  meta: {
+    name: string
+  }
+  entryPath?: string
 }
 
-export const getLogger = () => {
-  if (loggerRef.value) {
-    return loggerRef.value
+// Use plain variable instead of Vue ref to avoid reactivity overhead
+let loggerInstance: ConsolaInstance | undefined
+
+/**
+ * Initializes the WPNuxt logger with specified log level
+ *
+ * @param logLevel - The logging level (0=silent, 1=error, 2=warn, 3=info, 4=debug, 5=trace)
+ * @returns Configured Consola instance
+ */
+export const initLogger = (logLevel: LogLevel | undefined): ConsolaInstance => {
+  if (!loggerInstance) {
+    loggerInstance = createConsola({
+      level: logLevel ?? 3,
+      formatOptions: {
+        colors: true,
+        compact: true,
+        date: true,
+        fancy: true
+      }
+    }).withTag('wpnuxt')
   }
+  return loggerInstance
 }
 
 /**
- * Validate the module options.
+ * Gets the current logger instance
+ *
+ * @returns The logger instance if initialized, undefined otherwise
  */
-export function validateConfig(options: Partial<WPNuxtConfig>) {
+export const getLogger = (): ConsolaInstance | undefined => {
+  return loggerInstance
+}
+
+/**
+ * Validates the WPNuxt module configuration
+ *
+ * @param options - The configuration options to validate
+ * @throws Error if configuration is invalid
+ */
+export function validateConfig(options: Partial<WPNuxtConfig>): void {
   if (!options.wordpressUrl || options.wordpressUrl.length === 0) {
     throw new Error('WPNuxt error: WordPress url is missing')
   } else if (options.wordpressUrl.substring(options.wordpressUrl.length - 1) === '/') {
@@ -41,7 +61,13 @@ export function validateConfig(options: Partial<WPNuxtConfig>) {
   }
 }
 
-export async function mergeQueries(nuxt: any) {
+/**
+ * Merges GraphQL queries from runtime, add-on modules, and user-defined directories
+ *
+ * @param nuxt - The Nuxt instance
+ * @returns Path to the merged queries directory
+ */
+export async function mergeQueries(nuxt: Nuxt): Promise<string> {
   const { resolve } = createResolver(import.meta.url)
   const resolveRuntimeModule = (path: string) => resolve('./runtime', path)
   const logger = getLogger()
@@ -53,45 +79,130 @@ export async function mergeQueries(nuxt: any) {
     .replace(/^(~~|@@)/, nuxt.options.rootDir)
     .replace(/^(~|@)/, nuxt.options.srcDir)
   const userQueryPathExists = existsSync(userQueryPath)
-  cpSync(resolveRuntimeModule('./queries/'), queryOutputPath, { recursive: true })
+  const queryFiles = new Map<string, string>()
 
-  addQueriesFromAddOnModule('@wpnuxt/blocks', queryOutputPath, nuxt, resolve)
-  addQueriesFromAddOnModule('@wpnuxt/auth', queryOutputPath, nuxt, resolve)
+  // Copy and track runtime queries in one pass
+  await copyAndTrack(resolveRuntimeModule('./queries/'), queryOutputPath, queryFiles, 'runtime')
 
+  // Add queries from add-on modules
+  const blocksPath = getAddOnModuleQueriesPath('@wpnuxt/blocks', nuxt)
+  if (blocksPath) {
+    logger.debug('Loading queries from @wpnuxt/blocks')
+    await copyAndTrack(blocksPath, queryOutputPath, queryFiles, '@wpnuxt/blocks')
+  }
+
+  const authPath = getAddOnModuleQueriesPath('@wpnuxt/auth', nuxt)
+  if (authPath) {
+    logger.debug('Loading queries from @wpnuxt/auth')
+    await copyAndTrack(authPath, queryOutputPath, queryFiles, '@wpnuxt/auth')
+  }
+
+  // Add user-defined queries
   if (userQueryPathExists) {
     logger.debug('Extending queries:', userQueryPath)
-    cpSync(resolve(userQueryPath), queryOutputPath, { recursive: true })
+    await copyAndTrack(resolve(userQueryPath), queryOutputPath, queryFiles, 'user')
+
+    // Detect conflicts
+    const conflicts = detectQueryConflicts(queryFiles)
+    if (conflicts.length > 0) {
+      logger.warn('Query file conflicts detected:')
+      conflicts.forEach((conflict) => {
+        logger.warn(`  - ${conflict.file} exists in multiple sources: ${conflict.sources.join(', ')}`)
+      })
+    }
+  } else {
+    // Create empty templates for modules that aren't installed
+    if (!blocksPath) {
+      const moduleName = 'wpnuxt/blocks'
+      addTemplate({
+        write: true,
+        filename: moduleName + '.mjs',
+        getContents: () => `export { }`
+      })
+      nuxt.options.alias['#' + moduleName] = resolve(nuxt.options.buildDir, moduleName)
+    }
+    if (!authPath) {
+      const moduleName = 'wpnuxt/auth'
+      addTemplate({
+        write: true,
+        filename: moduleName + '.mjs',
+        getContents: () => `export { }`
+      })
+      nuxt.options.alias['#' + moduleName] = resolve(nuxt.options.buildDir, moduleName)
+    }
   }
+
   logger.debug('Copied merged queries in folder:', queryOutputPath)
   return queryOutputPath
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-function addQueriesFromAddOnModule(addOnModuleName: string, queryOutputPath: string, nuxt: any, resolve: Function) {
-  const logger = getLogger()
-  if (hasNuxtModule(addOnModuleName)) {
-    for (const m of nuxt.options._installedModules) {
-      if (m.meta.name === addOnModuleName && m.entryPath) {
-        logger.debug('Loading queries from ' + addOnModuleName)
-        let blocksQueriesPath
-        if (m.entryPath == '../src/module') {
-          blocksQueriesPath = join(nuxt.options.rootDir, '../src/runtime/queries/')
-        } else if (m.entryPath.startsWith('../')) {
-          blocksQueriesPath = join(nuxt.options.rootDir, '../', m.entryPath, './runtime/queries/')
-        } else {
-          blocksQueriesPath = join('./node_modules', m.entryPath, 'dist/runtime/queries/')
+/**
+ * Optimized copy and track: copies files and tracks them in a single pass
+ * This eliminates redundant file system reads
+ */
+async function copyAndTrack(
+  sourcePath: string,
+  destPath: string,
+  fileMap: Map<string, string>,
+  sourceLabel: string
+): Promise<void> {
+  try {
+    const entries = await fsp.readdir(sourcePath, { withFileTypes: true })
+    await fsp.mkdir(destPath, { recursive: true })
+
+    // Process all files in parallel for better performance
+    await Promise.all(
+      entries.map(async (entry) => {
+        const srcPath = join(sourcePath, entry.name)
+        const destFilePath = join(destPath, entry.name)
+
+        if (entry.isDirectory()) {
+          await copyAndTrack(srcPath, destFilePath, fileMap, sourceLabel)
+        } else if (entry.isFile() && (entry.name.endsWith('.gql') || entry.name.endsWith('.graphql'))) {
+          await fsp.copyFile(srcPath, destFilePath)
+          const existing = fileMap.get(entry.name)
+          fileMap.set(entry.name, existing ? `${existing},${sourceLabel}` : sourceLabel)
         }
-        cpSync(blocksQueriesPath, queryOutputPath, { recursive: true })
+      })
+    )
+  } catch {
+    // Source directory might not exist
+  }
+}
+
+/**
+ * Detects conflicts in GraphQL query files
+ */
+function detectQueryConflicts(fileMap: Map<string, string>): Array<{ file: string, sources: string[] }> {
+  const conflicts: Array<{ file: string, sources: string[] }> = []
+  fileMap.forEach((sources, file) => {
+    const sourceList = sources.split(',')
+    if (sourceList.length > 1) {
+      conflicts.push({ file, sources: sourceList })
+    }
+  })
+  return conflicts
+}
+
+/**
+ * Gets the queries path for an add-on module if it's installed
+ */
+function getAddOnModuleQueriesPath(addOnModuleName: string, nuxt: Nuxt): string | null {
+  if (!hasNuxtModule(addOnModuleName)) {
+    return null
+  }
+
+  const installedModules = (nuxt.options as { _installedModules?: InstalledModule[] })._installedModules || []
+  for (const m of installedModules) {
+    if (m.meta.name === addOnModuleName && m.entryPath) {
+      if (m.entryPath === '../src/module') {
+        return join(nuxt.options.rootDir, '../src/runtime/queries/')
+      } else if (m.entryPath.startsWith('../')) {
+        return join(nuxt.options.rootDir, '../', m.entryPath, './runtime/queries/')
+      } else {
+        return join('./node_modules', m.entryPath, 'dist/runtime/queries/')
       }
     }
-  } else {
-    const moduleName = addOnModuleName.replace('@', '')
-    // TODO: (should we?) find a way to avoid this hack. (it makes sure the dynamic import in WPContent doesn't throw an error)
-    addTemplate({
-      write: true,
-      filename: moduleName + '.mjs',
-      getContents: () => `export { }`
-    })
-    nuxt.options.alias['#' + moduleName] = resolve(nuxt.options.buildDir, moduleName)
   }
+  return null
 }

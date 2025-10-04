@@ -2,6 +2,13 @@ import { parse } from 'graphql'
 import type { SelectionNode, OperationDefinitionNode } from 'graphql'
 import type { WPNuxtQuery } from './types'
 
+/**
+ * Parses a GraphQL document string and extracts query operations
+ *
+ * @param doc - The GraphQL document string to parse
+ * @returns Array of parsed query operations with their metadata
+ * @throws Error if an operation is missing a name
+ */
 const _parseDoc = async (doc: string): Promise<WPNuxtQuery[]> => {
   const { definitions } = parse(doc)
 
@@ -26,7 +33,14 @@ const _parseDoc = async (doc: string): Promise<WPNuxtQuery[]> => {
   return operations
 }
 
-function processSelections(selections: readonly SelectionNode[], level: number, query: WPNuxtQuery) {
+/**
+ * Recursively processes GraphQL selection sets to extract nodes and fragments
+ *
+ * @param selections - The GraphQL selection nodes to process
+ * @param level - Current depth level in the selection tree
+ * @param query - The query object to populate with extracted data
+ */
+function processSelections(selections: readonly SelectionNode[], level: number, query: WPNuxtQuery): void {
   if (!selections || selections.length === 0) return
   if (selections.length === 1 && selections[0]?.kind === 'Field') {
     query.nodes?.push(selections[0].name.value.trim())

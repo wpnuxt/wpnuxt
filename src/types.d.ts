@@ -20,6 +20,13 @@ export interface WPNuxtConfig {
 
   enableCache?: boolean
 
+  /**
+   * Cache duration in seconds for WordPress content
+   *
+   * @default 300 (5 minutes)
+   */
+  cacheMaxAge?: number
+
   staging?: boolean
 
   /**

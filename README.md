@@ -67,14 +67,14 @@ pnpm run release
 ```
 
 <!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/@vernaillen/wpnuxt/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
-[npm-version-href]: https://www.npmjs.com/package/@vernaillen/wpnuxt
+[npm-version-src]: https://img.shields.io/npm/v/@wpnuxt/core/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
+[npm-version-href]: https://www.npmjs.com/package/@wpnuxt/core
 
-[npm-downloads-src]: https://img.shields.io/npm/dm/@vernaillen/wpnuxt.svg?style=flat&colorA=18181B&colorB=28CF8D
-[npm-downloads-href]: https://www.npmjs.com/package/@vernaillen/wpnuxt
+[npm-downloads-src]: https://img.shields.io/npm/dm/@wpnuxt/core.svg?style=flat&colorA=18181B&colorB=28CF8D
+[npm-downloads-href]: https://www.npmjs.com/package/@wpnuxt/core
 
-[license-src]: https://img.shields.io/npm/l/@vernaillen/wpnuxt?style=flat&colorA=18181B&colorB=28CF8D
-[license-href]: https://www.npmjs.com/package/@vernaillen/wpnuxt
+[license-src]: https://img.shields.io/npm/l/@wpnuxt/core?style=flat&colorA=18181B&colorB=28CF8D
+[license-href]: https://www.npmjs.com/package/@wpnuxt/core
 
 [nuxt-src]: https://img.shields.io/badge/Nuxt-18181B?logo=nuxt.js
 [nuxt-href]: https://nuxt.com
