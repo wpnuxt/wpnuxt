@@ -31,7 +31,7 @@ const _parseDoc = async (doc: string): Promise<WPNuxtQuery[]> => {
     return operations
   } catch (error) {
     if (error instanceof GraphQLError) {
-      throw new Error(`WPNuxt: Failed to parse GraphQL document - ${error.message}`)
+      throw new TypeError(`WPNuxt: Failed to parse GraphQL document - ${error.message}`)
     }
     throw error
   }

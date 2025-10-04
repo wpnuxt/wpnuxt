@@ -6,7 +6,7 @@ const getRelativeImagePath = function getRelativeImagePath(imgUrl: string): stri
   try {
     const url = new URL(imgUrl)
     return url.pathname
-  } catch (error) {
+  } catch {
     // If URL parsing fails, assume it's already a relative path
     // or return the original if it starts with /
     if (imgUrl.startsWith('/')) {

@@ -20,11 +20,11 @@ describe('images', () => {
     })
 
     it('should return empty string for null input', () => {
-      expect(getRelativeImagePath(null as any)).toBe('')
+      expect(getRelativeImagePath(null as unknown as string)).toBe('')
     })
 
     it('should return empty string for undefined input', () => {
-      expect(getRelativeImagePath(undefined as any)).toBe('')
+      expect(getRelativeImagePath(undefined as unknown as string)).toBe('')
     })
 
     it('should handle already relative paths starting with /', () => {

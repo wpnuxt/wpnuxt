@@ -8,7 +8,7 @@ import { getLogger } from './utils/index'
 import { parseDoc } from './utils/useParser'
 
 // Cache regex for performance
-const SCHEMA_PATTERN = /schema\.(gql|graphql)$/i
+const SCHEMA_PATTERN = /schema\.(?:gql|graphql)$/i
 
 const allowDocument = (f: string, resolver: Resolver) => {
   // Skip if filename contains 'schema'
@@ -72,7 +72,7 @@ export async function prepareContext(ctx: WPNuxtContext) {
 
   // Use Set directly for better performance
   const typeSet = new Set<string>()
-  ctx.fns.forEach(o => {
+  ctx.fns.forEach((o) => {
     typeSet.add(`${o.name}QueryVariables`)
     o.fragments?.forEach(f => typeSet.add(`${f}Fragment`))
   })

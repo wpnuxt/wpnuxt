@@ -41,7 +41,7 @@ describe('useParser', () => {
     })
 
     it('should throw error for null/undefined document', async () => {
-      await expect(parseDoc(null as any)).rejects.toThrow('Invalid GraphQL document')
+      await expect(parseDoc(null as unknown as string)).rejects.toThrow('Invalid GraphQL document')
     })
 
     it('should throw error for query without name', async () => {
