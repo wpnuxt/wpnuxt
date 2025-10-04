@@ -30,7 +30,6 @@ jobs:
         id: pnpm-install
         with:
           run_install: false
-          version: 9
 
       - name: Install dependencies
         run: pnpm install
@@ -41,19 +40,8 @@ jobs:
       - name: Type check
         run: pnpm run typecheck
 
-      - name: Run tests
-        run: pnpm run test
-
       - name: Generate coverage report
         run: pnpm run coverage
-
-      - name: Upload coverage to GitHub
-        uses: codecov/codecov-action@v4
-        if: always()
-        with:
-          files: ./coverage/coverage-final.json
-          flags: unittests
-          fail_ci_if_error: false
 
       - name: Module Build
         run: pnpm run build
