@@ -7,6 +7,7 @@ on:
       - "*.md"
     branches:
       - main
+      - refactoring-claude-ai
   pull_request:
     paths-ignore:
       - "docs/**"
