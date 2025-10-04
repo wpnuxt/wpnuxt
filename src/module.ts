@@ -1,4 +1,5 @@
-import { defineNuxtModule, addComponentsDir, addServerHandler, createResolver, installModule, addTemplate, addTypeTemplate, addImports, type Resolver, addPlugin, hasNuxtModule, type Nuxt } from '@nuxt/kit'
+import { defineNuxtModule, addComponentsDir, addServerHandler, createResolver, installModule, addTemplate, addTypeTemplate, addImports, type Resolver, addPlugin, hasNuxtModule } from '@nuxt/kit'
+import type { Nuxt } from '@nuxt/schema'
 import { consola } from 'consola'
 import type { Import } from 'unimport'
 import { name, version } from '../package.json'
@@ -56,10 +57,10 @@ export default defineNuxtModule<WPNuxtConfig>({
     nuxt.options.runtimeConfig.public.wpNuxt = publicWPNuxtConfig
     validateConfig(publicWPNuxtConfig)
     const logger = initLogger(publicWPNuxtConfig.logLevel)
-    logger.info('config:', publicWPNuxtConfig)
+    logger.debug('Config:', publicWPNuxtConfig)
 
-    logger.info('Connecting GraphQL to', publicWPNuxtConfig.wordpressUrl)
-    logger.info('frontendUrl:', publicWPNuxtConfig.frontendUrl)
+    logger.debug('Connecting GraphQL to', publicWPNuxtConfig.wordpressUrl)
+    logger.info('WPNuxt frontend URL:', publicWPNuxtConfig.frontendUrl)
     if (publicWPNuxtConfig.enableCache) logger.info('Cache enabled')
     logger.debug('Debug mode enabled, log level:', publicWPNuxtConfig.logLevel)
     if (publicWPNuxtConfig.staging) logger.info('Staging enabled')

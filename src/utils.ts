@@ -1,6 +1,7 @@
 import { existsSync, promises as fsp } from 'node:fs'
 import { type LogLevel, createConsola, type ConsolaInstance } from 'consola'
-import { hasNuxtModule, addTemplate, createResolver, type Nuxt } from '@nuxt/kit'
+import { hasNuxtModule, addTemplate, createResolver } from '@nuxt/kit'
+import type { Nuxt } from '@nuxt/schema'
 import { join } from 'pathe'
 import type { WPNuxtConfig } from './types'
 
@@ -87,27 +88,27 @@ export async function mergeQueries(nuxt: Nuxt): Promise<string> {
   // Add queries from add-on modules
   const blocksPath = getAddOnModuleQueriesPath('@wpnuxt/blocks', nuxt)
   if (blocksPath) {
-    logger.debug('Loading queries from @wpnuxt/blocks')
+    logger?.debug('Loading queries from @wpnuxt/blocks')
     await copyAndTrack(blocksPath, queryOutputPath, queryFiles, '@wpnuxt/blocks')
   }
 
   const authPath = getAddOnModuleQueriesPath('@wpnuxt/auth', nuxt)
   if (authPath) {
-    logger.debug('Loading queries from @wpnuxt/auth')
+    logger?.debug('Loading queries from @wpnuxt/auth')
     await copyAndTrack(authPath, queryOutputPath, queryFiles, '@wpnuxt/auth')
   }
 
   // Add user-defined queries
   if (userQueryPathExists) {
-    logger.debug('Extending queries:', userQueryPath)
+    logger?.debug('Extending queries:', userQueryPath)
     await copyAndTrack(resolve(userQueryPath), queryOutputPath, queryFiles, 'user')
 
     // Detect conflicts
     const conflicts = detectQueryConflicts(queryFiles)
     if (conflicts.length > 0) {
-      logger.warn('Query file conflicts detected:')
+      logger?.warn('Query file conflicts detected:')
       conflicts.forEach((conflict) => {
-        logger.warn(`  - ${conflict.file} exists in multiple sources: ${conflict.sources.join(', ')}`)
+        logger?.warn(`  - ${conflict.file} exists in multiple sources: ${conflict.sources.join(', ')}`)
       })
     }
   } else {
@@ -132,7 +133,7 @@ export async function mergeQueries(nuxt: Nuxt): Promise<string> {
     }
   }
 
-  logger.debug('Copied merged queries in folder:', queryOutputPath)
+  logger?.debug('Copied merged queries in folder:', queryOutputPath)
   return queryOutputPath
 }
 

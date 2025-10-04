@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import type { CoreButton } from '#wpnuxt/blocks'
+interface CoreButtonBlock {
+  attributes: {
+    url?: string
+    text?: string
+  }
+}
 
 defineProps<{
-  block: CoreButton
+  block: CoreButtonBlock
 }>()
 </script>
 

@@ -2,6 +2,7 @@ import type { FetchError } from 'ofetch'
 import type { OperationTypeNode } from 'graphql'
 import { getRelativeImagePath } from '../util/images'
 import type { AsyncData } from '#app'
+import { useRuntimeConfig } from '#imports'
 
 interface WPContentResponse<T> {
   data?: T
@@ -26,7 +27,10 @@ const _useWPContent = async <T>(
   params?: T
 ): Promise<WPContentResponse<T>> => {
   try {
-    const { data, error } = await $fetch<AsyncData<T, FetchError | null>>('/api/wpContent', {
+    const config = useRuntimeConfig()
+    const wordpressUrl = config.public.wpNuxt.wordpressUrl
+
+    const response = await $fetch<AsyncData<T, FetchError | null>>('/api/wpContent', {
       method: 'POST',
       body: {
         operation,
@@ -35,14 +39,19 @@ const _useWPContent = async <T>(
       }
     })
 
-    if (error) {
-      console.error(`[WPNuxt] Error fetching ${queryName}:`, error)
-      return { data: undefined, error }
+    const { data, error } = response
+
+    // Handle error - could be a Ref with .value or a plain object
+    const actualError = error && typeof error === 'object' && 'value' in error ? error.value : error
+
+    if (actualError) {
+      console.error(`[WPNuxt] Error fetching ${queryName}:`, actualError)
+      return { data: undefined, error: actualError }
     }
 
     return {
-      data: data ? transformData(data, nodes, fixImagePaths) : undefined,
-      error
+      data: data ? transformData(data, nodes, fixImagePaths, wordpressUrl) : undefined,
+      error: null
     }
   } catch (err) {
     const fetchError = err as FetchError
@@ -54,11 +63,43 @@ const _useWPContent = async <T>(
   }
 }
 
-const transformData = <T>(data: unknown, nodes: string[], fixImagePaths: boolean): T => {
+interface FeaturedImageData {
+  featuredImage?: {
+    node?: {
+      sourceUrl?: string
+      relativePath?: string
+    }
+  }
+}
+
+const fixMalformedUrls = (content: string, wordpressUrl: string): string => {
+  // Fix malformed URLs that start with :port (e.g., ":4000/wp-admin/")
+  // These get resolved relative to current domain causing issues like "http://localhost:3000:4000"
+  const urlObj = new URL(wordpressUrl)
+  const port = urlObj.port
+  if (port) {
+    // Replace href=":port/..." with href="wordpressUrl/..."
+    const malformedPattern = new RegExp(`(href|src)=["']:${port}/`, 'g')
+    content = content.replace(malformedPattern, `$1="${wordpressUrl}/`)
+  }
+  return content
+}
+
+const transformData = <T>(data: unknown, nodes: string[], fixImagePaths: boolean, wordpressUrl: string): T => {
   const transformedData = findData(data, nodes)
-  if (fixImagePaths && transformedData?.featuredImage?.node?.sourceUrl) {
-    transformedData.featuredImage.node.relativePath
-      = getRelativeImagePath(transformedData.featuredImage.node.sourceUrl)
+  if (transformedData && typeof transformedData === 'object') {
+    // Fix malformed URLs in content field if it exists
+    if ('content' in transformedData && typeof transformedData.content === 'string') {
+      (transformedData as Record<string, unknown>).content = fixMalformedUrls(transformedData.content, wordpressUrl)
+    }
+
+    // Fix featured image paths if needed
+    if (fixImagePaths && 'featuredImage' in transformedData) {
+      const typed = transformedData as FeaturedImageData
+      if (typed.featuredImage?.node?.sourceUrl) {
+        typed.featuredImage.node.relativePath = getRelativeImagePath(typed.featuredImage.node.sourceUrl)
+      }
+    }
   }
   return transformedData as T
 }

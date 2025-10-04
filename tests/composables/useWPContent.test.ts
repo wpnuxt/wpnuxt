@@ -1,8 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useWPContent } from '../../src/runtime/composables/useWPContent'
+import { OperationTypeNode } from 'graphql'
 
 // Mock $fetch
-global.$fetch = vi.fn()
+global.$fetch = vi.fn() as unknown as typeof $fetch
+
+// Mock useRuntimeConfig
+vi.mock('#imports', () => ({
+  useRuntimeConfig: () => ({
+    public: {
+      wpNuxt: {
+        wordpressUrl: 'http://localhost:4000'
+      }
+    }
+  })
+}))
 
 describe('useWPContent', () => {
   beforeEach(() => {
@@ -17,7 +29,7 @@ describe('useWPContent', () => {
       error: null
     })
 
-    const result = await useWPContent('query', 'TestQuery', [], false, {})
+    const result = await useWPContent(OperationTypeNode.QUERY, 'TestQuery', [], false, {})
 
     expect(result.data).toEqual(mockData)
     expect(result.error).toBeNull()
@@ -35,7 +47,7 @@ describe('useWPContent', () => {
     const mockError = new Error('Network error')
     vi.mocked($fetch).mockRejectedValue(mockError)
 
-    const result = await useWPContent('query', 'TestQuery', [], false, {})
+    const result = await useWPContent(OperationTypeNode.QUERY, 'TestQuery', [], false, {})
 
     expect(result.data).toBeUndefined()
     expect(result.error).toBeDefined()
@@ -49,7 +61,7 @@ describe('useWPContent', () => {
       error: mockError
     })
 
-    const result = await useWPContent('query', 'TestQuery', [], false, {})
+    const result = await useWPContent(OperationTypeNode.QUERY, 'TestQuery', [], false, {})
 
     expect(result.data).toBeUndefined()
     expect(result.error).toEqual(mockError)
@@ -70,7 +82,7 @@ describe('useWPContent', () => {
       error: null
     })
 
-    const result = await useWPContent('query', 'TestQuery', ['posts', 'nodes'], false, {})
+    const result = await useWPContent(OperationTypeNode.QUERY, 'TestQuery', ['posts', 'nodes'], false, {})
 
     expect(result.data).toEqual(mockData.posts.nodes)
   })
@@ -82,7 +94,7 @@ describe('useWPContent', () => {
       error: null
     })
 
-    const result = await useWPContent('query', 'TestQuery', ['posts', 'nodes'], false, {})
+    const result = await useWPContent(OperationTypeNode.QUERY, 'TestQuery', ['posts', 'nodes'], false, {})
 
     // Should return posts object when nodes doesn't exist
     expect(result.data).toEqual(mockData.posts)
@@ -95,7 +107,7 @@ describe('useWPContent', () => {
       error: null
     })
 
-    await useWPContent('query', 'GetPostBySlug', [], false, params)
+    await useWPContent(OperationTypeNode.QUERY, 'GetPostBySlug', [], false, params)
 
     expect($fetch).toHaveBeenCalledWith('/api/wpContent', {
       method: 'POST',

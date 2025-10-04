@@ -9,6 +9,7 @@ export default defineNuxtConfig({
       myValue: 'original value'
     }
   },
+  // @ts-expect-error - wpNuxt config is provided by wpnuxt module
   wpNuxt: {
     wordpressUrl: 'https://wordpress.wpnuxt.com',
     frontendUrl: 'https://demo.wpnuxt.com'

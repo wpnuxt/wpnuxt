@@ -2,7 +2,7 @@
 import { useRuntimeConfig } from 'nuxt/app'
 import { usePosts, usePostByUri, useGeneralSettings } from '#wpnuxt'
 
-const prefix = useRuntimeConfig().public.wpNuxt.generateComposables?.prefix
+const prefix = useRuntimeConfig().public.wpNuxt.composablesPrefix
 
 const { data: posts } = await usePosts()
 const { data: postsLimited } = await usePosts({ limit: 1 })

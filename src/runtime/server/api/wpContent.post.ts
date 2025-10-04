@@ -1,8 +1,13 @@
 import type { H3Event } from 'h3'
 import { readBody, createError } from 'h3'
 import { LRUCache } from 'lru-cache'
-import { defineCachedEventHandler, useRuntimeConfig } from '#imports'
-import type { GraphqlResponse } from '#graphql-documents'
+import { defineCachedEventHandler } from 'nitro/runtime'
+import { useRuntimeConfig } from '#imports'
+
+interface GraphqlResponse {
+  data: unknown
+  errors?: Array<{ message: string }>
+}
 
 interface WPContentRequestBody {
   queryName: string

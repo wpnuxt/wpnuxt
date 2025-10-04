@@ -22,14 +22,14 @@ defineProps<{
         {{ post.date?.split('T')[0] }}
       </div>
       <div
-        v-if="post.categories?.nodes"
+        v-if="'categories' in post && post.categories?.nodes"
         class="text-sm mt-5"
       >
         <p>Categories:</p>
         <ul>
           <li
-            v-for="category in post.categories?.nodes"
-            :key="category.id"
+            v-for="category in 'categories' in post ? post.categories?.nodes : []"
+            :key="category.name"
           >
             {{ category.name }}
           </li>

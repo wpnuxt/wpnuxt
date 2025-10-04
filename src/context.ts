@@ -38,7 +38,7 @@ export async function prepareContext(ctx: WPNuxtContext): Promise<void> {
   }
 
   ctx.generateImports = () => {
-    const parts: string[] = []
+    const parts: string[] = ['import { useWPContent } from \'#imports\'', '']
     for (const fn of ctx.fns) {
       parts.push(fnExp(fn))
     }
@@ -100,7 +100,7 @@ function getQueryTypeTemplate(q: WPNuxtQuery): string[] {
  */
 async function prepareFunctions(ctx: WPNuxtContext): Promise<void> {
   if (!ctx.docs) {
-    getLogger().error('no GraphQL query documents were found!')
+    getLogger()?.error('no GraphQL query documents were found!')
     return
   }
 

@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { OperationTypeNode } from 'graphql'
-import { useWPUri } from '../composables/useWPUri'
-import { useWPContent } from '../composables'
 import WPNuxtLogo from './WPNuxtLogo.vue'
 import WordPressLogo from './WordPressLogo.vue'
-import { useRuntimeConfig, useHead, useRoute } from '#imports'
+import { useRuntimeConfig, useHead, useRoute, useWPContent, useWPUri } from '#imports'
 
 const config = useRuntimeConfig()
 const frontendUrl = config.public.wpNuxt.frontendUrl
@@ -28,7 +26,12 @@ if (uri.startsWith('/')) {
 if (uri.endsWith('/')) {
   uri = uri.substring(0, uri.length - 1)
 }
-const { data: post } = await useWPContent(OperationTypeNode.QUERY, 'NodeByUri', ['nodeByUri'], false, { uri: uri })
+interface NodeData {
+  databaseId?: number
+  contentTypeName?: string
+}
+
+const { data: post } = await useWPContent(OperationTypeNode.QUERY, 'NodeByUri', ['nodeByUri'], false, { uri: uri }) as { data: NodeData }
 
 if (import.meta.client) {
   document.body.style.marginBottom = '40px'
@@ -41,20 +44,24 @@ if (import.meta.client) {
       <div class="bar-left">
         <WPNuxtLogo wp-color="white" />
         <div class="bar-button-wrapper">
-          <NuxtLink
-            :to="wpUri.admin"
+          <a
+            :href="wpUri.admin"
             class="bar-button"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <WordPressLogo /> Admin
-          </NuxtLink>
+          </a>
         </div>
         <div
           v-if="post"
           class="bar-button-wrapper"
         >
-          <NuxtLink
-            :to="wpUri.postEdit('' + post.databaseId)"
+          <a
+            :href="wpUri.postEdit('' + post.databaseId)"
             class="bar-button primary"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <svg
               class="icon"
@@ -72,16 +79,17 @@ if (import.meta.client) {
               />
             </svg>
             Edit <span class="hidden sm:inline-flex">{{ post.contentTypeName }}</span>
-          </NuxtLink>
+          </a>
         </div>
       </div>
       <div class="bar-right">
         <div class="bar-button-wrapper">
-          <NuxtLink
+          <a
             v-if="frontendUrl"
-            :to="frontendUrl"
+            :href="frontendUrl"
             class="bar-button"
             target="_blank"
+            rel="noopener noreferrer"
           >
             Live site
             <svg
@@ -96,7 +104,7 @@ if (import.meta.client) {
                 d="M18 10.82a1 1 0 0 0-1 1V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h7.18a1 1 0 0 0 0-2H5a3 3 0 0 0-3 3v11a3 3 0 0 0 3 3h11a3 3 0 0 0 3-3v-7.18a1 1 0 0 0-1-1m3.92-8.2a1 1 0 0 0-.54-.54A1 1 0 0 0 21 2h-6a1 1 0 0 0 0 2h3.59L8.29 14.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L20 5.41V9a1 1 0 0 0 2 0V3a1 1 0 0 0-.08-.38"
               />
             </svg>
-          </NuxtLink>
+          </a>
         </div>
       </div>
     </div>

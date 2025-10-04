@@ -1,3 +1,5 @@
+import type { OperationTypeNode } from 'graphql'
+
 export interface WPNuxtConfig {
 
   /**
