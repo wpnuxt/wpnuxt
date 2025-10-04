@@ -1,7 +1,18 @@
 {
   "name": "wpnuxt",
   "version": "1.0.0",
-  "description": "WPNuxt",
+  "description": "A Nuxt 4 module that seamlessly integrates WordPress with Nuxt via GraphQL (WPGraphQL)",
+  "keywords": [
+    "nuxt",
+    "nuxt-module",
+    "wordpress",
+    "graphql",
+    "wpgraphql",
+    "headless-cms",
+    "headless-wordpress",
+    "vue",
+    "typescript"
+  ],
   "repository": "wpnuxt/wpnuxt",
   "license": "MIT",
   "type": "module",
@@ -27,7 +38,8 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@nuxt/kit": "4.0.3",
@@ -46,10 +58,20 @@
     "@types/node": "^24.3.0",
     "changelogen": "^0.6.2",
     "eslint": "^9.34.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
     "nuxt": "4.0.3",
     "typescript": "~5.9.2",
     "vitest": "^3.2.4",
     "vue-tsc": "^3.0.6"
+  },
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "eslint --fix"
+    ],
+    "*.{json,md,yml}": [
+      "prettier --write"
+    ]
   },
   "packageManager": "pnpm@10.8.0+sha512.0e82714d1b5b43c74610193cb20734897c1d00de89d0e18420aebc5977fa13d780a9cb05734624e81ebd81cc876cd464794850641c48b9544326b5622ca29971"
 }

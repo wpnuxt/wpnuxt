@@ -1,48 +1,120 @@
-name: ci
+name: CI
 
 on:
   push:
     branches:
       - main
+      - dev
   pull_request:
     branches:
       - main
+      - dev
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+    name: Lint
 
     steps:
-      - uses: actions/checkout@v4
-      - run: corepack enable
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npx nypm@latest i
+        run: pnpm install --frozen-lockfile
 
-      - name: Lint
-        run: npm run lint
+      - name: Run linter
+        run: pnpm run lint
 
   test:
     runs-on: ubuntu-latest
+    name: Test
 
     env:
       WPNUXT_WORDPRESS_URL: ${{ secrets.WPNUXT_WORDPRESS_URL }}
 
     steps:
-      - uses: actions/checkout@v4
-      - run: corepack enable
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npx nypm@latest i
+        run: pnpm install --frozen-lockfile
 
-      - name: Playground prepare
-        run: npm run dev:prepare
+      - name: Prepare module
+        run: pnpm run dev:prepare
 
-      - name: Test
-        run: npm run test
+      - name: Run tests
+        run: pnpm run test
+
+  typecheck:
+    runs-on: ubuntu-latest
+    name: Type Check
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare for type checking
+        run: pnpm run dev:prepare
+
+      - name: Run type check
+        run: pnpm run test:types
+
+  build:
+    runs-on: ubuntu-latest
+    name: Build
+    needs: [lint, test, typecheck]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare module
+        run: pnpm run dev:prepare
+
+      - name: Build module
+        run: pnpm run prepack
+
+      - name: Build playground
+        run: pnpm run dev:build

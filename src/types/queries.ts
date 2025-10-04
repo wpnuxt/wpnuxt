@@ -1,4 +1,5 @@
 import type { Import } from 'unimport'
+import type { OperationTypeNode } from 'graphql'
 
 export interface WPNuxtConfigQueries {
 
@@ -7,18 +8,18 @@ export interface WPNuxtConfigQueries {
    *
    * relative to the src dir of your nuxt app
    *
-   * @default extend/queries
+   * @default extend/queries/
    */
-  extendDir?: string
+  extendFolder?: string
 
   /**
    * The predefined queries & the user defined queries will be merged and placed in the queries output folder
    *
    * relative to the src dir of your nuxt app
    *
-   * @default queries
+   * @default .queries/
    */
-  outputDir?: string
+  mergedOutputFolder?: string
 }
 
 export type WPNuxtQuery = {

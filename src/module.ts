@@ -52,7 +52,7 @@ export default defineNuxtModule<WPNuxtConfig>({
 
     logger.trace('Start generating composables')
 
-    const ctx: WPNuxtContext = await {
+    const ctx: WPNuxtContext = {
       fns: [],
       fnImports: [],
       composablesPrefix: 'use'
@@ -98,10 +98,11 @@ function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig {
   nuxt.options.runtimeConfig.public.wordpressUrl = config.wordpressUrl
 
   // validate config
-  if (!config.wordpressUrl || config.wordpressUrl.length === 0) {
+  if (!config.wordpressUrl?.trim()) {
     throw new Error('WPNuxt error: WordPress url is missing')
-  } else if (config.wordpressUrl.substring(config.wordpressUrl.length - 1) === '/') {
-    throw new Error('WPNuxt error: WordPress url should not have a trailing slash: ' + config.wordpressUrl)
+  }
+  if (config.wordpressUrl.endsWith('/')) {
+    throw new Error(`WPNuxt error: WordPress url should not have a trailing slash: ${config.wordpressUrl}`)
   }
   return config
 }

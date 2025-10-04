@@ -2,17 +2,15 @@ import { existsSync, cpSync, promises as fsp } from 'node:fs'
 import { createResolver, useLogger } from '@nuxt/kit'
 import { ref } from 'vue'
 import type { ConsolaInstance } from 'consola'
+import type { Nuxt } from 'nuxt/schema'
 import type { WPNuxtConfig } from '../types/config'
 
 export function randHashGenerator(length = 12) {
-  const randomChar = () => Math.floor(36 * Math.random()).toString(36)
-
-  return Array<string>(length)
-    .fill(String())
-    .map(randomChar)
-    .reduce((acc, cur) => {
-      return acc + cur.toUpperCase()
-    }, '')
+  return Math.random()
+    .toString(36)
+    .substring(2, 2 + length)
+    .toUpperCase()
+    .padEnd(length, '0')
 }
 
 const loggerRef = ref()
@@ -25,27 +23,28 @@ export function getLogger(): ConsolaInstance {
   return loggerRef.value
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function mergeQueries(nuxt: any, wpNuxtConfig: WPNuxtConfig) {
+export async function mergeQueries(nuxt: Nuxt, wpNuxtConfig: WPNuxtConfig) {
   const { resolve } = createResolver(import.meta.url)
-  const resolveRuntimeModule = (path: string) => resolve('../runtime', path)
   const logger = getLogger()
 
-  const queryOutputPath = resolve((nuxt.options.srcDir || nuxt.options.rootDir) + '/' + wpNuxtConfig.queries.mergedOutputFolder)
+  // Cache base directory
+  const baseDir = nuxt.options.srcDir || nuxt.options.rootDir
+  const queryOutputPath = resolve(baseDir, wpNuxtConfig.queries.mergedOutputFolder)
+  const userQueryPath = resolve(baseDir, wpNuxtConfig.queries.extendFolder)
+  const defaultQueriesPath = resolve('../runtime', 'queries')
+
+  // Clean output directory
   await fsp.rm(queryOutputPath, { recursive: true, force: true })
 
-  const userQueryPath = resolve((nuxt.options.srcDir || nuxt.options.rootDir) + '/' + wpNuxtConfig.queries.extendFolder)
-  logger.debug('User query path:', userQueryPath)
-  /* const userQueryPath = wpNuxtConfig.queries.extendFolder
-    .replace(/^(~~|@@)/, nuxt.options.rootDir)
-    .replace(/^(~|@)/, nuxt.options.srcDir) */
-  const userQueryPathExists = existsSync(userQueryPath)
-  cpSync(resolveRuntimeModule('./queries/'), queryOutputPath, { recursive: true })
+  // Copy default queries
+  cpSync(defaultQueriesPath, queryOutputPath, { recursive: true })
 
-  if (userQueryPathExists) {
+  // Extend with user queries if they exist
+  if (existsSync(userQueryPath)) {
     logger.debug('Extending queries:', userQueryPath)
-    cpSync(resolve(userQueryPath), queryOutputPath, { recursive: true })
+    cpSync(userQueryPath, queryOutputPath, { recursive: true })
   }
-  logger.debug('Copied merged queries in folder:', queryOutputPath)
+
+  logger.debug('Merged queries folder:', queryOutputPath)
   return queryOutputPath
 }
