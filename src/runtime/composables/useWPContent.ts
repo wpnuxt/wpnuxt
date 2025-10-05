@@ -12,6 +12,7 @@ import { useAsyncGraphqlQuery, useGraphqlQuery } from '#imports'
  * @param params - Query variables
  */
 export const useWPContent = async <T>(queryName: keyof Query, nodes: string[], fixImagePaths: boolean, params?: T) => {
+  // Use nuxt-graphql-middleware's built-in client-side caching
   const { data } = await useGraphqlQuery(queryName, params ?? {})
   return {
     data: data ? transformData(data, nodes, fixImagePaths) : undefined
@@ -28,6 +29,7 @@ export const useWPContent = async <T>(queryName: keyof Query, nodes: string[], f
  * @param params - Query variables
  */
 export const useAsyncWPContent = async <T>(queryName: keyof Query, nodes: string[], fixImagePaths: boolean, params?: T) => {
+  // Use nuxt-graphql-middleware's built-in client-side caching
   const { data, pending, refresh, execute, clear, error, status } = await useAsyncGraphqlQuery(queryName, params ?? {})
 
   return {

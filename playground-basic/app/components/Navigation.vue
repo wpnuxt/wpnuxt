@@ -30,26 +30,3 @@ const { data: pages } = await usePages()
     </ul>
   </nav>
 </template>
-
-<style scoped>
-nav {
-    margin-top: 20px;
-    margin-left: 0px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #ccc;
-}
-ul {
-    display: inline;
-    padding-inline-start: 0px;
-}
-ul li {
-    display: inline;
-    margin-right: 10px;
-    color: #ccc;
-}
-ul li a.active {
-  color: rgb(186 175 78 / 1);
-  text-decoration: none;
-  border-bottom: transparent;
-}
-</style>
