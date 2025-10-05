@@ -49,25 +49,26 @@ export async function prepareContext(ctx: WPNuxtContext) {
     return q.fragments?.length ? q.fragments.map(f => `${f}Fragment${fragmentSuffix}`).join(' | ') : 'any'
   }
 
-  const fnExp = (q: WPNuxtQuery, typed = false) => {
-    const functionName = fnName(q.name)
-    if (!typed) {
-      return `export const ${functionName} = (params) => useWPContent('${q.name}', [${formatNodes(q.nodes)}], false, params)`
-    }
-    return `  export const ${functionName}: (params?: ${q.name}QueryVariables) => GraphqlResponse<${getFragmentType(q)}>`
-  }
+  const fnExp = (q: WPNuxtQuery, typed = false, lazy = false) => {
+    const baseName = fnName(q.name)
+    const functionName = lazy ? `useLazy${q.name}` : baseName
 
-  const fnExpAsync = (q: WPNuxtQuery, typed = false) => {
-    const functionName = fnName('Async' + q.name)
     if (!typed) {
-      return `export const ${functionName} = (params) => useAsyncWPContent('${q.name}', [${formatNodes(q.nodes)}], false, params)`
+      if (lazy) {
+        // Lazy variant passes lazy: true option
+        return `export const ${functionName} = (params, options) => useWPContent('${q.name}', [${formatNodes(q.nodes)}], false, params, { ...options, lazy: true })`
+      }
+      return `export const ${functionName} = (params, options) => useWPContent('${q.name}', [${formatNodes(q.nodes)}], false, params, options)`
     }
-    return `  export const ${functionName}: (params?: ${q.name}QueryVariables) => AsyncData<${getFragmentType(q)}, FetchError | null | undefined>`
+    return `  export const ${functionName}: (params?: ${q.name}QueryVariables, options?: WPContentOptions) => WPContentResult<${getFragmentType(q)}>`
   }
 
   ctx.generateImports = () => [
-    ...ctx.fns.map(f => fnExp(f)),
-    ...ctx.fns.map(f => fnExpAsync(f))
+    // Generate both regular and lazy variants for each function
+    ...ctx.fns.flatMap(f => [
+      fnExp(f, false, false), // Regular version
+      fnExp(f, false, true) // Lazy version
+    ])
   ].join('\n')
 
   // Use Set directly for better performance
@@ -80,23 +81,57 @@ export async function prepareContext(ctx: WPNuxtContext) {
   ctx.generateDeclarations = () => {
     const declarations = [
       `import type { ${[...typeSet].join(', ')} } from '#build/graphql-operations'`,
-      'import { AsyncData } from \'nuxt/app\'',
-      'import { FetchError } from \'ofetch\'',
+      'import type { ComputedRef, Ref } from \'vue\'',
+      'import type { AsyncDataRequestStatus } from \'#app\'',
+      '',
+      'export interface WPContentOptions {',
+      '  /** Whether to resolve the async function after loading the route, instead of blocking client-side navigation. Default: false */',
+      '  lazy?: boolean',
+      '  /** Whether to fetch data on the server (during SSR). Default: true */',
+      '  server?: boolean',
+      '  /** Whether to fetch immediately. Default: true */',
+      '  immediate?: boolean',
+      '  /** Watch reactive sources to auto-refresh */',
+      '  watch?: unknown[]',
+      '  /** Transform function to alter the result */',
+      '  transform?: (input: unknown) => unknown',
+      '  /** Additional options to pass to useAsyncGraphqlQuery */',
+      '  [key: string]: unknown',
+      '}',
+      '',
+      'interface WPContentResult<T> {',
+      '  data: ComputedRef<T | undefined>',
+      '  pending: Ref<boolean>',
+      '  refresh: () => Promise<void>',
+      '  execute: () => Promise<void>',
+      '  clear: () => void',
+      '  error: Ref<Error | undefined>',
+      '  status: Ref<AsyncDataRequestStatus>',
+      '}',
+      '',
       'declare module \'#wpnuxt\' {',
-      ...ctx.fns!.map(f => fnExp(f, true)),
-      ...ctx.fns!.map(f => fnExpAsync(f, true)),
+      ...ctx.fns!.flatMap(f => [
+        fnExp(f, true, false), // Regular version type
+        fnExp(f, true, true) // Lazy version type
+      ]),
       '}'
     ]
     return declarations.join('\n')
   }
 
   ctx.fnImports = [
-    ...ctx.fns.map((fn): Import => ({ from: '#wpnuxt', name: fnName(fn.name) })),
-    ...ctx.fns.map((fn): Import => ({ from: '#wpnuxt', name: fnName('Async' + fn.name) }))
+    // Auto-import both regular and lazy variants
+    ...ctx.fns.flatMap((fn): Import[] => [
+      { from: '#wpnuxt', name: fnName(fn.name) },
+      { from: '#wpnuxt', name: `useLazy${fn.name}` }
+    ])
   ]
 
   logger.debug('generated WPNuxt composables: ')
-  ctx.fns.forEach(f => logger.debug(` ${fnName(f.name)}()`))
+  ctx.fns.forEach((f) => {
+    logger.debug(` ${fnName(f.name)}()`)
+    logger.debug(` useLazy${f.name}()`)
+  })
 }
 
 async function prepareFunctions(ctx: WPNuxtContext) {

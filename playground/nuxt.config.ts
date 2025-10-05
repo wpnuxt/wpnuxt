@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4
   },
-  compatibilityDate: '2025-07-12',
+  compatibilityDate: '2025-10-05',
 
   wpNuxt: {
     wordpressUrl: 'https://wordpress2.wpnuxt.com',

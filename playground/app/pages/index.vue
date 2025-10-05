@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const posts = await usePosts()
+const { data: posts, pending } = await usePosts()
 </script>
 
 <template>
@@ -7,15 +7,19 @@ const posts = await usePosts()
     <UPage>
       <UPageHeader
         title="Posts"
-        :description="`fetched ${posts.data.length} posts using the WordPress GraphQL API`"
+        :description="`Fetched ${posts?.length || 0} posts using usePosts()`"
       />
-      <UPageGrid>
-        <PostCard
-          v-for="post in posts.data"
-          :key="post.id"
-          :post="post"
-        />
-      </UPageGrid>
+      <UPageBody>
+        <pre>const { data: posts, pending } = await usePosts()</pre>
+        <p>pending: {{ pending }}</p>
+        <UPageGrid>
+          <PostCard
+            v-for="post in posts"
+            :key="post.id"
+            :post="post"
+          />
+        </UPageGrid>
+      </UPageBody>
     </UPage>
   </UContainer>
 </template>

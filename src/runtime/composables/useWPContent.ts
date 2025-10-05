@@ -1,39 +1,80 @@
 import { getRelativeImagePath } from '../util/images'
 import type { Query } from '#nuxt-graphql-middleware/operation-types'
-import { useAsyncGraphqlQuery, useGraphqlQuery } from '#imports'
+import { computed, useAsyncGraphqlQuery } from '#imports'
 
-/**
- * Synchronously fetch WordPress content using GraphQL
- * Use this in <script setup> with await for immediate data fetching
- *
- * @param queryName - The GraphQL query name
- * @param nodes - Array of nested property names to extract from response
- * @param fixImagePaths - Whether to convert image URLs to relative paths
- * @param params - Query variables
- */
-export const useWPContent = async <T>(queryName: keyof Query, nodes: string[], fixImagePaths: boolean, params?: T) => {
-  // Use nuxt-graphql-middleware's built-in client-side caching
-  const { data } = await useGraphqlQuery(queryName, params ?? {})
-  return {
-    data: data ? transformData(data, nodes, fixImagePaths) : undefined
-  }
+export interface WPContentOptions {
+  /** Whether to resolve the async function after loading the route, instead of blocking client-side navigation. Default: false */
+  lazy?: boolean
+  /** Whether to fetch data on the server (during SSR). Default: true */
+  server?: boolean
+  /** Whether to fetch immediately. Default: true */
+  immediate?: boolean
+  /** Watch reactive sources to auto-refresh */
+  watch?: unknown[]
+  /** Transform function to alter the result */
+  transform?: (input: unknown) => unknown
+  /** Additional options to pass to useAsyncGraphqlQuery */
+  [key: string]: unknown
 }
 
 /**
- * Asynchronously fetch WordPress content using GraphQL
- * Returns AsyncData with reactive data, pending state, and refresh capabilities
+ * Fetch WordPress content using GraphQL with reactive state
+ *
+ * Follows Nuxt's useAsyncData pattern. Returns reactive refs immediately.
+ *
+ * **Standard usage (with or without await - same behavior):**
+ * ```ts
+ * const { data: posts, pending } = usePosts() // or await usePosts()
+ * ```
+ * - Returns reactive refs immediately
+ * - Data fetched during SSR and hydrated to client
+ * - `pending` is true while fetching, false when done
+ * - Uses Suspense during navigation (lazy: false by default)
+ *
+ * **Lazy variant (doesn't block navigation):**
+ * ```ts
+ * const { data: posts, pending } = useLazyPosts()
+ * ```
+ * - Doesn't use Suspense - navigation happens immediately
+ * - Shows loading state (pending: true) while fetching
+ * - Better for below-fold or non-critical content
+ *
+ * **Client-only execution:**
+ * ```ts
+ * const { data: posts } = usePosts(undefined, { server: false })
+ * ```
+ * - Skips SSR, only fetches on client
  *
  * @param queryName - The GraphQL query name
  * @param nodes - Array of nested property names to extract from response
  * @param fixImagePaths - Whether to convert image URLs to relative paths
  * @param params - Query variables
+ * @param options - Options (lazy, server, immediate, watch, transform, etc.)
  */
-export const useAsyncWPContent = async <T>(queryName: keyof Query, nodes: string[], fixImagePaths: boolean, params?: T) => {
+export const useWPContent = <T>(
+  queryName: keyof Query,
+  nodes: string[],
+  fixImagePaths: boolean,
+  params?: T,
+  options?: WPContentOptions
+) => {
   // Use nuxt-graphql-middleware's built-in client-side caching
-  const { data, pending, refresh, execute, clear, error, status } = await useAsyncGraphqlQuery(queryName, params ?? {})
+  // Returns reactive refs immediately - works for both SSR and CSR
+  const { data, pending, refresh, execute, clear, error, status } = useAsyncGraphqlQuery(
+    queryName,
+    params ?? {},
+    options
+  )
+
+  const transformedData = computed(() => {
+    // useAsyncGraphqlQuery returns data wrapped in { data: GraphQLResponse }
+    // The actual query response is in data.value.data
+    const queryResult = data.value?.data
+    return queryResult ? transformData(queryResult, nodes, fixImagePaths) : undefined
+  })
 
   return {
-    data: data.value ? transformData(data.value?.data, nodes, fixImagePaths) : undefined,
+    data: transformedData,
     pending,
     refresh,
     execute,
@@ -56,6 +97,6 @@ const findData = (data: unknown, nodes: string[]) => {
   if (nodes.length === 0) return data
 
   return nodes.reduce((acc, node) => {
-    return acc?.[node] ?? acc
+    return acc?.[node]
   }, data)
 }
