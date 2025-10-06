@@ -10,8 +10,7 @@ const { data: posts, pending, refresh, clear } = useLazyPosts()
       <PageHeaderMultiplePosts
         :posts="posts || []"
         :pending="pending"
-        :refresh="refresh"
-        :clear="clear"
+        :refresh-content="() => { clear(); refresh(); }"
       />
       <UPageBody>
         <pre>const { data: posts, pending, refresh, clear } = useLazyPosts()</pre>

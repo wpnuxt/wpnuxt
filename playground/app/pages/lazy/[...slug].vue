@@ -8,16 +8,17 @@ const { data: post, pending, refresh, clear } = await useLazyNodeByUri({ uri: us
       <PageHeaderSinglePost
         :post="post"
         :pending="pending"
-        :refresh="refresh"
-        :clear="clear"
+        :refresh-content="() => { clear(); refresh(); }"
       />
       <UPageBody>
         <pre>const { data: post, pending, refresh, clear } = useLazyNodeByUri({ uri: useRoute().path })</pre>
-        <MDC
-          v-if="post?.content"
-          :value="post.content"
-        />
-        <LoadingIcon v-else />
+        <UPageCard>
+          <MDC
+            v-if="post?.content"
+            :value="post.content"
+          />
+          <LoadingPage v-else />
+        </UPageCard>
       </UPageBody>
     </UPage>
   </UContainer>

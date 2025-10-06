@@ -4,8 +4,7 @@ import type { PostFragment, PageFragment } from '#graphql-operations'
 defineProps<{
   post: PostFragment | PageFragment | undefined
   pending: boolean
-  refresh: () => void
-  clear: () => void
+  refreshContent: () => void
 }>()
 </script>
 
@@ -19,7 +18,7 @@ defineProps<{
         v-else
         class="grid mt-1"
       >
-        <USkeleton class="h-9 w-[250px]" />
+        <USkeleton class="h-9 w-[250px] opacity-30" />
       </div>
     </template>
     <template #description>
@@ -30,19 +29,20 @@ defineProps<{
         day="numeric"
         year="numeric"
       />
-      <div
-        v-else
-        class="grid my-2"
-      >
-        <USkeleton class="h-5 w-[100px]" />
-      </div>
+      <LoadingIcon v-else />
     </template>
     <template #links>
-      <p>pending: {{ pending }}</p>
-      <UButton @click="clear">
-        Clear
-      </UButton>
-      <UButton @click="refresh">
+      <UBadge
+        v-if="pending"
+        color="primary"
+        variant="subtle"
+      >
+        Loading...
+      </UBadge>
+      <UButton
+        class="cursor-pointer"
+        @click="refreshContent"
+      >
         Refresh
       </UButton>
     </template>

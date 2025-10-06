@@ -8,8 +8,7 @@ const { data: posts, pending, refresh, clear } = await usePosts()
       <PageHeaderMultiplePosts
         :posts="posts || []"
         :pending="pending"
-        :refresh="refresh"
-        :clear="clear"
+        :refresh-content="() => { clear(); refresh(); }"
       />
       <UPageBody>
         <pre>const { data: posts, pending, refresh, clear } = await usePosts()</pre>
