@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { data: post, pending, refresh, clear } = await useNodeByUri({ uri: useRoute().path })
+const { data: post, pending, refresh, clear } = await useLazyNodeByUri({ uri: useRoute().path.replace('/lazy', '') })
 </script>
 
 <template>
@@ -11,7 +11,7 @@ const { data: post, pending, refresh, clear } = await useNodeByUri({ uri: useRou
         :refresh-content="() => { clear(); refresh(); }"
       />
       <UPageBody>
-        <pre>const { data: post, pending, refresh, clear } = await useNodeByUri({ uri: route.path })</pre>
+        <pre>const { data: post, pending, refresh, clear } = useLazyNodeByUri({ uri: useRoute().path })</pre>
         <UPageCard>
           <MDC
             v-if="post?.content"

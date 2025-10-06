@@ -7,9 +7,20 @@ import type { WPNuxtContext, WPNuxtQuery } from './types/queries'
 import { getLogger } from './utils/index'
 import { parseDoc } from './utils/useParser'
 
+// Cache regex for performance
+const SCHEMA_PATTERN = /schema\.(?:gql|graphql)$/i
+
 const allowDocument = (f: string, resolver: Resolver) => {
-  const isSchema = f.match(/([^/]+)\.(gql|graphql)$/)?.[0]?.toLowerCase().includes('schema')
-  return !isSchema && !!statSync(resolver.resolve(f)).size
+  // Skip if filename contains 'schema'
+  if (SCHEMA_PATTERN.test(f)) return false
+
+  try {
+    // Check if file has content
+    return statSync(resolver.resolve(f)).size > 0
+  } catch {
+    // File doesn't exist or can't be read
+    return false
+  }
 }
 export async function generateWPNuxtComposables(ctx: WPNuxtContext, queryOutputPath: string, resolver: Resolver) {
   const gqlMatch = '**/*.{gql,graphql}'
@@ -28,60 +39,99 @@ export async function prepareContext(ctx: WPNuxtContext) {
   }
 
   const fnName = (fn: string) => ctx.composablesPrefix + upperFirst(fn)
-  const fnExp = (q: WPNuxtQuery, typed = false) => {
-    const functionName = fnName(q.name)
-    if (!typed) {
-      return `export const ${functionName} = (params) => useWPContent('${q.name}', [${q.nodes?.map(n => `'${n}'`).join(',')}], false, params)`
-    }
+
+  // Helper to format node array
+  const formatNodes = (nodes?: string[]) => nodes?.map(n => `'${n}'`).join(',') ?? ''
+
+  // Helper to get fragment type string
+  const getFragmentType = (q: WPNuxtQuery) => {
     const fragmentSuffix = q.fragments?.length && q.nodes?.includes('nodes') ? '[]' : ''
-    const fragments = q.fragments?.length ? q.fragments.map(f => `${f}Fragment${fragmentSuffix}`).join(' | ') : 'any'
-    return `  export const ${functionName}: (params?: ${q.name}QueryVariables) => GraphqlResponse<${fragments}>`
+    return q.fragments?.length ? q.fragments.map(f => `${f}Fragment${fragmentSuffix}`).join(' | ') : 'any'
   }
-  const fnExpAsync = (q: WPNuxtQuery, typed = false) => {
-    const functionName = fnName('Async' + q.name)
+
+  const fnExp = (q: WPNuxtQuery, typed = false, lazy = false) => {
+    const baseName = fnName(q.name)
+    const functionName = lazy ? `useLazy${q.name}` : baseName
+
     if (!typed) {
-      return `export const ${functionName} = (params) => useAsyncWPContent('${q.name}', [${q.nodes?.map(n => `'${n}'`).join(',')}], false, params)`
+      if (lazy) {
+        // Lazy variant passes lazy: true option
+        return `export const ${functionName} = (params, options) => useWPContent('${q.name}', [${formatNodes(q.nodes)}], false, params, { ...options, lazy: true })`
+      }
+      return `export const ${functionName} = (params, options) => useWPContent('${q.name}', [${formatNodes(q.nodes)}], false, params, options)`
     }
-    const fragmentSuffix = q.fragments?.length && q.nodes?.includes('nodes') ? '[]' : ''
-    const fragments = q.fragments?.length ? q.fragments.map(f => `${f}Fragment${fragmentSuffix}`).join(' | ') : 'any'
-    return `  export const ${functionName}: (params?: ${q.name}QueryVariables) => AsyncData<${fragments}, FetchError | null | undefined>`
+    return `  export const ${functionName}: (params?: ${q.name}QueryVariables, options?: WPContentOptions) => WPContentResult<${getFragmentType(q)}>`
   }
 
   ctx.generateImports = () => [
-    ...ctx.fns.map(f => fnExp(f)),
-    ...ctx.fns.map(f => fnExpAsync(f))
+    // Generate both regular and lazy variants for each function
+    ...ctx.fns.flatMap(f => [
+      fnExp(f, false, false), // Regular version
+      fnExp(f, false, true) // Lazy version
+    ])
   ].join('\n')
 
-  const types: string[] = []
-  ctx.fns.forEach(o => types.push(...getQueryTypeTemplate(o)))
-  ctx.generateDeclarations = () => [
-    `import type { ${[...new Set(types)].join(', ')} } from '#build/graphql-operations'`,
-    'import { AsyncData } from \'nuxt/app\'',
-    'import { FetchError } from \'ofetch\'',
-    'declare module \'#wpnuxt\' {',
-    ...([
-      ...ctx.fns!.map(f => fnExp(f, true)),
-      ...ctx.fns!.map(f => fnExpAsync(f, true))
-    ]),
-    '}'
-  ].join('\n')
+  // Use Set directly for better performance
+  const typeSet = new Set<string>()
+  ctx.fns.forEach((o) => {
+    typeSet.add(`${o.name}QueryVariables`)
+    o.fragments?.forEach(f => typeSet.add(`${f}Fragment`))
+  })
+
+  ctx.generateDeclarations = () => {
+    const declarations = [
+      `import type { ${[...typeSet].join(', ')} } from '#build/graphql-operations'`,
+      'import type { ComputedRef, Ref } from \'vue\'',
+      'import type { AsyncDataRequestStatus } from \'#app\'',
+      '',
+      'export interface WPContentOptions {',
+      '  /** Whether to resolve the async function after loading the route, instead of blocking client-side navigation. Default: false */',
+      '  lazy?: boolean',
+      '  /** Whether to fetch data on the server (during SSR). Default: true */',
+      '  server?: boolean',
+      '  /** Whether to fetch immediately. Default: true */',
+      '  immediate?: boolean',
+      '  /** Watch reactive sources to auto-refresh */',
+      '  watch?: unknown[]',
+      '  /** Transform function to alter the result */',
+      '  transform?: (input: unknown) => unknown',
+      '  /** Additional options to pass to useAsyncGraphqlQuery */',
+      '  [key: string]: unknown',
+      '}',
+      '',
+      'interface WPContentResult<T> {',
+      '  data: ComputedRef<T | undefined>',
+      '  pending: Ref<boolean>',
+      '  refresh: () => Promise<void>',
+      '  execute: () => Promise<void>',
+      '  clear: () => void',
+      '  error: Ref<Error | undefined>',
+      '  status: Ref<AsyncDataRequestStatus>',
+      '}',
+      '',
+      'declare module \'#wpnuxt\' {',
+      ...ctx.fns!.flatMap(f => [
+        fnExp(f, true, false), // Regular version type
+        fnExp(f, true, true) // Lazy version type
+      ]),
+      '}'
+    ]
+    return declarations.join('\n')
+  }
 
   ctx.fnImports = [
-    ...ctx.fns.map((fn): Import => ({ from: '#wpnuxt', name: fnName(fn.name) })),
-    ...ctx.fns.map((fn): Import => ({ from: '#wpnuxt', name: fnName('Async' + fn.name) }))
+    // Auto-import both regular and lazy variants
+    ...ctx.fns.flatMap((fn): Import[] => [
+      { from: '#wpnuxt', name: fnName(fn.name) },
+      { from: '#wpnuxt', name: `useLazy${fn.name}` }
+    ])
   ]
 
   logger.debug('generated WPNuxt composables: ')
-  ctx.fns.forEach(f => logger.debug(` ${fnName(f.name)}()`))
-}
-
-function getQueryTypeTemplate(q: WPNuxtQuery): string[] {
-  const types: string[] = []
-  types.push(`${q.name}QueryVariables`)
-  if (q.fragments && q.fragments.length > 0) {
-    q.fragments.forEach(f => types.push(`${f}Fragment`))
-  }
-  return types
+  ctx.fns.forEach((f) => {
+    logger.debug(` ${fnName(f.name)}()`)
+    logger.debug(` useLazy${f.name}()`)
+  })
 }
 
 async function prepareFunctions(ctx: WPNuxtContext) {
@@ -89,10 +139,17 @@ async function prepareFunctions(ctx: WPNuxtContext) {
     getLogger().error('no GraphQL query documents were found!')
     return
   }
-  for await (const doc of ctx.docs) {
-    const operations = await parseDoc(await fsp.readFile(doc, 'utf8'))
-    operations.forEach((query) => {
-      ctx.fns.push(query)
+
+  // Parallel file reads for better performance
+  const operations = await Promise.all(
+    ctx.docs.map(async (doc) => {
+      const content = await fsp.readFile(doc, 'utf8')
+      return parseDoc(content)
     })
-  }
+  )
+
+  // Flatten and add to context
+  operations.flat().forEach((query) => {
+    ctx.fns.push(query)
+  })
 }

@@ -4,6 +4,7 @@
     "dist",
     "node_modules",
     "playground",
+    "playground-basic",
     "wordpress"
   ],
   "compilerOptions": {

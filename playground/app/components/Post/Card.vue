@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import type { PostFragment } from '#graphql-operations'
 
-const route = useRoute()
-
 defineProps<{
   post: PostFragment
+  lazy?: boolean
 }>()
 </script>
 
 <template>
   <UPageCard
     :title="post.title"
-    :to="route.path === '/async' ? `/async/${post.slug}` : `/${post.slug}`"
+    :to="lazy ? `/lazy/${post.slug}` : `/${post.slug}`"
     class="shadow-md mb-0"
   >
     <template #description>

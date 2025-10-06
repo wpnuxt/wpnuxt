@@ -1,29 +1,40 @@
-import { parse } from 'graphql'
+import { parse, GraphQLError } from 'graphql'
 import type { SelectionNode, OperationDefinitionNode } from 'graphql'
 import type { WPNuxtQuery } from '../types/queries'
 
 const _parseDoc = async (doc: string): Promise<WPNuxtQuery[]> => {
-  const { definitions } = parse(doc)
+  if (!doc || typeof doc !== 'string' || doc.trim().length === 0) {
+    throw new Error('WPNuxt: Invalid GraphQL document - document is empty or not a string')
+  }
 
-  const operations: WPNuxtQuery[] = definitions
-    .filter(({ kind }) => kind === 'OperationDefinition')
-    .map((definition) => {
-      const operationDefinition = definition as OperationDefinitionNode
-      if (!operationDefinition.name?.value) {
-        throw new Error(`Operation name missing in: ${doc}`)
-      }
+  try {
+    const { definitions } = parse(doc)
 
-      const query: WPNuxtQuery = {
-        name: operationDefinition.name.value.trim(),
-        nodes: [],
-        fragments: [],
-        params: {},
-        operation: operationDefinition.operation
-      }
-      processSelections(operationDefinition.selectionSet.selections, 0, query)
-      return query
-    })
-  return operations
+    const operations: WPNuxtQuery[] = definitions
+      .filter(({ kind }) => kind === 'OperationDefinition')
+      .map((definition) => {
+        const operationDefinition = definition as OperationDefinitionNode
+        if (!operationDefinition.name?.value) {
+          throw new Error('WPNuxt: GraphQL operation is missing a name. All queries and mutations must have a name.')
+        }
+
+        const query: WPNuxtQuery = {
+          name: operationDefinition.name.value.trim(),
+          nodes: [],
+          fragments: [],
+          params: {},
+          operation: operationDefinition.operation
+        }
+        processSelections(operationDefinition.selectionSet.selections, 0, query)
+        return query
+      })
+    return operations
+  } catch (error) {
+    if (error instanceof GraphQLError) {
+      throw new TypeError(`WPNuxt: Failed to parse GraphQL document - ${error.message}`)
+    }
+    throw error
+  }
 }
 
 function processSelections(selections: readonly SelectionNode[], level: number, query: WPNuxtQuery) {

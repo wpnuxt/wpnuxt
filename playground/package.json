@@ -5,12 +5,13 @@
   "scripts": {
     "dev": "nuxi dev",
     "build": "nuxi build",
-    "generate": "nuxi generate"
+    "generate": "nuxi generate",
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/ui": "4.0.0-alpha.0",
+    "@nuxt/ui": "4.0.1",
     "@nuxtjs/mdc": "^0.17.2",
-    "nuxt": "4.0.3"
+    "nuxt": "4.1.2"
   },
   "devDependencies": {
     "@iconify-json/logos": "^1.2.9",

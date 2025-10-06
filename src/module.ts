@@ -21,7 +21,12 @@ export default defineNuxtModule<WPNuxtConfig>({
       mergedOutputFolder: '.queries/'
     },
     downloadSchema: true,
-    debug: false
+    debug: false,
+    cache: {
+      enabled: true,
+      maxAge: 60 * 5, // 5 minutes
+      swr: true
+    }
   },
   async setup(options, nuxt) {
     const startTime = new Date().getTime()
@@ -39,6 +44,19 @@ export default defineNuxtModule<WPNuxtConfig>({
     const mergedQueriesFolder = await mergeQueries(nuxt, wpNuxtConfig)
     await registerModules(nuxt, resolver, wpNuxtConfig, mergedQueriesFolder)
 
+    // Configure Nitro route rules for caching GraphQL requests if enabled
+    if (wpNuxtConfig.cache?.enabled !== false) {
+      const maxAge = wpNuxtConfig.cache?.maxAge ?? 300
+      nuxt.options.nitro.routeRules = nuxt.options.nitro.routeRules || {}
+      nuxt.options.nitro.routeRules['/graphql-middleware/**'] = {
+        cache: {
+          maxAge,
+          swr: wpNuxtConfig.cache?.swr !== false
+        }
+      }
+      logger.debug(`Server-side caching enabled for GraphQL requests (maxAge: ${maxAge}s, SWR: ${wpNuxtConfig.cache?.swr !== false})`)
+    }
+
     addImports([
       { name: 'useWPContent', as: 'useWPContent', from: resolver.resolve('./runtime/composables/useWPContent') },
       { name: 'useAsyncWPContent', as: 'useAsyncWPContent', from: resolver.resolve('./runtime/composables/useWPContent') }
@@ -52,7 +70,7 @@ export default defineNuxtModule<WPNuxtConfig>({
 
     logger.trace('Start generating composables')
 
-    const ctx: WPNuxtContext = await {
+    const ctx: WPNuxtContext = {
       fns: [],
       fnImports: [],
       composablesPrefix: 'use'
@@ -96,12 +114,22 @@ function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig {
   }, options) as WPNuxtConfig
 
   nuxt.options.runtimeConfig.public.wordpressUrl = config.wordpressUrl
+  nuxt.options.runtimeConfig.public.wpNuxt = {
+    wordpressUrl: config.wordpressUrl,
+    graphqlEndpoint: config.graphqlEndpoint,
+    cache: {
+      enabled: config.cache?.enabled ?? true,
+      maxAge: config.cache?.maxAge ?? 300,
+      swr: config.cache?.swr ?? true
+    }
+  }
 
   // validate config
-  if (!config.wordpressUrl || config.wordpressUrl.length === 0) {
+  if (!config.wordpressUrl?.trim()) {
     throw new Error('WPNuxt error: WordPress url is missing')
-  } else if (config.wordpressUrl.substring(config.wordpressUrl.length - 1) === '/') {
-    throw new Error('WPNuxt error: WordPress url should not have a trailing slash: ' + config.wordpressUrl)
+  }
+  if (config.wordpressUrl.endsWith('/')) {
+    throw new Error(`WPNuxt error: WordPress url should not have a trailing slash: ${config.wordpressUrl}`)
   }
   return config
 }

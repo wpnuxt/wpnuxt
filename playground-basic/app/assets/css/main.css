@@ -1,0 +1,42 @@
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'DM Sans', sans-serif;
+}
+header, main {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 10px;
+}
+a {
+  color: #666;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid rgb(186 175 78 / 1);
+}
+a:hover {
+  border-bottom: 1px solid #333;
+}
+
+nav {
+  margin-top: 20px;
+  margin-left: 0px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+}
+nav ul {
+  display: inline;
+  padding-inline-start: 0px;
+}
+nav ul li {
+  display: inline;
+  margin-right: 10px;
+  color: #ccc;
+}
+nav ul li a.active {
+  color: rgb(186 175 78 / 1);
+  text-decoration: none;
+  border-bottom: transparent;
+}

@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const { data: posts, pending, refresh, clear } = await usePosts()
+// Using useLazyPosts() - same as usePosts with lazy: true option
+// Doesn't block navigation, perfect for showing loading states
+const { data: posts, pending, refresh, clear } = useLazyPosts()
 </script>
 
 <template>
@@ -11,11 +13,11 @@ const { data: posts, pending, refresh, clear } = await usePosts()
         :refresh-content="() => { clear(); refresh(); }"
       />
       <UPageBody>
-        <pre>const { data: posts, pending, refresh, clear } = await usePosts()</pre>
+        <pre>const { data: posts, pending, refresh, clear } = useLazyPosts()</pre>
         <PostGrid
           :posts="posts || []"
           :pending="pending"
-          :lazy="false"
+          :lazy="true"
         />
       </UPageBody>
     </UPage>
