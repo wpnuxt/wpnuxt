@@ -117,7 +117,11 @@ function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig {
   nuxt.options.runtimeConfig.public.wpNuxt = {
     wordpressUrl: config.wordpressUrl,
     graphqlEndpoint: config.graphqlEndpoint,
-    cache: config.cache
+    cache: {
+      enabled: config.cache?.enabled ?? true,
+      maxAge: config.cache?.maxAge ?? 300,
+      swr: config.cache?.swr ?? true
+    }
   }
 
   // validate config

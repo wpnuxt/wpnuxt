@@ -1,5 +1,6 @@
 import { getRelativeImagePath } from '../util/images'
 import type { Query } from '#nuxt-graphql-middleware/operation-types'
+import type { WatchSource } from 'vue'
 import { computed, useAsyncGraphqlQuery } from '#imports'
 
 export interface WPContentOptions {
@@ -10,7 +11,7 @@ export interface WPContentOptions {
   /** Whether to fetch immediately. Default: true */
   immediate?: boolean
   /** Watch reactive sources to auto-refresh */
-  watch?: unknown[]
+  watch?: (WatchSource<unknown> | object)[]
   /** Transform function to alter the result */
   transform?: (input: unknown) => unknown
   /** Additional options to pass to useAsyncGraphqlQuery */
@@ -69,7 +70,7 @@ export const useWPContent = <T>(
   const transformedData = computed(() => {
     // useAsyncGraphqlQuery returns data wrapped in { data: GraphQLResponse }
     // The actual query response is in data.value.data
-    const queryResult = data.value?.data
+    const queryResult = data.value && typeof data.value === 'object' && data.value !== null && 'data' in data.value ? (data.value as Record<string, unknown>).data : undefined
     return queryResult ? transformData(queryResult, nodes, fixImagePaths) : undefined
   })
 
@@ -86,17 +87,25 @@ export const useWPContent = <T>(
 
 const transformData = <T>(data: unknown, nodes: string[], fixImagePaths: boolean): T => {
   const transformedData = findData(data, nodes)
-  if (fixImagePaths && transformedData?.featuredImage?.node?.sourceUrl) {
-    transformedData.featuredImage.node.relativePath
-      = getRelativeImagePath(transformedData.featuredImage.node.sourceUrl)
+  if (fixImagePaths && transformedData && typeof transformedData === 'object' && 'featuredImage' in transformedData) {
+    const featuredImage = (transformedData as Record<string, unknown>).featuredImage
+    if (featuredImage && typeof featuredImage === 'object' && 'node' in featuredImage) {
+      const node = featuredImage.node
+      if (node && typeof node === 'object' && 'sourceUrl' in node && typeof node.sourceUrl === 'string') {
+        (node as Record<string, unknown>).relativePath = getRelativeImagePath(node.sourceUrl)
+      }
+    }
   }
   return transformedData as T
 }
 
-const findData = (data: unknown, nodes: string[]) => {
+const findData = (data: unknown, nodes: string[]): unknown => {
   if (nodes.length === 0) return data
 
-  return nodes.reduce((acc, node) => {
-    return acc?.[node]
+  return nodes.reduce((acc: unknown, node: string) => {
+    if (acc && typeof acc === 'object' && node in acc) {
+      return (acc as Record<string, unknown>)[node]
+    }
+    return undefined
   }, data)
 }

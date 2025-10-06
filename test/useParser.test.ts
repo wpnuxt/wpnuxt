@@ -16,9 +16,9 @@ describe('useParser', () => {
       `
       const result = await parseDoc(doc)
       expect(result).toHaveLength(1)
-      expect(result[0].name).toBe('TestQuery')
-      expect(result[0].operation).toBe('query')
-      expect(result[0].nodes).toContain('posts')
+      expect(result[0]?.name).toBe('TestQuery')
+      expect(result[0]?.operation).toBe('query')
+      expect(result[0]?.nodes).toContain('posts')
     })
 
     it('should parse queries with fragments', async () => {
@@ -33,7 +33,7 @@ describe('useParser', () => {
       `
       const result = await parseDoc(doc)
       expect(result).toHaveLength(1)
-      expect(result[0].fragments).toContain('PostFragment')
+      expect(result[0]?.fragments).toContain('PostFragment')
     })
 
     it('should throw error for empty document', async () => {
@@ -87,8 +87,8 @@ describe('useParser', () => {
       `
       const result = await parseDoc(doc)
       expect(result).toHaveLength(2)
-      expect(result[0].name).toBe('FirstQuery')
-      expect(result[1].name).toBe('SecondQuery')
+      expect(result[0]?.name).toBe('FirstQuery')
+      expect(result[1]?.name).toBe('SecondQuery')
     })
 
     it('should handle queries with variables', async () => {
@@ -102,7 +102,7 @@ describe('useParser', () => {
       `
       const result = await parseDoc(doc)
       expect(result).toHaveLength(1)
-      expect(result[0].name).toBe('PostById')
+      expect(result[0]?.name).toBe('PostById')
     })
   })
 })

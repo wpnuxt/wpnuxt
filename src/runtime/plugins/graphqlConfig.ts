@@ -15,7 +15,7 @@ export default defineNuxtPlugin((_NuxtApp) => {
   const { buildHash } = useRuntimeConfig().public
 
   state.fetchOptions = {
-    async onRequest({ _request, options }) {
+    async onRequest({ options }) {
       if (!options.params) {
         options.params = {}
       }

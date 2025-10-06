@@ -1,23 +1,28 @@
 <script setup lang="ts">
-const { data: posts } = await usePosts()
+const { data: posts, pending } = await usePosts()
 </script>
 
 <template>
-  <div
-    v-for="post in posts"
-    :key="post.id"
-    :title="post.title"
-    :to="`/${post.slug}`"
-    class="shadow-md mb-0"
-  >
-    <h2>{{ post.title }}</h2>
-    <div v-sanitize-html="post.excerpt" />
-    <NuxtLink
+  <div>
+    <p v-if="pending">
+      Fetching posts...
+    </p>
+    <div
+      v-for="post in posts"
+      v-else
+      :key="post.id"
+      :title="post.title"
       :to="`/${post.slug}`"
-      color="neutral"
-      variant="outline"
     >
-      Read More
-    </NuxtLink>
+      <h2>{{ post.title }}</h2>
+      <div v-sanitize-html="post.excerpt" />
+      <NuxtLink
+        :to="`/${post.slug}`"
+        color="neutral"
+        variant="outline"
+      >
+        Read More
+      </NuxtLink>
+    </div>
   </div>
 </template>

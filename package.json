@@ -34,11 +34,13 @@
     "dev:basic": "nuxi dev playground-basic",
     "dev:basic:build": "nuxi build playground-basic",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground && nuxi prepare playground-basic",
-    "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
+    "release": "pnpm run fullcheck && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
+    "typecheck": "vue-tsc --noEmit",
+    "typecheck:all": "pnpm -w -r run typecheck",
+    "fullcheck": "pnpm run typecheck:all && pnpm run lint && pnpm run prepack && pnpm run test",
     "prepare": "husky || true"
   },
   "dependencies": {
