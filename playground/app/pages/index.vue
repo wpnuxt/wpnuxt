@@ -1,24 +1,23 @@
 <script setup lang="ts">
-const { data: posts, pending } = await usePosts()
+const { data: posts, pending, refresh, clear } = await usePosts()
 </script>
 
 <template>
   <UContainer>
     <UPage>
-      <UPageHeader
-        title="Posts"
-        :description="`Fetched ${posts?.length || 0} posts using usePosts()`"
+      <PageHeaderMultiplePosts
+        :posts="posts || []"
+        :pending="pending"
+        :refresh="refresh"
+        :clear="clear"
       />
       <UPageBody>
-        <pre>const { data: posts, pending } = await usePosts()</pre>
-        <p>pending: {{ pending }}</p>
-        <UPageGrid>
-          <PostCard
-            v-for="post in posts"
-            :key="post.id"
-            :post="post"
-          />
-        </UPageGrid>
+        <pre>const { data: posts, pending, refresh, clear } = await usePosts()</pre>
+        <PostGrid
+          :posts="posts || []"
+          :pending="pending"
+          :lazy="false"
+        />
       </UPageBody>
     </UPage>
   </UContainer>

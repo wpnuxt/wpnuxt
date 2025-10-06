@@ -2,8 +2,5 @@
 @import "@nuxt/ui";
 
 pre {
-  background-color: #f0f0f0;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 5px;
+  @apply bg-gray-100 p-4 my-4 rounded-md;
 }

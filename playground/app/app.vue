@@ -18,10 +18,6 @@ const menu = computed(() => {
       label: 'Lazy data fetching',
       to: '/lazy'
     },
-    {
-      label: 'Comparison',
-      to: '/comparison'
-    },
     ...wordPressPages
   ]
 })

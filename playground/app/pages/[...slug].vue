@@ -1,19 +1,23 @@
 <script setup lang="ts">
-const route = useRoute()
-// Using await blocks on server for SSR, but data is still reactive on client
-const { data: post } = await useNodeByUri({ uri: route.path })
+const { data: post, pending, refresh, clear } = await useNodeByUri({ uri: useRoute().path })
 </script>
 
 <template>
   <UContainer>
     <UPage>
-      <PageHeader :post="post" />
-      <UPageBody class="my-10">
+      <PageHeaderSinglePost
+        :post="post"
+        :pending="pending"
+        :refresh="refresh"
+        :clear="clear"
+      />
+      <UPageBody>
+        <pre>const { data: post, pending, refresh, clear } = await useNodeByUri({ uri: route.path })</pre>
         <MDC
           v-if="post?.content"
           :value="post.content"
         />
-        <Loading v-else />
+        <LoadingIcon v-else />
       </UPageBody>
     </UPage>
   </UContainer>
