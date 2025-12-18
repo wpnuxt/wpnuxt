@@ -82,18 +82,11 @@ export default defineNuxtModule<WPNuxtConfig>({
       src: resolveRuntimeModule('plugins/vue-sanitize-directive')
     })
 
+    // Base composables (always available)
     addImports([
       { name: 'isStaging', as: 'isStaging', from: resolveRuntimeModule('./composables/isStaging') },
       { name: 'useWPContent', as: 'useWPContent', from: resolveRuntimeModule('./composables/useWPContent') },
-      { name: 'parseDoc', as: 'parseDoc', from: resolveRuntimeModule('./composables/useParser') },
       { name: 'usePrevNextPost', as: 'usePrevNextPost', from: resolveRuntimeModule('./composables/usePrevNextPost') },
-
-      { name: 'loginUser', as: 'loginUser', from: resolveRuntimeModule('./composables/user') },
-      { name: 'logoutUser', as: 'logoutUser', from: resolveRuntimeModule('./composables/user') },
-      { name: 'getCurrentUserId', as: 'getCurrentUserId', from: resolveRuntimeModule('./composables/user') },
-      { name: 'getCurrentUserName', as: 'getCurrentUserName', from: resolveRuntimeModule('./composables/user') },
-
-      { name: 'useTokens', as: 'useTokens', from: resolveRuntimeModule('./composables/useTokens') },
       { name: 'useWPUri', as: 'useWPUri', from: resolveRuntimeModule('./composables/useWPUri') },
       { name: 'useFeaturedImage', as: 'useFeaturedImage', from: resolveRuntimeModule('./composables/useFeaturedImage') }
     ])
