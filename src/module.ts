@@ -33,7 +33,9 @@ export default defineNuxtModule<WPNuxtConfig>({
     name,
     version,
     configKey: 'wpNuxt',
-    nuxt: '>=3.1.0'
+    compatibility: {
+      nuxt: '>=3.1.0'
+    }
   },
   // Default configuration options of the Nuxt module
   defaults: defaultConfigs,
