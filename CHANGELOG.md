@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.0.0-edge.31
+
+[compare changes](https://github.com/wpnuxt/wpnuxt-core/compare/v1.0.0-edge.30...v1.0.0-edge.31)
+
+### 🏡 Chore
+
+- Update dependencies and upgrade Nuxt to 4.2.2 and @nuxt/ui to 4.3.0 ([f4d7fa7](https://github.com/wpnuxt/wpnuxt-core/commit/f4d7fa7))
+
+### ❤️ Contributors
+
+- Wouter Vernaillen <wouter@vernaillen.com>
+
 ## v1.0.0-edge.12
 
 [compare changes](https://github.com/wpnuxt/wpnuxt-core/compare/v1.0.0-edge.11...v1.0.0-edge.12)
