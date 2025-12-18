@@ -1,4 +1,4 @@
-import { defineNuxtModule, addComponentsDir, addServerHandler, createResolver, installModule, addTemplate, addTypeTemplate, addImports, type Resolver, addPlugin, hasNuxtModule } from '@nuxt/kit'
+import { defineNuxtModule, addComponentsDir, addServerHandler, createResolver, installModule, addTemplate, addTypeTemplate, addImportsDir, type Resolver, addPlugin, hasNuxtModule } from '@nuxt/kit'
 import type { Nuxt } from '@nuxt/schema'
 import { consola } from 'consola'
 import type { Import } from 'unimport'
@@ -82,14 +82,8 @@ export default defineNuxtModule<WPNuxtConfig>({
       src: resolveRuntimeModule('plugins/vue-sanitize-directive')
     })
 
-    // Base composables (always available)
-    addImports([
-      { name: 'isStaging', as: 'isStaging', from: resolveRuntimeModule('./composables/isStaging') },
-      { name: 'useWPContent', as: 'useWPContent', from: resolveRuntimeModule('./composables/useWPContent') },
-      { name: 'usePrevNextPost', as: 'usePrevNextPost', from: resolveRuntimeModule('./composables/usePrevNextPost') },
-      { name: 'useWPUri', as: 'useWPUri', from: resolveRuntimeModule('./composables/useWPUri') },
-      { name: 'useFeaturedImage', as: 'useFeaturedImage', from: resolveRuntimeModule('./composables/useFeaturedImage') }
-    ])
+    // Auto-discover all composables from the directory
+    addImportsDir(resolveRuntimeModule('./composables'))
 
     addComponentsDir({
       path: resolveRuntimeModule('./components'),
