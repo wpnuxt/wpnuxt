@@ -33,7 +33,7 @@ describe('useWPContent', () => {
 
     expect(result.data).toEqual(mockData)
     expect(result.error).toBeNull()
-    expect($fetch).toHaveBeenCalledWith('/api/wpContent', {
+    expect($fetch).toHaveBeenCalledWith('/api/_wpnuxt/content', {
       method: 'POST',
       body: {
         operation: 'query',
@@ -109,7 +109,7 @@ describe('useWPContent', () => {
 
     await useWPContent(OperationTypeNode.QUERY, 'GetPostBySlug', [], false, params)
 
-    expect($fetch).toHaveBeenCalledWith('/api/wpContent', {
+    expect($fetch).toHaveBeenCalledWith('/api/_wpnuxt/content', {
       method: 'POST',
       body: {
         operation: 'query',

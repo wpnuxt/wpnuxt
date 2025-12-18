@@ -99,12 +99,12 @@ export default defineNuxtModule<WPNuxtConfig>({
       extensions: ['.vue']
     })
     addServerHandler({
-      route: '/api/wpContent',
-      handler: resolveRuntimeModule('./server/api/wpContent.post')
+      route: '/api/_wpnuxt/content',
+      handler: resolveRuntimeModule('./server/api/_wpnuxt/content.post')
     })
     addServerHandler({
-      route: '/api/config',
-      handler: resolveRuntimeModule('./server/api/config')
+      route: '/api/_wpnuxt/config',
+      handler: resolveRuntimeModule('./server/api/_wpnuxt/config')
     })
 
     // Parallelize independent operations for faster setup

@@ -18,7 +18,7 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4
   },
-  compatibilityDate: '2025-01-09',
+  compatibilityDate: '2025-12-18',
 
   // @ts-expect-error - eslint config is provided by @nuxt/eslint module
   eslint: {

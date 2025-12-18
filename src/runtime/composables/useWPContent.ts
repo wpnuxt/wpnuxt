@@ -30,7 +30,7 @@ const _useWPContent = async <T>(
     const config = useRuntimeConfig()
     const wordpressUrl = config.public.wpNuxt.wordpressUrl
 
-    const response = await $fetch<AsyncData<T, FetchError | null>>('/api/wpContent', {
+    const response = await $fetch<AsyncData<T, FetchError | null>>('/api/_wpnuxt/content', {
       method: 'POST',
       body: {
         operation,
