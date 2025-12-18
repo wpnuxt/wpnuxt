@@ -13,11 +13,20 @@ interface WPContentResponse<T> {
  * Fetches content from WordPress via GraphQL
  *
  * @param operation - The GraphQL operation type (query or mutation)
- * @param queryName - The name of the GraphQL query
- * @param nodes - Array of node names to traverse in the response
- * @param fixImagePaths - Whether to convert image URLs to relative paths
- * @param params - Optional query parameters
- * @returns Promise with data and error properties
+ * @param queryName - The name of the GraphQL query to execute
+ * @param nodes - Array of node names to traverse in the response data
+ * @param fixImagePaths - Whether to convert absolute image URLs to relative paths
+ * @param params - Optional query parameters/variables
+ * @returns Promise with `data` and `error` properties
+ *
+ * @example
+ * ```typescript
+ * // Fetch posts with pagination
+ * const { data, error } = await useWPContent('query', 'Posts', ['posts', 'nodes'], false, { first: 10 })
+ *
+ * // Fetch a single page by URI
+ * const { data } = await useWPContent('query', 'Node', ['nodeByUri'], true, { uri: '/about' })
+ * ```
  */
 const _useWPContent = async <T>(
   operation: OperationTypeNode,
