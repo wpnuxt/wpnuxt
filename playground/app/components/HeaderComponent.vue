@@ -3,21 +3,32 @@ import type { MenuItemFragment } from '#build/graphql-operations'
 import { useMenu, usePosts } from '#wpnuxt'
 import { computed, useAsyncData, useRoute } from '#imports'
 
+interface PostData {
+  slug?: string
+  title?: string
+  uri?: string
+}
+
+interface LinkData {
+  label?: string
+  uri?: string
+}
+
 const route = useRoute()
 const { data: menu } = await useAsyncData('nav-menu', () => useMenu({ name: 'main' }))
 const { data: posts } = await useAsyncData('nav-posts', () => usePosts())
-const postSlugs = computed(() => posts.value?.data?.map(post => post.slug))
+const postSlugs = computed(() => posts.value?.data?.map((post: PostData) => post.slug))
 
-const wpLinks: MenuItemFragment[] = menu.value?.data?.map(link => ({
+const wpLinks: MenuItemFragment[] = menu.value?.data?.map((link: LinkData) => ({
   label: link.label,
   to: link.uri
-}))
+})) || []
 const links = [
   {
     label: 'Blog',
     to: '/',
     active: postSlugs.value?.includes(route.path.replaceAll('/', '')),
-    children: posts.value?.data?.map(post => ({
+    children: posts.value?.data?.map((post: PostData) => ({
       label: post.title,
       to: post.uri
     }))

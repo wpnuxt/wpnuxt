@@ -6,7 +6,7 @@ defineProps<{
   node: NodeWithContentEditorFragment | NodeWithEditorBlocksFragment
 }>()
 
-const manifest = await import('#wpnuxt/blocks').catch(() => ({}))
+const manifest = await import('#wpnuxt/blocks').catch(() => ({})) as Record<string, unknown>
 const findComponentToRender = async () => {
   const componentImporter = manifest['BlockRenderer']
   if (typeof componentImporter === 'function') {

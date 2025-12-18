@@ -7,6 +7,7 @@ on:
       - "*.md"
     branches:
       - main
+      - refactoring-claude-ai
   pull_request:
     paths-ignore:
       - "docs/**"
@@ -29,16 +30,18 @@ jobs:
         id: pnpm-install
         with:
           run_install: false
-          version: 9
-
-      - name: Install dependencies
-        run: pnpm install
 
       - name: Install dependencies
         run: pnpm install
 
       - name: Lint
         run: pnpm run lint
+
+      - name: Type check
+        run: pnpm run typecheck
+
+      - name: Generate coverage report
+        run: pnpm run coverage
 
       - name: Module Build
         run: pnpm run build

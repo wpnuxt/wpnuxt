@@ -1,3 +1,5 @@
+import type { OperationTypeNode } from 'graphql'
+
 export interface WPNuxtConfig {
 
   /**
@@ -19,6 +21,13 @@ export interface WPNuxtConfig {
   defaultMenuName?: string
 
   enableCache?: boolean
+
+  /**
+   * Cache duration in seconds for WordPress content
+   *
+   * @default 300 (5 minutes)
+   */
+  cacheMaxAge?: number
 
   staging?: boolean
 

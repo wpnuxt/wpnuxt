@@ -7,13 +7,9 @@ export default defineNuxtConfig({
     '../src/module'
   ],
 
-  devtools: { enabled: true },
+  devtools: { enabled: process.env.NODE_ENV === 'development' },
 
   css: ['~/assets/css/main.css'],
-
-  ui: {
-    colorMode: true
-  },
 
   routeRules: {
     '/wp-content/**': { proxy: { to: 'http://localhost:4000/wp-content/**' } }
@@ -22,8 +18,9 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4
   },
-  compatibilityDate: '2025-01-09',
+  compatibilityDate: '2025-12-18',
 
+  // @ts-expect-error - eslint config is provided by @nuxt/eslint module
   eslint: {
     config: {
       stylistic: {
@@ -42,7 +39,7 @@ export default defineNuxtConfig({
     frontendUrl: 'https://demo.wpnuxt.com',
     enableCache: true,
     staging: false,
-    logLevel: 4,
+    logLevel: 3,
     downloadSchema: true,
     composablesPrefix: 'use'
   }

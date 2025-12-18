@@ -1,17 +1,26 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { defineNuxtModule, addComponentsDir, addServerHandler, createResolver, installModule, addTemplate, addTypeTemplate, addImports, type Resolver, addPlugin, hasNuxtModule } from '@nuxt/kit'
+import { defineNuxtModule, addComponentsDir, addServerHandler, createResolver, installModule, addTemplate, addTypeTemplate, addImportsDir, type Resolver, addPlugin, hasNuxtModule } from '@nuxt/kit'
+import type { Nuxt } from '@nuxt/schema'
 import { consola } from 'consola'
+import type { Import } from 'unimport'
 import { name, version } from '../package.json'
 import type { WPNuxtConfig } from './types'
 import { initLogger, mergeQueries, validateConfig } from './utils'
 import { generateWPNuxtComposables } from './generate'
 import type { WPNuxtContext } from './context'
 
+interface NitroStorageItem {
+  storage: {
+    getKeys: (prefix: string) => Promise<string[]>
+    removeItem: (key: string) => Promise<void>
+  }
+}
+
 const defaultConfigs: WPNuxtConfig = {
   wordpressUrl: '',
   frontendUrl: '',
   defaultMenuName: 'main',
   enableCache: true,
+  cacheMaxAge: 300,
   staging: false,
   logLevel: 3,
   composablesPrefix: 'useWP',
@@ -24,11 +33,13 @@ export default defineNuxtModule<WPNuxtConfig>({
     name,
     version,
     configKey: 'wpNuxt',
-    nuxt: '>=3.1.0'
+    compatibility: {
+      nuxt: '>=3.1.0'
+    }
   },
   // Default configuration options of the Nuxt module
   defaults: defaultConfigs,
-  async setup(options: any, nuxt: any) {
+  async setup(options: WPNuxtConfig, nuxt: Nuxt) {
     const startTime = new Date().getTime()
     consola.log('::: Starting WPNuxt setup ::: ')
 
@@ -37,6 +48,7 @@ export default defineNuxtModule<WPNuxtConfig>({
       frontendUrl: process.env.WPNUXT_FRONTEND_URL || options.frontendUrl!,
       defaultMenuName: process.env.WPNUXT_DEFAULT_MENU_NAME || options.defaultMenuName!,
       enableCache: process.env.WPNUXT_ENABLE_CACHE ? process.env.WPNUXT_ENABLE_CACHE === 'true' : options.enableCache!,
+      cacheMaxAge: process.env.WPNUXT_CACHE_MAX_AGE ? Number.parseInt(process.env.WPNUXT_CACHE_MAX_AGE) : options.cacheMaxAge,
       staging: process.env.WPNUXT_STAGING === 'true' || options.staging!,
       downloadSchema: process.env.WPNUXT_DOWNLOAD_SCHEMA === 'true' || options.downloadSchema,
       logLevel: process.env.WPNUXT_LOG_LEVEL ? Number.parseInt(process.env.WPNUXT_LOG_LEVEL) : options.logLevel,
@@ -47,10 +59,10 @@ export default defineNuxtModule<WPNuxtConfig>({
     nuxt.options.runtimeConfig.public.wpNuxt = publicWPNuxtConfig
     validateConfig(publicWPNuxtConfig)
     const logger = initLogger(publicWPNuxtConfig.logLevel)
-    logger.info('config:', publicWPNuxtConfig)
+    logger.debug('Config:', publicWPNuxtConfig)
 
-    logger.info('Connecting GraphQL to', publicWPNuxtConfig.wordpressUrl)
-    logger.info('frontendUrl:', publicWPNuxtConfig.frontendUrl)
+    logger.debug('Connecting GraphQL to', publicWPNuxtConfig.wordpressUrl)
+    logger.info('WPNuxt frontend URL:', publicWPNuxtConfig.frontendUrl)
     if (publicWPNuxtConfig.enableCache) logger.info('Cache enabled')
     logger.debug('Debug mode enabled, log level:', publicWPNuxtConfig.logLevel)
     if (publicWPNuxtConfig.staging) logger.info('Staging enabled')
@@ -72,40 +84,30 @@ export default defineNuxtModule<WPNuxtConfig>({
       src: resolveRuntimeModule('plugins/vue-sanitize-directive')
     })
 
-    addImports([
-      { name: 'isStaging', as: 'isStaging', from: resolveRuntimeModule('./composables/isStaging') },
-      { name: 'useWPContent', as: 'useWPContent', from: resolveRuntimeModule('./composables/useWPContent') },
-      { name: 'parseDoc', as: 'parseDoc', from: resolveRuntimeModule('./composables/useParser') },
-      { name: 'usePrevNextPost', as: 'usePrevNextPost', from: resolveRuntimeModule('./composables/usePrevNextPost') },
-
-      { name: 'loginUser', as: 'loginUser', from: resolveRuntimeModule('./composables/user') },
-      { name: 'logoutUser', as: 'logoutUser', from: resolveRuntimeModule('./composables/user') },
-      { name: 'getCurrentUserId', as: 'getCurrentUserId', from: resolveRuntimeModule('./composables/user') },
-      { name: 'getCurrentUserName', as: 'getCurrentUserName', from: resolveRuntimeModule('./composables/user') },
-
-      { name: 'useTokens', as: 'useTokens', from: resolveRuntimeModule('./composables/useTokens') },
-      { name: 'useWPUri', as: 'useWPUri', from: resolveRuntimeModule('./composables/useWPUri') },
-      { name: 'useFeaturedImage', as: 'useFeaturedImage', from: resolveRuntimeModule('./composables/useFeaturedImage') }
-    ])
+    // Auto-discover all composables from the directory
+    addImportsDir(resolveRuntimeModule('./composables'))
 
     addComponentsDir({
       path: resolveRuntimeModule('./components'),
       pathPrefix: false,
       prefix: '',
-      global: true
+      global: false, // Lazy load components for better performance
+      extensions: ['.vue']
     })
     addServerHandler({
-      route: '/api/wpContent',
-      handler: resolveRuntimeModule('./server/api/wpContent.post')
+      route: '/api/_wpnuxt/content',
+      handler: resolveRuntimeModule('./server/api/_wpnuxt/content.post')
     })
     addServerHandler({
-      route: '/api/config',
-      handler: resolveRuntimeModule('./server/api/config')
+      route: '/api/_wpnuxt/config',
+      handler: resolveRuntimeModule('./server/api/_wpnuxt/config')
     })
 
-    await installModule('@vueuse/nuxt', {})
-
-    const mergedQueriesFolder = await mergeQueries(nuxt)
+    // Parallelize independent operations for faster setup
+    const [_, mergedQueriesFolder] = await Promise.all([
+      installModule('@vueuse/nuxt', {}),
+      mergeQueries(nuxt)
+    ])
 
     await installModule('nuxt-graphql-middleware', {
       debug: publicWPNuxtConfig.logLevel ? publicWPNuxtConfig.logLevel > 3 : false,
@@ -113,7 +115,7 @@ export default defineNuxtModule<WPNuxtConfig>({
       downloadSchema: publicWPNuxtConfig.downloadSchema,
       codegenConfig: {
         debugMode: publicWPNuxtConfig.logLevel ? publicWPNuxtConfig.logLevel > 3 : false,
-        useCache: false
+        useCache: !publicWPNuxtConfig.downloadSchema // Cache when schema is committed
       },
       codegenSchemaConfig: {
         urlSchemaOptions: {
@@ -147,14 +149,14 @@ export default defineNuxtModule<WPNuxtConfig>({
       filename: 'wpnuxt/index.d.ts',
       getContents: () => ctx.generateDeclarations?.() || ''
     })
-    nuxt.hook('imports:extend', (autoimports: any) => {
+    nuxt.hook('imports:extend', (autoimports: Import[]) => {
       autoimports.push(...(ctx.fnImports || []))
     })
 
-    nuxt.hook('nitro:init', async (nitro: any) => {
+    nuxt.hook('nitro:init', async (nitro: NitroStorageItem) => {
       // Remove content cache when nitro starts
       const keys = await nitro.storage.getKeys('cache:api:wpContent')
-      keys.forEach(async (key: any) => {
+      keys.forEach(async (key: string) => {
         if (key.startsWith('cache:api:wpContent')) await nitro.storage.removeItem(key)
       })
     })

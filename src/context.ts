@@ -15,7 +15,12 @@ export interface WPNuxtContext {
   docs?: string[]
 }
 
-export async function prepareContext(ctx: WPNuxtContext) {
+/**
+ * Prepares the WPNuxt context by generating composables from GraphQL documents
+ *
+ * @param ctx - The WPNuxt context object
+ */
+export async function prepareContext(ctx: WPNuxtContext): Promise<void> {
   const logger = getLogger()
   if (ctx.docs) {
     await prepareFunctions(ctx)
@@ -32,47 +37,81 @@ export async function prepareContext(ctx: WPNuxtContext) {
     return `  export const ${functionName}: (params?: ${q.name}QueryVariables) => AsyncData<${fragments}, FetchError | null | undefined>`
   }
 
-  ctx.generateImports = () => [
-    ...ctx.fns.map(f => fnExp(f))
-  ].join('\n')
+  ctx.generateImports = () => {
+    const parts: string[] = ['import { useWPContent } from \'#imports\'', '']
+    for (const fn of ctx.fns) {
+      parts.push(fnExp(fn))
+    }
+    return parts.join('\n')
+  }
 
   const types: string[] = []
-  ctx.fns.forEach(o => types.push(...getQueryTypeTemplate(o)))
-  ctx.generateDeclarations = () => [
-    `import type { ${[...new Set(types)].join(', ')} } from '#build/graphql-operations'`,
-    'import { AsyncData } from \'nuxt/app\'',
-    'import { FetchError } from \'ofetch\'',
-    'declare module \'#wpnuxt\' {',
-    ...([
-      ...ctx.fns!.map(f => fnExp(f, true))
-    ]),
-    '}'
-  ].join('\n')
+  for (const fn of ctx.fns) {
+    types.push(...getQueryTypeTemplate(fn))
+  }
+
+  ctx.generateDeclarations = () => {
+    const declarations: string[] = [
+      `import type { ${[...new Set(types)].join(', ')} } from '#build/graphql-operations'`,
+      'import { AsyncData } from \'nuxt/app\'',
+      'import { FetchError } from \'ofetch\'',
+      'declare module \'#wpnuxt\' {'
+    ]
+
+    for (const fn of ctx.fns) {
+      declarations.push(fnExp(fn, true))
+    }
+
+    declarations.push('}')
+    return declarations.join('\n')
+  }
 
   ctx.fnImports = ctx.fns.map((fn): Import => ({ from: '#wpnuxt', name: fnName(fn.name) }))
 
-  logger.debug('generated WPNuxt composables: ')
-  ctx.fns.forEach(f => logger.debug(` ${fnName(f.name)}()`))
+  if (logger) {
+    logger.debug('generated WPNuxt composables: ')
+    for (const fn of ctx.fns) {
+      logger.debug(` ${fnName(fn.name)}()`)
+    }
+  }
 }
 
+/**
+ * Extracts TypeScript type names from a GraphQL query
+ *
+ * @param q - The GraphQL query object
+ * @returns Array of type names to import
+ */
 function getQueryTypeTemplate(q: WPNuxtQuery): string[] {
-  const types: string[] = []
-  types.push(`${q.name}QueryVariables`)
+  const types: string[] = [`${q.name}QueryVariables`]
   if (q.fragments && q.fragments.length > 0) {
-    q.fragments.forEach(f => types.push(`${f}Fragment`))
+    for (const fragment of q.fragments) {
+      types.push(`${fragment}Fragment`)
+    }
   }
   return types
 }
 
-async function prepareFunctions(ctx: WPNuxtContext) {
+/**
+ * Parses GraphQL documents and populates the context with query functions
+ * Processes all files in parallel for better performance
+ *
+ * @param ctx - The WPNuxt context object
+ */
+async function prepareFunctions(ctx: WPNuxtContext): Promise<void> {
   if (!ctx.docs) {
-    getLogger().error('no GraphQL query documents were found!')
+    getLogger()?.error('no GraphQL query documents were found!')
     return
   }
-  for await (const doc of ctx.docs) {
-    const operations = await parseDoc(await fsp.readFile(doc, 'utf8'))
-    operations.forEach((query) => {
-      ctx.fns.push(query)
+
+  // Process all GraphQL documents in parallel
+  const allOperations = await Promise.all(
+    ctx.docs.map(async (doc) => {
+      const content = await fsp.readFile(doc, 'utf8')
+      return parseDoc(content)
     })
-  }
+  )
+
+  // Flatten and add all operations to context
+  ctx.fns.push(...allOperations.flat())
 }
