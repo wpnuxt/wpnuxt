@@ -42,6 +42,7 @@ export default defineNuxtModule<WPNuxtConfig>({
     // will be picked up by the graphqlConfig plugin and added to each GraphQL fetch request
     nuxt.options.runtimeConfig.public.buildHash = randHashGenerator()
     addPlugin(resolver.resolve('./runtime/plugins/graphqlConfig'))
+    addPlugin(resolver.resolve('./runtime/plugins/graphqlErrors'))
 
     const mergedQueriesFolder = await mergeQueries(nuxt, wpNuxtConfig, resolver)
 
@@ -67,6 +68,7 @@ export default defineNuxtModule<WPNuxtConfig>({
     addImports([
       { name: 'useWPContent', as: 'useWPContent', from: resolver.resolve('./runtime/composables/useWPContent') },
       { name: 'useAsyncWPContent', as: 'useAsyncWPContent', from: resolver.resolve('./runtime/composables/useWPContent') }
+      // Note: useGraphqlMutation is auto-imported via nuxt-graphql-middleware with includeComposables: true
     ])
     addComponentsDir({
       path: resolver.resolve('./runtime/components'),
@@ -201,11 +203,23 @@ async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPN
     autoImportPatterns: [mergedQueriesFolder],
     includeComposables: true,
     downloadSchema: wpNuxtConfig.downloadSchema,
+    enableFileUploads: true,
     clientCache: {
       // Enable or disable the caching feature.
       enabled: true,
       // Cache a maximum of 50 queries (default: 100).
       maxSize: 50
+    },
+    codegenConfig: {
+      // WordPress-specific scalar mappings
+      scalars: {
+        DateTime: 'string',
+        ID: 'string'
+      }
+    },
+    experimental: {
+      // Use improved query parameter encoding for better URL handling
+      improvedQueryParamEncoding: true
     }
   })
   await registerModule('@radya/nuxt-dompurify', 'dompurify', {})
