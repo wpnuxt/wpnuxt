@@ -256,9 +256,6 @@ type Category implements DatabaseIdentifier & HierarchicalNode & HierarchicalTer
     where: CategoryToPostConnectionWhereArgs
   ): CategoryToPostConnection
 
-  """The Yoast SEO data of the Categories taxonomy."""
-  seo: TaxonomySEO
-
   """An alphanumeric identifier for the object unique to its type."""
   slug: String
 
@@ -323,9 +320,6 @@ interface CategoryConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -384,9 +378,6 @@ type CategoryToAncestorsCategoryConnectionPageInfo implements CategoryConnection
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -424,9 +415,6 @@ type CategoryToCategoryConnectionPageInfo implements CategoryConnectionPageInfo 
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -551,9 +539,6 @@ type CategoryToContentNodeConnectionPageInfo implements ContentNodeConnectionPag
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -663,9 +648,6 @@ type CategoryToPostConnectionPageInfo implements PageInfo & PostConnectionPageIn
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -1005,9 +987,6 @@ interface CommentConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -1036,7 +1015,7 @@ enum CommentStatusEnum {
   """Comments with the Spam status"""
   SPAM
 
-  """Comments with the Bin status"""
+  """Comments with the Trash status"""
   TRASH
 }
 
@@ -1073,9 +1052,6 @@ type CommentToCommentConnectionPageInfo implements CommentConnectionPageInfo & P
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -1639,9 +1615,6 @@ interface ContentNode implements Node & UniformResourceIdentifiable {
   """Whether the object is a node in the preview state"""
   previewRevisionId: ID
 
-  """The Yoast SEO data of the ContentNode"""
-  seo: PostTypeSEO
-
   """
   The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table.
   """
@@ -1701,9 +1674,6 @@ interface ContentNodeConnectionPageInfo implements PageInfo & WPPageInfo {
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -1793,9 +1763,6 @@ type ContentNodeToEnqueuedScriptConnectionPageInfo implements EnqueuedScriptConn
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -1835,9 +1802,6 @@ type ContentNodeToEnqueuedStylesheetConnectionPageInfo implements EnqueuedStyles
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -2058,9 +2022,6 @@ interface ContentTypeConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -2123,9 +2084,6 @@ type ContentTypeToContentNodeConnectionPageInfo implements ContentNodeConnection
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -2228,9 +2186,6 @@ type ContentTypeToTaxonomyConnectionPageInfo implements PageInfo & TaxonomyConne
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -2251,6 +2206,464 @@ enum ContentTypesOfPostFormatEnum {
 enum ContentTypesOfTagEnum {
   """The Type of Content object"""
   POST
+}
+
+"""A block used for editing the site"""
+type CoreAccordion implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+  """The anchor field for the block."""
+  anchor: String
+
+  """The API version of the Gutenberg Block"""
+  apiVersion: Int
+
+  """Attributes of the CoreAccordion Block Type"""
+  attributes: CoreAccordionAttributes
+
+  """The name of the category the Block belongs to"""
+  blockEditorCategoryName: String
+
+  """The id of the Block"""
+  clientId: String
+
+  """CSS Classnames to apply to the block"""
+  cssClassNames: [String]
+
+  """The inner blocks of the Block"""
+  innerBlocks: [EditorBlock]
+
+  """Whether the block is Dynamic (server rendered)"""
+  isDynamic: Boolean!
+
+  """The name of the block"""
+  name: String
+
+  """The parent id of the Block"""
+  parentClientId: String
+
+  """The rendered HTML for the block"""
+  renderedHtml: String
+
+  """The (GraphQL) type of the block"""
+  type: String
+}
+
+"""Attributes of the CoreAccordion Block Type"""
+type CoreAccordionAttributes implements BlockWithSupportsAnchor {
+  """
+  The &quot;align&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  align: String
+
+  """The anchor field for the block."""
+  anchor: String
+
+  """
+  The &quot;ariaLabel&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  ariaLabel: String
+
+  """
+  The &quot;autoclose&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  autoclose: Boolean!
+
+  """
+  The &quot;backgroundColor&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  backgroundColor: String
+
+  """
+  The &quot;borderColor&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
+  The &quot;className&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  className: String
+
+  """
+  The &quot;fontFamily&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  fontFamily: String
+
+  """
+  The &quot;fontSize&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  fontSize: String
+
+  """
+  The &quot;gradient&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  gradient: String
+
+  """
+  The &quot;headingLevel&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  headingLevel: Float!
+
+  """
+  The &quot;iconPosition&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  iconPosition: String!
+
+  """
+  The &quot;layout&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  layout: BlockAttributesObject
+
+  """
+  The &quot;levelOptions&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  levelOptions: BlockAttributesArray
+
+  """
+  The &quot;lock&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  lock: BlockAttributesObject
+
+  """
+  The &quot;metadata&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  metadata: BlockAttributesObject
+
+  """
+  The &quot;showIcon&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  showIcon: Boolean!
+
+  """
+  The &quot;style&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  style: BlockAttributesObject
+
+  """
+  The &quot;textColor&quot; field on the &quot;CoreAccordionAttributes&quot; block or block attributes
+  """
+  textColor: String
+}
+
+"""A block used for editing the site"""
+type CoreAccordionHeading implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+  """The anchor field for the block."""
+  anchor: String
+
+  """The API version of the Gutenberg Block"""
+  apiVersion: Int
+
+  """Attributes of the CoreAccordionHeading Block Type"""
+  attributes: CoreAccordionHeadingAttributes
+
+  """The name of the category the Block belongs to"""
+  blockEditorCategoryName: String
+
+  """The id of the Block"""
+  clientId: String
+
+  """CSS Classnames to apply to the block"""
+  cssClassNames: [String]
+
+  """The inner blocks of the Block"""
+  innerBlocks: [EditorBlock]
+
+  """Whether the block is Dynamic (server rendered)"""
+  isDynamic: Boolean!
+
+  """The name of the block"""
+  name: String
+
+  """The parent id of the Block"""
+  parentClientId: String
+
+  """The rendered HTML for the block"""
+  renderedHtml: String
+
+  """The (GraphQL) type of the block"""
+  type: String
+}
+
+"""Attributes of the CoreAccordionHeading Block Type"""
+type CoreAccordionHeadingAttributes implements BlockWithSupportsAnchor {
+  """The anchor field for the block."""
+  anchor: String
+
+  """
+  The &quot;backgroundColor&quot; field on the &quot;CoreAccordionHeadingAttributes&quot; block or block attributes
+  """
+  backgroundColor: String
+
+  """
+  The &quot;borderColor&quot; field on the &quot;CoreAccordionHeadingAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
+  The &quot;className&quot; field on the &quot;CoreAccordionHeadingAttributes&quot; block or block attributes
+  """
+  className: String
+
+  """
+  The &quot;fontFamily&quot; field on the &quot;CoreAccordionHeadingAttributes&quot; block or block attributes
+  """
+  fontFamily: String
+
+  """
+  The &quot;fontSize&quot; field on the &quot;CoreAccordionHeadingAttributes&quot; block or block attributes
+  """
+  fontSize: String
+
+  """
+  The &quot;gradient&quot; field on the &quot;CoreAccordionHeadingAttributes&quot; block or block attributes
+  """
+  gradient: String
+
+  """
+  The &quot;iconPosition&quot; field on the &quot;CoreAccordionHeadingAttributes&quot; block or block attributes
+  """
+  iconPosition: String!
+
+  """
+  The &quot;level&quot; field on the &quot;CoreAccordionHeadingAttributes&quot; block or block attributes
+  """
+  level: Float
+
+  """
+  The &quot;lock&quot; field on the &quot;CoreAccordionHeadingAttributes&quot; block or block attributes
+  """
+  lock: BlockAttributesObject
+
+  """
+  The &quot;metadata&quot; field on the &quot;CoreAccordionHeadingAttributes&quot; block or block attributes
+  """
+  metadata: BlockAttributesObject
+
+  """
+  The &quot;openByDefault&quot; field on the &quot;CoreAccordionHeadingAttributes&quot; block or block attributes
+  """
+  openByDefault: Boolean!
+
+  """
+  The &quot;showIcon&quot; field on the &quot;CoreAccordionHeadingAttributes&quot; block or block attributes
+  """
+  showIcon: Boolean!
+
+  """
+  The &quot;style&quot; field on the &quot;CoreAccordionHeadingAttributes&quot; block or block attributes
+  """
+  style: BlockAttributesObject
+
+  """
+  The &quot;textColor&quot; field on the &quot;CoreAccordionHeadingAttributes&quot; block or block attributes
+  """
+  textColor: String
+
+  """
+  The &quot;title&quot; field on the &quot;CoreAccordionHeadingAttributes&quot; block or block attributes
+  """
+  title: String
+}
+
+"""A block used for editing the site"""
+type CoreAccordionItem implements EditorBlock & PageEditorBlock & PostEditorBlock {
+  """The API version of the Gutenberg Block"""
+  apiVersion: Int
+
+  """Attributes of the CoreAccordionItem Block Type"""
+  attributes: CoreAccordionItemAttributes
+
+  """The name of the category the Block belongs to"""
+  blockEditorCategoryName: String
+
+  """The id of the Block"""
+  clientId: String
+
+  """CSS Classnames to apply to the block"""
+  cssClassNames: [String]
+
+  """The inner blocks of the Block"""
+  innerBlocks: [EditorBlock]
+
+  """Whether the block is Dynamic (server rendered)"""
+  isDynamic: Boolean!
+
+  """The name of the block"""
+  name: String
+
+  """The parent id of the Block"""
+  parentClientId: String
+
+  """The rendered HTML for the block"""
+  renderedHtml: String
+
+  """The (GraphQL) type of the block"""
+  type: String
+}
+
+"""Attributes of the CoreAccordionItem Block Type"""
+type CoreAccordionItemAttributes {
+  """
+  The &quot;backgroundColor&quot; field on the &quot;CoreAccordionItemAttributes&quot; block or block attributes
+  """
+  backgroundColor: String
+
+  """
+  The &quot;borderColor&quot; field on the &quot;CoreAccordionItemAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
+  The &quot;className&quot; field on the &quot;CoreAccordionItemAttributes&quot; block or block attributes
+  """
+  className: String
+
+  """
+  The &quot;fontFamily&quot; field on the &quot;CoreAccordionItemAttributes&quot; block or block attributes
+  """
+  fontFamily: String
+
+  """
+  The &quot;fontSize&quot; field on the &quot;CoreAccordionItemAttributes&quot; block or block attributes
+  """
+  fontSize: String
+
+  """
+  The &quot;gradient&quot; field on the &quot;CoreAccordionItemAttributes&quot; block or block attributes
+  """
+  gradient: String
+
+  """
+  The &quot;layout&quot; field on the &quot;CoreAccordionItemAttributes&quot; block or block attributes
+  """
+  layout: BlockAttributesObject
+
+  """
+  The &quot;lock&quot; field on the &quot;CoreAccordionItemAttributes&quot; block or block attributes
+  """
+  lock: BlockAttributesObject
+
+  """
+  The &quot;metadata&quot; field on the &quot;CoreAccordionItemAttributes&quot; block or block attributes
+  """
+  metadata: BlockAttributesObject
+
+  """
+  The &quot;openByDefault&quot; field on the &quot;CoreAccordionItemAttributes&quot; block or block attributes
+  """
+  openByDefault: Boolean!
+
+  """
+  The &quot;style&quot; field on the &quot;CoreAccordionItemAttributes&quot; block or block attributes
+  """
+  style: BlockAttributesObject
+
+  """
+  The &quot;textColor&quot; field on the &quot;CoreAccordionItemAttributes&quot; block or block attributes
+  """
+  textColor: String
+}
+
+"""A block used for editing the site"""
+type CoreAccordionPanel implements EditorBlock & PageEditorBlock & PostEditorBlock {
+  """The API version of the Gutenberg Block"""
+  apiVersion: Int
+
+  """Attributes of the CoreAccordionPanel Block Type"""
+  attributes: CoreAccordionPanelAttributes
+
+  """The name of the category the Block belongs to"""
+  blockEditorCategoryName: String
+
+  """The id of the Block"""
+  clientId: String
+
+  """CSS Classnames to apply to the block"""
+  cssClassNames: [String]
+
+  """The inner blocks of the Block"""
+  innerBlocks: [EditorBlock]
+
+  """Whether the block is Dynamic (server rendered)"""
+  isDynamic: Boolean!
+
+  """The name of the block"""
+  name: String
+
+  """The parent id of the Block"""
+  parentClientId: String
+
+  """The rendered HTML for the block"""
+  renderedHtml: String
+
+  """The (GraphQL) type of the block"""
+  type: String
+}
+
+"""Attributes of the CoreAccordionPanel Block Type"""
+type CoreAccordionPanelAttributes {
+  """
+  The &quot;backgroundColor&quot; field on the &quot;CoreAccordionPanelAttributes&quot; block or block attributes
+  """
+  backgroundColor: String
+
+  """
+  The &quot;borderColor&quot; field on the &quot;CoreAccordionPanelAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
+  The &quot;className&quot; field on the &quot;CoreAccordionPanelAttributes&quot; block or block attributes
+  """
+  className: String
+
+  """
+  The &quot;fontFamily&quot; field on the &quot;CoreAccordionPanelAttributes&quot; block or block attributes
+  """
+  fontFamily: String
+
+  """
+  The &quot;fontSize&quot; field on the &quot;CoreAccordionPanelAttributes&quot; block or block attributes
+  """
+  fontSize: String
+
+  """
+  The &quot;gradient&quot; field on the &quot;CoreAccordionPanelAttributes&quot; block or block attributes
+  """
+  gradient: String
+
+  """
+  The &quot;isSelected&quot; field on the &quot;CoreAccordionPanelAttributes&quot; block or block attributes
+  """
+  isSelected: Boolean!
+
+  """
+  The &quot;layout&quot; field on the &quot;CoreAccordionPanelAttributes&quot; block or block attributes
+  """
+  layout: BlockAttributesObject
+
+  """
+  The &quot;lock&quot; field on the &quot;CoreAccordionPanelAttributes&quot; block or block attributes
+  """
+  lock: BlockAttributesObject
+
+  """
+  The &quot;metadata&quot; field on the &quot;CoreAccordionPanelAttributes&quot; block or block attributes
+  """
+  metadata: BlockAttributesObject
+
+  """
+  The &quot;openByDefault&quot; field on the &quot;CoreAccordionPanelAttributes&quot; block or block attributes
+  """
+  openByDefault: Boolean!
+
+  """
+  The &quot;style&quot; field on the &quot;CoreAccordionPanelAttributes&quot; block or block attributes
+  """
+  style: BlockAttributesObject
+
+  """
+  The &quot;textColor&quot; field on the &quot;CoreAccordionPanelAttributes&quot; block or block attributes
+  """
+  textColor: String
 }
 
 """A block used for editing the site"""
@@ -3259,11 +3672,6 @@ type CoreColumn implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlo
 
 """Attributes of the CoreColumn Block Type"""
 type CoreColumnAttributes implements BlockWithSupportsAnchor {
-  """
-  The &quot;allowedBlocks&quot; field on the &quot;CoreColumnAttributes&quot; block or block attributes
-  """
-  allowedBlocks: BlockAttributesArray
-
   """The anchor field for the block."""
   anchor: String
 
@@ -4633,11 +5041,6 @@ type CoreCoverAttributes implements BlockWithSupportsAnchor {
   align: String
 
   """
-  The &quot;allowedBlocks&quot; field on the &quot;CoreCoverAttributes&quot; block or block attributes
-  """
-  allowedBlocks: BlockAttributesArray
-
-  """
   The &quot;alt&quot; field on the &quot;CoreCoverAttributes&quot; block or block attributes
   """
   alt: String!
@@ -4756,6 +5159,11 @@ type CoreCoverAttributes implements BlockWithSupportsAnchor {
   overlayColor: String
 
   """
+  The &quot;poster&quot; field on the &quot;CoreCoverAttributes&quot; block or block attributes
+  """
+  poster: String
+
+  """
   The &quot;sizeSlug&quot; field on the &quot;CoreCoverAttributes&quot; block or block attributes
   """
   sizeSlug: String
@@ -4831,11 +5239,6 @@ type CoreDetailsAttributes implements BlockWithSupportsAnchor {
   The &quot;align&quot; field on the &quot;CoreDetailsAttributes&quot; block or block attributes
   """
   align: String
-
-  """
-  The &quot;allowedBlocks&quot; field on the &quot;CoreDetailsAttributes&quot; block or block attributes
-  """
-  allowedBlocks: BlockAttributesArray
 
   """The anchor field for the block."""
   anchor: String
@@ -5348,6 +5751,11 @@ type CoreGalleryAttributes implements BlockWithSupportsAnchor {
   anchor: String
 
   """
+  The &quot;aspectRatio&quot; field on the &quot;CoreGalleryAttributes&quot; block or block attributes
+  """
+  aspectRatio: String!
+
+  """
   The &quot;backgroundColor&quot; field on the &quot;CoreGalleryAttributes&quot; block or block attributes
   """
   backgroundColor: String
@@ -5523,11 +5931,6 @@ type CoreGroupAttributes implements BlockWithSupportsAnchor {
   The &quot;align&quot; field on the &quot;CoreGroupAttributes&quot; block or block attributes
   """
   align: String
-
-  """
-  The &quot;allowedBlocks&quot; field on the &quot;CoreGroupAttributes&quot; block or block attributes
-  """
-  allowedBlocks: BlockAttributesArray
 
   """The anchor field for the block."""
   anchor: String
@@ -6721,6 +7124,70 @@ type CoreLoginoutAttributes {
 }
 
 """A block used for editing the site"""
+type CoreMath implements EditorBlock & PageEditorBlock & PostEditorBlock {
+  """The API version of the Gutenberg Block"""
+  apiVersion: Int
+
+  """Attributes of the CoreMath Block Type"""
+  attributes: CoreMathAttributes
+
+  """The name of the category the Block belongs to"""
+  blockEditorCategoryName: String
+
+  """The id of the Block"""
+  clientId: String
+
+  """CSS Classnames to apply to the block"""
+  cssClassNames: [String]
+
+  """The inner blocks of the Block"""
+  innerBlocks: [EditorBlock]
+
+  """Whether the block is Dynamic (server rendered)"""
+  isDynamic: Boolean!
+
+  """The name of the block"""
+  name: String
+
+  """The parent id of the Block"""
+  parentClientId: String
+
+  """The rendered HTML for the block"""
+  renderedHtml: String
+
+  """The (GraphQL) type of the block"""
+  type: String
+}
+
+"""Attributes of the CoreMath Block Type"""
+type CoreMathAttributes {
+  """
+  The &quot;className&quot; field on the &quot;CoreMathAttributes&quot; block or block attributes
+  """
+  className: String
+
+  """
+  The &quot;latex&quot; field on the &quot;CoreMathAttributes&quot; block or block attributes
+  """
+  latex: String
+
+  """
+  The &quot;lock&quot; field on the &quot;CoreMathAttributes&quot; block or block attributes
+  """
+  lock: BlockAttributesObject
+
+  """
+  The &quot;mathML&quot; field on the &quot;CoreMathAttributes&quot; block or block attributes
+  """
+  mathML: String
+
+  """
+  The &quot;metadata&quot; field on the &quot;CoreMathAttributes&quot; block or block attributes
+  """
+  metadata: BlockAttributesObject
+}
+
+"""A block used for editing the site"""
 type CoreMediaText implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
@@ -6765,11 +7232,6 @@ type CoreMediaTextAttributes implements BlockWithSupportsAnchor {
   The &quot;align&quot; field on the &quot;CoreMediaTextAttributes&quot; block or block attributes
   """
   align: String!
-
-  """
-  The &quot;allowedBlocks&quot; field on the &quot;CoreMediaTextAttributes&quot; block or block attributes
-  """
-  allowedBlocks: BlockAttributesArray
 
   """The anchor field for the block."""
   anchor: String
@@ -8273,6 +8735,100 @@ type CorePostCommentsAttributes {
 }
 
 """A block used for editing the site"""
+type CorePostCommentsCount implements EditorBlock & PageEditorBlock & PostEditorBlock {
+  """The API version of the Gutenberg Block"""
+  apiVersion: Int
+
+  """Attributes of the CorePostCommentsCount Block Type"""
+  attributes: CorePostCommentsCountAttributes
+
+  """The name of the category the Block belongs to"""
+  blockEditorCategoryName: String
+
+  """The id of the Block"""
+  clientId: String
+
+  """CSS Classnames to apply to the block"""
+  cssClassNames: [String]
+
+  """The inner blocks of the Block"""
+  innerBlocks: [EditorBlock]
+
+  """Whether the block is Dynamic (server rendered)"""
+  isDynamic: Boolean!
+
+  """The name of the block"""
+  name: String
+
+  """The parent id of the Block"""
+  parentClientId: String
+
+  """The rendered HTML for the block"""
+  renderedHtml: String
+
+  """The (GraphQL) type of the block"""
+  type: String
+}
+
+"""Attributes of the CorePostCommentsCount Block Type"""
+type CorePostCommentsCountAttributes {
+  """
+  The &quot;backgroundColor&quot; field on the &quot;CorePostCommentsCountAttributes&quot; block or block attributes
+  """
+  backgroundColor: String
+
+  """
+  The &quot;borderColor&quot; field on the &quot;CorePostCommentsCountAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
+  The &quot;className&quot; field on the &quot;CorePostCommentsCountAttributes&quot; block or block attributes
+  """
+  className: String
+
+  """
+  The &quot;fontFamily&quot; field on the &quot;CorePostCommentsCountAttributes&quot; block or block attributes
+  """
+  fontFamily: String
+
+  """
+  The &quot;fontSize&quot; field on the &quot;CorePostCommentsCountAttributes&quot; block or block attributes
+  """
+  fontSize: String
+
+  """
+  The &quot;gradient&quot; field on the &quot;CorePostCommentsCountAttributes&quot; block or block attributes
+  """
+  gradient: String
+
+  """
+  The &quot;lock&quot; field on the &quot;CorePostCommentsCountAttributes&quot; block or block attributes
+  """
+  lock: BlockAttributesObject
+
+  """
+  The &quot;metadata&quot; field on the &quot;CorePostCommentsCountAttributes&quot; block or block attributes
+  """
+  metadata: BlockAttributesObject
+
+  """
+  The &quot;style&quot; field on the &quot;CorePostCommentsCountAttributes&quot; block or block attributes
+  """
+  style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CorePostCommentsCountAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
+  The &quot;textColor&quot; field on the &quot;CorePostCommentsCountAttributes&quot; block or block attributes
+  """
+  textColor: String
+}
+
+"""A block used for editing the site"""
 type CorePostCommentsForm implements EditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
@@ -8359,6 +8915,90 @@ type CorePostCommentsFormAttributes {
   The &quot;textColor&quot; field on the &quot;CorePostCommentsFormAttributes&quot; block or block attributes
   """
   textColor: String
+}
+
+"""A block used for editing the site"""
+type CorePostCommentsLink implements EditorBlock & PageEditorBlock & PostEditorBlock {
+  """The API version of the Gutenberg Block"""
+  apiVersion: Int
+
+  """Attributes of the CorePostCommentsLink Block Type"""
+  attributes: CorePostCommentsLinkAttributes
+
+  """The name of the category the Block belongs to"""
+  blockEditorCategoryName: String
+
+  """The id of the Block"""
+  clientId: String
+
+  """CSS Classnames to apply to the block"""
+  cssClassNames: [String]
+
+  """The inner blocks of the Block"""
+  innerBlocks: [EditorBlock]
+
+  """Whether the block is Dynamic (server rendered)"""
+  isDynamic: Boolean!
+
+  """The name of the block"""
+  name: String
+
+  """The parent id of the Block"""
+  parentClientId: String
+
+  """The rendered HTML for the block"""
+  renderedHtml: String
+
+  """The (GraphQL) type of the block"""
+  type: String
+}
+
+"""Attributes of the CorePostCommentsLink Block Type"""
+type CorePostCommentsLinkAttributes {
+  """
+  The &quot;backgroundColor&quot; field on the &quot;CorePostCommentsLinkAttributes&quot; block or block attributes
+  """
+  backgroundColor: String
+
+  """
+  The &quot;borderColor&quot; field on the &quot;CorePostCommentsLinkAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
+  The &quot;className&quot; field on the &quot;CorePostCommentsLinkAttributes&quot; block or block attributes
+  """
+  className: String
+
+  """
+  The &quot;fontFamily&quot; field on the &quot;CorePostCommentsLinkAttributes&quot; block or block attributes
+  """
+  fontFamily: String
+
+  """
+  The &quot;fontSize&quot; field on the &quot;CorePostCommentsLinkAttributes&quot; block or block attributes
+  """
+  fontSize: String
+
+  """
+  The &quot;lock&quot; field on the &quot;CorePostCommentsLinkAttributes&quot; block or block attributes
+  """
+  lock: BlockAttributesObject
+
+  """
+  The &quot;metadata&quot; field on the &quot;CorePostCommentsLinkAttributes&quot; block or block attributes
+  """
+  metadata: BlockAttributesObject
+
+  """
+  The &quot;style&quot; field on the &quot;CorePostCommentsLinkAttributes&quot; block or block attributes
+  """
+  style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CorePostCommentsLinkAttributes&quot; block or block attributes
+  """
+  textAlign: String
 }
 
 """A block used for editing the site"""
@@ -8455,6 +9095,11 @@ type CorePostContentAttributes {
   style: BlockAttributesObject
 
   """
+  The &quot;tagName&quot; field on the &quot;CorePostContentAttributes&quot; block or block attributes
+  """
+  tagName: String!
+
+  """
   The &quot;textColor&quot; field on the &quot;CorePostContentAttributes&quot; block or block attributes
   """
   textColor: String
@@ -8514,9 +9159,9 @@ type CorePostDateAttributes {
   className: String
 
   """
-  The &quot;displayType&quot; field on the &quot;CorePostDateAttributes&quot; block or block attributes
+  The &quot;datetime&quot; field on the &quot;CorePostDateAttributes&quot; block or block attributes
   """
-  displayType: String!
+  datetime: String
 
   """
   The &quot;fontFamily&quot; field on the &quot;CorePostDateAttributes&quot; block or block attributes
@@ -9217,11 +9862,117 @@ type CorePostTermsToTermNodeConnectionPageInfo implements PageInfo & TermNodeCon
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
+}
+
+"""A block used for editing the site"""
+type CorePostTimeToRead implements EditorBlock & PageEditorBlock & PostEditorBlock {
+  """The API version of the Gutenberg Block"""
+  apiVersion: Int
+
+  """Attributes of the CorePostTimeToRead Block Type"""
+  attributes: CorePostTimeToReadAttributes
+
+  """The name of the category the Block belongs to"""
+  blockEditorCategoryName: String
+
+  """The id of the Block"""
+  clientId: String
+
+  """CSS Classnames to apply to the block"""
+  cssClassNames: [String]
+
+  """The inner blocks of the Block"""
+  innerBlocks: [EditorBlock]
+
+  """Whether the block is Dynamic (server rendered)"""
+  isDynamic: Boolean!
+
+  """The name of the block"""
+  name: String
+
+  """The parent id of the Block"""
+  parentClientId: String
+
+  """The rendered HTML for the block"""
+  renderedHtml: String
+
+  """The (GraphQL) type of the block"""
+  type: String
+}
+
+"""Attributes of the CorePostTimeToRead Block Type"""
+type CorePostTimeToReadAttributes {
+  """
+  The &quot;averageReadingSpeed&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
+  """
+  averageReadingSpeed: Float!
+
+  """
+  The &quot;backgroundColor&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
+  """
+  backgroundColor: String
+
+  """
+  The &quot;borderColor&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
+  The &quot;className&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
+  """
+  className: String
+
+  """
+  The &quot;displayAsRange&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
+  """
+  displayAsRange: Boolean!
+
+  """
+  The &quot;displayMode&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
+  """
+  displayMode: String!
+
+  """
+  The &quot;fontFamily&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
+  """
+  fontFamily: String
+
+  """
+  The &quot;fontSize&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
+  """
+  fontSize: String
+
+  """
+  The &quot;gradient&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
+  """
+  gradient: String
+
+  """
+  The &quot;lock&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
+  """
+  lock: BlockAttributesObject
+
+  """
+  The &quot;metadata&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
+  """
+  metadata: BlockAttributesObject
+
+  """
+  The &quot;style&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
+  """
+  style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
+  The &quot;textColor&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
+  """
+  textColor: String
 }
 
 """A block used for editing the site"""
@@ -10658,6 +11409,16 @@ type CoreRssAttributes {
   metadata: BlockAttributesObject
 
   """
+  The &quot;openInNewTab&quot; field on the &quot;CoreRssAttributes&quot; block or block attributes
+  """
+  openInNewTab: Boolean!
+
+  """
+  The &quot;rel&quot; field on the &quot;CoreRssAttributes&quot; block or block attributes
+  """
+  rel: String
+
+  """
   The &quot;style&quot; field on the &quot;CoreRssAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
@@ -11996,6 +12757,100 @@ type CoreTemplatePartAttributes {
 }
 
 """A block used for editing the site"""
+type CoreTermCount implements EditorBlock & PageEditorBlock & PostEditorBlock {
+  """The API version of the Gutenberg Block"""
+  apiVersion: Int
+
+  """Attributes of the CoreTermCount Block Type"""
+  attributes: CoreTermCountAttributes
+
+  """The name of the category the Block belongs to"""
+  blockEditorCategoryName: String
+
+  """The id of the Block"""
+  clientId: String
+
+  """CSS Classnames to apply to the block"""
+  cssClassNames: [String]
+
+  """The inner blocks of the Block"""
+  innerBlocks: [EditorBlock]
+
+  """Whether the block is Dynamic (server rendered)"""
+  isDynamic: Boolean!
+
+  """The name of the block"""
+  name: String
+
+  """The parent id of the Block"""
+  parentClientId: String
+
+  """The rendered HTML for the block"""
+  renderedHtml: String
+
+  """The (GraphQL) type of the block"""
+  type: String
+}
+
+"""Attributes of the CoreTermCount Block Type"""
+type CoreTermCountAttributes {
+  """
+  The &quot;backgroundColor&quot; field on the &quot;CoreTermCountAttributes&quot; block or block attributes
+  """
+  backgroundColor: String
+
+  """
+  The &quot;borderColor&quot; field on the &quot;CoreTermCountAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
+  The &quot;bracketType&quot; field on the &quot;CoreTermCountAttributes&quot; block or block attributes
+  """
+  bracketType: String!
+
+  """
+  The &quot;className&quot; field on the &quot;CoreTermCountAttributes&quot; block or block attributes
+  """
+  className: String
+
+  """
+  The &quot;fontFamily&quot; field on the &quot;CoreTermCountAttributes&quot; block or block attributes
+  """
+  fontFamily: String
+
+  """
+  The &quot;fontSize&quot; field on the &quot;CoreTermCountAttributes&quot; block or block attributes
+  """
+  fontSize: String
+
+  """
+  The &quot;gradient&quot; field on the &quot;CoreTermCountAttributes&quot; block or block attributes
+  """
+  gradient: String
+
+  """
+  The &quot;lock&quot; field on the &quot;CoreTermCountAttributes&quot; block or block attributes
+  """
+  lock: BlockAttributesObject
+
+  """
+  The &quot;metadata&quot; field on the &quot;CoreTermCountAttributes&quot; block or block attributes
+  """
+  metadata: BlockAttributesObject
+
+  """
+  The &quot;style&quot; field on the &quot;CoreTermCountAttributes&quot; block or block attributes
+  """
+  style: BlockAttributesObject
+
+  """
+  The &quot;textColor&quot; field on the &quot;CoreTermCountAttributes&quot; block or block attributes
+  """
+  textColor: String
+}
+
+"""A block used for editing the site"""
 type CoreTermDescription implements EditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
@@ -12087,6 +12942,288 @@ type CoreTermDescriptionAttributes {
   The &quot;textColor&quot; field on the &quot;CoreTermDescriptionAttributes&quot; block or block attributes
   """
   textColor: String
+}
+
+"""A block used for editing the site"""
+type CoreTermName implements EditorBlock & PageEditorBlock & PostEditorBlock {
+  """The API version of the Gutenberg Block"""
+  apiVersion: Int
+
+  """Attributes of the CoreTermName Block Type"""
+  attributes: CoreTermNameAttributes
+
+  """The name of the category the Block belongs to"""
+  blockEditorCategoryName: String
+
+  """The id of the Block"""
+  clientId: String
+
+  """CSS Classnames to apply to the block"""
+  cssClassNames: [String]
+
+  """The inner blocks of the Block"""
+  innerBlocks: [EditorBlock]
+
+  """Whether the block is Dynamic (server rendered)"""
+  isDynamic: Boolean!
+
+  """The name of the block"""
+  name: String
+
+  """The parent id of the Block"""
+  parentClientId: String
+
+  """The rendered HTML for the block"""
+  renderedHtml: String
+
+  """The (GraphQL) type of the block"""
+  type: String
+}
+
+"""Attributes of the CoreTermName Block Type"""
+type CoreTermNameAttributes {
+  """
+  The &quot;align&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
+  """
+  align: String
+
+  """
+  The &quot;backgroundColor&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
+  """
+  backgroundColor: String
+
+  """
+  The &quot;borderColor&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
+  The &quot;className&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
+  """
+  className: String
+
+  """
+  The &quot;fontFamily&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
+  """
+  fontFamily: String
+
+  """
+  The &quot;fontSize&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
+  """
+  fontSize: String
+
+  """
+  The &quot;gradient&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
+  """
+  gradient: String
+
+  """
+  The &quot;isLink&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
+  """
+  isLink: Boolean!
+
+  """
+  The &quot;level&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
+  """
+  level: Float!
+
+  """
+  The &quot;lock&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
+  """
+  lock: BlockAttributesObject
+
+  """
+  The &quot;metadata&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
+  """
+  metadata: BlockAttributesObject
+
+  """
+  The &quot;style&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
+  """
+  style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
+  The &quot;textColor&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
+  """
+  textColor: String
+}
+
+"""A block used for editing the site"""
+type CoreTermTemplate implements EditorBlock & PageEditorBlock & PostEditorBlock {
+  """The API version of the Gutenberg Block"""
+  apiVersion: Int
+
+  """Attributes of the CoreTermTemplate Block Type"""
+  attributes: CoreTermTemplateAttributes
+
+  """The name of the category the Block belongs to"""
+  blockEditorCategoryName: String
+
+  """The id of the Block"""
+  clientId: String
+
+  """CSS Classnames to apply to the block"""
+  cssClassNames: [String]
+
+  """The inner blocks of the Block"""
+  innerBlocks: [EditorBlock]
+
+  """Whether the block is Dynamic (server rendered)"""
+  isDynamic: Boolean!
+
+  """The name of the block"""
+  name: String
+
+  """The parent id of the Block"""
+  parentClientId: String
+
+  """The rendered HTML for the block"""
+  renderedHtml: String
+
+  """The (GraphQL) type of the block"""
+  type: String
+}
+
+"""Attributes of the CoreTermTemplate Block Type"""
+type CoreTermTemplateAttributes {
+  """
+  The &quot;align&quot; field on the &quot;CoreTermTemplateAttributes&quot; block or block attributes
+  """
+  align: String
+
+  """
+  The &quot;backgroundColor&quot; field on the &quot;CoreTermTemplateAttributes&quot; block or block attributes
+  """
+  backgroundColor: String
+
+  """
+  The &quot;borderColor&quot; field on the &quot;CoreTermTemplateAttributes&quot; block or block attributes
+  """
+  borderColor: String
+
+  """
+  The &quot;className&quot; field on the &quot;CoreTermTemplateAttributes&quot; block or block attributes
+  """
+  className: String
+
+  """
+  The &quot;fontFamily&quot; field on the &quot;CoreTermTemplateAttributes&quot; block or block attributes
+  """
+  fontFamily: String
+
+  """
+  The &quot;fontSize&quot; field on the &quot;CoreTermTemplateAttributes&quot; block or block attributes
+  """
+  fontSize: String
+
+  """
+  The &quot;gradient&quot; field on the &quot;CoreTermTemplateAttributes&quot; block or block attributes
+  """
+  gradient: String
+
+  """
+  The &quot;layout&quot; field on the &quot;CoreTermTemplateAttributes&quot; block or block attributes
+  """
+  layout: BlockAttributesObject
+
+  """
+  The &quot;lock&quot; field on the &quot;CoreTermTemplateAttributes&quot; block or block attributes
+  """
+  lock: BlockAttributesObject
+
+  """
+  The &quot;metadata&quot; field on the &quot;CoreTermTemplateAttributes&quot; block or block attributes
+  """
+  metadata: BlockAttributesObject
+
+  """
+  The &quot;style&quot; field on the &quot;CoreTermTemplateAttributes&quot; block or block attributes
+  """
+  style: BlockAttributesObject
+
+  """
+  The &quot;textColor&quot; field on the &quot;CoreTermTemplateAttributes&quot; block or block attributes
+  """
+  textColor: String
+}
+
+"""A block used for editing the site"""
+type CoreTermsQuery implements EditorBlock & PageEditorBlock & PostEditorBlock {
+  """The API version of the Gutenberg Block"""
+  apiVersion: Int
+
+  """Attributes of the CoreTermsQuery Block Type"""
+  attributes: CoreTermsQueryAttributes
+
+  """The name of the category the Block belongs to"""
+  blockEditorCategoryName: String
+
+  """The id of the Block"""
+  clientId: String
+
+  """CSS Classnames to apply to the block"""
+  cssClassNames: [String]
+
+  """The inner blocks of the Block"""
+  innerBlocks: [EditorBlock]
+
+  """Whether the block is Dynamic (server rendered)"""
+  isDynamic: Boolean!
+
+  """The name of the block"""
+  name: String
+
+  """The parent id of the Block"""
+  parentClientId: String
+
+  """The rendered HTML for the block"""
+  renderedHtml: String
+
+  """The (GraphQL) type of the block"""
+  type: String
+}
+
+"""Attributes of the CoreTermsQuery Block Type"""
+type CoreTermsQueryAttributes {
+  """
+  The &quot;align&quot; field on the &quot;CoreTermsQueryAttributes&quot; block or block attributes
+  """
+  align: String
+
+  """
+  The &quot;className&quot; field on the &quot;CoreTermsQueryAttributes&quot; block or block attributes
+  """
+  className: String
+
+  """
+  The &quot;layout&quot; field on the &quot;CoreTermsQueryAttributes&quot; block or block attributes
+  """
+  layout: BlockAttributesObject
+
+  """
+  The &quot;lock&quot; field on the &quot;CoreTermsQueryAttributes&quot; block or block attributes
+  """
+  lock: BlockAttributesObject
+
+  """
+  The &quot;metadata&quot; field on the &quot;CoreTermsQueryAttributes&quot; block or block attributes
+  """
+  metadata: BlockAttributesObject
+
+  """
+  The &quot;tagName&quot; field on the &quot;CoreTermsQueryAttributes&quot; block or block attributes
+  """
+  tagName: String!
+
+  """
+  The &quot;termQuery&quot; field on the &quot;CoreTermsQueryAttributes&quot; block or block attributes
+  """
+  termQuery: BlockAttributesObject!
 }
 
 """A block used for editing the site"""
@@ -13368,9 +14505,6 @@ interface EnqueuedScriptConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -13476,9 +14610,6 @@ interface EnqueuedStylesheetConnectionPageInfo implements PageInfo & WPPageInfo 
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -13741,9 +14872,6 @@ interface HierarchicalContentNode implements ContentNode & DatabaseIdentifier & 
   """Whether the object is a node in the preview state"""
   previewRevisionId: ID
 
-  """The Yoast SEO data of the ContentNode"""
-  seo: PostTypeSEO
-
   """
   The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table.
   """
@@ -13799,9 +14927,6 @@ type HierarchicalContentNodeToContentNodeAncestorsConnectionPageInfo implements 
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -13907,9 +15032,6 @@ type HierarchicalContentNodeToContentNodeChildrenConnectionPageInfo implements C
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -14415,9 +15537,6 @@ type MediaItem implements ContentNode & DatabaseIdentifier & HierarchicalContent
   """Whether the object is a node in the preview state"""
   previewRevisionId: ID
 
-  """The Yoast SEO data of the ContentNode"""
-  seo: PostTypeSEO
-
   """The sizes attribute value for an image."""
   sizes(
     """Size of the MediaItem to calculate sizes with"""
@@ -14506,9 +15625,6 @@ interface MediaItemConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -14593,9 +15709,6 @@ enum MediaItemSizeEnum {
   """
   MEDIUM_LARGE
 
-  """Custom Image Size. (1568x9999)"""
-  POST_THUMBNAIL
-
   """Small image preview suitable for thumbnails and listings. (150x150)"""
   THUMBNAIL
 
@@ -14656,9 +15769,6 @@ type MediaItemToCommentConnectionPageInfo implements CommentConnectionPageInfo &
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -14882,9 +15992,6 @@ interface MenuConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -15020,9 +16127,6 @@ interface MenuItemConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -15134,9 +16238,6 @@ type MenuItemToMenuItemConnectionPageInfo implements MenuItemConnectionPageInfo 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -15233,9 +16334,6 @@ type MenuToMenuItemConnectionPageInfo implements MenuItemConnectionPageInfo & Pa
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -15755,9 +16853,6 @@ interface NodeWithTitle implements Node {
   """The globally unique ID for the object"""
   id: ID!
 
-  """The Yoast SEO data of the ContentNode"""
-  seo: PostTypeSEO
-
   """
   The title of the post. This is currently just the raw title. An amendment to support rendered title needs to be made.
   """
@@ -16107,9 +17202,6 @@ type Page implements ContentNode & DatabaseIdentifier & HierarchicalContentNode 
     where: PageToRevisionConnectionWhereArgs
   ): PageToRevisionConnection
 
-  """The Yoast SEO data of the ContentNode"""
-  seo: PostTypeSEO
-
   """
   The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table.
   """
@@ -16177,9 +17269,6 @@ interface PageConnectionPageInfo implements PageInfo & WPPageInfo {
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -16282,9 +17371,6 @@ type PageToCommentConnectionPageInfo implements CommentConnectionPageInfo & Page
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -16432,9 +17518,6 @@ type PageToRevisionConnectionPageInfo implements PageConnectionPageInfo & PageIn
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -16587,9 +17670,6 @@ interface PluginConnectionPageInfo implements PageInfo & WPPageInfo {
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -16932,9 +18012,6 @@ type Post implements ContentNode & DatabaseIdentifier & MenuItemLinkable & Node 
     where: PostToRevisionConnectionWhereArgs
   ): PostToRevisionConnection
 
-  """The Yoast SEO data of the ContentNode"""
-  seo: PostTypeSEO
-
   """
   The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table.
   """
@@ -17085,9 +18162,6 @@ interface PostConnectionPageInfo implements PageInfo & WPPageInfo {
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -17254,9 +18328,6 @@ type PostFormat implements DatabaseIdentifier & MenuItemLinkable & Node & TermNo
     where: PostFormatToPostConnectionWhereArgs
   ): PostFormatToPostConnection
 
-  """The Yoast SEO data of the Formats taxonomy."""
-  seo: TaxonomySEO
-
   """An alphanumeric identifier for the object unique to its type."""
   slug: String
 
@@ -17321,9 +18392,6 @@ interface PostFormatConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -17381,9 +18449,6 @@ type PostFormatToContentNodeConnectionPageInfo implements ContentNodeConnectionP
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -17485,9 +18550,6 @@ type PostFormatToPostConnectionPageInfo implements PageInfo & PostConnectionPage
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -17835,9 +18897,6 @@ type PostToCategoryConnectionEdge implements CategoryConnectionEdge & Edge {
   """A cursor for use in pagination"""
   cursor: String
 
-  """The Yoast SEO Primary category"""
-  isPrimary: Boolean
-
   """The item at the end of the edge"""
   node: Category!
 }
@@ -17854,9 +18913,6 @@ type PostToCategoryConnectionPageInfo implements CategoryConnectionPageInfo & Pa
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -17980,9 +19036,6 @@ type PostToCommentConnectionPageInfo implements CommentConnectionPageInfo & Page
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -18131,9 +19184,6 @@ type PostToPostConnectionPageInfo implements PageInfo & PostConnectionPageInfo &
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -18155,9 +19205,6 @@ type PostToPostFormatConnectionEdge implements Edge & PostFormatConnectionEdge {
   """A cursor for use in pagination"""
   cursor: String
 
-  """The Yoast SEO Primary post_format"""
-  isPrimary: Boolean
-
   """The item at the end of the edge"""
   node: PostFormat!
 }
@@ -18174,9 +19221,6 @@ type PostToPostFormatConnectionPageInfo implements PageInfo & PostFormatConnecti
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -18312,9 +19356,6 @@ type PostToRevisionConnectionPageInfo implements PageInfo & PostConnectionPageIn
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -18444,9 +19485,6 @@ type PostToTagConnectionEdge implements Edge & TagConnectionEdge {
   """A cursor for use in pagination"""
   cursor: String
 
-  """The Yoast SEO Primary post_tag"""
-  isPrimary: Boolean
-
   """The item at the end of the edge"""
   node: Tag!
 }
@@ -18463,9 +19501,6 @@ type PostToTagConnectionPageInfo implements PageInfo & TagConnectionPageInfo & W
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -18589,9 +19624,6 @@ type PostToTermNodeConnectionPageInfo implements PageInfo & TermNodeConnectionPa
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -18761,83 +19793,6 @@ type PostTypeLabelDetails {
 
   """Label for viewing post type archives."""
   viewItems: String
-}
-
-type PostTypeSEO {
-  """"""
-  breadcrumbs: [SEOPostTypeBreadcrumbs]
-
-  """"""
-  canonical: String
-
-  """"""
-  cornerstone: Boolean
-
-  """"""
-  focuskw: String
-
-  """"""
-  fullHead: String
-
-  """"""
-  metaDesc: String
-
-  """"""
-  metaKeywords: String
-
-  """"""
-  metaRobotsNofollow: String
-
-  """"""
-  metaRobotsNoindex: String
-
-  """"""
-  opengraphAuthor: String
-
-  """"""
-  opengraphDescription: String
-
-  """"""
-  opengraphImage: MediaItem
-
-  """"""
-  opengraphModifiedTime: String
-
-  """"""
-  opengraphPublishedTime: String
-
-  """"""
-  opengraphPublisher: String
-
-  """"""
-  opengraphSiteName: String
-
-  """"""
-  opengraphTitle: String
-
-  """"""
-  opengraphType: String
-
-  """"""
-  opengraphUrl: String
-
-  """"""
-  readingTime: Float
-
-  """"""
-  schema: SEOPostTypeSchema
-
-  """"""
-  title: String
-
-  """"""
-  twitterDescription: String
-
-  """"""
-  twitterImage: MediaItem
-
-  """"""
-  twitterTitle: String
 }
 
 """
@@ -19701,9 +20656,6 @@ type RootQuery {
     where: RootQueryToRevisionsConnectionWhereArgs
   ): RootQueryToRevisionsConnection
 
-  """Returns seo site data"""
-  seo: SEOConfig
-
   """A 0bject"""
   tag(
     """The globally unique identifier of the object."""
@@ -19923,9 +20875,6 @@ type RootQueryToCategoryConnectionPageInfo implements CategoryConnectionPageInfo
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -20048,9 +20997,6 @@ type RootQueryToCommentConnectionPageInfo implements CommentConnectionPageInfo &
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -20188,9 +21134,6 @@ type RootQueryToContentNodeConnectionPageInfo implements ContentNodeConnectionPa
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -20292,9 +21235,6 @@ type RootQueryToContentTypeConnectionPageInfo implements ContentTypeConnectionPa
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -20332,9 +21272,6 @@ type RootQueryToEnqueuedScriptConnectionPageInfo implements EnqueuedScriptConnec
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -20374,9 +21311,6 @@ type RootQueryToEnqueuedStylesheetConnectionPageInfo implements EnqueuedStyleshe
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -20414,9 +21348,6 @@ type RootQueryToMediaItemConnectionPageInfo implements MediaItemConnectionPageIn
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -20530,9 +21461,6 @@ type RootQueryToMenuConnectionPageInfo implements MenuConnectionPageInfo & PageI
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -20582,9 +21510,6 @@ type RootQueryToMenuItemConnectionPageInfo implements MenuItemConnectionPageInfo
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -20638,9 +21563,6 @@ type RootQueryToPageConnectionPageInfo implements PageConnectionPageInfo & PageI
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -20754,9 +21676,6 @@ type RootQueryToPluginConnectionPageInfo implements PageInfo & PluginConnectionP
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -20806,9 +21725,6 @@ type RootQueryToPostConnectionPageInfo implements PageInfo & PostConnectionPageI
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -20956,9 +21872,6 @@ type RootQueryToPostFormatConnectionPageInfo implements PageInfo & PostFormatCon
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -21082,9 +21995,6 @@ type RootQueryToRevisionsConnectionPageInfo implements ContentNodeConnectionPage
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -21183,9 +22093,6 @@ type RootQueryToTagConnectionPageInfo implements PageInfo & TagConnectionPageInf
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -21310,9 +22217,6 @@ type RootQueryToTaxonomyConnectionPageInfo implements PageInfo & TaxonomyConnect
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -21350,9 +22254,6 @@ type RootQueryToTermNodeConnectionPageInfo implements PageInfo & TermNodeConnect
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -21480,9 +22381,6 @@ type RootQueryToThemeConnectionPageInfo implements PageInfo & ThemeConnectionPag
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -21520,9 +22418,6 @@ type RootQueryToUserConnectionPageInfo implements PageInfo & UserConnectionPageI
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -21630,501 +22525,8 @@ type RootQueryToUserRoleConnectionPageInfo implements PageInfo & UserRoleConnect
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
-}
-
-"""The Yoast SEO breadcrumb config"""
-type SEOBreadcrumbs {
-  """"""
-  archivePrefix: String
-
-  """"""
-  boldLast: Boolean
-
-  """"""
-  enabled: Boolean
-
-  """"""
-  homeText: String
-
-  """"""
-  notFoundText: String
-
-  """"""
-  prefix: String
-
-  """"""
-  searchPrefix: String
-
-  """"""
-  separator: String
-
-  """"""
-  showBlogPage: Boolean
-}
-
-"""Types of cards"""
-enum SEOCardType {
-  """"""
-  summary
-
-  """"""
-  summary_large_image
-}
-
-"""The Yoast SEO site level configuration data"""
-type SEOConfig {
-  """"""
-  breadcrumbs: SEOBreadcrumbs
-
-  """"""
-  contentTypes: SEOContentTypes
-
-  """"""
-  meta: SEOGlobalMeta
-
-  """"""
-  openGraph: SEOOpenGraph
-
-  """"""
-  redirects: [SEORedirect]
-
-  """"""
-  schema: SEOSchema
-
-  """"""
-  social: SEOSocial
-
-  """"""
-  webmaster: SEOWebmaster
-}
-
-"""The Yoast SEO search appearance content types fields"""
-type SEOContentType {
-  """"""
-  archive: SEOContentTypeArchive
-
-  """"""
-  metaDesc: String
-
-  """"""
-  metaRobotsNoindex: Boolean
-
-  """"""
-  schema: SEOPageInfoSchema
-
-  """"""
-  schemaType: String
-
-  """"""
-  title: String
-}
-
-"""The Yoast SEO search appearance content types fields"""
-type SEOContentTypeArchive {
-  """"""
-  archiveLink: String
-
-  """"""
-  breadcrumbTitle: String
-
-  """"""
-  fullHead: String
-
-  """"""
-  hasArchive: Boolean
-
-  """"""
-  metaDesc: String
-
-  """"""
-  metaRobotsFollow: String
-
-  """"""
-  metaRobotsIndex: String
-
-  """"""
-  metaRobotsNofollow: Boolean
-
-  """"""
-  metaRobotsNoindex: Boolean
-
-  """"""
-  title: String
-}
-
-"""The Yoast SEO search appearance content types"""
-type SEOContentTypes {
-  """"""
-  mediaItem: SEOContentType
-
-  """"""
-  page: SEOContentType
-
-  """"""
-  post: SEOContentType
-}
-
-"""The Yoast SEO meta data"""
-type SEOGlobalMeta {
-  """"""
-  author: SEOGlobalMetaAuthor
-
-  """"""
-  config: SEOGlobalMetaConfig
-
-  """"""
-  date: SEOGlobalMetaDate
-
-  """"""
-  homepage: SEOGlobalMetaHome
-
-  """"""
-  notFound: SEOGlobalMeta404
-}
-
-"""The Yoast SEO meta 404 data"""
-type SEOGlobalMeta404 {
-  """"""
-  breadcrumb: String
-
-  """"""
-  title: String
-}
-
-"""The Yoast SEO Author data"""
-type SEOGlobalMetaAuthor {
-  """"""
-  description: String
-
-  """"""
-  title: String
-}
-
-"""The Yoast SEO meta config data"""
-type SEOGlobalMetaConfig {
-  """"""
-  separator: String
-}
-
-"""The Yoast SEO Date data"""
-type SEOGlobalMetaDate {
-  """"""
-  description: String
-
-  """"""
-  title: String
-}
-
-"""The Yoast SEO homepage data"""
-type SEOGlobalMetaHome {
-  """"""
-  description: String
-
-  """"""
-  title: String
-}
-
-"""The Open Graph data"""
-type SEOOpenGraph {
-  """"""
-  defaultImage: MediaItem
-
-  """"""
-  frontPage: SEOOpenGraphFrontPage
-}
-
-"""The Open Graph Front page data"""
-type SEOOpenGraphFrontPage {
-  """"""
-  description: String
-
-  """"""
-  image: MediaItem
-
-  """"""
-  title: String
-}
-
-"""The Schema for post type"""
-type SEOPageInfoSchema {
-  """"""
-  raw: String
-}
-
-type SEOPostTypeBreadcrumbs {
-  """"""
-  text: String
-
-  """"""
-  url: String
-}
-
-"""The page info SEO details"""
-type SEOPostTypePageInfo {
-  """"""
-  schema: SEOPageInfoSchema
-}
-
-"""The Schema types"""
-type SEOPostTypeSchema {
-  """"""
-  articleType: [String]
-
-  """"""
-  pageType: [String]
-
-  """"""
-  raw: String
-}
-
-"""The Yoast redirect data  (Yoast Premium only)"""
-type SEORedirect {
-  """"""
-  format: String
-
-  """"""
-  origin: String
-
-  """"""
-  target: String
-
-  """"""
-  type: Int
-}
-
-"""The Yoast SEO schema data"""
-type SEOSchema {
-  """"""
-  companyLogo: MediaItem
-
-  """"""
-  companyName: String
-
-  """"""
-  companyOrPerson: String
-
-  """"""
-  homeUrl: String
-
-  """"""
-  inLanguage: String
-
-  """"""
-  logo: MediaItem
-
-  """"""
-  personLogo: MediaItem
-
-  """"""
-  personName: String
-
-  """"""
-  siteName: String
-
-  """"""
-  siteUrl: String
-
-  """"""
-  wordpressSiteName: String
-}
-
-"""The Yoast SEO Social media links"""
-type SEOSocial {
-  """"""
-  facebook: SEOSocialFacebook
-
-  """"""
-  instagram: SEOSocialInstagram
-
-  """"""
-  linkedIn: SEOSocialLinkedIn
-
-  """"""
-  mySpace: SEOSocialMySpace
-
-  """"""
-  otherSocials: [String]
-
-  """"""
-  pinterest: SEOSocialPinterest
-
-  """"""
-  twitter: SEOSocialTwitter
-
-  """"""
-  wikipedia: SEOSocialWikipedia
-
-  """"""
-  youTube: SEOSocialYoutube
-}
-
-type SEOSocialFacebook {
-  """"""
-  defaultImage: MediaItem
-
-  """"""
-  url: String
-}
-
-type SEOSocialInstagram {
-  """"""
-  url: String
-}
-
-type SEOSocialLinkedIn {
-  """"""
-  url: String
-}
-
-type SEOSocialMySpace {
-  """"""
-  url: String
-}
-
-type SEOSocialPinterest {
-  """"""
-  metaTag: String
-
-  """"""
-  url: String
-}
-
-type SEOSocialTwitter {
-  """"""
-  cardType: SEOCardType
-
-  """"""
-  username: String
-}
-
-type SEOSocialWikipedia {
-  """"""
-  url: String
-}
-
-type SEOSocialYoutube {
-  """"""
-  url: String
-}
-
-"""The Schema types for Taxonomy"""
-type SEOTaxonomySchema {
-  """"""
-  raw: String
-}
-
-type SEOUser {
-  """"""
-  breadcrumbTitle: String
-
-  """"""
-  canonical: String
-
-  """"""
-  fullHead: String
-
-  """"""
-  language: String
-
-  """"""
-  metaDesc: String
-
-  """"""
-  metaRobotsNofollow: String
-
-  """"""
-  metaRobotsNoindex: String
-
-  """"""
-  opengraphDescription: String
-
-  """"""
-  opengraphImage: MediaItem
-
-  """"""
-  opengraphTitle: String
-
-  """"""
-  region: String
-
-  """"""
-  schema: SEOUserSchema
-
-  """"""
-  social: SEOUserSocial
-
-  """"""
-  title: String
-
-  """"""
-  twitterDescription: String
-
-  """"""
-  twitterImage: MediaItem
-
-  """"""
-  twitterTitle: String
-}
-
-"""The Schema types for User"""
-type SEOUserSchema {
-  """"""
-  articleType: [String]
-
-  """"""
-  pageType: [String]
-
-  """"""
-  raw: String
-}
-
-type SEOUserSocial {
-  """"""
-  facebook: String
-
-  """"""
-  instagram: String
-
-  """"""
-  linkedIn: String
-
-  """"""
-  mySpace: String
-
-  """"""
-  pinterest: String
-
-  """"""
-  soundCloud: String
-
-  """"""
-  twitter: String
-
-  """"""
-  wikipedia: String
-
-  """"""
-  youTube: String
-}
-
-"""The Yoast SEO  webmaster fields"""
-type SEOWebmaster {
-  """"""
-  baiduVerify: String
-
-  """"""
-  googleVerify: String
-
-  """"""
-  msVerify: String
-
-  """"""
-  yandexVerify: String
 }
 
 """
@@ -22366,9 +22768,6 @@ type Tag implements DatabaseIdentifier & MenuItemLinkable & Node & TermNode & Un
     where: TagToPostConnectionWhereArgs
   ): TagToPostConnection
 
-  """The Yoast SEO data of the Tags taxonomy."""
-  seo: TaxonomySEO
-
   """An alphanumeric identifier for the object unique to its type."""
   slug: String
 
@@ -22436,9 +22835,6 @@ interface TagConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -22496,9 +22892,6 @@ type TagToContentNodeConnectionPageInfo implements ContentNodeConnectionPageInfo
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -22598,9 +22991,6 @@ type TagToPostConnectionPageInfo implements PageInfo & PostConnectionPageInfo & 
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -22879,9 +23269,6 @@ interface TaxonomyConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -22909,80 +23296,6 @@ enum TaxonomyIdTypeEnum {
 
   """The name of the taxonomy"""
   NAME
-}
-
-type TaxonomySEO {
-  """"""
-  breadcrumbs: [SEOPostTypeBreadcrumbs]
-
-  """"""
-  canonical: String
-
-  """"""
-  cornerstone: Boolean
-
-  """"""
-  focuskw: String
-
-  """"""
-  fullHead: String
-
-  """"""
-  metaDesc: String
-
-  """"""
-  metaKeywords: String
-
-  """"""
-  metaRobotsNofollow: String
-
-  """"""
-  metaRobotsNoindex: String
-
-  """"""
-  opengraphAuthor: String
-
-  """"""
-  opengraphDescription: String
-
-  """"""
-  opengraphImage: MediaItem
-
-  """"""
-  opengraphModifiedTime: String
-
-  """"""
-  opengraphPublishedTime: String
-
-  """"""
-  opengraphPublisher: String
-
-  """"""
-  opengraphSiteName: String
-
-  """"""
-  opengraphTitle: String
-
-  """"""
-  opengraphType: String
-
-  """"""
-  opengraphUrl: String
-
-  """"""
-  schema: SEOTaxonomySchema
-
-  """"""
-  title: String
-
-  """"""
-  twitterDescription: String
-
-  """"""
-  twitterImage: MediaItem
-
-  """"""
-  twitterTitle: String
 }
 
 """Connection between the Taxonomy type and the ContentType type"""
@@ -23018,9 +23331,6 @@ type TaxonomyToContentTypeConnectionPageInfo implements ContentTypeConnectionPag
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -23060,11 +23370,14 @@ type TaxonomyToTermNodeConnectionPageInfo implements PageInfo & TermNodeConnecti
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
+}
+
+"""The template assigned to the node"""
+type Template_PageNoTitle implements ContentTemplate {
+  """The name of the template"""
+  templateName: String
 }
 
 """
@@ -23209,9 +23522,6 @@ interface TermNodeConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -23270,9 +23580,6 @@ type TermNodeToEnqueuedScriptConnectionPageInfo implements EnqueuedScriptConnect
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -23310,9 +23617,6 @@ type TermNodeToEnqueuedStylesheetConnectionPageInfo implements EnqueuedStyleshee
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -23439,9 +23743,6 @@ interface ThemeConnectionPageInfo implements PageInfo & WPPageInfo {
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -24286,9 +24587,6 @@ type User implements Commenter & DatabaseIdentifier & Node & UniformResourceIden
     last: Int
   ): UserToUserRoleConnection
 
-  """The Yoast SEO data of a user"""
-  seo: SEOUser
-
   """
   Whether the Toolbar should be displayed when the user is viewing the site.
   """
@@ -24361,9 +24659,6 @@ interface UserConnectionPageInfo implements PageInfo & WPPageInfo {
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -24452,9 +24747,6 @@ interface UserRoleConnectionPageInfo implements PageInfo & WPPageInfo {
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -24474,12 +24766,6 @@ enum UserRoleEnum {
 
   """User role with specific capabilities"""
   EDITOR
-
-  """User role with specific capabilities"""
-  SEO_EDITOR
-
-  """User role with specific capabilities"""
-  SEO_MANAGER
 
   """User role with specific capabilities"""
   SUBSCRIBER
@@ -24518,9 +24804,6 @@ type UserToCommentConnectionPageInfo implements CommentConnectionPageInfo & Page
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -24658,9 +24941,6 @@ type UserToEnqueuedScriptConnectionPageInfo implements EnqueuedScriptConnectionP
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -24699,9 +24979,6 @@ type UserToEnqueuedStylesheetConnectionPageInfo implements EnqueuedStylesheetCon
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -24739,9 +25016,6 @@ type UserToMediaItemConnectionPageInfo implements MediaItemConnectionPageInfo & 
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -24855,9 +25129,6 @@ type UserToPageConnectionPageInfo implements PageConnectionPageInfo & PageInfo &
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -24969,9 +25240,6 @@ type UserToPostConnectionPageInfo implements PageInfo & PostConnectionPageInfo &
 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -25119,9 +25387,6 @@ type UserToRevisionsConnectionPageInfo implements ContentNodeConnectionPageInfo 
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -25221,9 +25486,6 @@ type UserToUserRoleConnectionPageInfo implements PageInfo & UserRoleConnectionPa
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -25299,9 +25561,6 @@ interface WPPageInfo implements PageInfo {
   """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  """Raw schema for page"""
-  seo: SEOPostTypePageInfo
-
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
@@ -25316,231 +25575,4 @@ type WritingSettings {
 
   """Convert emoticons like :-) and :-P to graphics on display."""
   useSmilies: Boolean
-}
-
-"""A block used for editing the site"""
-type YoastFaqBlock implements EditorBlock & PageEditorBlock & PostEditorBlock {
-  """The API version of the Gutenberg Block"""
-  apiVersion: Int
-
-  """Attributes of the YoastFaqBlock Block Type"""
-  attributes: YoastFaqBlockAttributes
-
-  """The name of the category the Block belongs to"""
-  blockEditorCategoryName: String
-
-  """The id of the Block"""
-  clientId: String
-
-  """CSS Classnames to apply to the block"""
-  cssClassNames: [String]
-
-  """The inner blocks of the Block"""
-  innerBlocks: [EditorBlock]
-
-  """Whether the block is Dynamic (server rendered)"""
-  isDynamic: Boolean!
-
-  """The name of the block"""
-  name: String
-
-  """The parent id of the Block"""
-  parentClientId: String
-
-  """The rendered HTML for the block"""
-  renderedHtml: String
-
-  """The (GraphQL) type of the block"""
-  type: String
-}
-
-"""Attributes of the YoastFaqBlock Block Type"""
-type YoastFaqBlockAttributes {
-  """
-  The &quot;additionalListCssClasses&quot; field on the &quot;YoastFaqBlockAttributes&quot; block or block attributes
-  """
-  additionalListCssClasses: String
-
-  """
-  The &quot;className&quot; field on the &quot;YoastFaqBlockAttributes&quot; block or block attributes
-  """
-  className: String
-
-  """
-  The &quot;lock&quot; field on the &quot;YoastFaqBlockAttributes&quot; block or block attributes
-  """
-  lock: BlockAttributesObject
-
-  """
-  The &quot;metadata&quot; field on the &quot;YoastFaqBlockAttributes&quot; block or block attributes
-  """
-  metadata: BlockAttributesObject
-
-  """
-  The &quot;questions&quot; field on the &quot;YoastFaqBlockAttributes&quot; block or block attributes
-  """
-  questions: BlockAttributesArray
-}
-
-"""A block used for editing the site"""
-type YoastHowToBlock implements EditorBlock & PageEditorBlock & PostEditorBlock {
-  """The API version of the Gutenberg Block"""
-  apiVersion: Int
-
-  """Attributes of the YoastHowToBlock Block Type"""
-  attributes: YoastHowToBlockAttributes
-
-  """The name of the category the Block belongs to"""
-  blockEditorCategoryName: String
-
-  """The id of the Block"""
-  clientId: String
-
-  """CSS Classnames to apply to the block"""
-  cssClassNames: [String]
-
-  """The inner blocks of the Block"""
-  innerBlocks: [EditorBlock]
-
-  """Whether the block is Dynamic (server rendered)"""
-  isDynamic: Boolean!
-
-  """The name of the block"""
-  name: String
-
-  """The parent id of the Block"""
-  parentClientId: String
-
-  """The rendered HTML for the block"""
-  renderedHtml: String
-
-  """The (GraphQL) type of the block"""
-  type: String
-}
-
-"""Attributes of the YoastHowToBlock Block Type"""
-type YoastHowToBlockAttributes {
-  """
-  The &quot;additionalListCssClasses&quot; field on the &quot;YoastHowToBlockAttributes&quot; block or block attributes
-  """
-  additionalListCssClasses: String
-
-  """
-  The &quot;className&quot; field on the &quot;YoastHowToBlockAttributes&quot; block or block attributes
-  """
-  className: String
-
-  """
-  The &quot;days&quot; field on the &quot;YoastHowToBlockAttributes&quot; block or block attributes
-  """
-  days: String
-
-  """
-  The &quot;defaultDurationText&quot; field on the &quot;YoastHowToBlockAttributes&quot; block or block attributes
-  """
-  defaultDurationText: String
-
-  """
-  The &quot;description&quot; field on the &quot;YoastHowToBlockAttributes&quot; block or block attributes
-  """
-  description: String
-
-  """
-  The &quot;durationText&quot; field on the &quot;YoastHowToBlockAttributes&quot; block or block attributes
-  """
-  durationText: String
-
-  """
-  The &quot;hasDuration&quot; field on the &quot;YoastHowToBlockAttributes&quot; block or block attributes
-  """
-  hasDuration: Boolean
-
-  """
-  The &quot;hours&quot; field on the &quot;YoastHowToBlockAttributes&quot; block or block attributes
-  """
-  hours: String
-
-  """
-  The &quot;jsonDescription&quot; field on the &quot;YoastHowToBlockAttributes&quot; block or block attributes
-  """
-  jsonDescription: String
-
-  """
-  The &quot;lock&quot; field on the &quot;YoastHowToBlockAttributes&quot; block or block attributes
-  """
-  lock: BlockAttributesObject
-
-  """
-  The &quot;metadata&quot; field on the &quot;YoastHowToBlockAttributes&quot; block or block attributes
-  """
-  metadata: BlockAttributesObject
-
-  """
-  The &quot;minutes&quot; field on the &quot;YoastHowToBlockAttributes&quot; block or block attributes
-  """
-  minutes: String
-
-  """
-  The &quot;steps&quot; field on the &quot;YoastHowToBlockAttributes&quot; block or block attributes
-  """
-  steps: BlockAttributesArray
-
-  """
-  The &quot;unorderedList&quot; field on the &quot;YoastHowToBlockAttributes&quot; block or block attributes
-  """
-  unorderedList: Boolean
-}
-
-"""A block used for editing the site"""
-type YoastSeoBreadcrumbs implements EditorBlock & PageEditorBlock & PostEditorBlock {
-  """The API version of the Gutenberg Block"""
-  apiVersion: Int
-
-  """Attributes of the YoastSeoBreadcrumbs Block Type"""
-  attributes: YoastSeoBreadcrumbsAttributes
-
-  """The name of the category the Block belongs to"""
-  blockEditorCategoryName: String
-
-  """The id of the Block"""
-  clientId: String
-
-  """CSS Classnames to apply to the block"""
-  cssClassNames: [String]
-
-  """The inner blocks of the Block"""
-  innerBlocks: [EditorBlock]
-
-  """Whether the block is Dynamic (server rendered)"""
-  isDynamic: Boolean!
-
-  """The name of the block"""
-  name: String
-
-  """The parent id of the Block"""
-  parentClientId: String
-
-  """The rendered HTML for the block"""
-  renderedHtml: String
-
-  """The (GraphQL) type of the block"""
-  type: String
-}
-
-"""Attributes of the YoastSeoBreadcrumbs Block Type"""
-type YoastSeoBreadcrumbsAttributes {
-  """
-  The &quot;className&quot; field on the &quot;YoastSeoBreadcrumbsAttributes&quot; block or block attributes
-  """
-  className: String
-
-  """
-  The &quot;lock&quot; field on the &quot;YoastSeoBreadcrumbsAttributes&quot; block or block attributes
-  """
-  lock: BlockAttributesObject
-
-  """
-  The &quot;metadata&quot; field on the &quot;YoastSeoBreadcrumbsAttributes&quot; block or block attributes
-  """
-  metadata: BlockAttributesObject
 }

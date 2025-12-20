@@ -1,10 +1,10 @@
 packages:
-  - .
-  - playground
-  - playground-basic
+  - packages/*
+  - playgrounds/*
 
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@tailwindcss/oxide'
   - esbuild
+  - unrs-resolver
   - vue-demi

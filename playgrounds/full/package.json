@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "name": "@wpnuxt/playground-full",
+  "type": "module",
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "generate": "nuxi generate",
+    "nuxt:prepare": "nuxi prepare",
+    "typecheck": "vue-tsc --noEmit",
+    "clean": "rm -rf .nuxt .output"
+  },
+  "dependencies": {
+    "@nuxt/ui": "4.3.0",
+    "@nuxtjs/mdc": "^0.19.1",
+    "@wpnuxt/core": "workspace:*",
+    "nuxt": "4.2.2"
+  },
+  "devDependencies": {
+    "@iconify-json/logos": "^1.2.10",
+    "@iconify-json/lucide": "^1.2.82",
+    "@iconify-json/svg-spinners": "^1.2.4",
+    "vue-tsc": "^3.1.8"
+  }
+}

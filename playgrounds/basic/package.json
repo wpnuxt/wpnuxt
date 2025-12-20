@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "name": "@wpnuxt/playground-basic",
+  "type": "module",
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "generate": "nuxi generate",
+    "nuxt:prepare": "nuxi prepare",
+    "typecheck": "vue-tsc --noEmit",
+    "clean": "rm -rf .nuxt .output"
+  },
+  "dependencies": {
+    "@wpnuxt/core": "workspace:*",
+    "nuxt": "4.2.2"
+  },
+  "devDependencies": {
+    "vue-tsc": "^3.1.8"
+  }
+}

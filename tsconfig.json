@@ -1,13 +1,14 @@
 {
-  "extends": "./.nuxt/tsconfig.json",
-  "exclude": [
-    "dist",
-    "node_modules",
-    "playground",
-    "playground-basic",
-    "wordpress"
-  ],
   "compilerOptions": {
-    "declaration": false
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "declarationMap": true
   }
 }
