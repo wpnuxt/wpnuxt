@@ -8,16 +8,41 @@ export interface GraphQLResponse<T = unknown> {
 }
 
 /**
+ * Get WordPress configuration from request headers or environment variables.
+ * Headers take precedence, allowing each MCP user to connect to their own WordPress instance.
+ *
+ * Supported headers:
+ * - X-WordPress-URL: The WordPress site URL (required if not set via env)
+ * - X-WordPress-App-User: Optional application username for authenticated requests
+ * - X-WordPress-App-Password: Optional application password for authenticated requests
+ */
+function getWordPressConfig() {
+  const event = useEvent()
+  const runtimeConfig = useRuntimeConfig()
+
+  // Headers take precedence over environment variables
+  const wordpressUrl = getHeader(event, 'x-wordpress-url') || runtimeConfig.wordpressUrl
+  const appUser = getHeader(event, 'x-wordpress-app-user') || runtimeConfig.wordpressAppUser
+  const appPassword = getHeader(event, 'x-wordpress-app-password') || runtimeConfig.wordpressAppPassword
+
+  return {
+    wordpressUrl,
+    appUser,
+    appPassword
+  }
+}
+
+/**
  * Execute a GraphQL query against the WordPress endpoint
  */
 export async function executeGraphQL<T = unknown>(
   query: string,
   variables?: Record<string, unknown>
 ): Promise<GraphQLResponse<T>> {
-  const config = useRuntimeConfig()
+  const config = getWordPressConfig()
 
   if (!config.wordpressUrl) {
-    throw new Error('WordPress URL not configured. Set NUXT_WORDPRESS_URL environment variable.')
+    throw new Error('WordPress URL not configured. Set X-WordPress-URL header or NUXT_WORDPRESS_URL environment variable.')
   }
 
   const endpoint = `${config.wordpressUrl}/graphql`
@@ -27,9 +52,9 @@ export async function executeGraphQL<T = unknown>(
   }
 
   // Add authentication if configured
-  if (config.wordpressAppUser && config.wordpressAppPassword) {
+  if (config.appUser && config.appPassword) {
     const credentials = Buffer.from(
-      `${config.wordpressAppUser}:${config.wordpressAppPassword}`
+      `${config.appUser}:${config.appPassword}`
     ).toString('base64')
     headers['Authorization'] = `Basic ${credentials}`
   }
