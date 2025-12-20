@@ -4,16 +4,18 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter './packages/**' build",
+    "build": "pnpm --filter './packages/**' dev:prepare && pnpm --filter './packages/**' build && pnpm --filter './playgrounds/**' build",
     "dev:prepare": "pnpm --filter './packages/**' dev:prepare && pnpm --filter './playgrounds/**' nuxt:prepare",
     "dev:basic": "pnpm --filter @wpnuxt/playground-basic dev",
     "dev:full": "pnpm --filter @wpnuxt/playground-full dev",
     "dev": "pnpm dev:full",
     "lint": "eslint .",
     "test": "pnpm --filter './packages/**' test",
-    "typecheck": "pnpm --filter './packages/**' typecheck",
+    "typecheck": "pnpm --filter './**' typecheck",
     "clean": "pnpm -r run clean && rm -rf node_modules",
-    "release": "pnpm build && release-it"
+    "check": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build",
+    "check:full": "pnpm clean && pnpm install && pnpm run dev:prepare && pnpm run check",
+    "release": "release-it"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^1.12.1",

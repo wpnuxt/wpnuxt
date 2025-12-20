@@ -15,7 +15,7 @@
     "web": true
   },
   "hooks": {
-    "before:init": ["pnpm lint", "pnpm test", "pnpm typecheck"],
+    "before:init": ["pnpm lint", "pnpm typecheck", "pnpm test", "pnpm build"],
     "after:bump": "pnpm --filter './packages/*' exec npm pkg set version=${version}",
     "after:release": "echo Successfully released ${name} v${version} to GitHub! && pnpm publish -r --access public --no-git-checks"
   },

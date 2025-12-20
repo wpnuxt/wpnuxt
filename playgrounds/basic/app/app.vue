@@ -1,7 +1,9 @@
 <template>
   <div>
     <header>
-      <WPNuxtLogo />
+      <NuxtLink to="/">
+        <WPNuxtLogo />
+      </NuxtLink>
       <Navigation />
     </header>
     <main>

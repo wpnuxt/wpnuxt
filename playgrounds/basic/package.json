@@ -8,7 +8,7 @@
     "generate": "nuxi generate",
     "nuxt:prepare": "nuxi prepare",
     "typecheck": "vue-tsc --noEmit",
-    "clean": "rm -rf .nuxt .output"
+    "clean": "rm -rf .nuxt .output node_modules"
   },
   "dependencies": {
     "@wpnuxt/core": "workspace:*",

@@ -1,0 +1,49 @@
+{
+  "name": "@wpnuxt/mcp",
+  "version": "2.0.0-alpha.1",
+  "description": "MCP Server for AI assistants to interact with WordPress via WPNuxt",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "wordpress",
+    "ai",
+    "claude",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wpnuxt/wpnuxt.git",
+    "directory": "packages/mcp"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "dev:prepare": "echo 'No prepare needed for mcp'",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist node_modules"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3"
+  }
+}
