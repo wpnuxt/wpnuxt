@@ -1,4 +1,5 @@
 import { defu } from 'defu'
+import { pathToFileURL } from 'node:url'
 import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
@@ -48,7 +49,7 @@ export default defineNuxtModule<WPNuxtConfig>({
     if (wpNuxtConfig.cache?.enabled !== false) {
       const maxAge = wpNuxtConfig.cache?.maxAge ?? 300
       nuxt.options.nitro.routeRules = nuxt.options.nitro.routeRules || {}
-      nuxt.options.nitro.routeRules['/graphql-middleware/**'] = {
+      nuxt.options.nitro.routeRules['/api/graphql_middleware/**'] = {
         cache: {
           maxAge,
           swr: wpNuxtConfig.cache?.swr !== false
@@ -75,7 +76,7 @@ export default defineNuxtModule<WPNuxtConfig>({
       fnImports: [],
       composablesPrefix: 'use'
     }
-    await generateWPNuxtComposables(ctx, mergedQueriesFolder, createResolver(nuxt.options.srcDir))
+    await generateWPNuxtComposables(ctx, mergedQueriesFolder, createResolver(pathToFileURL(nuxt.options.srcDir).toString()))
 
     nuxt.options.alias['#wpnuxt'] = resolver.resolve(nuxt.options.buildDir, 'wpnuxt')
     nuxt.options.alias['#wpnuxt/*'] = resolver.resolve(nuxt.options.buildDir, 'wpnuxt', '*')
