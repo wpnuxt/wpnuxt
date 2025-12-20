@@ -1,6 +1,6 @@
 {
   "name": "@wpnuxt/core",
-  "version": "1.0.0",
+  "version": "2.0.0-alpha.1",
   "description": "Nuxt module for WordPress integration via GraphQL (WPGraphQL)",
   "keywords": [
     "nuxt",
