@@ -67,6 +67,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Type Check
 
+    env:
+      WPNUXT_WORDPRESS_URL: ${{ secrets.WPNUXT_WORDPRESS_URL }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -87,12 +90,15 @@ jobs:
         run: pnpm run dev:prepare
 
       - name: Run type check
-        run: pnpm run test:types
+        run: pnpm run typecheck
 
   build:
     runs-on: ubuntu-latest
     name: Build
     needs: [lint, test, typecheck]
+
+    env:
+      WPNUXT_WORDPRESS_URL: ${{ secrets.WPNUXT_WORDPRESS_URL }}
 
     steps:
       - name: Checkout
@@ -114,7 +120,4 @@ jobs:
         run: pnpm run dev:prepare
 
       - name: Build module
-        run: pnpm run prepack
-
-      - name: Build playground
-        run: pnpm run dev:build
+        run: pnpm run build
