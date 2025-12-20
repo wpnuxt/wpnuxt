@@ -1,7 +1,6 @@
 import { defu } from 'defu'
 import { existsSync, copyFileSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
-import { pathToFileURL } from 'node:url'
 import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
@@ -82,7 +81,7 @@ export default defineNuxtModule<WPNuxtConfig>({
       fnImports: [],
       composablesPrefix: 'use'
     }
-    await generateWPNuxtComposables(ctx, mergedQueriesFolder, createResolver(pathToFileURL(nuxt.options.srcDir).toString()))
+    await generateWPNuxtComposables(ctx, mergedQueriesFolder, createResolver(nuxt.options.srcDir))
 
     nuxt.options.alias['#wpnuxt'] = resolver.resolve(nuxt.options.buildDir, 'wpnuxt')
     nuxt.options.alias['#wpnuxt/*'] = resolver.resolve(nuxt.options.buildDir, 'wpnuxt', '*')

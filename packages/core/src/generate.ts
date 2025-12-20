@@ -38,7 +38,12 @@ export async function prepareContext(ctx: WPNuxtContext) {
     await prepareFunctions(ctx)
   }
 
+  // Separate queries and mutations
+  const queries = ctx.fns.filter(f => f.operation === 'query')
+  const mutations = ctx.fns.filter(f => f.operation === 'mutation')
+
   const fnName = (fn: string) => ctx.composablesPrefix + upperFirst(fn)
+  const mutationFnName = (fn: string) => `useMutation${upperFirst(fn)}`
 
   // Helper to format node array
   const formatNodes = (nodes?: string[]) => nodes?.map(n => `'${n}'`).join(',') ?? ''
@@ -49,13 +54,13 @@ export async function prepareContext(ctx: WPNuxtContext) {
     return q.fragments?.length ? q.fragments.map(f => `${f}Fragment${fragmentSuffix}`).join(' | ') : 'any'
   }
 
-  const fnExp = (q: WPNuxtQuery, typed = false, lazy = false) => {
+  // Query composable expression
+  const queryFnExp = (q: WPNuxtQuery, typed = false, lazy = false) => {
     const baseName = fnName(q.name)
     const functionName = lazy ? `useLazy${q.name}` : baseName
 
     if (!typed) {
       if (lazy) {
-        // Lazy variant passes lazy: true option
         return `export const ${functionName} = (params, options) => useWPContent('${q.name}', [${formatNodes(q.nodes)}], false, params, { ...options, lazy: true })`
       }
       return `export const ${functionName} = (params, options) => useWPContent('${q.name}', [${formatNodes(q.nodes)}], false, params, options)`
@@ -63,19 +68,42 @@ export async function prepareContext(ctx: WPNuxtContext) {
     return `  export const ${functionName}: (params?: ${q.name}QueryVariables, options?: WPContentOptions) => WPContentResult<${getFragmentType(q)}>`
   }
 
-  ctx.generateImports = () => [
-    // Generate both regular and lazy variants for each function
-    ...ctx.fns.flatMap(f => [
-      fnExp(f, false, false), // Regular version
-      fnExp(f, false, true) // Lazy version
-    ])
-  ].join('\n')
+  // Mutation composable expression
+  const mutationFnExp = (m: WPNuxtQuery, typed = false) => {
+    const functionName = mutationFnName(m.name)
 
-  // Use Set directly for better performance
+    if (!typed) {
+      return `export const ${functionName} = (variables, options) => useGraphqlMutation('${m.name}', variables, options)`
+    }
+    return `  export const ${functionName}: (variables: ${m.name}MutationVariables, options?: WPMutationOptions) => Promise<WPMutationResult<${m.name}Mutation>>`
+  }
+
+  ctx.generateImports = () => {
+    const imports: string[] = []
+
+    // Generate query composables (regular and lazy variants)
+    queries.forEach((f) => {
+      imports.push(queryFnExp(f, false, false))
+      imports.push(queryFnExp(f, false, true))
+    })
+
+    // Generate mutation composables
+    mutations.forEach((m) => {
+      imports.push(mutationFnExp(m, false))
+    })
+
+    return imports.join('\n')
+  }
+
+  // Collect types for queries and mutations
   const typeSet = new Set<string>()
-  ctx.fns.forEach((o) => {
+  queries.forEach((o) => {
     typeSet.add(`${o.name}QueryVariables`)
     o.fragments?.forEach(f => typeSet.add(`${f}Fragment`))
+  })
+  mutations.forEach((m) => {
+    typeSet.add(`${m.name}MutationVariables`)
+    typeSet.add(`${m.name}Mutation`)
   })
 
   ctx.generateDeclarations = () => {
@@ -83,6 +111,7 @@ export async function prepareContext(ctx: WPNuxtContext) {
       `import type { ${[...typeSet].join(', ')} } from '#build/graphql-operations'`,
       'import type { ComputedRef, Ref } from \'vue\'',
       'import type { AsyncDataRequestStatus } from \'#app\'',
+      'import type { GraphqlResponse } from \'nuxt-graphql-middleware/types\'',
       '',
       'export interface WPContentOptions {',
       '  /** Whether to resolve the async function after loading the route, instead of blocking client-side navigation. Default: false */',
@@ -99,6 +128,13 @@ export async function prepareContext(ctx: WPNuxtContext) {
       '  [key: string]: unknown',
       '}',
       '',
+      'export interface WPMutationOptions {',
+      '  /** Fetch options to pass to the request */',
+      '  fetchOptions?: RequestInit',
+      '  /** Additional options */',
+      '  [key: string]: unknown',
+      '}',
+      '',
       'interface WPContentResult<T> {',
       '  data: ComputedRef<T | undefined>',
       '  pending: Ref<boolean>',
@@ -109,28 +145,43 @@ export async function prepareContext(ctx: WPNuxtContext) {
       '  status: Ref<AsyncDataRequestStatus>',
       '}',
       '',
-      'declare module \'#wpnuxt\' {',
-      ...ctx.fns!.flatMap(f => [
-        fnExp(f, true, false), // Regular version type
-        fnExp(f, true, true) // Lazy version type
-      ]),
-      '}'
+      'type WPMutationResult<T> = GraphqlResponse<T>',
+      '',
+      'declare module \'#wpnuxt\' {'
     ]
+
+    // Add query type declarations
+    queries.forEach((f) => {
+      declarations.push(queryFnExp(f, true, false))
+      declarations.push(queryFnExp(f, true, true))
+    })
+
+    // Add mutation type declarations
+    mutations.forEach((m) => {
+      declarations.push(mutationFnExp(m, true))
+    })
+
+    declarations.push('}')
     return declarations.join('\n')
   }
 
   ctx.fnImports = [
-    // Auto-import both regular and lazy variants
-    ...ctx.fns.flatMap((fn): Import[] => [
+    // Auto-import query composables (regular and lazy variants)
+    ...queries.flatMap((fn): Import[] => [
       { from: '#wpnuxt', name: fnName(fn.name) },
       { from: '#wpnuxt', name: `useLazy${fn.name}` }
-    ])
+    ]),
+    // Auto-import mutation composables
+    ...mutations.map((m): Import => ({ from: '#wpnuxt', name: mutationFnName(m.name) }))
   ]
 
   logger.debug('generated WPNuxt composables: ')
-  ctx.fns.forEach((f) => {
+  queries.forEach((f) => {
     logger.debug(` ${fnName(f.name)}()`)
     logger.debug(` useLazy${f.name}()`)
+  })
+  mutations.forEach((m) => {
+    logger.debug(` ${mutationFnName(m.name)}()`)
   })
 }
 

@@ -1,0 +1,15 @@
+# Sample mutation for testing mutation composable generation
+mutation CreateComment($input: CreateCommentInput!) {
+  createComment(input: $input) {
+    success
+    comment {
+      id
+      content
+      author {
+        node {
+          name
+        }
+      }
+    }
+  }
+}
