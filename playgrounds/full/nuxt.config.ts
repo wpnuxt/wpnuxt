@@ -11,10 +11,7 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
-  future: {
-    compatibilityVersion: 4
-  },
-  compatibilityDate: '2025-10-05',
+  compatibilityDate: '2025-12-20',
 
   wpNuxt: {
     wordpressUrl: 'https://wordpress2.wpnuxt.com',

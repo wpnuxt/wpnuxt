@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const { data: post, pending, refresh, clear } = await useLazyNodeByUri({ uri: useRoute().path.replace('/lazy', '') })
+const route = useRoute()
+// Variables must be reactive (computed) for client-side navigation to refetch
+const { data: post, pending, refresh, clear } = await useLazyNodeByUri(computed(() => ({ uri: route.path.replace('/lazy', '') })))
 </script>
 
 <template>

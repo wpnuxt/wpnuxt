@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const { data: post, pending, refresh, clear } = await useNodeByUri({ uri: useRoute().path })
+const route = useRoute()
+// Variables must be reactive (computed) for client-side navigation to refetch
+const { data: post, pending, refresh, clear } = await useNodeByUri(computed(() => ({ uri: route.path })))
 </script>
 
 <template>
