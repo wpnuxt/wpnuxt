@@ -2,9 +2,6 @@ import { executeGraphQL, CONTENT_TYPES_QUERY } from '../../utils/graphql'
 
 export default defineMcpTool({
   description: 'List all WordPress content types (post types). Returns both built-in types (posts, pages) and custom post types.',
-  inputSchema: {
-    // No input required
-  },
   async handler() {
     const result = await executeGraphQL<{
       contentTypes: {

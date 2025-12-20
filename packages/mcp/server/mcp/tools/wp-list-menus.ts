@@ -26,9 +26,6 @@ const MENUS_QUERY = `
 
 export default defineMcpTool({
   description: 'List all WordPress navigation menus with their items. Useful for understanding site navigation structure.',
-  inputSchema: {
-    // No input required
-  },
   async handler() {
     const result = await executeGraphQL<{
       menus: {

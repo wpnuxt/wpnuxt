@@ -4,6 +4,11 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
 
+  // Enable async context for Nitro request handling
+  experimental: {
+    asyncContext: true
+  },
+
   // Runtime config for WordPress connection
   runtimeConfig: {
     // WordPress GraphQL endpoint (set via NUXT_WORDPRESS_URL env var)

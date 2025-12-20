@@ -5,7 +5,7 @@ export default defineMcpTool({
   description: 'Execute an arbitrary GraphQL query against WordPress. Use this for custom queries not covered by other tools.',
   inputSchema: {
     query: z.string().describe('The GraphQL query to execute'),
-    variables: z.record(z.unknown()).optional().describe('Optional variables for the query')
+    variables: z.record(z.string(), z.any()).optional().describe('Optional variables for the query')
   },
   async handler({ query, variables }) {
     // Basic validation

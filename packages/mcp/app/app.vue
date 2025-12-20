@@ -34,7 +34,9 @@
         <li><code>X-WordPress-App-Password</code> <span class="optional">(optional)</span> - Application password for authenticated requests</li>
       </ul>
 
-      <p class="note">Each user connects to their own WordPress instance by providing their URL in the headers.</p>
+      <p class="note">
+        Each user connects to their own WordPress instance by providing their URL in the headers.
+      </p>
     </section>
 
     <section>
