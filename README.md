@@ -83,7 +83,7 @@ const post = await usePostByUri({ uri: '/my-post' })
 const pages = await usePages()
 
 // Using async versions for reactive data
-const { data: asyncPosts, pending, refresh } = await useAsyncPosts()
+const { data: asyncPosts, pending, refresh } = await useLazyPosts()
 </script>
 
 <template>

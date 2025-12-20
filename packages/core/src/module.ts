@@ -170,7 +170,7 @@ export default defineGraphqlServerOptions({
 
   async onServerError(event, error, _operation, operationName) {
     const url = event.node.req.url || 'unknown'
-    console.error(\`[WPNuxt] GraphQL error in \${operationName} (\${url}):\`, error.message)
+    console.error(\\\`[WPNuxt] GraphQL error in \\\${operationName} (\\\${url}):\\\`, error.message)
   }
 })
 `

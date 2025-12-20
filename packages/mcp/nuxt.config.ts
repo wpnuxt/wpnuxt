@@ -1,13 +1,10 @@
+import pkg from './package.json'
+
 export default defineNuxtConfig({
 
   modules: ['@nuxtjs/mcp-toolkit'],
 
   devtools: { enabled: true },
-
-  // Enable async context for Nitro request handling
-  experimental: {
-    asyncContext: true
-  },
 
   // Runtime config for WordPress connection
   runtimeConfig: {
@@ -15,7 +12,14 @@ export default defineNuxtConfig({
     wordpressUrl: '',
     // Optional: WordPress Application Password for authenticated requests
     wordpressAppUser: '',
-    wordpressAppPassword: ''
+    wordpressAppPassword: '',
+    // Package version (used by wpnuxt_init to set @wpnuxt/core dependency)
+    wpnuxtVersion: pkg.version
   },
-  compatibilityDate: '2025-01-01'
+
+  // Enable async context for Nitro request handling
+  experimental: {
+    asyncContext: true
+  },
+  compatibilityDate: '2025-12-20'
 })

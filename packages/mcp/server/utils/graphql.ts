@@ -195,3 +195,145 @@ export const PAGES_QUERY = `
     }
   }
 `
+
+/**
+ * Query to list all taxonomies
+ */
+export const TAXONOMIES_QUERY = `
+  query Taxonomies {
+    taxonomies {
+      nodes {
+        name
+        graphqlSingleName
+        graphqlPluralName
+        description
+        hierarchical
+        showInGraphql
+        connectedContentTypes {
+          nodes {
+            name
+          }
+        }
+      }
+    }
+  }
+`
+
+/**
+ * Query to get general site settings
+ */
+export const SITE_SETTINGS_QUERY = `
+  query SiteSettings {
+    generalSettings {
+      title
+      description
+      url
+      language
+      timezone
+      dateFormat
+      timeFormat
+    }
+    readingSettings {
+      postsPerPage
+      showOnFront
+      pageOnFront
+      pageForPosts
+    }
+    discussionSettings {
+      defaultCommentStatus
+    }
+  }
+`
+
+/**
+ * Query to sample content with Gutenberg blocks
+ */
+export const SAMPLE_CONTENT_QUERY = `
+  query SampleContent($contentType: ContentTypeEnum!, $first: Int = 5) {
+    contentNodes(where: { contentTypes: [$contentType] }, first: $first) {
+      nodes {
+        ... on NodeWithTitle {
+          title
+        }
+        ... on ContentNode {
+          id
+          databaseId
+          uri
+          contentTypeName
+          date
+        }
+        ... on NodeWithContentEditor {
+          content(format: RAW)
+        }
+        ... on NodeWithFeaturedImage {
+          featuredImage {
+            node {
+              sourceUrl
+              altText
+              mediaDetails {
+                width
+                height
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+/**
+ * Query to detect plugins via schema introspection
+ * We detect plugins by checking for their specific GraphQL types
+ */
+export const PLUGIN_DETECTION_QUERY = `
+  query PluginDetection {
+    __schema {
+      types {
+        name
+        kind
+        description
+      }
+    }
+  }
+`
+
+/**
+ * Query to fetch menus with menu items
+ */
+export const MENUS_QUERY = `
+  query Menus {
+    menus {
+      nodes {
+        id
+        databaseId
+        name
+        slug
+        locations
+        menuItems(first: 100) {
+          nodes {
+            id
+            databaseId
+            parentId
+            label
+            url
+            path
+            target
+            cssClasses
+            childItems {
+              nodes {
+                id
+                parentId
+                label
+                url
+                path
+                target
+                cssClasses
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
