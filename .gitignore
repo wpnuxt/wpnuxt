@@ -57,3 +57,4 @@ Temporary Items
 
 .queries
 playground-basic/schema.graphql
+packages/core/test/fixtures/basic/schema.graphql

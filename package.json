@@ -1,5 +1,6 @@
 {
-  "name": "wpnuxt-monorepo",
+  "name": "wpnuxt",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,27 +12,14 @@
     "lint": "eslint .",
     "test": "pnpm --filter './packages/**' test",
     "typecheck": "pnpm --filter './packages/**' typecheck",
-    "typecheck:all": "pnpm -r run typecheck",
     "clean": "pnpm -r run clean && rm -rf node_modules",
-    "release": "pnpm build && changeset publish",
-    "prepare": "husky || true"
+    "release": "pnpm build && release-it"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.0",
     "@nuxt/eslint-config": "^1.12.1",
+    "@release-it/conventional-changelog": "^10.0.0",
     "eslint": "^9.39.2",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.2.7",
-    "prettier": "^3.7.4",
-    "typescript": "~5.9.2"
-  },
-  "lint-staged": {
-    "*.{js,ts,vue}": [
-      "eslint --fix"
-    ],
-    "*.{json,md,yml}": [
-      "prettier --write"
-    ]
+    "release-it": "^18.1.2"
   },
   "packageManager": "pnpm@10.26.1+sha512.664074abc367d2c9324fdc18037097ce0a8f126034160f709928e9e9f95d98714347044e5c3164d65bd5da6c59c6be362b107546292a8eecb7999196e5ce58fa",
   "engines": {
