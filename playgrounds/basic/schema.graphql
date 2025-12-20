@@ -16190,7 +16190,7 @@ enum MenuItemNodeIdTypeEnum {
   ID
 }
 
-"""Deprecated in favor of MenuItemLinkeable Interface"""
+"""Deprecated in favor of MenuItemLinkable Interface"""
 union MenuItemObjectUnion = Category | Page | Post | PostFormat | Tag
 
 """Connection between the MenuItem type and the Menu type"""
@@ -17166,7 +17166,7 @@ type Page implements ContentNode & DatabaseIdentifier & HierarchicalContentNode 
   """The password for the page object."""
   password: String
 
-  """Connection between the Page type and the page type"""
+  """Connection between the page type and the page type"""
   preview: PageToPreviewConnectionEdge
 
   """The database id of the preview node"""
@@ -17474,7 +17474,7 @@ input PageToCommentConnectionWhereArgs {
   userId: ID
 }
 
-"""Connection between the Page type and the page type"""
+"""Connection between the page type and the page type"""
 type PageToPreviewConnectionEdge implements Edge & OneToOneConnection & PageConnectionEdge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -17976,7 +17976,7 @@ type Post implements ContentNode & DatabaseIdentifier & MenuItemLinkable & Node 
   """The id field matches the WP_Post-&gt;ID field."""
   postId: Int! @deprecated(reason: "Deprecated in favor of the databaseId field")
 
-  """Connection between the Post type and the post type"""
+  """Connection between the post type and the post type"""
   preview: PostToPreviewConnectionEdge
 
   """The database id of the preview node"""
@@ -19139,7 +19139,7 @@ input PostToCommentConnectionWhereArgs {
   userId: ID
 }
 
-"""Connection between the Post type and the post type"""
+"""Connection between the post type and the post type"""
 type PostToParentConnectionEdge implements Edge & OneToOneConnection & PostConnectionEdge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
@@ -19150,7 +19150,7 @@ type PostToParentConnectionEdge implements Edge & OneToOneConnection & PostConne
   node: Post! @deprecated(reason: "This content type is not hierarchical and typically will not have a parent")
 }
 
-"""Connection between the Post type and the post type"""
+"""Connection between the post type and the post type"""
 type PostToPostConnection implements Connection & PostConnection {
   """Edges for the PostToPostConnection connection"""
   edges: [PostToPostConnectionEdge!]!
@@ -19311,7 +19311,7 @@ input PostToPostFormatConnectionWhereArgs {
   updateTermMetaCache: Boolean
 }
 
-"""Connection between the Post type and the post type"""
+"""Connection between the post type and the post type"""
 type PostToPreviewConnectionEdge implements Edge & OneToOneConnection & PostConnectionEdge {
   """
   Opaque reference to the nodes position in the connection. Value can be used with pagination args.
