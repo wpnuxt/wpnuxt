@@ -1,5 +1,6 @@
 import { existsSync, cpSync, promises as fsp } from 'node:fs'
 import { createResolver, useLogger } from '@nuxt/kit'
+import type { Resolver } from '@nuxt/kit'
 import { ref } from 'vue'
 import type { ConsolaInstance } from 'consola'
 import type { Nuxt } from 'nuxt/schema'
@@ -23,15 +24,15 @@ export function getLogger(): ConsolaInstance {
   return loggerRef.value
 }
 
-export async function mergeQueries(nuxt: Nuxt, wpNuxtConfig: WPNuxtConfig) {
-  const { resolve } = createResolver(import.meta.url)
+export async function mergeQueries(nuxt: Nuxt, wpNuxtConfig: WPNuxtConfig, resolver: Resolver) {
   const logger = getLogger()
 
   // Cache base directory
   const baseDir = nuxt.options.srcDir || nuxt.options.rootDir
-  const queryOutputPath = resolve(baseDir, wpNuxtConfig.queries.mergedOutputFolder)
-  const userQueryPath = resolve(baseDir, wpNuxtConfig.queries.extendFolder)
-  const defaultQueriesPath = resolve('../runtime', 'queries')
+  const { resolve } = createResolver(baseDir)
+  const queryOutputPath = resolve(wpNuxtConfig.queries.mergedOutputFolder)
+  const userQueryPath = resolve(wpNuxtConfig.queries.extendFolder)
+  const defaultQueriesPath = resolver.resolve('./runtime/queries')
 
   // Clean output directory
   await fsp.rm(queryOutputPath, { recursive: true, force: true })

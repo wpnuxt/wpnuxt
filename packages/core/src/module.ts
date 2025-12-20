@@ -41,7 +41,7 @@ export default defineNuxtModule<WPNuxtConfig>({
     nuxt.options.runtimeConfig.public.buildHash = randHashGenerator()
     addPlugin(resolver.resolve('./runtime/plugins/graphqlConfig'))
 
-    const mergedQueriesFolder = await mergeQueries(nuxt, wpNuxtConfig)
+    const mergedQueriesFolder = await mergeQueries(nuxt, wpNuxtConfig, resolver)
     await registerModules(nuxt, resolver, wpNuxtConfig, mergedQueriesFolder)
 
     // Configure Nitro route rules for caching GraphQL requests if enabled
