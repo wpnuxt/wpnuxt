@@ -24,6 +24,14 @@
     ".": {
       "types": "./dist/types.d.mts",
       "import": "./dist/module.mjs"
+    },
+    "./server-options": {
+      "types": "./dist/server-options.d.mts",
+      "import": "./dist/server-options.mjs"
+    },
+    "./client-options": {
+      "types": "./dist/client-options.d.mts",
+      "import": "./dist/client-options.mjs"
     }
   },
   "main": "./dist/module.mjs",

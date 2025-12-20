@@ -1,5 +1,5 @@
 import { defu } from 'defu'
-import { existsSync, copyFileSync, mkdirSync } from 'node:fs'
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
@@ -143,7 +143,39 @@ function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig {
   return config
 }
 
-function setupServerOptions(nuxt: Nuxt, resolver: Resolver, logger: ReturnType<typeof getLogger>) {
+const SERVER_OPTIONS_TEMPLATE = `import { defineGraphqlServerOptions } from '@wpnuxt/core/server-options'
+import { getHeader } from 'h3'
+
+/**
+ * WPNuxt default server options for nuxt-graphql-middleware.
+ *
+ * This enables:
+ * - Cookie forwarding for WordPress preview mode
+ * - Authorization header forwarding for authenticated requests
+ * - Consistent error logging
+ *
+ * Users can customize by creating their own server/graphqlMiddleware.serverOptions.ts
+ */
+export default defineGraphqlServerOptions({
+  async serverFetchOptions(event, _operation, _operationName, _context) {
+    return {
+      headers: {
+        // Forward WordPress auth cookies for previews
+        Cookie: getHeader(event, 'cookie') || '',
+        // Forward authorization header if present
+        Authorization: getHeader(event, 'authorization') || ''
+      }
+    }
+  },
+
+  async onServerError(event, error, _operation, operationName) {
+    const url = event.node.req.url || 'unknown'
+    console.error(\`[WPNuxt] GraphQL error in \${operationName} (\${url}):\`, error.message)
+  }
+})
+`
+
+function setupServerOptions(nuxt: Nuxt, _resolver: Resolver, logger: ReturnType<typeof getLogger>) {
   const serverDir = nuxt.options.serverDir
   const targetPath = join(serverDir, 'graphqlMiddleware.serverOptions.ts')
 
@@ -158,13 +190,42 @@ function setupServerOptions(nuxt: Nuxt, resolver: Resolver, logger: ReturnType<t
     mkdirSync(serverDir, { recursive: true })
   }
 
-  // Copy WPNuxt's default server options
-  const sourcePath = resolver.resolve('./runtime/server/graphqlMiddleware.serverOptions.ts')
-  copyFileSync(sourcePath, targetPath)
+  // Write WPNuxt's default server options
+  writeFileSync(targetPath, SERVER_OPTIONS_TEMPLATE)
   logger.debug('Created graphqlMiddleware.serverOptions.ts with WPNuxt defaults (cookie/auth forwarding)')
 }
 
-function setupClientOptions(nuxt: Nuxt, resolver: Resolver, logger: ReturnType<typeof getLogger>) {
+const CLIENT_OPTIONS_TEMPLATE = `import { defineGraphqlClientOptions } from '@wpnuxt/core/client-options'
+import { useRoute } from '#imports'
+
+/**
+ * WPNuxt default client options for nuxt-graphql-middleware.
+ *
+ * This enables passing client context to the server for:
+ * - Preview mode (passes preview flag and token from URL query params)
+ *
+ * The context is available in serverFetchOptions via context.client
+ * All values must be strings (nuxt-graphql-middleware requirement)
+ *
+ * Users can customize by creating their own app/graphqlMiddleware.clientOptions.ts
+ */
+export default defineGraphqlClientOptions<{
+  preview?: string
+  previewToken?: string
+}>({
+  buildClientContext() {
+    const route = useRoute()
+
+    return {
+      // Context values must be strings - use 'true'/'false' instead of boolean
+      preview: route.query.preview === 'true' ? 'true' : undefined,
+      previewToken: route.query.token as string | undefined
+    }
+  }
+})
+`
+
+function setupClientOptions(nuxt: Nuxt, _resolver: Resolver, logger: ReturnType<typeof getLogger>) {
   // Client options go in the app directory (Nuxt 4 structure)
   // In Nuxt 4, nuxt.options.dir.app is an absolute path
   const appDir = nuxt.options.dir.app
@@ -181,9 +242,8 @@ function setupClientOptions(nuxt: Nuxt, resolver: Resolver, logger: ReturnType<t
     mkdirSync(appDir, { recursive: true })
   }
 
-  // Copy WPNuxt's default client options
-  const sourcePath = resolver.resolve('./runtime/app/graphqlMiddleware.clientOptions.ts')
-  copyFileSync(sourcePath, targetPath)
+  // Write WPNuxt's default client options
+  writeFileSync(targetPath, CLIENT_OPTIONS_TEMPLATE)
   logger.debug('Created graphqlMiddleware.clientOptions.ts with WPNuxt defaults (preview mode support)')
 }
 
