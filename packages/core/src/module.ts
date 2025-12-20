@@ -1,4 +1,6 @@
 import { defu } from 'defu'
+import { existsSync, copyFileSync, mkdirSync } from 'node:fs'
+import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
@@ -43,6 +45,10 @@ export default defineNuxtModule<WPNuxtConfig>({
     addPlugin(resolver.resolve('./runtime/plugins/graphqlConfig'))
 
     const mergedQueriesFolder = await mergeQueries(nuxt, wpNuxtConfig, resolver)
+
+    // Set up server options for nuxt-graphql-middleware (cookie/auth forwarding)
+    setupServerOptions(nuxt, resolver, logger)
+
     await registerModules(nuxt, resolver, wpNuxtConfig, mergedQueriesFolder)
 
     // Configure Nitro route rules for caching GraphQL requests if enabled
@@ -133,6 +139,27 @@ function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig {
     throw new Error(`WPNuxt error: WordPress url should not have a trailing slash: ${config.wordpressUrl}`)
   }
   return config
+}
+
+function setupServerOptions(nuxt: Nuxt, resolver: Resolver, logger: ReturnType<typeof getLogger>) {
+  const serverDir = nuxt.options.serverDir
+  const targetPath = join(serverDir, 'graphqlMiddleware.serverOptions.ts')
+
+  // Check if user already has a custom server options file
+  if (existsSync(targetPath)) {
+    logger.debug('Using existing graphqlMiddleware.serverOptions.ts from project')
+    return
+  }
+
+  // Ensure server directory exists
+  if (!existsSync(serverDir)) {
+    mkdirSync(serverDir, { recursive: true })
+  }
+
+  // Copy WPNuxt's default server options
+  const sourcePath = resolver.resolve('./runtime/server/graphqlMiddleware.serverOptions.ts')
+  copyFileSync(sourcePath, targetPath)
+  logger.debug('Created graphqlMiddleware.serverOptions.ts with WPNuxt defaults (cookie/auth forwarding)')
 }
 
 async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPNuxtConfig, mergedQueriesFolder: string) {
