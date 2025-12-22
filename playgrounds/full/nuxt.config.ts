@@ -22,5 +22,16 @@ export default defineNuxtConfig({
   // Force SSR for all routes (fix for Vercel catch-all route issue)
   routeRules: {
     '/**': { ssr: true }
+  },
+
+  // Use native SWR for Vercel ISR
+  future: {
+    compatibilityVersion: 4
+  },
+
+  nitro: {
+    future: {
+      nativeSWR: true
+    }
   }
 })
