@@ -1,7 +1,7 @@
 import { getRelativeImagePath } from '../util/images'
 import type { Query } from '#nuxt-graphql-middleware/operation-types'
 import type { WatchSource } from 'vue'
-import { computed, useAsyncGraphqlQuery } from '#imports'
+import { computed, useAsyncGraphqlQuery, watch } from '#imports'
 
 // DEBUG: temporary logging for Vercel SSR investigation
 const DEBUG_SSR = true
@@ -84,8 +84,14 @@ export const useWPContent = <T>(
     pendingValue: pending?.value,
     hasError: !!error?.value,
     hasData: !!data?.value,
-    status: status?.value
+    status: status?.value,
+    rawData: data?.value // Log the actual raw data
   })
+
+  // Watch for data changes
+  watch(data, (newData) => {
+    debugLog('data changed for', queryName, ':', { hasData: !!newData, rawData: newData })
+  }, { immediate: false })
 
   const transformedData = computed(() => {
     // useAsyncGraphqlQuery returns data wrapped in { data: GraphQLResponse }
