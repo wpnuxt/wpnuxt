@@ -12,11 +12,12 @@ const debugInfo = ref({
 
 console.log('[DEBUG] route.path:', route.path, 'isServer:', isServer)
 
+// Use a unique key based on the route path to ensure proper caching/hydration
 const { data: post, pending, refresh, clear, error } = await useNodeByUri(
   { uri: route.path },
   {
-    watch: [() => route.path],
-    getCachedData: () => null
+    key: `node-${route.path}`,
+    watch: [() => route.path]
   }
 )
 
