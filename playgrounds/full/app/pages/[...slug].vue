@@ -1,12 +1,18 @@
 <script setup lang="ts">
-// Use plain object with watch option - computed refs don't work on Vercel serverless SSR
-const { data: post, pending, refresh, clear } = await useNodeByUri(
-  { uri: useRoute().path },
+// Debug: log the route path to see what's happening on Vercel
+const route = useRoute()
+console.log('[DEBUG SSR] route.path:', route.path)
+console.log('[DEBUG SSR] import.meta.server:', import.meta.server)
+
+const { data: post, pending, refresh, clear, error } = await useNodeByUri(
+  { uri: route.path },
   {
-    watch: [() => useRoute().path],
+    watch: [() => route.path],
     getCachedData: () => null
   }
 )
+
+console.log('[DEBUG SSR] after useNodeByUri - pending:', pending.value, 'error:', error.value, 'data:', !!post.value)
 </script>
 
 <template>
@@ -19,6 +25,7 @@ const { data: post, pending, refresh, clear } = await useNodeByUri(
       />
       <UPageBody>
         <pre>const { data: post, pending, refresh, clear } = await useNodeByUri({ uri: route.path })</pre>
+        <pre style="background: #ffcccc; padding: 8px;">DEBUG: route.path={{ route.path }}, pending={{ pending }}, error={{ error }}, hasData={{ !!post }}</pre>
         <UPageCard>
           <MDC
             v-if="post?.content"
