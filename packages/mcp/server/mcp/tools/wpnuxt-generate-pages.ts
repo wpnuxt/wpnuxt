@@ -295,10 +295,11 @@ function generateSinglePage(ct: ContentType, customRoute?: string): { filename: 
  */
 const route = useRoute()
 
-// Variables must be reactive (computed) for client-side navigation to refetch
-const { data: ${singular}, pending, error } = await use${singularCapitalized}BySlug(
-  computed(() => ({ slug: route.params.slug as string }))
-)
+const { data: ${singular}, pending, error } = await use${singularCapitalized}BySlug({
+  slug: route.params.slug as string
+}, {
+  watch: [() => route.params.slug]
+})
 
 // SEO
 useSeoMeta({
@@ -398,8 +399,11 @@ function generateCatchAllPage(): { filename: string, content: string } {
  */
 const route = useRoute()
 
-// Variables must be reactive (computed) for client-side navigation to refetch
-const { data: node, pending, error } = await useNodeByUri(computed(() => ({ uri: route.path })))
+const { data: node, pending, error } = await useNodeByUri({
+  uri: route.path
+}, {
+  watch: [() => route.path]
+})
 
 // SEO
 useSeoMeta({

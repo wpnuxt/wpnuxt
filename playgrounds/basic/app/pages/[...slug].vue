@@ -1,16 +1,10 @@
 <script setup lang="ts">
 const route = useRoute()
 
-const { data: node, pending, status, execute } = await useNodeByUri({
-  uri: route.path
-})
-
-// On client-side navigation, explicitly trigger the fetch if no data
-onMounted(async () => {
-  if (!import.meta.server && !node.value && status.value !== 'success') {
-    await execute()
-  }
-})
+const { data: node, pending } = await useNodeByUri(
+  { uri: route.path },
+  { watch: [() => route.path] }
+)
 </script>
 
 <template>
