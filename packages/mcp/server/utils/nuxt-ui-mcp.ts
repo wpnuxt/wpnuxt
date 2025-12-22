@@ -19,7 +19,7 @@ export interface NuxtUISetupInfo {
   dependencies: string[]
   cssImports: string[]
   nuxtConfig: Record<string, unknown>
-  files: Array<{ path: string; content: string }>
+  files: Array<{ path: string, content: string }>
 }
 
 let clientInstance: Client | null = null
@@ -58,7 +58,7 @@ async function getClient(): Promise<Client> {
 /**
  * List all available tools from the Nuxt UI MCP server
  */
-export async function listNuxtUITools(): Promise<Array<{ name: string; description?: string }>> {
+export async function listNuxtUITools(): Promise<Array<{ name: string, description?: string }>> {
   try {
     const client = await getClient()
     const result = await client.listTools()
@@ -66,8 +66,7 @@ export async function listNuxtUITools(): Promise<Array<{ name: string; descripti
       name: tool.name,
       description: tool.description
     }))
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Failed to list Nuxt UI tools:', error)
     return []
   }
@@ -93,15 +92,13 @@ export async function callNuxtUITool<T = unknown>(
       if (textContent && 'text' in textContent) {
         try {
           return JSON.parse(textContent.text) as T
-        }
-        catch {
+        } catch {
           return textContent.text as T
         }
       }
     }
     return result as T
-  }
-  catch (error) {
+  } catch (error) {
     console.error(`Failed to call Nuxt UI tool ${toolName}:`, error)
     return null
   }
@@ -128,7 +125,7 @@ export async function getNuxtUISetupInfo(): Promise<NuxtUISetupInfo | null> {
 /**
  * Get CSS setup information specifically
  */
-export async function getNuxtUICSSSetup(): Promise<{ cssFile: string; imports: string[] } | null> {
+export async function getNuxtUICSSSetup(): Promise<{ cssFile: string, imports: string[] } | null> {
   const setupInfo = await getNuxtUISetupInfo()
 
   if (setupInfo) {

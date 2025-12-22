@@ -539,8 +539,7 @@ async function generateMainCSS(): Promise<string> {
     if (nuxtUICss?.imports.length) {
       return nuxtUICss.imports.join('\n')
     }
-  }
-  catch (error) {
+  } catch {
     console.log('Nuxt UI MCP server not available, trying Nuxt docs...')
   }
 
@@ -550,8 +549,7 @@ async function generateMainCSS(): Promise<string> {
     if (nuxtCss?.cssFile?.content) {
       return nuxtCss.cssFile.content
     }
-  }
-  catch (error) {
+  } catch {
     console.log('Nuxt docs not available, using defaults...')
   }
 
@@ -790,19 +788,21 @@ Then use wpnuxt_generate_pages with these preferences to create the appropriate 
         ? `After creating the base project files, call these tools in order:\n${followUpTools.map((t, i) => `${i + 1}. ${t}`).join('\n')}`
         : 'Base project complete. No additional tools requested.',
       // When custom post types are found, prompt the AI to ask the user about display preferences
-      userQuestions: customPostTypes.length > 0 ? {
-        prompt: 'Custom post types were detected. Ask the user how they want to display this content:',
-        contentTypes: customPostTypes.map(ct => ({
-          name: ct.name,
-          plural: ct.graphqlPluralName,
-          singular: ct.graphqlSingleName,
-          suggestedQuestions: [
-            `How should "${ct.graphqlPluralName}" be displayed? (grid of cards, simple list, or detailed list with images)`,
-            `Should there be an archive page listing all ${ct.graphqlPluralName}?`,
-            `What route should ${ct.graphqlPluralName} use? (e.g., /${ct.graphqlPluralName}/ or /shop/ for products)`
-          ]
-        }))
-      } : undefined
+      userQuestions: customPostTypes.length > 0
+        ? {
+            prompt: 'Custom post types were detected. Ask the user how they want to display this content:',
+            contentTypes: customPostTypes.map(ct => ({
+              name: ct.name,
+              plural: ct.graphqlPluralName,
+              singular: ct.graphqlSingleName,
+              suggestedQuestions: [
+                `How should "${ct.graphqlPluralName}" be displayed? (grid of cards, simple list, or detailed list with images)`,
+                `Should there be an archive page listing all ${ct.graphqlPluralName}?`,
+                `What route should ${ct.graphqlPluralName} use? (e.g., /${ct.graphqlPluralName}/ or /shop/ for products)`
+              ]
+            }))
+          }
+        : undefined
     })
   }
 })

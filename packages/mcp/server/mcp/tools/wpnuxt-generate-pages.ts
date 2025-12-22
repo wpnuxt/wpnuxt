@@ -19,12 +19,6 @@ interface SiteSettings {
 
 type DisplayStyle = 'grid' | 'list' | 'detailed'
 
-interface DisplayPreference {
-  contentType: string
-  displayStyle?: DisplayStyle
-  customRoute?: string
-}
-
 function generateListPage(
   ct: ContentType,
   displayStyle: DisplayStyle = 'grid',

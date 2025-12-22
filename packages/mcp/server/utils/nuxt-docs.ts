@@ -65,8 +65,7 @@ export async function fetchNuxtDocsPage(path: string): Promise<NuxtDocsPage | nu
     }
 
     return null
-  }
-  catch (error) {
+  } catch (error) {
     console.error(`Failed to fetch Nuxt docs page ${path}:`, error)
     return null
   }
@@ -113,8 +112,7 @@ export async function fetchNuxtModuleInfo(moduleName: string): Promise<NuxtModul
     }
 
     return null
-  }
-  catch (error) {
+  } catch (error) {
     console.error(`Failed to fetch module info for ${moduleName}:`, error)
     return null
   }
@@ -139,8 +137,7 @@ export async function searchNuxtDocs(query: string): Promise<NuxtDocsPage[]> {
     }
 
     return []
-  }
-  catch (error) {
+  } catch (error) {
     console.error(`Failed to search Nuxt docs for "${query}":`, error)
     return []
   }
@@ -174,7 +171,7 @@ export async function getNuxt4SetupRequirements(): Promise<{
  */
 export async function getNuxtCSSSetup(framework: 'tailwind' | 'nuxt-ui' | 'unocss' | 'none' = 'none'): Promise<{
   dependencies: string[]
-  cssFile?: { path: string; content: string }
+  cssFile?: { path: string, content: string }
   nuxtConfig: Record<string, unknown>
   postcssConfig?: Record<string, unknown>
 }> {
@@ -228,21 +225,20 @@ export async function getNuxtCSSSetup(framework: 'tailwind' | 'nuxt-ui' | 'unocs
 function parseDocsFromHtml(html: string, path: string): NuxtDocsPage {
   // Extract title from HTML
   const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i)
-  const title = titleMatch ? titleMatch[1].replace(' | Nuxt', '').trim() : path
+  const title = titleMatch?.[1]?.replace(' | Nuxt', '').trim() ?? path
 
   // Extract description from meta tag
   const descMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']+)["']/i)
-  const description = descMatch ? descMatch[1] : undefined
+  const description = descMatch?.[1]
 
   // Extract main content - look for article or main content area
   let content = ''
   const articleMatch = html.match(/<article[^>]*>([\s\S]*?)<\/article>/i)
-  if (articleMatch) {
+  if (articleMatch?.[1]) {
     content = stripHtmlTags(articleMatch[1])
-  }
-  else {
+  } else {
     const mainMatch = html.match(/<main[^>]*>([\s\S]*?)<\/main>/i)
-    if (mainMatch) {
+    if (mainMatch?.[1]) {
       content = stripHtmlTags(mainMatch[1])
     }
   }
@@ -267,7 +263,7 @@ function stripHtmlTags(html: string): string {
  */
 export function getNuxtProjectStructure(): {
   directories: string[]
-  files: Array<{ path: string; description: string }>
+  files: Array<{ path: string, description: string }>
 } {
   return {
     directories: [

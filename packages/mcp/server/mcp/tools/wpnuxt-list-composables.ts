@@ -15,7 +15,7 @@ const DEFAULT_QUERIES = [
     ],
     returns: 'menu.menuItems.nodes',
     description: 'Fetch a WordPress menu by name',
-    example: "useLazyMenu({ name: 'main' })"
+    example: 'useLazyMenu({ name: \'main\' })'
   },
   {
     name: 'NodeByUri',
@@ -25,7 +25,7 @@ const DEFAULT_QUERIES = [
     ],
     returns: 'nodeByUri',
     description: 'Fetch any content node (page, post, CPT) by its URI',
-    example: "useLazyNodeByUri({ uri: '/about/' })"
+    example: 'useLazyNodeByUri({ uri: \'/about/\' })'
   },
   {
     name: 'Posts',
@@ -45,7 +45,7 @@ const DEFAULT_QUERIES = [
     ],
     returns: 'nodeByUri',
     description: 'Fetch a single post by its URI',
-    example: "useLazyPostByUri({ uri: '/2024/01/hello-world/' })"
+    example: 'useLazyPostByUri({ uri: \'/2024/01/hello-world/\' })'
   },
   {
     name: 'PostById',
@@ -67,7 +67,7 @@ const DEFAULT_QUERIES = [
     ],
     returns: 'posts.nodes',
     description: 'Fetch posts by category name/slug',
-    example: "useLazyPostsByCategoryName({ categoryName: 'news', limit: 5 })"
+    example: 'useLazyPostsByCategoryName({ categoryName: \'news\', limit: 5 })'
   },
   {
     name: 'PostsByCategoryId',
@@ -98,7 +98,7 @@ const DEFAULT_QUERIES = [
     ],
     returns: 'nodeByUri',
     description: 'Fetch a single page by its URI',
-    example: "useLazyPageByUri({ uri: '/about/' })"
+    example: 'useLazyPageByUri({ uri: \'/about/\' })'
   },
   {
     name: 'PageById',
@@ -143,7 +143,7 @@ const DEFAULT_QUERIES = [
  */
 const PLUGIN_QUERIES: Record<string, Array<{
   name: string
-  parameters: Array<{ name: string; type: string; required?: boolean; default?: unknown }>
+  parameters: Array<{ name: string, type: string, required?: boolean, default?: unknown }>
   returns: string
   description: string
   example: string
@@ -161,7 +161,7 @@ const PLUGIN_QUERIES: Record<string, Array<{
       parameters: [{ name: 'slug', type: 'String', required: true }],
       returns: 'product',
       description: 'Fetch a single product by slug',
-      example: "useLazyProductBySlug({ slug: 'my-product' })"
+      example: 'useLazyProductBySlug({ slug: \'my-product\' })'
     }
   ],
   ACF: [
@@ -190,7 +190,7 @@ interface SchemaType {
   description?: string
   fields?: Array<{
     name: string
-    type: { name: string; kind: string }
+    type: { name: string, kind: string }
   }>
 }
 
@@ -297,7 +297,7 @@ Composable naming convention:
     }))
 
     // Check which queries are actually supported by the schema
-    const supportedQueries = composables.filter(c => {
+    const supportedQueries = composables.filter((c) => {
       // Map composable names to expected query field names
       const queryFieldMappings: Record<string, string[]> = {
         Menu: ['menu', 'menus'],
@@ -321,7 +321,7 @@ Composable naming convention:
 
     // Build plugin suggestions
     const pluginSuggestions = includePluginSuggestions
-      ? detectedPlugins.flatMap(plugin => {
+      ? detectedPlugins.flatMap((plugin) => {
           const queries = PLUGIN_QUERIES[plugin] || []
           return queries.map(q => ({
             plugin,
@@ -364,9 +364,9 @@ Composable naming convention:
       usage: {
         note: 'Always use the lazy variant (useLazy*) in page components',
         examples: [
-          "const { data: menu } = await useLazyMenu({ name: 'main' })",
-          "const { data: posts } = await useLazyPosts({ limit: 10 })",
-          "const { data: node } = await useLazyNodeByUri({ uri: route.path })"
+          'const { data: menu } = await useLazyMenu({ name: \'main\' })',
+          'const { data: posts } = await useLazyPosts({ limit: 10 })',
+          'const { data: node } = await useLazyNodeByUri({ uri: route.path })'
         ]
       }
     })

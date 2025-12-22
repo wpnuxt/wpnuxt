@@ -3,8 +3,7 @@ import { executeGraphQL, SITE_SETTINGS_QUERY } from '../../utils/graphql'
 import {
   setWordPressSession,
   clearWordPressSession,
-  getSessionInfo,
-  getWordPressUrl
+  getSessionInfo
 } from '../../utils/wordpress-session'
 
 interface SiteSettings {
@@ -116,8 +115,7 @@ The WordPress site must have WPGraphQL plugin installed and accessible.`,
         message: `Successfully connected to "${siteName}"`,
         hint: 'You can now use other WPNuxt tools. The WordPress URL is remembered for this session.'
       })
-    }
-    catch (error) {
+    } catch (error) {
       // Clear the failed session
       clearWordPressSession(event)
 

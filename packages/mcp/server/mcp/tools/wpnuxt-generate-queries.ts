@@ -37,25 +37,6 @@ query TypeInterfaces {
 }
 `
 
-// Known node interfaces we might use in queries
-const NODE_INTERFACES = {
-  NodeWithTitle: '... on NodeWithTitle { title }',
-  NodeWithExcerpt: '... on NodeWithExcerpt { excerpt }',
-  NodeWithContentEditor: '... on NodeWithContentEditor { content }',
-  NodeWithFeaturedImage: `... on NodeWithFeaturedImage {
-    featuredImage {
-      node {
-        sourceUrl
-        altText
-        mediaDetails {
-          width
-          height
-        }
-      }
-    }
-  }`
-} as const
-
 /**
  * Get the interfaces implemented by a content type
  */

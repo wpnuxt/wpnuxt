@@ -35,7 +35,7 @@ export const DEFAULT_COMPOSABLES: ComposableDefinition[] = [
     ],
     returns: 'menu.menuItems.nodes',
     description: 'Fetch a WordPress menu by name',
-    example: "useLazyMenu({ name: 'main' })"
+    example: 'useLazyMenu({ name: \'main\' })'
   },
   {
     name: 'NodeByUri',
@@ -44,7 +44,7 @@ export const DEFAULT_COMPOSABLES: ComposableDefinition[] = [
     ],
     returns: 'nodeByUri',
     description: 'Fetch any content node (page, post, CPT) by its URI',
-    example: "useLazyNodeByUri({ uri: '/about/' })"
+    example: 'useLazyNodeByUri({ uri: \'/about/\' })'
   },
   {
     name: 'Posts',
@@ -62,7 +62,7 @@ export const DEFAULT_COMPOSABLES: ComposableDefinition[] = [
     ],
     returns: 'nodeByUri',
     description: 'Fetch a single post by its URI',
-    example: "useLazyPostByUri({ uri: '/2024/01/hello-world/' })"
+    example: 'useLazyPostByUri({ uri: \'/2024/01/hello-world/\' })'
   },
   {
     name: 'PostById',
@@ -82,7 +82,7 @@ export const DEFAULT_COMPOSABLES: ComposableDefinition[] = [
     ],
     returns: 'posts.nodes',
     description: 'Fetch posts by category name/slug',
-    example: "useLazyPostsByCategoryName({ categoryName: 'news' })"
+    example: 'useLazyPostsByCategoryName({ categoryName: \'news\' })'
   },
   {
     name: 'PostsByCategoryId',
@@ -110,7 +110,7 @@ export const DEFAULT_COMPOSABLES: ComposableDefinition[] = [
     ],
     returns: 'nodeByUri',
     description: 'Fetch a single page by its URI',
-    example: "useLazyPageByUri({ uri: '/about/' })"
+    example: 'useLazyPageByUri({ uri: \'/about/\' })'
   },
   {
     name: 'PageById',
@@ -202,7 +202,7 @@ export function getComposableDefinition(name: string): ComposableDefinition | nu
 export function validateComposableCall(
   name: string,
   params: Record<string, unknown> = {}
-): { valid: boolean; issues: string[] } {
+): { valid: boolean, issues: string[] } {
   const issues: string[] = []
 
   const definition = getComposableDefinition(name)
@@ -246,7 +246,7 @@ export function generateComposableCall(
   const paramParts = Object.entries(params).map(([key, value]) => {
     if (typeof value === 'string') {
       // Check if it looks like a variable reference
-      if (value.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/)) {
+      if (value.match(/^[a-z_]\w*$/i)) {
         return `${key}: ${value}`
       }
       return `${key}: '${value}'`
@@ -288,7 +288,7 @@ export function getComposablesQuickReference(): string {
     '# WPNuxt Composables Quick Reference',
     '',
     '## Usage Pattern',
-    "const { data, pending, error } = await useLazy{QueryName}({ ...params })",
+    'const { data, pending, error } = await useLazy{QueryName}({ ...params })',
     '',
     '## Available Composables',
     ''

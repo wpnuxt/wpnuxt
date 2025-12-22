@@ -57,7 +57,10 @@
       </ul>
 
       <p class="note">
-        Your WordPress site must have <a href="https://www.wpgraphql.com/" target="_blank">WPGraphQL</a> installed and activated.
+        Your WordPress site must have <a
+          href="https://www.wpgraphql.com/"
+          target="_blank"
+        >WPGraphQL</a> installed and activated.
       </p>
     </section>
 

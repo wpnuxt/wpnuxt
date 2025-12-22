@@ -5,6 +5,8 @@
  * Stores the URL server-side and provides utilities to get/set it.
  */
 
+import type { H3Event } from 'h3'
+
 interface WordPressSession {
   wordpressUrl: string
   siteName?: string
