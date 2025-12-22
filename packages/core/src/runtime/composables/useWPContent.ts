@@ -96,11 +96,13 @@ export const useWPContent = <T>(
   const transformedData = computed(() => {
     // useAsyncGraphqlQuery returns data wrapped in { data: GraphQLResponse }
     // The actual query response is in data.value.data
+    const keys = data.value && typeof data.value === 'object' ? Object.keys(data.value) : null
     debugLog('transformedData computing for', queryName, ':', {
       hasDataValue: !!data.value,
       dataValueType: typeof data.value,
-      dataValueKeys: data.value && typeof data.value === 'object' ? Object.keys(data.value) : null,
-      rawDataValue: data.value
+      dataValueKeys: keys,
+      actualKeys: keys?.join(', '), // Log the actual key names as a string
+      rawDataValue: JSON.stringify(data.value)?.substring(0, 500) // First 500 chars
     })
     const queryResult = data.value && typeof data.value === 'object' && data.value !== null && 'data' in data.value ? (data.value as Record<string, unknown>).data : undefined
     debugLog('transformedData computed:', { queryName, hasQueryResult: !!queryResult, queryResult })
