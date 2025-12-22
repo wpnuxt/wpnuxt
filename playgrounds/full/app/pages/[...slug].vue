@@ -1,16 +1,22 @@
 <script setup lang="ts">
-// Debug: log the route path to see what's happening on Vercel
+// Debug: Use useState to preserve SSR debug info across hydration
 const route = useRoute()
-const isServer = import.meta.server
 
-// Store debug info that will be visible in SSR HTML
-const debugInfo = ref({
+// useState persists between SSR and client - won't be overwritten on hydration
+const ssrDebug = useState('ssr-debug', () => ({
+  ranOnServer: import.meta.server,
+  serverRoutePath: import.meta.server ? route.path : null,
+  serverTime: import.meta.server ? new Date().toISOString() : null
+}))
+
+// This will be different on client
+const clientDebug = ref({
+  isServer: import.meta.server,
   routePath: route.path,
-  isServer,
-  beforeFetch: new Date().toISOString()
+  time: new Date().toISOString()
 })
 
-console.log('[DEBUG] route.path:', route.path, 'isServer:', isServer)
+console.log('[DEBUG] route.path:', route.path, 'isServer:', import.meta.server)
 
 // Use a unique key based on the route path to ensure proper caching/hydration
 const { data: post, pending, refresh, clear, error } = await useNodeByUri(
@@ -21,11 +27,12 @@ const { data: post, pending, refresh, clear, error } = await useNodeByUri(
   }
 )
 
-debugInfo.value.afterFetch = new Date().toISOString()
-debugInfo.value.pending = pending.value
-debugInfo.value.hasError = !!error.value
-debugInfo.value.errorMsg = error.value?.message || null
-debugInfo.value.hasData = !!post.value
+const fetchDebug = ref({
+  pending: pending.value,
+  hasError: !!error.value,
+  errorMsg: error.value?.message || null,
+  hasData: !!post.value
+})
 
 console.log('[DEBUG] after fetch - pending:', pending.value, 'error:', error.value, 'data:', !!post.value)
 </script>
@@ -40,7 +47,9 @@ console.log('[DEBUG] after fetch - pending:', pending.value, 'error:', error.val
       />
       <UPageBody>
         <pre>const { data: post, pending, refresh, clear } = await useNodeByUri({ uri: route.path })</pre>
-        <pre style="background: #ffcccc; padding: 8px; white-space: pre-wrap;">SSR DEBUG: {{ JSON.stringify(debugInfo, null, 2) }}</pre>
+        <pre style="background: #ccffcc; padding: 8px; white-space: pre-wrap;">SSR STATE (useState - preserved): {{ JSON.stringify(ssrDebug, null, 2) }}</pre>
+        <pre style="background: #ffcccc; padding: 8px; white-space: pre-wrap;">CLIENT STATE (ref - current): {{ JSON.stringify(clientDebug, null, 2) }}</pre>
+        <pre style="background: #ccccff; padding: 8px; white-space: pre-wrap;">FETCH STATE: {{ JSON.stringify(fetchDebug, null, 2) }}</pre>
         <UPageCard>
           <MDC
             v-if="post?.content"
