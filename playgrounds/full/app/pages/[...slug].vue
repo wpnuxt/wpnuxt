@@ -18,19 +18,23 @@ const clientDebug = ref({
 
 console.log('[DEBUG] route.path:', route.path, 'isServer:', import.meta.server)
 
-// Use plain object with immediate: true to force fetch on client navigation
-const { data: post, pending, refresh, clear, error, status } = await useNodeByUri(
-  { uri: route.path },
-  {
-    // Force a unique key per route to avoid cache conflicts
-    key: `nodeByUri-${route.path}`,
-    // Ensure it fetches even on client navigation
-    immediate: true,
-    server: true
-  }
+// Use plain object - the key is generated based on query name + hash(variables)
+const { data: post, pending, refresh, clear, error, status, execute } = await useNodeByUri(
+  { uri: route.path }
 )
 
 console.log('[DEBUG] initial state - pending:', pending.value, 'status:', status.value, 'hasData:', !!post.value)
+
+// On client-side navigation, explicitly trigger the fetch
+onMounted(async () => {
+  console.log('[DEBUG] onMounted - isServer:', import.meta.server, 'hasData:', !!post.value, 'status:', status.value)
+  // If no data and we're on client, force execute
+  if (!import.meta.server && !post.value && status.value !== 'success') {
+    console.log('[DEBUG] forcing execute() on client mount')
+    await execute()
+    console.log('[DEBUG] after execute - hasData:', !!post.value, 'status:', status.value)
+  }
+})
 
 const fetchDebug = computed(() => ({
   pending: pending.value,
