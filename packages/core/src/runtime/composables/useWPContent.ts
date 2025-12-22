@@ -3,6 +3,15 @@ import type { Query } from '#nuxt-graphql-middleware/operation-types'
 import type { WatchSource } from 'vue'
 import { computed, useAsyncGraphqlQuery } from '#imports'
 
+// DEBUG: temporary logging for Vercel SSR investigation
+const DEBUG_SSR = true
+function debugLog(...args: unknown[]) {
+  if (DEBUG_SSR) {
+    const isServer = typeof window === 'undefined'
+    console.log(`[WPNuxt ${isServer ? 'SSR' : 'CLIENT'}]`, ...args)
+  }
+}
+
 export interface WPContentOptions {
   /** Whether to resolve the async function after loading the route, instead of blocking client-side navigation. Default: false */
   lazy?: boolean
@@ -59,6 +68,8 @@ export const useWPContent = <T>(
   params?: T,
   options?: WPContentOptions
 ) => {
+  debugLog('useWPContent called:', { queryName, params, options })
+
   // Use nuxt-graphql-middleware's built-in client-side caching
   // Returns reactive refs immediately - works for both SSR and CSR
   const { data, pending, refresh, execute, clear, error, status } = useAsyncGraphqlQuery(
@@ -67,10 +78,20 @@ export const useWPContent = <T>(
     options
   )
 
+  debugLog('useAsyncGraphqlQuery returned:', {
+    queryName,
+    hasPending: !!pending,
+    pendingValue: pending?.value,
+    hasError: !!error?.value,
+    hasData: !!data?.value,
+    status: status?.value
+  })
+
   const transformedData = computed(() => {
     // useAsyncGraphqlQuery returns data wrapped in { data: GraphQLResponse }
     // The actual query response is in data.value.data
     const queryResult = data.value && typeof data.value === 'object' && data.value !== null && 'data' in data.value ? (data.value as Record<string, unknown>).data : undefined
+    debugLog('transformedData computed:', { queryName, hasQueryResult: !!queryResult })
     return queryResult ? transformData(queryResult, nodes, fixImagePaths) : undefined
   })
 
