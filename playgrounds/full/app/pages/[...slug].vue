@@ -1,7 +1,16 @@
 <script setup lang="ts">
 const route = useRoute()
-// Variables must be reactive (computed) for client-side navigation to refetch
-const { data: post, pending, refresh, clear } = await useNodeByUri(computed(() => ({ uri: route.path })))
+
+const { data: post, pending, refresh, clear, error, status, execute } = await useNodeByUri(
+  { uri: route.path }
+)
+
+// On client-side navigation, explicitly trigger the fetch if no data
+onMounted(async () => {
+  if (!import.meta.server && !post.value && status.value !== 'success') {
+    await execute()
+  }
+})
 </script>
 
 <template>
