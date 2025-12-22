@@ -19,21 +19,28 @@ const clientDebug = ref({
 console.log('[DEBUG] route.path:', route.path, 'isServer:', import.meta.server)
 
 // Use computed ref for variables so they update on route change
-// useAsyncGraphqlQuery automatically watches ref variables and creates a reactive key
 const variables = computed(() => ({ uri: route.path }))
 
-const { data: post, pending, refresh, clear, error } = await useNodeByUri(variables)
+const { data: post, pending, refresh, clear, error, status } = await useNodeByUri(variables)
 
-console.log('[DEBUG] variables:', variables.value)
+console.log('[DEBUG] initial state - pending:', pending.value, 'status:', status.value, 'hasData:', !!post.value)
 
-const fetchDebug = ref({
+// Watch for route changes and manually trigger refresh
+watch(() => route.path, async (newPath, oldPath) => {
+  console.log('[DEBUG] route changed:', oldPath, '->', newPath)
+  console.log('[DEBUG] before refresh - pending:', pending.value, 'status:', status.value)
+  clear()
+  await refresh()
+  console.log('[DEBUG] after refresh - pending:', pending.value, 'status:', status.value, 'hasData:', !!post.value)
+})
+
+const fetchDebug = computed(() => ({
   pending: pending.value,
+  status: status.value,
   hasError: !!error.value,
   errorMsg: error.value?.message || null,
   hasData: !!post.value
-})
-
-console.log('[DEBUG] after fetch - pending:', pending.value, 'error:', error.value, 'data:', !!post.value)
+}))
 </script>
 
 <template>
