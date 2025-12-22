@@ -65,6 +65,9 @@ export default defineNuxtModule<WPNuxtConfig>({
       logger.debug(`Server-side caching enabled for GraphQL requests (maxAge: ${maxAge}s, SWR: ${wpNuxtConfig.cache?.swr !== false})`)
     }
 
+    // Configure Vercel-specific settings for proper SSR and ISR handling
+    configureVercelSettings(nuxt, logger)
+
     addImports([
       { name: 'useWPContent', as: 'useWPContent', from: resolver.resolve('./runtime/composables/useWPContent') },
       { name: 'useAsyncWPContent', as: 'useAsyncWPContent', from: resolver.resolve('./runtime/composables/useWPContent') }
@@ -245,6 +248,40 @@ function setupClientOptions(nuxt: Nuxt, _resolver: Resolver, logger: ReturnType<
   // Write WPNuxt's default client options
   writeFileSync(targetPath, CLIENT_OPTIONS_TEMPLATE)
   logger.debug('Created graphqlMiddleware.clientOptions.ts with WPNuxt defaults (preview mode support)')
+}
+
+/**
+ * Configure Vercel-specific settings for proper SSR and ISR handling.
+ *
+ * This fixes issues with:
+ * 1. Catch-all routes not being server-rendered on Vercel
+ * 2. ISR response handling causing data extraction issues
+ *
+ * @see https://github.com/wpnuxt/wpnuxt/issues/2
+ */
+function configureVercelSettings(nuxt: Nuxt, logger: ReturnType<typeof getLogger>) {
+  // Detect if we're building for Vercel
+  const isVercel = process.env.VERCEL === '1' || nuxt.options.nitro.preset === 'vercel'
+
+  if (isVercel) {
+    logger.debug('Vercel deployment detected, applying recommended settings')
+
+    // Enable native SWR for proper Vercel ISR handling
+    // This fixes issues with GraphQL response data not being properly passed to the client
+    nuxt.options.nitro.future = nuxt.options.nitro.future || {}
+    if (nuxt.options.nitro.future.nativeSWR === undefined) {
+      nuxt.options.nitro.future.nativeSWR = true
+      logger.debug('Enabled nitro.future.nativeSWR for Vercel ISR compatibility')
+    }
+
+    // Ensure SSR is enabled for all routes (fixes catch-all route issues)
+    // Users can override specific routes if needed
+    nuxt.options.routeRules = nuxt.options.routeRules || {}
+    if (!nuxt.options.routeRules['/**']) {
+      nuxt.options.routeRules['/**'] = { ssr: true }
+      logger.debug('Enabled SSR for all routes (routeRules[\'/**\'] = { ssr: true })')
+    }
+  }
 }
 
 async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPNuxtConfig, mergedQueriesFolder: string) {
