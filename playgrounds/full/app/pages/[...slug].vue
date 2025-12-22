@@ -18,14 +18,13 @@ const clientDebug = ref({
 
 console.log('[DEBUG] route.path:', route.path, 'isServer:', import.meta.server)
 
-// Use a unique key based on the route path to ensure proper caching/hydration
-const { data: post, pending, refresh, clear, error } = await useNodeByUri(
-  { uri: route.path },
-  {
-    key: `node-${route.path}`,
-    watch: [() => route.path]
-  }
-)
+// Use computed ref for variables so they update on route change
+// useAsyncGraphqlQuery automatically watches ref variables and creates a reactive key
+const variables = computed(() => ({ uri: route.path }))
+
+const { data: post, pending, refresh, clear, error } = await useNodeByUri(variables)
+
+console.log('[DEBUG] variables:', variables.value)
 
 const fetchDebug = ref({
   pending: pending.value,
