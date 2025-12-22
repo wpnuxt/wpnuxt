@@ -17,5 +17,10 @@ export default defineNuxtConfig({
     wordpressUrl: 'https://wordpress2.wpnuxt.com',
     debug: IS_DEV,
     downloadSchema: IS_DEV
+  },
+
+  // Force SSR for all routes (fix for Vercel catch-all route issue)
+  routeRules: {
+    '/**': { ssr: true }
   }
 })
