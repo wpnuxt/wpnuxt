@@ -18,21 +18,19 @@ const clientDebug = ref({
 
 console.log('[DEBUG] route.path:', route.path, 'isServer:', import.meta.server)
 
-// Use computed ref for variables so they update on route change
-const variables = computed(() => ({ uri: route.path }))
-
-const { data: post, pending, refresh, clear, error, status } = await useNodeByUri(variables)
+// Use plain object with immediate: true to force fetch on client navigation
+const { data: post, pending, refresh, clear, error, status } = await useNodeByUri(
+  { uri: route.path },
+  {
+    // Force a unique key per route to avoid cache conflicts
+    key: `nodeByUri-${route.path}`,
+    // Ensure it fetches even on client navigation
+    immediate: true,
+    server: true
+  }
+)
 
 console.log('[DEBUG] initial state - pending:', pending.value, 'status:', status.value, 'hasData:', !!post.value)
-
-// Watch for route changes and manually trigger refresh
-watch(() => route.path, async (newPath, oldPath) => {
-  console.log('[DEBUG] route changed:', oldPath, '->', newPath)
-  console.log('[DEBUG] before refresh - pending:', pending.value, 'status:', status.value)
-  clear()
-  await refresh()
-  console.log('[DEBUG] after refresh - pending:', pending.value, 'status:', status.value, 'hasData:', !!post.value)
-})
 
 const fetchDebug = computed(() => ({
   pending: pending.value,
