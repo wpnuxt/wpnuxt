@@ -1,12 +1,16 @@
 <script setup lang="ts">
-// Use plain object with watch option - computed refs don't work on Vercel serverless SSR
-const { data: node, pending } = await useNodeByUri(
-  { uri: useRoute().path },
-  {
-    watch: [() => useRoute().path],
-    getCachedData: () => null
+const route = useRoute()
+
+const { data: node, pending, status, execute } = await useNodeByUri({
+  uri: route.path
+})
+
+// On client-side navigation, explicitly trigger the fetch if no data
+onMounted(async () => {
+  if (!import.meta.server && !node.value && status.value !== 'success') {
+    await execute()
   }
-)
+})
 </script>
 
 <template>
