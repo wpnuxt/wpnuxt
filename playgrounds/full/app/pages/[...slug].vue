@@ -1,7 +1,12 @@
 <script setup lang="ts">
-const route = useRoute()
-// Variables must be reactive (computed) for client-side navigation to refetch
-const { data: post, pending, refresh, clear } = await useNodeByUri(computed(() => ({ uri: route.path })))
+// Use plain object with watch option - computed refs don't work on Vercel serverless SSR
+const { data: post, pending, refresh, clear } = await useNodeByUri(
+  { uri: useRoute().path },
+  {
+    watch: [() => useRoute().path],
+    getCachedData: () => null
+  }
+)
 </script>
 
 <template>

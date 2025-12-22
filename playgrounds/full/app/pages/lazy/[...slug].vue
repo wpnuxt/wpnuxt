@@ -1,7 +1,13 @@
 <script setup lang="ts">
-const route = useRoute()
-// Variables must be reactive (computed) for client-side navigation to refetch
-const { data: post, pending, refresh, clear } = await useLazyNodeByUri(computed(() => ({ uri: route.path.replace('/lazy', '') })))
+// Use plain object with watch option - computed refs don't work on Vercel serverless SSR
+const uri = () => useRoute().path.replace('/lazy', '')
+const { data: post, pending, refresh, clear } = await useLazyNodeByUri(
+  { uri: uri() },
+  {
+    watch: [uri],
+    getCachedData: () => null
+  }
+)
 </script>
 
 <template>
