@@ -12,13 +12,31 @@
     <section>
       <h2>Configuration</h2>
       <p>Add the MCP server to Claude Code:</p>
-      <pre><code>claude mcp add wpnuxt --transport http {{ serverUrl }}/mcp \
-  --header "X-WordPress-URL: https://your-wordpress-site.com"</code></pre>
+      <pre><code>claude mcp add wpnuxt --transport http {{ serverUrl }}/mcp</code></pre>
 
       <p style="margin-top: 1.5rem;">
         Or add this to your Claude settings manually (<code>~/.claude/settings.json</code>):
       </p>
       <pre><code>{
+  "mcpServers": {
+    "wpnuxt": {
+      "url": "{{ serverUrl }}/mcp"
+    }
+  }
+}</code></pre>
+
+      <h3>Connecting to WordPress</h3>
+      <p>There are three ways to connect to your WordPress site:</p>
+      <ol class="connection-methods">
+        <li>
+          <strong>Use a prompt</strong> (recommended) - Ask Claude to use the <code>connect-wordpress</code> prompt
+        </li>
+        <li>
+          <strong>Use the wp_connect tool</strong> - Claude can call <code>wp_connect</code> with your WordPress URL
+        </li>
+        <li>
+          <strong>Set headers</strong> - Configure the WordPress URL in the MCP server headers:
+          <pre><code>{
   "mcpServers": {
     "wpnuxt": {
       "url": "{{ serverUrl }}/mcp",
@@ -28,21 +46,45 @@
     }
   }
 }</code></pre>
+        </li>
+      </ol>
 
-      <h3>Headers</h3>
+      <h3>Optional Headers</h3>
       <ul class="headers-list">
-        <li><code>X-WordPress-URL</code> <span class="required">(required)</span> - Your WordPress site URL with WPGraphQL enabled</li>
+        <li><code>X-WordPress-URL</code> <span class="optional">(optional)</span> - Your WordPress site URL (can also be set via wp_connect)</li>
         <li><code>X-WordPress-App-User</code> <span class="optional">(optional)</span> - Application username for authenticated requests</li>
         <li><code>X-WordPress-App-Password</code> <span class="optional">(optional)</span> - Application password for authenticated requests</li>
       </ul>
 
       <p class="note">
-        Each user connects to their own WordPress instance by providing their URL in the headers.
+        Your WordPress site must have <a href="https://www.wpgraphql.com/" target="_blank">WPGraphQL</a> installed and activated.
       </p>
     </section>
 
     <section>
+      <h2>Available Prompts</h2>
+      <ul class="tools-list">
+        <li>
+          <strong>connect-wordpress</strong>
+          <span class="tool-desc">Connect to a WordPress site and discover available content types, menus, and plugins</span>
+        </li>
+        <li>
+          <strong>switch-wordpress</strong>
+          <span class="tool-desc">Switch to a different WordPress site or check the current connection status</span>
+        </li>
+      </ul>
+    </section>
+
+    <section>
       <h2>Available Tools</h2>
+
+      <h3>Connection</h3>
+      <ul class="tools-list">
+        <li>
+          <strong>wp_connect</strong>
+          <span class="tool-desc">Connect to a WordPress site and store the URL in the session</span>
+        </li>
+      </ul>
 
       <h3>WordPress Discovery</h3>
       <ul class="tools-list">
@@ -100,7 +142,11 @@
       <ul class="tools-list">
         <li>
           <strong>wpnuxt_init</strong>
-          <span class="tool-desc">Generate WPNuxt project files for the AI to create locally</span>
+          <span class="tool-desc">Generate WPNuxt project files with Nuxt UI v4 (default) for the AI to create locally</span>
+        </li>
+        <li>
+          <strong>wpnuxt_list_composables</strong>
+          <span class="tool-desc">List available WPNuxt composables based on GraphQL schema introspection</span>
         </li>
         <li>
           <strong>wpnuxt_generate_queries</strong>
@@ -128,11 +174,23 @@
     <section>
       <h2>Workflow</h2>
       <ol class="workflow-list">
-        <li><strong>Connect</strong> - Configure the MCP server with your WordPress URL</li>
-        <li><strong>Discover</strong> - Use wp_* tools to analyze your WordPress site</li>
-        <li><strong>Generate</strong> - Use wpnuxt_* tools to scaffold your Nuxt project</li>
+        <li><strong>Connect</strong> - Use the <code>connect-wordpress</code> prompt or <code>wp_connect</code> tool</li>
+        <li><strong>Discover</strong> - Use wp_* tools to analyze your WordPress site structure</li>
+        <li><strong>Generate</strong> - Use <code>wpnuxt_init</code> to scaffold your Nuxt project with Nuxt UI</li>
+        <li><strong>Enhance</strong> - Use wpnuxt_* tools to add pages, components, and queries</li>
         <li><strong>Customize</strong> - Modify generated components to match your design</li>
       </ol>
+    </section>
+
+    <section>
+      <h2>Generated Project Stack</h2>
+      <ul class="stack-list">
+        <li><strong>Nuxt 4</strong> - Latest Nuxt with app/ directory structure</li>
+        <li><strong>Nuxt UI v4</strong> - 110+ ready-to-use components (enabled by default)</li>
+        <li><strong>Tailwind CSS v4</strong> - Utility-first CSS framework</li>
+        <li><strong>@wpnuxt/core</strong> - WordPress integration with typed composables</li>
+        <li><strong>TypeScript</strong> - Full type safety</li>
+      </ul>
     </section>
   </div>
 </template>
@@ -192,7 +250,7 @@ pre code {
   padding: 0;
 }
 
-ul {
+ul, ol {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -236,6 +294,30 @@ li {
   padding: 0.5rem 0;
 }
 
+.connection-methods {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin-top: 1rem;
+}
+
+.connection-methods li {
+  border-bottom: none;
+  padding: 0.75rem 0;
+}
+
+.connection-methods pre {
+  margin-top: 0.5rem;
+}
+
+.stack-list li {
+  border-bottom: none;
+  padding: 0.4rem 0;
+}
+
+.stack-list li strong {
+  color: #2563eb;
+}
+
 .required {
   color: #c53030;
   font-size: 0.85em;
@@ -254,5 +336,10 @@ li {
   border-radius: 0 4px 4px 0;
   font-size: 0.9em;
   color: #2b6cb0;
+}
+
+.note a {
+  color: #2b6cb0;
+  text-decoration: underline;
 }
 </style>

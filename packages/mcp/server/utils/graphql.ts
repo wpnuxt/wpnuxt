@@ -2,17 +2,23 @@
  * GraphQL utility functions for WordPress interaction
  */
 
+import { getWordPressUrl } from './wordpress-session'
+
 export interface GraphQLResponse<T = unknown> {
   data?: T
   errors?: Array<{ message: string }>
 }
 
 /**
- * Get WordPress configuration from request headers or environment variables.
- * Headers take precedence, allowing each MCP user to connect to their own WordPress instance.
+ * Get WordPress configuration from session, headers, or environment variables.
+ *
+ * Priority order:
+ * 1. X-WordPress-URL header (explicit override)
+ * 2. Session URL (set via wp_connect tool)
+ * 3. Environment variable (NUXT_WORDPRESS_URL)
  *
  * Supported headers:
- * - X-WordPress-URL: The WordPress site URL (required if not set via env)
+ * - X-WordPress-URL: The WordPress site URL (optional, overrides session)
  * - X-WordPress-App-User: Optional application username for authenticated requests
  * - X-WordPress-App-Password: Optional application password for authenticated requests
  */
@@ -20,8 +26,10 @@ function getWordPressConfig() {
   const event = useEvent()
   const runtimeConfig = useRuntimeConfig()
 
-  // Headers take precedence over environment variables
-  const wordpressUrl = getHeader(event, 'x-wordpress-url') || runtimeConfig.wordpressUrl
+  // Use the session-aware URL getter (handles header > session > env priority)
+  const wordpressUrl = getWordPressUrl(event)
+
+  // Auth credentials from headers or environment
   const appUser = getHeader(event, 'x-wordpress-app-user') || runtimeConfig.wordpressAppUser
   const appPassword = getHeader(event, 'x-wordpress-app-password') || runtimeConfig.wordpressAppPassword
 
@@ -42,7 +50,7 @@ export async function executeGraphQL<T = unknown>(
   const config = getWordPressConfig()
 
   if (!config.wordpressUrl) {
-    throw new Error('WordPress URL not configured. Set X-WordPress-URL header or NUXT_WORDPRESS_URL environment variable.')
+    throw new Error('No WordPress site connected. Use the wp_connect tool to connect to a WordPress site first.')
   }
 
   const endpoint = `${config.wordpressUrl}/graphql`

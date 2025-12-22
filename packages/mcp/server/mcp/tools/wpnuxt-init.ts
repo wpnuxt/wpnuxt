@@ -6,11 +6,93 @@ import {
   MENUS_QUERY,
   SITE_SETTINGS_QUERY
 } from '../../utils/graphql'
+import { getNuxtUICSSSetup } from '../../utils/nuxt-ui-mcp'
+import { getNuxtCSSSetup } from '../../utils/nuxt-docs'
+import { getWordPressUrl } from '../../utils/wordpress-session'
 
 interface ContentType {
   name: string
   graphqlSingleName: string
   graphqlPluralName: string
+  hierarchical: boolean
+}
+
+// Built-in content types that WPNuxt already provides queries for
+const BUILTIN_CONTENT_TYPES = ['post', 'page', 'attachment', 'nav_menu_item', 'revision']
+
+/**
+ * Generate GraphQL query file content for a custom post type
+ * Uses interface fragments to only include fields the CPT actually supports
+ */
+function generateQueryForContentType(ct: ContentType): string {
+  const singular = ct.graphqlSingleName
+  const plural = ct.graphqlPluralName
+  const singularCapitalized = singular.charAt(0).toUpperCase() + singular.slice(1)
+  const pluralCapitalized = plural.charAt(0).toUpperCase() + plural.slice(1)
+
+  // Use interface fragments - these only include fields if the type implements the interface
+  // This handles CPTs that don't support all standard fields (title, excerpt, content, featured image)
+  return `# ${pluralCapitalized} Queries
+# Generated for custom post type: ${ct.name}
+# Uses interface fragments for compatibility with CPT field support
+
+fragment ${singularCapitalized} on ${singularCapitalized} {
+  id
+  databaseId
+  slug
+  uri
+  date
+  # Interface fragments - only included if CPT supports them
+  ... on NodeWithTitle {
+    title
+  }
+  ... on NodeWithContentEditor {
+    content
+  }
+  ... on NodeWithExcerpt {
+    excerpt
+  }
+  ... on NodeWithFeaturedImage {
+    featuredImage {
+      node {
+        sourceUrl
+        altText
+        mediaDetails {
+          width
+          height
+        }
+      }
+    }
+  }
+}
+
+# List ${plural} with pagination
+query ${pluralCapitalized}($first: Int = 10, $after: String) {
+  ${plural}(first: $first, after: $after) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      ...${singularCapitalized}
+    }
+  }
+}
+
+# Get single ${singular} by URI
+query ${singularCapitalized}ByUri($uri: String!) {
+  ${singular}(id: $uri, idType: URI) {
+    ...${singularCapitalized}
+  }
+}
+
+# Get single ${singular} by slug
+query ${singularCapitalized}BySlug($slug: ID!) {
+  ${singular}(id: $slug, idType: SLUG) {
+    ...${singularCapitalized}
+  }
+}
+`
 }
 
 interface Taxonomy {
@@ -45,10 +127,15 @@ function generateNuxtConfig(settings: SiteSettings, wordpressUrl: string, includ
     ? `['@nuxt/ui', '@wpnuxt/core']`
     : `['@wpnuxt/core']`
 
+  // Add CSS reference when using Nuxt UI
+  const cssConfig = includeNuxtUI
+    ? `\n  css: ['~/assets/css/main.css'],\n`
+    : ''
+
   return `// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: ${modules},
-
+${cssConfig}
   wpNuxt: {
     wordpressUrl: process.env.WPNUXT_WORDPRESS_URL || '${wordpressUrl}',
   },
@@ -95,10 +182,27 @@ function generateAppVue(includeNuxtUI: boolean): string {
 function generateDefaultLayout(siteName: string, includeNuxtUI: boolean): string {
   if (includeNuxtUI) {
     return `<script setup lang="ts">
-const links = [
-  { label: 'Home', to: '/' },
-  { label: 'Blog', to: '/blog' }
-]
+// Fetch the primary menu from WordPress
+const { data: menu } = await useMenu({ name: 'main' })
+
+// Transform WordPress menu items to Nuxt UI navigation format
+const navigationItems = computed(() => {
+  if (!menu.value?.length) {
+    return [{ label: 'Home', to: '/' }]
+  }
+
+  // Transform menu items to Nuxt UI format
+  return menu.value
+    .filter(item => !item.parentId) // Only top-level items
+    .map(item => ({
+      label: item.label,
+      to: item.uri,
+      children: item.childItems?.nodes?.map(child => ({
+        label: child.label,
+        to: child.uri
+      }))
+    }))
+})
 </script>
 
 <template>
@@ -111,7 +215,7 @@ const links = [
       </template>
 
       <template #right>
-        <UNavigationMenu :items="links" />
+        <UNavigationMenu :items="navigationItems" />
       </template>
     </UHeader>
 
@@ -423,6 +527,39 @@ logs
 `
 }
 
+/**
+ * Generate main.css content for Nuxt UI setup.
+ * Attempts to fetch the latest setup from Nuxt UI MCP server,
+ * falls back to Nuxt docs, then to default values.
+ */
+async function generateMainCSS(): Promise<string> {
+  // Try to get CSS setup from Nuxt UI MCP server
+  try {
+    const nuxtUICss = await getNuxtUICSSSetup()
+    if (nuxtUICss?.imports.length) {
+      return nuxtUICss.imports.join('\n')
+    }
+  }
+  catch (error) {
+    console.log('Nuxt UI MCP server not available, trying Nuxt docs...')
+  }
+
+  // Try to get CSS setup from Nuxt docs
+  try {
+    const nuxtCss = await getNuxtCSSSetup('nuxt-ui')
+    if (nuxtCss?.cssFile?.content) {
+      return nuxtCss.cssFile.content
+    }
+  }
+  catch (error) {
+    console.log('Nuxt docs not available, using defaults...')
+  }
+
+  // Default CSS imports for Nuxt UI v3
+  return `@import "tailwindcss";
+@import "@nuxt/ui";`
+}
+
 export default defineMcpTool({
   description: `Generate WPNuxt project files based on WordPress site analysis. Returns all files as output for the AI assistant to create locally.
 
@@ -440,7 +577,7 @@ Example prompt to user:
 "I'll create a WPNuxt project with these settings:
 - Folder name: [suggested-name]
 - Package manager: pnpm
-- Include Nuxt UI: No
+- Include Nuxt UI: Yes
 - Generate pages: Yes
 - Generate components: Yes
 - Setup menus: Yes
@@ -448,23 +585,29 @@ Example prompt to user:
 
 Would you like to change any of these?"
 
-NEVER call this tool without user confirmation of the settings first.`,
+NEVER call this tool without user confirmation of the settings first.
+
+AFTER calling this tool: If the response contains "userQuestions", the AI MUST ask the user these questions about how to display custom post type content. Use the suggested questions to understand:
+- Display style preference (grid, list, cards)
+- Whether archive pages are needed
+- What routes/URLs to use
+Then use wpnuxt_generate_pages with these preferences to create the appropriate pages.`,
   inputSchema: {
     projectName: z.string().min(1).describe('Project folder name - CONFIRM WITH USER'),
     packageManager: z.enum(['pnpm', 'npm', 'yarn', 'bun']).optional().describe('Package manager - CONFIRM WITH USER (default: pnpm)'),
-    includeNuxtUI: z.boolean().optional().describe('Include Nuxt UI v4 - CONFIRM WITH USER (default: false)'),
+    includeNuxtUI: z.boolean().optional().describe('Include Nuxt UI v4 for styled components (default: true)'),
     generatePages: z.boolean().optional().describe('Generate blog archive and single post pages - CONFIRM WITH USER (default: true)'),
     generateComponents: z.boolean().optional().describe('Generate post cards and taxonomy list components - CONFIRM WITH USER (default: true)'),
     setupMenus: z.boolean().optional().describe('Generate WordPress navigation menu components - CONFIRM WITH USER (default: true)'),
     generateQueries: z.boolean().optional().describe('Generate custom GraphQL queries for content types - CONFIRM WITH USER (default: true)')
   },
-  async handler({ projectName, packageManager = 'pnpm', includeNuxtUI = false, generatePages = true, generateComponents = true, setupMenus = true, generateQueries = true }) {
-    // Get WordPress URL from request headers
+  async handler({ projectName, packageManager = 'pnpm', includeNuxtUI = true, generatePages = true, generateComponents = true, setupMenus = true, generateQueries = true }) {
+    // Get WordPress URL from session, header, or environment
     const event = useEvent()
-    const wordpressUrl = getHeader(event, 'x-wordpress-url') || useRuntimeConfig().wordpressUrl
+    const wordpressUrl = getWordPressUrl(event)
 
     if (!wordpressUrl) {
-      return textResult('Error: WordPress URL not configured. Set X-WordPress-URL header.')
+      return textResult('Error: WordPress URL not configured. Use wp_connect first to connect to a WordPress site.')
     }
 
     // Analyze WordPress site
@@ -487,24 +630,33 @@ NEVER call this tool without user confirmation of the settings first.`,
       readingSettings: { showOnFront: 'posts', pageOnFront: 0, pageForPosts: 0 }
     }
 
-    // Get @wpnuxt/core version from runtime config (matches @wpnuxt/mcp version)
-    const wpnuxtVersion = useRuntimeConfig().wpnuxtVersion || '2.0.0-alpha.1'
-
     // Generate package.json
+    // IMPORTANT: Update these versions when releasing new versions
     const dependencies: Record<string, string> = {
-      '@wpnuxt/core': wpnuxtVersion,
-      'nuxt': '^4.2.0',
-      'vue': '^3.5.0'
+      '@wpnuxt/core': '2.0.0-alpha.1',
+      'nuxt': '^4.2.2',
+      'vue': '^3.5.13'
     }
 
     if (includeNuxtUI) {
       dependencies['@nuxt/ui'] = '^4.3.0'
+      // Tailwind must be explicitly added for pnpm (peer dependency not auto-installed)
+      dependencies['tailwindcss'] = '^4.0.17'
     }
 
-    const packageJson = {
+    // Package manager versions (updated December 2025)
+    const packageManagerVersions: Record<string, string> = {
+      pnpm: 'pnpm@10.26.1',
+      npm: 'npm@11.7.0',
+      yarn: 'yarn@4.12.0',
+      bun: 'bun@1.3.5'
+    }
+
+    const packageJson: Record<string, unknown> = {
       name: projectName.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
       private: true,
       type: 'module',
+      packageManager: packageManagerVersions[packageManager],
       scripts: {
         'build': 'nuxt build',
         'dev': 'nuxt dev',
@@ -533,6 +685,26 @@ NEVER call this tool without user confirmation of the settings first.`,
       { path: 'server/tsconfig.json', content: '{\n  "extends": "../.nuxt/tsconfig.server.json"\n}\n' }
     ]
 
+    // Add main.css for Nuxt UI (fetches setup from Nuxt UI MCP or Nuxt docs)
+    if (includeNuxtUI) {
+      const mainCssContent = await generateMainCSS()
+      files.push({ path: 'app/assets/css/main.css', content: mainCssContent })
+    }
+
+    // Detect custom post types and generate queries for them
+    // Queries go in app/extend/queries/ since srcDir is 'app' in Nuxt 4
+    const customPostTypes = contentTypes.filter(ct => !BUILTIN_CONTENT_TYPES.includes(ct.name))
+    if (generateQueries && customPostTypes.length > 0) {
+      for (const ct of customPostTypes) {
+        const queryContent = generateQueryForContentType(ct)
+        const filename = ct.graphqlPluralName.charAt(0).toUpperCase() + ct.graphqlPluralName.slice(1)
+        files.push({
+          path: `app/extend/queries/${filename}.gql`,
+          content: queryContent
+        })
+      }
+    }
+
     // Build install commands
     const installCommands: Record<string, string> = {
       pnpm: 'pnpm install',
@@ -557,7 +729,8 @@ NEVER call this tool without user confirmation of the settings first.`,
 
     // Build next steps based on selected options
     const followUpTools: string[] = []
-    if (generateQueries) {
+    // Only suggest wpnuxt_generate_queries if no custom post types were found (nothing to generate inline)
+    if (generateQueries && customPostTypes.length === 0) {
       followUpTools.push('wpnuxt_generate_queries - Generate GraphQL queries for content types')
     }
     if (generatePages) {
@@ -583,6 +756,12 @@ NEVER call this tool without user confirmation of the settings first.`,
         url: wordpressUrl,
         title: settings.generalSettings.title,
         contentTypes: contentTypes.map(ct => ct.name),
+        customPostTypes: customPostTypes.map(ct => ({
+          name: ct.name,
+          singular: ct.graphqlSingleName,
+          plural: ct.graphqlPluralName,
+          queryFile: `app/extend/queries/${ct.graphqlPluralName.charAt(0).toUpperCase() + ct.graphqlPluralName.slice(1)}.gql`
+        })),
         taxonomies: taxonomies.map(t => t.name),
         menus: menus.map(m => m.name)
       },
@@ -595,7 +774,8 @@ NEVER call this tool without user confirmation of the settings first.`,
         'app/pages',
         'app/components',
         'app/composables',
-        'extend/queries',
+        ...(includeNuxtUI ? ['app/assets', 'app/assets/css'] : []),
+        'app/extend/queries',
         'public',
         'server'
       ],
@@ -608,7 +788,21 @@ NEVER call this tool without user confirmation of the settings first.`,
       followUpTools: followUpTools.length > 0 ? followUpTools : undefined,
       instructions: followUpTools.length > 0
         ? `After creating the base project files, call these tools in order:\n${followUpTools.map((t, i) => `${i + 1}. ${t}`).join('\n')}`
-        : 'Base project complete. No additional tools requested.'
+        : 'Base project complete. No additional tools requested.',
+      // When custom post types are found, prompt the AI to ask the user about display preferences
+      userQuestions: customPostTypes.length > 0 ? {
+        prompt: 'Custom post types were detected. Ask the user how they want to display this content:',
+        contentTypes: customPostTypes.map(ct => ({
+          name: ct.name,
+          plural: ct.graphqlPluralName,
+          singular: ct.graphqlSingleName,
+          suggestedQuestions: [
+            `How should "${ct.graphqlPluralName}" be displayed? (grid of cards, simple list, or detailed list with images)`,
+            `Should there be an archive page listing all ${ct.graphqlPluralName}?`,
+            `What route should ${ct.graphqlPluralName} use? (e.g., /${ct.graphqlPluralName}/ or /shop/ for products)`
+          ]
+        }))
+      } : undefined
     })
   }
 })

@@ -14,6 +14,7 @@
     "clean": "rm -rf .nuxt .output node_modules"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.10.0",
     "@nuxtjs/mcp-toolkit": "^0.5.2",
     "nuxt": "^4.2.2",
     "vue": "^3.5.13",

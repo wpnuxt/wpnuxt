@@ -16,11 +16,118 @@ interface Taxonomy {
   connectedContentTypes: { nodes: Array<{ name: string }> }
 }
 
-function generateQueryForContentType(ct: ContentType, taxonomies: Taxonomy[]): string {
+interface SchemaType {
+  name: string
+  kind: string
+  interfaces?: Array<{ name: string }>
+}
+
+// Query to get type information including interfaces
+const TYPE_INTERFACES_QUERY = `
+query TypeInterfaces {
+  __schema {
+    types {
+      name
+      kind
+      interfaces {
+        name
+      }
+    }
+  }
+}
+`
+
+// Known node interfaces we might use in queries
+const NODE_INTERFACES = {
+  NodeWithTitle: '... on NodeWithTitle { title }',
+  NodeWithExcerpt: '... on NodeWithExcerpt { excerpt }',
+  NodeWithContentEditor: '... on NodeWithContentEditor { content }',
+  NodeWithFeaturedImage: `... on NodeWithFeaturedImage {
+    featuredImage {
+      node {
+        sourceUrl
+        altText
+        mediaDetails {
+          width
+          height
+        }
+      }
+    }
+  }`
+} as const
+
+/**
+ * Get the interfaces implemented by a content type
+ */
+function getTypeInterfaces(typeName: string, schemaTypes: SchemaType[]): string[] {
+  // The GraphQL type name is the capitalized singular name
+  const type = schemaTypes.find(t => t.name.toLowerCase() === typeName.toLowerCase())
+  if (!type?.interfaces) return []
+  return type.interfaces.map(i => i.name)
+}
+
+/**
+ * Build interface fragments based on what the type actually implements
+ */
+function buildInterfaceFragments(
+  interfaces: string[],
+  forList: boolean = false
+): string {
+  const fragments: string[] = []
+
+  if (interfaces.includes('NodeWithTitle')) {
+    fragments.push('      ... on NodeWithTitle { title }')
+  }
+
+  if (interfaces.includes('NodeWithExcerpt') && forList) {
+    fragments.push('      ... on NodeWithExcerpt { excerpt }')
+  }
+
+  if (interfaces.includes('NodeWithContentEditor') && !forList) {
+    fragments.push('      ... on NodeWithContentEditor { content }')
+  }
+
+  if (interfaces.includes('NodeWithFeaturedImage')) {
+    if (forList) {
+      fragments.push(`      ... on NodeWithFeaturedImage {
+        featuredImage {
+          node {
+            sourceUrl
+            altText
+          }
+        }
+      }`)
+    } else {
+      fragments.push(`      ... on NodeWithFeaturedImage {
+        featuredImage {
+          node {
+            sourceUrl
+            altText
+            mediaDetails {
+              width
+              height
+            }
+          }
+        }
+      }`)
+    }
+  }
+
+  return fragments.join('\n')
+}
+
+function generateQueryForContentType(
+  ct: ContentType,
+  taxonomies: Taxonomy[],
+  schemaTypes: SchemaType[]
+): string {
   const singular = ct.graphqlSingleName
   const plural = ct.graphqlPluralName
   const singularCapitalized = singular.charAt(0).toUpperCase() + singular.slice(1)
   const pluralCapitalized = plural.charAt(0).toUpperCase() + plural.slice(1)
+
+  // Get the interfaces this content type implements
+  const typeInterfaces = getTypeInterfaces(singularCapitalized, schemaTypes)
 
   // Find taxonomies connected to this content type
   const connectedTaxonomies = taxonomies.filter(tax =>
@@ -37,6 +144,10 @@ function generateQueryForContentType(ct: ContentType, taxonomies: Taxonomy[]): s
       }`
   ).join('\n')
 
+  // Build interface fragments based on what this type actually supports
+  const listFragments = buildInterfaceFragments(typeInterfaces, true)
+  const singleFragments = buildInterfaceFragments(typeInterfaces, false)
+
   // Generate list query
   const listQuery = `query ${pluralCapitalized}($first: Int = 10, $after: String) {
   ${plural}(first: $first, after: $after) {
@@ -50,88 +161,47 @@ function generateQueryForContentType(ct: ContentType, taxonomies: Taxonomy[]): s
       slug
       uri
       date
-      ... on NodeWithTitle {
-        title
-      }
-      ... on NodeWithExcerpt {
-        excerpt
-      }
-      ... on NodeWithFeaturedImage {
-        featuredImage {
-          node {
-            sourceUrl
-            altText
-          }
-        }
-      }
+${listFragments}
 ${taxonomyFields}
     }
   }
 }`
 
-  // Generate single query
+  // Generate single query by slug
+  // Note: Pages don't support SLUG idType, so we use URI for all content types
+  // This is consistent with how nodeByUri works
   const singleQuery = `query ${singularCapitalized}BySlug($slug: ID!) {
-  ${singular}(id: $slug, idType: SLUG) {
+  ${singular}(id: $slug, idType: URI) {
     id
     databaseId
     slug
     uri
     date
-    ... on NodeWithTitle {
-      title
-    }
-    ... on NodeWithContentEditor {
-      content
-    }
-    ... on NodeWithFeaturedImage {
-      featuredImage {
-        node {
-          sourceUrl
-          altText
-          mediaDetails {
-            width
-            height
-          }
-        }
-      }
-    }
+${singleFragments}
 ${taxonomyFields}
   }
 }`
 
-  // Generate by URI query (for catch-all routes)
+  // Generate by URI query using nodeByUri (works for all content types)
+  // This is the recommended approach for catch-all routes
   const byUriQuery = `query ${singularCapitalized}ByUri($uri: String!) {
-  ${singular}(id: $uri, idType: URI) {
-    id
-    databaseId
-    slug
-    uri
-    date
-    ... on NodeWithTitle {
-      title
-    }
-    ... on NodeWithContentEditor {
-      content
-    }
-    ... on NodeWithFeaturedImage {
-      featuredImage {
-        node {
-          sourceUrl
-          altText
-          mediaDetails {
-            width
-            height
-          }
-        }
-      }
-    }
+  nodeByUri(uri: $uri) {
+    ... on ${singularCapitalized} {
+      id
+      databaseId
+      slug
+      uri
+      date
+${singleFragments}
 ${taxonomyFields}
+    }
   }
 }`
 
   return `# ${pluralCapitalized} Queries
 # Generated for content type: ${ct.name}
-# Place in: queries/${pluralCapitalized}.gql
+# Implements: ${typeInterfaces.length > 0 ? typeInterfaces.join(', ') : 'no special interfaces'}
+# Place in: extend/queries/${pluralCapitalized}.gql
 
 # List ${plural} with pagination
 ${listQuery}
@@ -193,10 +263,11 @@ export default defineMcpTool({
     contentTypes: z.array(z.string()).optional().describe('Specific content types to generate queries for (default: all)')
   },
   async handler({ includeContentTypes = true, includeTaxonomies = true, contentTypes: filterContentTypes }) {
-    // Fetch content types and taxonomies
-    const [ctResult, taxResult] = await Promise.all([
+    // Fetch content types, taxonomies, and schema types (for interface detection)
+    const [ctResult, taxResult, schemaResult] = await Promise.all([
       executeGraphQL<{ contentTypes: { nodes: ContentType[] } }>(CONTENT_TYPES_QUERY),
-      executeGraphQL<{ taxonomies: { nodes: Taxonomy[] } }>(TAXONOMIES_QUERY)
+      executeGraphQL<{ taxonomies: { nodes: Taxonomy[] } }>(TAXONOMIES_QUERY),
+      executeGraphQL<{ __schema: { types: SchemaType[] } }>(TYPE_INTERFACES_QUERY)
     ])
 
     if (ctResult.errors) {
@@ -205,6 +276,7 @@ export default defineMcpTool({
 
     const allContentTypes = ctResult.data?.contentTypes.nodes ?? []
     const allTaxonomies = taxResult.data?.taxonomies.nodes ?? []
+    const schemaTypes = schemaResult.data?.__schema.types ?? []
 
     // Filter content types if specified
     let contentTypesToGenerate = allContentTypes
@@ -222,7 +294,7 @@ export default defineMcpTool({
         generatedQueries.push({
           name: ct.graphqlPluralName,
           type: 'contentType',
-          content: generateQueryForContentType(ct, allTaxonomies)
+          content: generateQueryForContentType(ct, allTaxonomies, schemaTypes)
         })
       }
     }

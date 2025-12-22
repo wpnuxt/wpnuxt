@@ -4,8 +4,7 @@ import { executeGraphQL, MENUS_QUERY } from '../../utils/graphql'
 interface MenuItem {
   id: string
   label: string
-  url: string
-  path: string
+  uri: string
   parentId?: string
   cssClasses?: string[]
   target?: string
@@ -143,8 +142,7 @@ function generateMenuItemComponent(): { filename: string, content: string } {
 interface MenuItem {
   id: string
   label: string
-  url: string
-  path: string
+  uri: string
   target?: string
   cssClasses?: string[]
   childItems?: {
@@ -165,22 +163,8 @@ const hasChildren = computed(() =>
   props.item.childItems?.nodes && props.item.childItems.nodes.length > 0
 )
 
-// Convert WordPress URL to internal path if same domain
-const linkPath = computed(() => {
-  if (props.item.path) {
-    return props.item.path
-  }
-  try {
-    const url = new URL(props.item.url)
-    // If it's a relative URL or same domain, use path
-    return url.pathname
-  } catch {
-    return props.item.url
-  }
-})
-
 const isExternal = computed(() => {
-  return props.item.target === '_blank' || props.item.url.startsWith('http')
+  return props.item.target === '_blank'
 })
 </script>
 
@@ -195,14 +179,14 @@ const isExternal = computed(() => {
   >
     <NuxtLink
       v-if="!isExternal"
-      :to="linkPath"
+      :to="item.uri"
       class="menu-link"
     >
       {{ item.label }}
     </NuxtLink>
     <a
       v-else
-      :href="item.url"
+      :href="item.uri"
       :target="item.target"
       :rel="item.target === '_blank' ? 'noopener noreferrer' : undefined"
       class="menu-link"
@@ -295,8 +279,8 @@ function generateNavComponent(menu: Menu, variant: 'header' | 'footer' | 'mobile
 interface MenuItem {
   id: string
   label: string
-  url: string
-  path: string
+  uri: string
+  parentId?: string
   target?: string
   cssClasses?: string[]
   childItems?: {
@@ -304,13 +288,12 @@ interface MenuItem {
   }
 }
 
-// Fetch menu by slug
-const { data: menuData } = await useLazyMenuBySlug({
-  slug: '${menuSlug}'
-})
+// Fetch menu by name
+const { data: menu } = await useMenu({ name: '${menuSlug}' })
 
-const menuItems = computed(() =>
-  menuData.value?.menuItems?.nodes?.filter(item => !item.parentId) || []
+// Filter to top-level items only
+const topLevelItems = computed(() =>
+  menu.value?.filter(item => !item.parentId) || []
 )
 </script>
 
@@ -318,7 +301,7 @@ const menuItems = computed(() =>
   <nav class="header-nav" aria-label="${menu.name}">
     <ul class="nav-menu">
       <MenuItem
-        v-for="item in menuItems"
+        v-for="item in topLevelItems"
         :key="item.id"
         :item="item"
       />
@@ -357,27 +340,26 @@ const menuItems = computed(() =>
 interface MenuItem {
   id: string
   label: string
-  url: string
-  path: string
+  uri: string
+  parentId?: string
   target?: string
   cssClasses?: string[]
 }
 
-// Fetch menu by slug
-const { data: menuData } = await useLazyMenuBySlug({
-  slug: '${menuSlug}'
-})
+// Fetch menu by name
+const { data: menu } = await useMenu({ name: '${menuSlug}' })
 
-const menuItems = computed(() =>
-  menuData.value?.menuItems?.nodes?.filter(item => !item.parentId) || []
+// Filter to top-level items only
+const topLevelItems = computed(() =>
+  menu.value?.filter(item => !item.parentId) || []
 )
 </script>
 
 <template>
   <nav class="footer-nav" aria-label="${menu.name}">
     <ul class="nav-menu">
-      <li v-for="item in menuItems" :key="item.id" class="nav-item">
-        <NuxtLink :to="item.path || item.url" class="nav-link">
+      <li v-for="item in topLevelItems" :key="item.id" class="nav-item">
+        <NuxtLink :to="item.uri" class="nav-link">
           {{ item.label }}
         </NuxtLink>
       </li>
@@ -429,8 +411,8 @@ const menuItems = computed(() =>
 interface MenuItem {
   id: string
   label: string
-  url: string
-  path: string
+  uri: string
+  parentId?: string
   target?: string
   cssClasses?: string[]
   childItems?: {
@@ -450,13 +432,12 @@ const emit = defineEmits<{
   close: []
 }>()
 
-// Fetch menu by slug
-const { data: menuData } = await useLazyMenuBySlug({
-  slug: '${menuSlug}'
-})
+// Fetch menu by name
+const { data: menu } = await useMenu({ name: '${menuSlug}' })
 
-const menuItems = computed(() =>
-  menuData.value?.menuItems?.nodes?.filter(item => !item.parentId) || []
+// Filter to top-level items only
+const topLevelItems = computed(() =>
+  menu.value?.filter(item => !item.parentId) || []
 )
 
 // Track expanded items
@@ -485,10 +466,10 @@ function handleLinkClick() {
       </div>
 
       <ul class="mobile-menu">
-        <li v-for="item in menuItems" :key="item.id" class="mobile-menu-item">
+        <li v-for="item in topLevelItems" :key="item.id" class="mobile-menu-item">
           <div class="menu-item-row">
             <NuxtLink
-              :to="item.path || item.url"
+              :to="item.uri"
               class="mobile-link"
               @click="handleLinkClick"
             >
@@ -511,7 +492,7 @@ function handleLinkClick() {
             >
               <li v-for="child in item.childItems.nodes" :key="child.id">
                 <NuxtLink
-                  :to="child.path || child.url"
+                  :to="child.uri"
                   class="mobile-link submenu-link"
                   @click="handleLinkClick"
                 >
