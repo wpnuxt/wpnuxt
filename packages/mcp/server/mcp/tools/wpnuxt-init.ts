@@ -629,17 +629,16 @@ Then use wpnuxt_generate_pages with these preferences to create the appropriate 
     }
 
     // Generate package.json
-    // IMPORTANT: Update these versions when releasing new versions
     const dependencies: Record<string, string> = {
-      '@wpnuxt/core': '2.0.0-alpha.1',
-      'nuxt': '^4.2.2',
-      'vue': '^3.5.13'
+      '@wpnuxt/core': 'latest',
+      'nuxt': '^4.0.0',
+      'vue': '^3.5.0'
     }
 
     if (includeNuxtUI) {
-      dependencies['@nuxt/ui'] = '^4.3.0'
+      dependencies['@nuxt/ui'] = 'latest'
       // Tailwind must be explicitly added for pnpm (peer dependency not auto-installed)
-      dependencies['tailwindcss'] = '^4.0.17'
+      dependencies['tailwindcss'] = '^4.0.0'
     }
 
     // Package manager versions (updated December 2025)
