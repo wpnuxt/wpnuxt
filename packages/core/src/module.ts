@@ -52,11 +52,20 @@ export default defineNuxtModule<WPNuxtConfig>({
 
     await registerModules(nuxt, resolver, wpNuxtConfig, mergedQueriesFolder)
 
+    // Customize the nuxt-graphql-middleware devtools tab for WPNuxt branding
+    nuxt.hook('devtools:customTabs', (tabs) => {
+      const middlewareTab = tabs.find(tab => tab.name === 'nuxt-graphql-middleware')
+      if (middlewareTab) {
+        middlewareTab.title = 'WPNuxt GraphQL'
+        middlewareTab.icon = 'simple-icons:wordpress'
+      }
+    })
+
     // Configure Nitro route rules for caching GraphQL requests if enabled
     if (wpNuxtConfig.cache?.enabled !== false) {
       const maxAge = wpNuxtConfig.cache?.maxAge ?? 300
       nuxt.options.nitro.routeRules = nuxt.options.nitro.routeRules || {}
-      nuxt.options.nitro.routeRules['/api/graphql_middleware/**'] = {
+      nuxt.options.nitro.routeRules['/api/wpnuxt/**'] = {
         cache: {
           maxAge,
           swr: wpNuxtConfig.cache?.swr !== false
@@ -301,6 +310,8 @@ async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPN
     includeComposables: true,
     downloadSchema: wpNuxtConfig.downloadSchema,
     enableFileUploads: true,
+    // Use WPNuxt-branded API route prefix
+    serverApiPrefix: '/api/wpnuxt',
     clientCache: {
       // Enable or disable the caching feature.
       enabled: true,
