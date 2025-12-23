@@ -1,0 +1,31 @@
+# Login mutation for WPGraphQL JWT Authentication
+mutation Login($username: String!, $password: String!) {
+  login(input: { username: $username, password: $password }) {
+    authToken
+    refreshToken
+    user {
+      id
+      databaseId
+      name
+      email
+      firstName
+      lastName
+      username
+      avatar {
+        url
+      }
+      roles {
+        nodes {
+          name
+        }
+      }
+    }
+  }
+}
+
+# Refresh auth token mutation
+mutation RefreshAuthToken($refreshToken: String!) {
+  refreshJwtAuthToken(input: { jwtRefreshToken: $refreshToken }) {
+    authToken
+  }
+}
