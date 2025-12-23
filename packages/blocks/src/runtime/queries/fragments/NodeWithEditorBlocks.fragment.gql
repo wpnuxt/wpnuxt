@@ -1,0 +1,10 @@
+#import "~/.queries/fragments/EditorBlock.fragment.gql"
+
+fragment NodeWithEditorBlocks on NodeWithEditorBlocks {
+  editorBlocks {
+    ...EditorBlock
+    innerBlocks {
+      ...EditorBlock
+    }
+  }
+}

@@ -1,0 +1,25 @@
+#import "~/.queries/fragments/CoreButton.fragment.gql"
+#import "~/.queries/fragments/CoreGallery.fragment.gql"
+#import "~/.queries/fragments/CoreHeading.fragment.gql"
+#import "~/.queries/fragments/CoreImage.fragment.gql"
+#import "~/.queries/fragments/CoreParagraph.fragment.gql"
+#import "~/.queries/fragments/CoreQuote.fragment.gql"
+#import "~/.queries/fragments/CoreSpacer.fragment.gql"
+
+fragment EditorBlock on EditorBlock {
+  apiVersion
+  blockEditorCategoryName
+  clientId
+  cssClassNames
+  isDynamic
+  name
+  parentClientId
+  renderedHtml
+  ...CoreButton
+  ...CoreGallery
+  ...CoreHeading
+  ...CoreImage
+  ...CoreParagraph
+  ...CoreQuote
+  ...CoreSpacer
+}

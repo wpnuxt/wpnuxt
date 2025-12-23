@@ -7,6 +7,7 @@
     "build": "pnpm --filter './packages/**' dev:prepare && pnpm --filter './packages/**' build && pnpm --filter './playgrounds/**' build",
     "dev:prepare": "pnpm --filter './packages/**' dev:prepare && pnpm --filter './playgrounds/**' nuxt:prepare",
     "dev:basic": "pnpm --filter @wpnuxt/playground-basic dev",
+    "dev:blocks": "pnpm --filter @wpnuxt/playground-blocks dev",
     "dev:full": "pnpm --filter @wpnuxt/playground-full dev",
     "dev": "pnpm dev:full",
     "lint": "eslint .",

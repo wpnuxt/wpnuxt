@@ -1,0 +1,20 @@
+fragment CoreParagraph on CoreParagraph {
+  attributes {
+    align
+    anchor
+    backgroundColor
+    className
+    content
+    cssClassName
+    direction
+    dropCap
+    fontFamily
+    fontSize
+    gradient
+    lock
+    metadata
+    placeholder
+    style
+    textColor
+  }
+}

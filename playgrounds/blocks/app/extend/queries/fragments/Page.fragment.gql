@@ -1,0 +1,11 @@
+#import "~/.queries/fragments/ContentNode.fragment.gql"
+#import "~/.queries/fragments/NodeWithFeaturedImage.fragment.gql"
+#import "~/.queries/fragments/NodeWithEditorBlocks.fragment.gql"
+
+fragment Page on Page {
+  ...ContentNode
+  ...NodeWithFeaturedImage
+  ...NodeWithEditorBlocks
+  content
+  title
+}

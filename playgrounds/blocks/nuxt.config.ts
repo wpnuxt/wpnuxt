@@ -3,8 +3,8 @@ const IS_DEV = process.env.NODE_ENV === 'development'
 export default defineNuxtConfig({
   modules: [
     '@wpnuxt/core',
-    '@nuxt/ui',
-    '@nuxtjs/mdc'
+    '@wpnuxt/blocks',
+    '@nuxt/ui'
   ],
 
   devtools: { enabled: true },
@@ -16,6 +16,10 @@ export default defineNuxtConfig({
   wpNuxt: {
     wordpressUrl: 'https://wordpress.wpnuxt.com',
     debug: IS_DEV,
-    downloadSchema: IS_DEV
+    downloadSchema: true
+  },
+
+  wpNuxtBlocks: {
+    imageDomains: ['wordpress.wpnuxt.com']
   }
 })

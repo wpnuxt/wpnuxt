@@ -1,6 +1,10 @@
 {
   "extends": "./.nuxt/tsconfig.json",
   "exclude": [
-    "../../packages/mcp/**/*"
+    "../../packages/mcp/**/*",
+    "../../packages/blocks/**/*",
+    "../../packages/auth/**/*",
+    "../blocks/**/*",
+    "../basic/**/*"
   ]
 }

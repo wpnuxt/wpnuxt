@@ -1,0 +1,26 @@
+fragment CoreButton on CoreButton {
+  attributes {
+    anchor
+    backgroundColor
+    borderColor
+    className
+    cssClassName
+    fontFamily
+    fontSize
+    gradient
+    linkClassName
+    linkTarget
+    lock
+    metadata
+    placeholder
+    rel
+    style
+    tagName
+    text
+    textAlign
+    textColor
+    title
+    type
+    url
+  }
+}
