@@ -4,3 +4,7 @@
 pre {
   @apply bg-gray-100 p-4 my-4 rounded-md;
 }
+
+figure.size-full {
+  @apply w-full h-auto;
+}

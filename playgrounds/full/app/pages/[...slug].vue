@@ -19,7 +19,7 @@ const { data: post, pending, refresh, clear } = await useNodeByUri(
         <pre>const { data: post, pending, refresh, clear } = await useNodeByUri({ uri: route.path })</pre>
         <UPageCard>
           <MDC
-            v-if="post?.content"
+            v-if="!pending && post?.content"
             :value="post.content"
           />
           <LoadingPage v-else />

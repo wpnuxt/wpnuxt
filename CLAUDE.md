@@ -123,16 +123,35 @@ The module relies on `nuxt-graphql-middleware` for GraphQL type generation:
 
 ### Playgrounds
 
-**Main Playground (`playground/`)**
-- Full-featured example using @nuxt/ui v4 and @nuxtjs/mdc
-- Demonstrates posts listing, post detail pages, and Nuxt UI components
-- Configuration in `playground/nuxt.config.ts`
+**Full Playground (`playgrounds/full/`)** - `pnpm dev:full`
+- Full-featured example using **@nuxt/ui v4** and **@nuxtjs/mdc**
+- Renders WordPress content using MDC's `<MDC :value="post.content" />` component
+- MDC parses the pre-rendered HTML from WordPress and applies beautiful typography
+- Best for: Simple content sites where you want great styling out of the box
 
-**Basic Playground (`playground-basic/`)**
-- Minimal setup without UI dependencies
+**Blocks Playground (`playgrounds/blocks/`)** - `pnpm dev:blocks`
+- Demonstrates the **@wpnuxt/blocks** package for Gutenberg block rendering
+- Renders structured `editorBlocks` data using `<BlockRenderer :node="node" />`
+- Each block type has its own Vue component (CoreParagraph, CoreHeading, CoreImage, etc.)
+- Best for: Sites needing custom rendering per block type, lazy-loading images, or interactive blocks
+
+**Basic Playground (`playgrounds/basic/`)** - `pnpm dev:basic`
+- Minimal setup with only @wpnuxt/core
+- No UI framework dependencies
 - Good for testing core functionality
 
-Both playgrounds have their own `.env` files and can connect to different WordPress instances.
+All playgrounds connect to the same WordPress instance (https://wordpress.wpnuxt.com).
+
+### @wpnuxt/blocks Package
+
+The blocks package provides Vue components for rendering WordPress Gutenberg blocks in Nuxt. Key features:
+
+- **BlockRenderer**: Iterates over `editorBlocks` and renders each block with the appropriate component
+- **BlockComponent**: Resolves block type to Vue component (e.g., `core/paragraph` → `CoreParagraph`)
+- **Custom Components**: Users can override any block component by creating their own in `components/blocks/`
+- **Nuxt UI Integration**: When @nuxt/ui is available, components like CoreButton use UButton automatically
+
+To override a block component, create a file in your project's `components/blocks/` directory with the same name (e.g., `CoreParagraph.vue`).
 
 ### Build Output
 
