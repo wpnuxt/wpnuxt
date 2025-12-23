@@ -1,12 +1,3 @@
-<!--
-Get your module up and running quickly.
-
-Find and replace all on all files (CMD+SHIFT+F):
-- Name: WPNuxt
-- Package name: wpnuxt
-- Description: My new Nuxt module
--->
-
 # WPNuxt
 
 [![npm version][npm-version-src]][npm-version-href]
@@ -16,45 +7,107 @@ Find and replace all on all files (CMD+SHIFT+F):
 
 A Nuxt 4 module that seamlessly integrates WordPress with Nuxt via GraphQL (WPGraphQL), providing type-safe composables and utilities for fetching WordPress content.
 
-- [✨ &nbsp;Release Notes](/CHANGELOG.md)
-<!-- - [🏀 Online playground](https://stackblitz.com/github/your-org/wpnuxt?file=playground%2Fapp.vue) -->
-<!-- - [📖 &nbsp;Documentation](https://example.com) -->
+- [Release Notes](/CHANGELOG.md)
+- [Migration Guide](/MIGRATION.md) (for users upgrading from 1.x)
+
+## Packages
+
+This monorepo contains the following packages:
+
+| Package | Description | Version |
+|---------|-------------|---------|
+| [@wpnuxt/core](./packages/core) | Core WordPress integration with GraphQL | [![npm](https://img.shields.io/npm/v/@wpnuxt/core.svg?style=flat&colorA=020420&colorB=00DC82)](https://npmjs.com/package/@wpnuxt/core) |
+| [@wpnuxt/blocks](./packages/blocks) | Gutenberg block rendering components | [![npm](https://img.shields.io/npm/v/@wpnuxt/blocks.svg?style=flat&colorA=020420&colorB=00DC82)](https://npmjs.com/package/@wpnuxt/blocks) |
+| [@wpnuxt/auth](./packages/auth) | WordPress authentication (JWT) | Coming soon |
 
 ## Features
 
-- 🚀 **Auto-generated Composables** - Automatically generates type-safe composables from your GraphQL queries
-- 📝 **Type Safety** - Full TypeScript support with generated types from your WordPress GraphQL schema
-- 🔄 **Query Merging** - Extend or override default queries with your custom GraphQL queries
-- 🖼️ **Image Handling** - Built-in utilities for transforming WordPress image URLs
-- ⚡ **Performance** - Client-side caching and optimized query execution
-- 🎨 **Flexible** - Works with any WordPress installation with WPGraphQL plugin
-- 🛡️ **Sanitized Content** - Integrated DOMPurify for safe HTML content rendering
+- **Auto-generated Composables** - Automatically generates type-safe composables from your GraphQL queries
+- **Type Safety** - Full TypeScript support with generated types from your WordPress GraphQL schema
+- **Query Merging** - Extend or override default queries with your custom GraphQL queries
+- **Block Rendering** - Render Gutenberg blocks as Vue components with `@wpnuxt/blocks`
+- **Image Optimization** - NuxtImg integration for optimized WordPress images
+- **Sanitized Content** - Integrated DOMPurify for safe HTML content rendering
+- **Vercel Ready** - Optimized settings for Vercel deployment with ISR support
 
 ## Quick Setup
 
-1. Install the module to your Nuxt application:
+### 1. Install the package
 
 ```bash
-npx nuxi module add wpnuxt
+npm install @wpnuxt/core
+# or
+pnpm add @wpnuxt/core
 ```
 
-2. Add `wpnuxt` to the `modules` section of `nuxt.config.ts`:
+### 2. Add to your Nuxt config
 
 ```ts
+// nuxt.config.ts
 export default defineNuxtConfig({
-  modules: ['wpnuxt'],
+  modules: ['@wpnuxt/core'],
 
   wpNuxt: {
-    wordpressUrl: 'https://your-wordpress-site.com',
-    // Optional configuration
-    graphqlEndpoint: '/graphql',
-    downloadSchema: true,
-    debug: false
+    wordpressUrl: 'https://your-wordpress-site.com'
   }
 })
 ```
 
-3. Or configure via environment variables in `.env`:
+### 3. Start using composables
+
+```vue
+<script setup lang="ts">
+// Fetch posts
+const { data: posts } = await usePosts()
+
+// Fetch a single post by URI
+const { data: post } = await usePostByUri({ uri: '/my-post' })
+
+// Lazy loading with reactive state
+const { data: pages, pending, refresh } = await useLazyPages()
+</script>
+
+<template>
+  <article v-for="post in posts" :key="post.id">
+    <h2>{{ post.title }}</h2>
+    <div v-sanitize-html="post.content" />
+  </article>
+</template>
+```
+
+## Configuration
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@wpnuxt/core'],
+
+  wpNuxt: {
+    // Required: Your WordPress site URL (no trailing slash)
+    wordpressUrl: 'https://your-wordpress-site.com',
+
+    // Optional settings
+    graphqlEndpoint: '/graphql',  // Default: '/graphql'
+    downloadSchema: true,          // Default: true
+    debug: false,                  // Default: false
+
+    // Query folders
+    queries: {
+      extendFolder: 'extend/queries/',      // Default
+      mergedOutputFolder: '.queries/'       // Default
+    },
+
+    // Server-side caching
+    cache: {
+      enabled: true,   // Default: true
+      maxAge: 300,     // Default: 300 (5 minutes)
+      swr: true        // Default: true (stale-while-revalidate)
+    }
+  }
+})
+```
+
+### Environment Variables
 
 ```env
 WPNUXT_WORDPRESS_URL=https://your-wordpress-site.com
@@ -63,42 +116,9 @@ WPNUXT_DOWNLOAD_SCHEMA=true
 WPNUXT_DEBUG=false
 ```
 
-That's it! You can now use WPNuxt in your Nuxt app ✨
+## Custom Queries
 
-## Usage
-
-### Using Default Composables
-
-WPNuxt provides default composables for common WordPress queries:
-
-```vue
-<script setup lang="ts">
-// Fetch posts
-const posts = await usePosts({ limit: 10 })
-
-// Fetch a single post by URI
-const post = await usePostByUri({ uri: '/my-post' })
-
-// Fetch pages
-const pages = await usePages()
-
-// Using async versions for reactive data
-const { data: asyncPosts, pending, refresh } = await useLazyPosts()
-</script>
-
-<template>
-  <div>
-    <article v-for="post in posts.data" :key="post.id">
-      <h2>{{ post.title }}</h2>
-      <div v-html="post.content" />
-    </article>
-  </div>
-</template>
-```
-
-### Custom GraphQL Queries
-
-Create custom queries by adding `.gql` files to `extend/queries/` in your project:
+Create custom queries by adding `.gql` files to `extend/queries/`:
 
 ```graphql
 # extend/queries/CustomPosts.gql
@@ -112,99 +132,104 @@ query CustomPosts($categoryId: Int!) {
 }
 ```
 
-This automatically generates `useCustomPosts()` and `useAsyncCustomPosts()` composables:
+This generates `useCustomPosts()` and `useLazyCustomPosts()` composables automatically.
+
+## Using @wpnuxt/blocks
+
+For rendering WordPress Gutenberg blocks as Vue components:
+
+```bash
+npm install @wpnuxt/blocks
+```
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@wpnuxt/core', '@wpnuxt/blocks'],
+
+  wpNuxtBlocks: {
+    imageDomains: ['your-wordpress-site.com']
+  }
+})
+```
 
 ```vue
 <script setup lang="ts">
-const posts = await useCustomPosts({ categoryId: 5 })
+const { data: page } = await usePageByUri({ uri: route.path })
 </script>
+
+<template>
+  <BlockRenderer v-if="page" :node="page" />
+</template>
 ```
 
-### Working with Fragments
+Override default block components by creating your own in `components/blocks/`:
 
-Extend existing fragments or create new ones:
-
-```graphql
-# extend/queries/fragments/CustomPost.fragment.gql
-fragment CustomPost on Post {
-  ...Post
-  author {
-    node {
-      name
-      avatar {
-        url
-      }
-    }
-  }
-  seo {
-    title
-    metaDesc
-  }
-}
+```
+components/
+  blocks/
+    CoreParagraph.vue    # Override default paragraph rendering
+    CoreHeading.vue      # Override default heading rendering
+    MyCustomBlock.vue    # Custom block component
 ```
 
-## Configuration
+## Requirements
 
-### Module Options
+- **Nuxt 4.x** (for Nuxt 3, use WPNuxt 1.x)
+- **WordPress** with [WPGraphQL](https://www.wpgraphql.com/) plugin installed
+- **Node.js 20+**
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `wordpressUrl` | `string` | - | **Required.** Your WordPress site URL (no trailing slash) |
-| `graphqlEndpoint` | `string` | `/graphql` | GraphQL endpoint path |
-| `downloadSchema` | `boolean` | `true` | Download schema from WordPress |
-| `debug` | `boolean` | `false` | Enable debug logging |
-| `queries.extendFolder` | `string` | `extend/queries/` | Path to custom queries folder |
-| `queries.mergedOutputFolder` | `string` | `.queries/` | Path for merged queries output |
+## Development
 
-### Environment Variables
+```bash
+# Install dependencies
+pnpm install
 
-- `WPNUXT_WORDPRESS_URL` - WordPress site URL
-- `WPNUXT_GRAPHQL_ENDPOINT` - GraphQL endpoint path
-- `WPNUXT_DOWNLOAD_SCHEMA` - Download schema (true/false)
-- `WPNUXT_DEBUG` - Enable debug mode (true/false)
+# Prepare all packages
+pnpm run dev:prepare
 
+# Run playground (full features)
+pnpm run dev
 
-## Contribution
+# Run basic playground (core only)
+pnpm run dev:basic
 
-<details>
-  <summary>Local development</summary>
-  
-  ```bash
-  # Install dependencies
-  npm install
-  
-  # Generate type stubs
-  npm run dev:prepare
-  
-  # Develop with the playground
-  npm run dev
-  
-  # Build the playground
-  npm run dev:build
-  
-  # Run ESLint
-  npm run lint
-  
-  # Run Vitest
-  npm run test
-  npm run test:watch
-  
-  # Release new version
-  npm run release
-  ```
+# Run blocks playground
+pnpm run dev:blocks
 
-</details>
+# Run tests
+pnpm run test
 
+# Type check
+pnpm run typecheck
+
+# Lint
+pnpm run lint
+```
+
+## Migration from 1.x
+
+See the [Migration Guide](/MIGRATION.md) for detailed instructions on upgrading from WPNuxt 1.x.
+
+Key changes:
+- Nuxt 4 required (was Nuxt 3)
+- Composables renamed: `useWPPosts` → `usePosts`
+- Async variants renamed: `useAsyncPosts` → `useLazyPosts`
+- Directive changed: `v-sanitize` → `v-sanitize-html`
+
+## License
+
+[MIT](./LICENSE)
 
 <!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/wpnuxt/latest.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-version-href]: https://npmjs.com/package/wpnuxt
+[npm-version-src]: https://img.shields.io/npm/v/@wpnuxt/core/latest.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-version-href]: https://npmjs.com/package/@wpnuxt/core
 
-[npm-downloads-src]: https://img.shields.io/npm/dm/wpnuxt.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-downloads-href]: https://npm.chart.dev/wpnuxt
+[npm-downloads-src]: https://img.shields.io/npm/dm/@wpnuxt/core.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-downloads-href]: https://npm.chart.dev/@wpnuxt/core
 
-[license-src]: https://img.shields.io/npm/l/wpnuxt.svg?style=flat&colorA=020420&colorB=00DC82
-[license-href]: https://npmjs.com/package/wpnuxt
+[license-src]: https://img.shields.io/npm/l/@wpnuxt/core.svg?style=flat&colorA=020420&colorB=00DC82
+[license-href]: https://npmjs.com/package/@wpnuxt/core
 
 [nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
 [nuxt-href]: https://nuxt.com
