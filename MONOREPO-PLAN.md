@@ -490,10 +490,11 @@ Each package needs its own README with:
 
 ### Blocks package
 
-- [x] Copy wpnuxt-blocks source from external repo
+- [x] Create package structure
 - [x] Update dependency to workspace:*
-- [x] Test with new core
 - [x] Typecheck passing
+- [ ] Migrate block components from wpnuxt-blocks repo
+- [ ] Test components with new core
 
 ### Auth package
 
