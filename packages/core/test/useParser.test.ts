@@ -104,5 +104,99 @@ describe('useParser', () => {
       expect(result).toHaveLength(1)
       expect(result[0]?.name).toBe('PostById')
     })
+
+    it('should parse mutations', async () => {
+      const doc = `
+        mutation Login($username: String!, $password: String!) {
+          login(input: { username: $username, password: $password }) {
+            authToken
+            refreshToken
+          }
+        }
+      `
+      const result = await parseDoc(doc)
+      expect(result).toHaveLength(1)
+      expect(result[0]?.name).toBe('Login')
+      expect(result[0]?.operation).toBe('mutation')
+    })
+
+    it('should handle mixed queries and mutations', async () => {
+      const doc = `
+        query GetUser {
+          viewer {
+            id
+            name
+          }
+        }
+
+        mutation UpdateUser($name: String!) {
+          updateUser(input: { name: $name }) {
+            user {
+              id
+              name
+            }
+          }
+        }
+      `
+      const result = await parseDoc(doc)
+      expect(result).toHaveLength(2)
+      expect(result[0]?.operation).toBe('query')
+      expect(result[1]?.operation).toBe('mutation')
+    })
+
+    it('should handle deeply nested selections', async () => {
+      const doc = `
+        query DeepQuery {
+          posts {
+            nodes {
+              author {
+                node {
+                  name
+                }
+              }
+            }
+          }
+        }
+      `
+      const result = await parseDoc(doc)
+      expect(result).toHaveLength(1)
+      expect(result[0]?.nodes).toContain('posts')
+    })
+
+    it('should handle multiple fragments', async () => {
+      const doc = `
+        query PostWithFragments {
+          post(id: "1") {
+            ...PostFields
+            ...AuthorFields
+            ...MediaFields
+          }
+        }
+      `
+      const result = await parseDoc(doc)
+      expect(result).toHaveLength(1)
+      expect(result[0]?.fragments).toContain('PostFields')
+      expect(result[0]?.fragments).toContain('AuthorFields')
+      expect(result[0]?.fragments).toContain('MediaFields')
+    })
+
+    it('should handle whitespace-only document', async () => {
+      const doc = `
+
+      `
+      await expect(parseDoc(doc)).rejects.toThrow('Invalid GraphQL document')
+    })
+
+    it('should throw specific error for fragment-only document', async () => {
+      const doc = `
+        fragment PostFields on Post {
+          id
+          title
+        }
+      `
+      const result = await parseDoc(doc)
+      // Fragment definitions are filtered out, so result should be empty
+      expect(result).toHaveLength(0)
+    })
   })
 })
