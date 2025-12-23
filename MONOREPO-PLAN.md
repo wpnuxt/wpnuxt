@@ -200,61 +200,44 @@ The source is already in place from Phase 1. Update the package.json:
 }
 ```
 
-### 2.2 Port features from wpnuxt-core
+### 2.2 Features from wpnuxt-core (Intentionally Not Ported)
 
-Copy these from wpnuxt-core to the new @wpnuxt/core:
+After review, the following wpnuxt-core features were **intentionally not ported** to keep @wpnuxt/core lean:
 
-#### Components to add
+#### Components (Not Ported)
 
-| File                                     | Purpose                       |
-| ---------------------------------------- | ----------------------------- |
-| `runtime/components/WPContent.vue`       | Smart content renderer        |
-| `runtime/components/ContentRenderer.vue` | HTML content renderer         |
-| `runtime/components/StagingBanner.vue`   | Staging environment indicator |
+| File                                     | Reason                                              |
+| ---------------------------------------- | --------------------------------------------------- |
+| `runtime/components/WPContent.vue`       | @wpnuxt/blocks handles content rendering            |
+| `runtime/components/ContentRenderer.vue` | Users can use `v-html` for simple cases             |
+| `runtime/components/StagingBanner.vue`   | Too specific, trivial to implement                  |
 
-#### Composables to add
+#### Composables (Not Ported)
 
-| File                                      | Purpose                     |
-| ----------------------------------------- | --------------------------- |
-| `runtime/composables/useWPUri.ts`         | WordPress admin URL helpers |
-| `runtime/composables/useFeaturedImage.ts` | Featured image extraction   |
-| `runtime/composables/usePrevNextPost.ts`  | Post navigation             |
-| `runtime/composables/isStaging.ts`        | Staging detection           |
+| File                                      | Reason                                              |
+| ----------------------------------------- | --------------------------------------------------- |
+| `runtime/composables/useWPUri.ts`         | Trivial helper (~10 lines), users can inline        |
+| `runtime/composables/useFeaturedImage.ts` | Already handled by `useWPContent` with `fixImagePaths` |
+| `runtime/composables/usePrevNextPost.ts`  | Inefficient (fetches ALL posts), opinionated        |
+| `runtime/composables/isStaging.ts`        | One-liner: `useRuntimeConfig().public.wpNuxt.staging` |
 
-#### Utilities to port
+#### Configuration (Not Ported)
 
-| Feature                    | From              | Notes                                           |
-| -------------------------- | ----------------- | ----------------------------------------------- |
-| `fixMalformedUrls`         | `useWPContent.ts` | Add as transform option                         |
-| Companion module detection | `module.ts`       | `hasBlocksModule`, `hasAuthModule`              |
-| Query merging from modules | `utils.ts`        | Merge queries from @wpnuxt/blocks, @wpnuxt/auth |
+| Option              | Reason                                              |
+| ------------------- | --------------------------------------------------- |
+| `frontendUrl`       | Can be added to user's runtimeConfig if needed      |
+| `defaultMenuName`   | Convenience only, users can pass menu name directly |
+| `staging`           | Specific use case, not core functionality           |
+| `composablesPrefix` | Adds complexity, default naming is clear            |
 
-#### Configuration options to add
+#### Current @wpnuxt/core Provides
 
-```typescript
-interface WPNuxtConfig {
-  // From wpnuxt (keep)
-  wordpressUrl: string;
-  graphqlEndpoint?: string;
-  downloadSchema?: boolean;
-  debug?: boolean;
-  cache?: {
-    enabled?: boolean;
-    maxAge?: number;
-    swr?: boolean;
-  };
-
-  // From wpnuxt-core (add)
-  frontendUrl?: string;
-  defaultMenuName?: string;
-  staging?: boolean;
-  composablesPrefix?: string;
-
-  // Auto-detected
-  hasBlocksModule?: boolean;
-  hasAuthModule?: boolean;
-}
-```
+- GraphQL middleware setup with WPNuxt branding
+- Auto-generated type-safe composables from `.gql` files
+- Query merging via `extend/queries/`
+- Image path transformation (`fixImagePaths`)
+- Error handling plugin
+- SSR/caching configuration
 
 ---
 
@@ -488,56 +471,57 @@ Each package needs its own README with:
 
 ### Preparation
 
-- [ ] Create monorepo directory structure (packages/, playgrounds/)
-- [ ] Move existing source to packages/core/
-- [ ] Move existing playgrounds to playgrounds/
-- [ ] Create root package.json and pnpm-workspace.yaml
-- [ ] Configure ESLint, Prettier, TypeScript at root
+- [x] Create monorepo directory structure (packages/, playgrounds/)
+- [x] Move existing source to packages/core/
+- [x] Move existing playgrounds to playgrounds/
+- [x] Create root package.json and pnpm-workspace.yaml
+- [x] Configure ESLint at root
 
 ### Core package
 
-- [ ] Update package.json (rename to @wpnuxt/core)
-- [ ] Port components from wpnuxt-core
-- [ ] Port additional composables from wpnuxt-core
-- [ ] Port utility functions (fixMalformedUrls)
-- [ ] Add companion module detection
-- [ ] Update configuration types
+- [x] Update package.json (rename to @wpnuxt/core)
+- [x] nuxt-graphql-middleware integration with WPNuxt branding
+- [x] API route prefix `/api/wpnuxt`
+- [x] Type generation working
+- [N/A] Port components from wpnuxt-core (intentionally skipped - see 2.2)
+- [N/A] Port additional composables from wpnuxt-core (intentionally skipped - see 2.2)
 - [ ] Write tests
 - [ ] Update documentation
 
 ### Blocks package
 
-- [ ] Copy wpnuxt-blocks source from external repo
-- [ ] Update dependency to workspace:\*
-- [ ] Test with new core
-- [ ] Fix any breaking changes
+- [x] Copy wpnuxt-blocks source from external repo
+- [x] Update dependency to workspace:*
+- [x] Test with new core
+- [x] Typecheck passing
 
 ### Auth package
 
-- [ ] Copy wpnuxt-auth source from external repo
-- [ ] Update to Nuxt 4
-- [ ] Update all dependencies
-- [ ] Update to new composable patterns
-- [ ] Test with new core
-- [ ] Fix breaking changes
+- [x] Create fresh @wpnuxt/auth for Nuxt 4 (not copied from old repo)
+- [x] useWPAuth composable (login, logout, refresh, tokens)
+- [x] useWPUser composable (fetchUser, roles, isAdmin, isEditor)
+- [x] Runtime config with proper types
+- [x] GraphQL queries for JWT authentication
+- [x] Typecheck and lint passing
 
 ### MCP package
 
-- [ ] Decide: app or module
-- [ ] Migrate accordingly
-- [ ] Test integration
+- [x] Converted to module structure
+- [x] Streamlined tools (removed duplicates)
+- [x] Integration with nuxt-graphql-middleware MCP
 
 ### Playgrounds
 
-- [ ] Update basic playground config for monorepo
-- [ ] Update full playground config for monorepo
-- [ ] Test all features
+- [x] Update basic playground config for monorepo
+- [x] Update full playground config for monorepo
+- [x] Test all features
 
 ### CI/CD
 
-- [ ] Set up GitHub Actions
-- [ ] Configure changesets
-- [ ] Set up npm publishing
+- [x] Set up GitHub Actions (parallel lint/test/typecheck, then build)
+- [x] Configure release-it with conventional changelog
+- [x] Set up npm publishing (via release-it after:release hook)
+- [ ] Test release flow with `pnpm release --dry-run`
 
 ### Finalization
 
