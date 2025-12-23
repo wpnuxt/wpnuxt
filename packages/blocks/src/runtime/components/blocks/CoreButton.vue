@@ -35,7 +35,7 @@ const hasNuxtUI = !!(nuxtApp.vueApp.component('UButton'))
     :class="getCssClasses(block)"
     :size="convertFontSize(block.attributes?.fontSize ?? undefined, '', 'md') as ButtonSize"
   >
-    <span v-sanitize="block.attributes.text" />
+    <span v-sanitize-html="block.attributes.text" />
   </UButton>
 
   <!-- Fallback to native link/button when Nuxt UI is not available -->
@@ -47,7 +47,7 @@ const hasNuxtUI = !!(nuxtApp.vueApp.component('UButton'))
     :style="block.attributes.style"
     :class="['wp-block-button__link', getCssClasses(block)]"
   >
-    <span v-sanitize="block.attributes.text" />
+    <span v-sanitize-html="block.attributes.text" />
   </a>
   <button
     v-else
@@ -55,6 +55,6 @@ const hasNuxtUI = !!(nuxtApp.vueApp.component('UButton'))
     :style="block.attributes.style"
     :class="['wp-block-button__link', getCssClasses(block)]"
   >
-    <span v-sanitize="block.attributes.text" />
+    <span v-sanitize-html="block.attributes.text" />
   </button>
 </template>

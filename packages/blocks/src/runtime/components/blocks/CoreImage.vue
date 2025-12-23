@@ -19,7 +19,7 @@ const imgUrl = props.block?.attributes?.url
     />
     <div
       v-else
-      v-sanitize="block?.renderedHtml"
+      v-sanitize-html="block?.renderedHtml"
     />
   </div>
 </template>

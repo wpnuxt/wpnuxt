@@ -1,0 +1,15 @@
+fragment CoreDetails on CoreDetails {
+  __typename
+  name
+  clientId
+  parentClientId
+  renderedHtml
+  attributes {
+    summary
+    showContent
+    className
+  }
+  innerBlocks {
+    ...EditorBlock
+  }
+}

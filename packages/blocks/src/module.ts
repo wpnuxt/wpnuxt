@@ -195,6 +195,15 @@ export interface CoreSpacer extends EditorBlock {
     className?: string | null
   } | null
 }
+
+export interface CoreDetails extends EditorBlock {
+  __typename?: 'CoreDetails'
+  attributes?: {
+    summary?: string | null
+    showContent?: boolean | null
+    className?: string | null
+  } | null
+}
 `
       }
     })

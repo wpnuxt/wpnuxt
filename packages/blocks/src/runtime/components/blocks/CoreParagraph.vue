@@ -10,7 +10,7 @@ const props = defineProps<{
 <template>
   <p
     :id="block?.attributes?.anchor ?? undefined"
-    v-sanitize="block?.attributes?.content"
+    v-sanitize-html="block?.attributes?.content"
     :class="getCssClasses(props.block)"
     :style="block?.attributes?.style ?? undefined"
   />
