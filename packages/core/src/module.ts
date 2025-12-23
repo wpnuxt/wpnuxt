@@ -287,7 +287,9 @@ function configureVercelSettings(nuxt: Nuxt, logger: ReturnType<typeof getLogger
     // Users can override specific routes if needed
     nuxt.options.routeRules = nuxt.options.routeRules || {}
     if (!nuxt.options.routeRules['/**']) {
-      nuxt.options.routeRules['/**'] = { ssr: true }
+      // Note: ssr property exists in NuxtConfig but NitroRouteConfig type is incomplete in Nuxt 4
+      // See: https://github.com/nuxt/nuxt/issues/32561
+      nuxt.options.routeRules['/**'] = { ssr: true } as Record<string, unknown>
       logger.debug('Enabled SSR for all routes (routeRules[\'/**\'] = { ssr: true })')
     }
   }
