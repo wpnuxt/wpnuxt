@@ -10,7 +10,11 @@ on:
       - main
       - dev
 
+env:
+  WPNUXT_WORDPRESS_URL: ${{ secrets.WPNUXT_WORDPRESS_URL }}
+
 jobs:
+  # Lint runs independently (no dev:prepare needed)
   lint:
     runs-on: ubuntu-latest
     name: Lint
@@ -34,12 +38,10 @@ jobs:
       - name: Run linter
         run: pnpm run lint
 
+  # Test and typecheck run in parallel (both need dev:prepare)
   test:
     runs-on: ubuntu-latest
     name: Test
-
-    env:
-      WPNUXT_WORDPRESS_URL: ${{ secrets.WPNUXT_WORDPRESS_URL }}
 
     steps:
       - name: Checkout
@@ -67,9 +69,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Type Check
 
-    env:
-      WPNUXT_WORDPRESS_URL: ${{ secrets.WPNUXT_WORDPRESS_URL }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -92,13 +91,11 @@ jobs:
       - name: Run type check
         run: pnpm run typecheck
 
+  # Build only runs after all checks pass
   build:
     runs-on: ubuntu-latest
     name: Build
     needs: [lint, test, typecheck]
-
-    env:
-      WPNUXT_WORDPRESS_URL: ${{ secrets.WPNUXT_WORDPRESS_URL }}
 
     steps:
       - name: Checkout
@@ -115,9 +112,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Prepare module
-        run: pnpm run dev:prepare
 
       - name: Build module
         run: pnpm run build
