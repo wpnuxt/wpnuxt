@@ -1,5 +1,70 @@
 # Changelog
 
+## 2.0.0-alpha.1 (2025-12-23)
+
+### Features
+
+* **auth:** add WPNuxt authentication module with GraphQL support ([4320837](https://github.com/wpnuxt/wpnuxt/commit/4320837d84d7b904604fdbf9a5e3f6c4c9eb42d3))
+* **blocks:** add CoreDetails block component and update sanitization methods ([ecf1525](https://github.com/wpnuxt/wpnuxt/commit/ecf1525a2a1e75106937396e857a24984b7c554e))
+* **blocks:** introduce @wpnuxt/blocks package for rendering WordPress Gutenberg blocks in Nuxt ([5b68202](https://github.com/wpnuxt/wpnuxt/commit/5b68202b7e22007e700d19bb2857b2e1e24c9dc7))
+* **blocks:** introduce new block components and enhance module configuration ([79dd73e](https://github.com/wpnuxt/wpnuxt/commit/79dd73e16b48bf0323d9b05f37326c20ad7ffebf))
+* **core:** add build configuration and default options for GraphQL middleware ([ffaee6c](https://github.com/wpnuxt/wpnuxt/commit/ffaee6cd4ce64519a9f93be4c88b5ae97e12048b))
+* **generate:** enhance composable generation for queries and mutations ([2973d66](https://github.com/wpnuxt/wpnuxt/commit/2973d66052f4f29b676ba122a1c9737b5668eed7))
+* **graphql:** enhance debugging capabilities with Nuxt DevTools and add GraphQL error handling ([c9ff684](https://github.com/wpnuxt/wpnuxt/commit/c9ff684e9dbf94adaaedce003af852796efe6d13))
+* **graphqlMiddleware:** add default client options for GraphQL middleware ([f45a4c7](https://github.com/wpnuxt/wpnuxt/commit/f45a4c7ea3f3619b2eb43b8e9679c50a9412cacd))
+* **graphqlMiddleware:** add default server options for GraphQL middleware with cookie and auth header forwarding ([be39f83](https://github.com/wpnuxt/wpnuxt/commit/be39f83e5c2d24dba236c05c7948514de2d95b38))
+* **mcp:** enable async context in Nuxt configuration and refine tool descriptions ([7d23713](https://github.com/wpnuxt/wpnuxt/commit/7d237130a1a4fadb70d3a88074fc14e9e74514ef))
+* **mcp:** enhance MCP server configuration and documentation ([3b877db](https://github.com/wpnuxt/wpnuxt/commit/3b877dbdd8cc18626f61a5719bb0283e85a279d2))
+* **mcp:** enhance MCP server functionality and documentation ([93bd095](https://github.com/wpnuxt/wpnuxt/commit/93bd09555852f52115877b6497e950e2623f7bca))
+* **mcp:** enhance MCP server with new tools and improved documentation ([c82e201](https://github.com/wpnuxt/wpnuxt/commit/c82e2013e09fc08e018876f13b73a34be3009ae5))
+* **mcp:** implement WPNuxt MCP server for WordPress integration ([c55f912](https://github.com/wpnuxt/wpnuxt/commit/c55f91229f08fc2b9a195093c5ca7b5653f58891))
+* **migration:** add comprehensive migration guide from WPNuxt 1.x to 2.x ([1004caa](https://github.com/wpnuxt/wpnuxt/commit/1004caa020bdf01e89d8bd4fb07d80917c80ee77))
+* **module:** enhance WPNuxt branding and API route configuration ([0e98ff0](https://github.com/wpnuxt/wpnuxt/commit/0e98ff05fbadbd051032a4ad3181b72e13d9dfb6))
+* **playgrounds:** enhance playground configurations ([b952388](https://github.com/wpnuxt/wpnuxt/commit/b9523888f421a5ef850278a1be53ecb291f9e058))
+
+### Bug Fixes
+
+* **graphqlConfig:** improve type definition for onRequest options ([777a89e](https://github.com/wpnuxt/wpnuxt/commit/777a89e617ca2dc126e96de820617b532c57907d))
+* **module:** correct error logging syntax in GraphQL server options ([16ffc47](https://github.com/wpnuxt/wpnuxt/commit/16ffc475647a558d1445e6e0bb6424db1259c6d1))
+* **module:** improve route rules and error handling in GraphQL plugin ([79bc93d](https://github.com/wpnuxt/wpnuxt/commit/79bc93d135964d536f7c8771e6d87bb657591ef4))
+* **module:** update GraphQL middleware route and improve path resolution for composables generation ([7c9d726](https://github.com/wpnuxt/wpnuxt/commit/7c9d72651136e1d0caaf35725adec4bcb4e7c8c2))
+* **nuxt.config:** improve reactive data fetching in page components ([60dc4ad](https://github.com/wpnuxt/wpnuxt/commit/60dc4ad64552064c6a0f0e127c4f9c9959d46876))
+* update data fetching in page components for improved reactivity ([580ac75](https://github.com/wpnuxt/wpnuxt/commit/580ac75aaa47e31d54de53d0783c30a680950329))
+
+### Refactoring
+
+* **mcp:** improve code formatting and cleanup ([c432eea](https://github.com/wpnuxt/wpnuxt/commit/c432eea921291dfa1190b673659cb24621dac484))
+* **mcp:** remove unused introspection tool and streamline query generation ([1371e67](https://github.com/wpnuxt/wpnuxt/commit/1371e67b6c11ebed80a2e5238e03729351db60a5))
+* **mergeQueries:** update mergeQueries function to accept resolver parameter for improved path resolution ([54f2542](https://github.com/wpnuxt/wpnuxt/commit/54f2542f98bd7b2266a6e78c524ee3e09c4f5db2))
+
+### Documentation
+
+* **MONOREPO-PLAN:** update blocks package section with migration tasks ([c4ab84c](https://github.com/wpnuxt/wpnuxt/commit/c4ab84c5d228855051f166c1c16a4878f8124250))
+* **MONOREPO-PLAN:** update feature porting section and clarify intentionally skipped components ([2cfc935](https://github.com/wpnuxt/wpnuxt/commit/2cfc935e2ed57832743740848231026fa568a8ee))
+
+### Maintenance
+
+* bump version to 2.0.0-alpha.1 for wpnuxt and @wpnuxt/core packages ([78fbad7](https://github.com/wpnuxt/wpnuxt/commit/78fbad7bef324702a5c842321aecafe10ecd220b))
+* **ci:** add environment variable for WordPress URL and update type check command ([3b0fcac](https://github.com/wpnuxt/wpnuxt/commit/3b0fcac1ba3cfb5852d6f90bca3b52664f13780f))
+* **ci:** streamline CI workflow by removing redundant environment variables ([c26e0d8](https://github.com/wpnuxt/wpnuxt/commit/c26e0d87ffa47c49b787eeb28207e06965efe6c8))
+* **dependencies:** update package versions in wpnuxt-init script ([fb3c583](https://github.com/wpnuxt/wpnuxt/commit/fb3c58305e632cdf6be22199d3f9b77d9bd06221))
+* **docs:** remove nuxt-graphql-middleware integration improvements document ([e3ea5f5](https://github.com/wpnuxt/wpnuxt/commit/e3ea5f5faadd105a9f3a74a23dcee968ed4daf68))
+* **release:** configure conventional changelog plugin to ignore recommended bumps ([97b3a5f](https://github.com/wpnuxt/wpnuxt/commit/97b3a5fa0c97dfd5cf689a9a17978cabaa270492))
+* **release:** downgrade package versions to 2.0.0-alpha.0 ([7626a21](https://github.com/wpnuxt/wpnuxt/commit/7626a21433b350bff8517a1d4a1b960196ed5a3e))
+* **release:** update release-it configuration and add bumper plugin ([e6d4e1a](https://github.com/wpnuxt/wpnuxt/commit/e6d4e1a97a5021ddc6a1551af5082b7260703439))
+* **tsconfig:** exclude MCP package from playground TypeScript configurations ([921154e](https://github.com/wpnuxt/wpnuxt/commit/921154e3b92e0975221661a53f4f4fb5ec89f834))
+* update compatibility dates in Nuxt configuration files ([3aef519](https://github.com/wpnuxt/wpnuxt/commit/3aef51916882fa1c8a8451d906277230b68fb1bf))
+* update dependencies - ([4998f71](https://github.com/wpnuxt/wpnuxt/commit/4998f71c5f10eea4c359581b778e3d0708d50eae))
+* update dependencies - ([a4f2e24](https://github.com/wpnuxt/wpnuxt/commit/a4f2e24e0071d509ad59e0f7bed992d48d3a6be0))
+* update dependencies - ([678a12e](https://github.com/wpnuxt/wpnuxt/commit/678a12ee551abeb553352dbde436efb4b9c379a1))
+* update dependencies - nuxt 4.0.3, etc ([f800132](https://github.com/wpnuxt/wpnuxt/commit/f800132a5efae842b95b7d5e63af82e6dba80717))
+* update package dependencies and versions ([a90e568](https://github.com/wpnuxt/wpnuxt/commit/a90e568ef91b4dac718e02d73258ddcb2331282c))
+* update project configuration, simplify setup ([3935af7](https://github.com/wpnuxt/wpnuxt/commit/3935af701b79615362aa950bfcc00e3b24aced40))
+
+### Tests
+
+* **core:** add unit tests for configuration validation and context preparation ([c4c4653](https://github.com/wpnuxt/wpnuxt/commit/c4c4653f085225c6cffdae7003134210d59dd4d8))
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
