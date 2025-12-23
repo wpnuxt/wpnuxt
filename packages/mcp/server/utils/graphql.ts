@@ -81,43 +81,6 @@ export async function executeGraphQL<T = unknown>(
 }
 
 /**
- * Introspection query to get the full schema
- */
-export const INTROSPECTION_QUERY = `
-  query IntrospectionQuery {
-    __schema {
-      types {
-        name
-        kind
-        description
-        fields {
-          name
-          description
-          type {
-            name
-            kind
-            ofType {
-              name
-              kind
-            }
-          }
-          args {
-            name
-            description
-            type {
-              name
-              kind
-            }
-          }
-        }
-      }
-      queryType { name }
-      mutationType { name }
-    }
-  }
-`
-
-/**
  * Query to list all content types (post types)
  */
 export const CONTENT_TYPES_QUERY = `
