@@ -1,0 +1,14 @@
+{
+  "name": "@wpnuxt/docs",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview"
+  },
+  "dependencies": {
+    "docus": "latest",
+    "nuxt": "^4.1.2"
+  }
+}

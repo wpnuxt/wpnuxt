@@ -5,6 +5,7 @@
     "../../packages/blocks/**/*",
     "../../packages/auth/**/*",
     "../blocks/**/*",
-    "../basic/**/*"
+    "../basic/**/*",
+    "../../docs/**/*"
   ]
 }

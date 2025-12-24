@@ -1,60 +1,72 @@
-# WPNuxt Documentation
+# Docus Default Starter
 
-Documentation for the WPNuxt module - a modern WordPress integration for Nuxt 4.
+> A beautiful, minimal starter for creating documentation with Docus
 
-## Documentation Structure
+This is the default Docus starter template that provides everything you need to build beautiful documentation sites with Markdown and Vue components.
 
-### Getting Started
+> [!TIP]
+> If you're looking for i18n support, check out the [i18n starter](https://github.com/nuxt-themes/docus/tree/main/.starters/i18n).
 
-- **[Introduction](0.index.md)** - What is WPNuxt?
-- **[Getting Started](1.getting-started/1.index.md)** - Installation and setup
-- **[Configuration](1.getting-started/2.configuration.md)** - Complete configuration reference
-- **[Composables](1.getting-started/3.composables.md)** - Using auto-generated composables
+## ✨ Features
 
-### Advanced
+- 🎨 **Beautiful Design** - Clean, modern documentation theme
+- 📱 **Responsive** - Mobile-first responsive design  
+- 🌙 **Dark Mode** - Built-in dark/light mode support
+- 🔍 **Search** - Full-text search functionality
+- 📝 **Markdown Enhanced** - Extended markdown with custom components
+- 🎨 **Customizable** - Easy theming and brand customization
+- ⚡ **Fast** - Optimized for performance with Nuxt 4
+- 🔧 **TypeScript** - Full TypeScript support
 
-- **[Performance](2.advanced/1.performance.md)** - Server-side caching and optimization
-- **[Composables API](2.advanced/2.composables-api.md)** - Detailed API reference
+## 🚀 Quick Start
 
-### Reference
+```bash
+# Install dependencies
+npm install
 
-- **[Cheat Sheet](3.cheat-sheet.md)** - Quick reference guide
+# Start development server
+npm run dev
+```
 
-## Quick Links
+Your documentation site will be running at `http://localhost:3000`
 
-- [GitHub Repository](https://github.com/wpnuxt/wpnuxt)
-- [Migration Guide](/MIGRATION.md) - Upgrading from WPNuxt 1.x
-- [WPGraphQL Plugin](https://wordpress.org/plugins/wp-graphql/)
-- [nuxt-graphql-middleware](https://nuxt-graphql-middleware.dulnan.net/)
+## 📁 Project Structure
 
-## Packages
+```
+my-docs/
+├── content/              # Your markdown content
+│   ├── index.md         # Homepage
+│   ├── 1.getting-started/  # Getting started section
+│   └── 2.essentials/    # Essential documentation
+├── public/              # Static assets
+└── package.json         # Dependencies and scripts
+```
 
-| Package | Description |
-|---------|-------------|
-| [@wpnuxt/core](https://npmjs.com/package/@wpnuxt/core) | Core WordPress integration |
-| [@wpnuxt/blocks](https://npmjs.com/package/@wpnuxt/blocks) | Gutenberg block components |
-| @wpnuxt/auth | WordPress authentication (coming soon) |
+## ⚡ Built with
 
-## Documentation Conventions
+This starter comes pre-configured with:
 
-Throughout the documentation:
+- [Nuxt 4](https://nuxt.com) - The web framework
+- [Nuxt Content](https://content.nuxt.com/) - File-based CMS
+- [Nuxt UI](https://ui.nuxt.com) - UI components
+- [Nuxt Image](https://image.nuxt.com/) - Optimized images
+- [Tailwind CSS 4](https://tailwindcss.com/) - Utility-first CSS
+- [Docus Layer](https://www.npmjs.com/package/docus) - Documentation theme
 
-- `wpNuxt` refers to the module configuration key in `nuxt.config.ts`
-- `wpNuxtBlocks` refers to the blocks module configuration key
-- Code examples use TypeScript
-- File paths use forward slashes (Unix-style)
-- Examples show pnpm, npm, and yarn where applicable
+## 📖 Documentation
 
-## Contributing
+For detailed documentation on customizing your Docus project, visit the [Docus Documentation](https://docus.dev)
 
-Documentation improvements are welcome! If you find errors or want to add examples:
+## 🚀 Deployment
 
-1. Fork the repository
-2. Edit files in the `docs/` folder
-3. Submit a pull request
+Build for production:
 
-## Support
+```bash
+npm run build
+```
 
-- **Issues**: Report bugs or request features on [GitHub](https://github.com/wpnuxt/wpnuxt/issues)
-- **Discussions**: Ask questions in [GitHub Discussions](https://github.com/wpnuxt/wpnuxt/discussions)
-- **WordPress Plugin Support**: See [WPGraphQL documentation](https://www.wpgraphql.com/docs/introduction)
+The built files will be in the `.output` directory, ready for deployment to any hosting provider that supports Node.js.
+
+## 📄 License
+
+[MIT License](https://opensource.org/licenses/MIT) 

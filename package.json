@@ -9,6 +9,7 @@
     "dev:basic": "pnpm --filter @wpnuxt/playground-basic dev",
     "dev:blocks": "pnpm --filter @wpnuxt/playground-blocks dev",
     "dev:full": "pnpm --filter @wpnuxt/playground-full dev",
+    "dev:docs": "pnpm --filter @wpnuxt/docs dev",
     "dev": "pnpm dev:full",
     "lint": "eslint .",
     "test": "pnpm --filter './packages/**' test",
@@ -23,7 +24,7 @@
     "@release-it/bumper": "^7.0.5",
     "@release-it/conventional-changelog": "^10.0.0",
     "eslint": "^9.39.2",
-    "release-it": "^19.1.0"
+    "release-it": "^19.2.0"
   },
   "packageManager": "pnpm@10.26.1+sha512.664074abc367d2c9324fdc18037097ce0a8f126034160f709928e9e9f95d98714347044e5c3164d65bd5da6c59c6be362b107546292a8eecb7999196e5ce58fa",
   "engines": {
