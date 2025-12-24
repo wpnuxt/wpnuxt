@@ -7,4 +7,5 @@ fragment GeneralSettings on GeneralSettings {
   startOfWeek
   timezone
   timeFormat
+  email
 }

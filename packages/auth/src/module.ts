@@ -1,3 +1,4 @@
+import { existsSync, cpSync } from 'node:fs'
 import { defineNuxtModule, addPlugin, createResolver, addImports } from '@nuxt/kit'
 import type { WPNuxtAuthConfig } from './runtime/types'
 
@@ -24,6 +25,24 @@ export default defineNuxtModule<WPNuxtAuthConfig>({
     }
 
     const resolver = createResolver(import.meta.url)
+
+    // Extend queries with auth-specific fragments
+    const baseDir = nuxt.options.srcDir || nuxt.options.rootDir
+    const { resolve } = createResolver(baseDir)
+    const wpNuxtConfig = nuxt.options.wpNuxt as { queries: { mergedOutputFolder: string, extendFolder: string } } | undefined
+    const mergedQueriesPath = resolve(wpNuxtConfig?.queries?.mergedOutputFolder || '.queries/')
+    const userQueryPath = resolve(wpNuxtConfig?.queries?.extendFolder || 'extend/queries/')
+    const authQueriesPath = resolver.resolve('./runtime/queries')
+
+    // Copy auth queries (overrides core defaults)
+    if (existsSync(authQueriesPath)) {
+      cpSync(authQueriesPath, mergedQueriesPath, { recursive: true })
+    }
+
+    // Re-copy user queries to ensure they still override auth
+    if (existsSync(userQueryPath)) {
+      cpSync(userQueryPath, mergedQueriesPath, { recursive: true })
+    }
 
     // Add runtime config
     nuxt.options.runtimeConfig.public.wpNuxtAuth = {

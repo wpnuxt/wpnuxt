@@ -1,14 +1,26 @@
 query Viewer {
   viewer {
     id
+    databaseId
     userId
     username
+    email
     firstName
     lastName
     name
+    nickname
     description
     locale
     url
     uri
+    avatar {
+      url
+    }
+    roles {
+      nodes {
+        name
+      }
+    }
+    capabilities
   }
 }
