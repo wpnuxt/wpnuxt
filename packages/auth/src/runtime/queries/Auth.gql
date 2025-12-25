@@ -1,8 +1,17 @@
-# Login mutation for WPGraphQL JWT Authentication
+# Login with username and password
+# Requires: Headless Login for WPGraphQL plugin
 mutation Login($username: String!, $password: String!) {
-  login(input: { username: $username, password: $password }) {
+  login(input: {
+    provider: PASSWORD
+    credentials: {
+      username: $username
+      password: $password
+    }
+  }) {
     authToken
+    authTokenExpiration
     refreshToken
+    refreshTokenExpiration
     user {
       id
       databaseId
@@ -23,14 +32,16 @@ mutation Login($username: String!, $password: String!) {
   }
 }
 
-# Refresh auth token mutation
-mutation RefreshAuthToken($refreshToken: String!) {
-  refreshJwtAuthToken(input: { jwtRefreshToken: $refreshToken }) {
+# Refresh authentication token
+mutation RefreshToken($refreshToken: String!) {
+  refreshToken(input: { refreshToken: $refreshToken }) {
     authToken
+    authTokenExpiration
+    success
   }
 }
 
-# Register a new user (requires WPGraphQL registration to be enabled)
+# Register a new user (requires user registration to be enabled in WordPress)
 mutation RegisterUser($username: String!, $email: String!, $password: String!) {
   registerUser(input: { username: $username, email: $email, password: $password }) {
     user {
@@ -75,6 +86,52 @@ mutation ResetUserPassword($key: String!, $login: String!, $password: String!) {
       databaseId
       username
       email
+    }
+  }
+}
+
+# Get available login clients/providers from Headless Login for WPGraphQL
+query LoginClients {
+  loginClients {
+    name
+    provider
+    authorizationUrl
+    isEnabled
+  }
+}
+
+# Login with an OAuth provider (Google, GitHub, etc.) using authorization code
+# Requires: Headless Login for WPGraphQL plugin with provider configured
+mutation LoginWithProvider($provider: LoginProviderEnum!, $code: String!, $state: String) {
+  login(input: {
+    provider: $provider
+    oauthResponse: {
+      code: $code
+      state: $state
+    }
+  }) {
+    authToken
+    authTokenExpiration
+    refreshToken
+    refreshTokenExpiration
+    user {
+      id
+      databaseId
+      name
+      email
+      firstName
+      lastName
+      username
+      nickname
+      description
+      avatar {
+        url
+      }
+      roles {
+        nodes {
+          name
+        }
+      }
     }
   }
 }

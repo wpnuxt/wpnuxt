@@ -1,12 +1,22 @@
 import { computed, useState, useCookie, useRuntimeConfig, navigateTo, useGraphqlMutation } from '#imports'
-import type { AuthState, LoginCredentials, LoginResult, WPUser } from '../types'
+import type { AuthState, LoginCredentials, LoginResult, WPUser, AuthProvidersPublic, HeadlessLoginProvider } from '../types'
+
+/**
+ * Available authentication providers
+ */
+export interface AvailableProviders {
+  password: boolean
+  oauth: boolean
+  headlessLogin: boolean
+}
 
 /**
  * Composable for WordPress authentication
  *
- * Requires the following GraphQL mutations in your queries folder:
- * - Login: mutation Login($username: String!, $password: String!)
- * - RefreshAuthToken: mutation RefreshAuthToken($refreshToken: String!)
+ * Supports:
+ * - Password auth: Headless Login for WPGraphQL plugin
+ * - OAuth2: miniOrange WP OAuth Server plugin (limited WPGraphQL compatibility)
+ * - Headless Login: External OAuth providers (Google, GitHub, etc.) with full WPGraphQL support
  */
 export function useWPAuth() {
   const config = useRuntimeConfig().public.wpNuxtAuth
@@ -23,7 +33,7 @@ export function useWPAuth() {
     sameSite: 'lax'
   })
 
-  const refreshToken = useCookie(config.refreshCookieName, {
+  const refreshTokenCookie = useCookie(config.refreshCookieName, {
     maxAge: config.refreshTokenMaxAge,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax'
@@ -37,16 +47,28 @@ export function useWPAuth() {
     authState.value.error = null
 
     try {
-      const { data, errors } = await useGraphqlMutation<{
-        login: {
-          authToken: string
-          refreshToken: string
-          user: WPUser
+      // Use custom endpoint to bypass nuxt-graphql-middleware body parsing bug
+      const response = await $fetch<{
+        data?: {
+          login: {
+            authToken: string
+            authTokenExpiration: string
+            refreshToken: string
+            refreshTokenExpiration: string
+            user: WPUser
+          }
         }
-      }>('Login', {
-        username: credentials.username,
-        password: credentials.password
+        errors?: Array<{ message: string }>
+      }>('/api/auth/login', {
+        method: 'POST',
+        body: {
+          username: credentials.username,
+          password: credentials.password
+        }
       })
+
+      const data = response.data
+      const errors = response.errors
 
       if (errors?.length) {
         const errorMessage = errors[0]?.message || 'Login failed'
@@ -58,7 +80,7 @@ export function useWPAuth() {
       if (data?.login) {
         // Store tokens in cookies
         authToken.value = data.login.authToken
-        refreshToken.value = data.login.refreshToken
+        refreshTokenCookie.value = data.login.refreshToken
 
         // Update state
         authState.value.user = data.login.user
@@ -89,8 +111,14 @@ export function useWPAuth() {
    * Logout and clear tokens
    */
   async function logout(): Promise<void> {
+    // Call server endpoint to clear httpOnly cookies
+    await $fetch('/api/auth/logout', { method: 'POST' }).catch(() => {
+      // Ignore errors - cookies might already be cleared
+    })
+
+    // Clear client-side state
     authToken.value = null
-    refreshToken.value = null
+    refreshTokenCookie.value = null
     authState.value.user = null
     authState.value.isAuthenticated = false
     authState.value.error = null
@@ -104,25 +132,23 @@ export function useWPAuth() {
    * Refresh the auth token using the refresh token
    */
   async function refresh(): Promise<boolean> {
-    if (!refreshToken.value) {
+    if (!refreshTokenCookie.value) {
       return false
     }
 
     try {
-      const { data, errors } = await useGraphqlMutation<{
-        refreshJwtAuthToken: {
-          authToken: string
-        }
-      }>('RefreshAuthToken', {
-        refreshToken: refreshToken.value
+      const { data, errors } = await useGraphqlMutation('RefreshToken', {
+        refreshToken: refreshTokenCookie.value
       })
 
-      if (errors?.length || !data?.refreshJwtAuthToken) {
+      const refreshData = data as { refreshToken?: { authToken: string, success: boolean } } | null
+
+      if (errors?.length || !refreshData?.refreshToken?.success) {
         await logout()
         return false
       }
 
-      authToken.value = data.refreshJwtAuthToken.authToken
+      authToken.value = refreshData.refreshToken.authToken
       return true
     } catch {
       await logout()
@@ -137,6 +163,138 @@ export function useWPAuth() {
     return authToken.value || null
   }
 
+  /**
+   * Get available authentication providers
+   */
+  function getProviders(): AvailableProviders {
+    const providers = config.providers as AuthProvidersPublic | undefined
+    return {
+      password: providers?.password?.enabled ?? true,
+      oauth: providers?.oauth?.enabled ?? false,
+      headlessLogin: providers?.headlessLogin?.enabled ?? false
+    }
+  }
+
+  /**
+   * Initiate OAuth2 login flow
+   * Redirects the user to WordPress OAuth authorization page
+   */
+  async function loginWithOAuth(): Promise<void> {
+    const providers = getProviders()
+    if (!providers.oauth) {
+      console.warn('[WPNuxt Auth] OAuth is not enabled')
+      return
+    }
+    // Navigate to OAuth authorize endpoint (external redirect)
+    await navigateTo('/api/auth/oauth/authorize', { external: true })
+  }
+
+  /**
+   * Check if password login is available
+   */
+  function hasPasswordAuth(): boolean {
+    return getProviders().password
+  }
+
+  /**
+   * Check if OAuth login is available
+   */
+  function hasOAuthAuth(): boolean {
+    return getProviders().oauth
+  }
+
+  /**
+   * Check if Headless Login (external OAuth providers) is available
+   */
+  function hasHeadlessLoginAuth(): boolean {
+    return getProviders().headlessLogin
+  }
+
+  /**
+   * Fetch available Headless Login providers from WordPress
+   * Returns providers configured in Headless Login for WPGraphQL plugin
+   */
+  async function fetchHeadlessLoginProviders(): Promise<HeadlessLoginProvider[]> {
+    if (!hasHeadlessLoginAuth()) {
+      return []
+    }
+
+    try {
+      const runtimeConfig = useRuntimeConfig()
+      const wordpressUrl = runtimeConfig.public.wordpressUrl as string | undefined
+      const graphqlEndpoint = (runtimeConfig.public.wpNuxt as { graphqlEndpoint?: string } | undefined)?.graphqlEndpoint || '/graphql'
+
+      if (!wordpressUrl) {
+        console.warn('[WPNuxt Auth] WordPress URL not configured')
+        return []
+      }
+
+      const response = await $fetch<{
+        data?: {
+          loginClients?: Array<{
+            name: string
+            provider: string
+            authorizationUrl: string
+            isEnabled: boolean
+          }>
+        }
+        errors?: Array<{ message: string }>
+      }>(`${wordpressUrl}${graphqlEndpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: {
+          query: `
+            query LoginClients {
+              loginClients {
+                name
+                provider
+                authorizationUrl
+                isEnabled
+              }
+            }
+          `
+        }
+      })
+
+      if (response.errors?.length) {
+        console.warn('[WPNuxt Auth] Failed to fetch login clients:', response.errors[0]?.message)
+        return []
+      }
+
+      // Filter for enabled OAuth providers (exclude PASSWORD and SITETOKEN)
+      const clients = response.data?.loginClients || []
+      return clients
+        .filter(client =>
+          client.isEnabled
+          && client.provider !== 'PASSWORD'
+          && client.provider !== 'SITETOKEN'
+          && client.authorizationUrl
+        )
+        .map(client => ({
+          name: client.name,
+          provider: client.provider,
+          authorizationUrl: client.authorizationUrl,
+          isEnabled: client.isEnabled
+        }))
+    } catch (error) {
+      console.warn('[WPNuxt Auth] Failed to fetch login providers:', error)
+      return []
+    }
+  }
+
+  /**
+   * Initiate login with a Headless Login provider (Google, GitHub, etc.)
+   * Redirects the user to the provider's OAuth page
+   */
+  async function loginWithProvider(provider: string): Promise<void> {
+    if (!hasHeadlessLoginAuth()) {
+      console.warn('[WPNuxt Auth] Headless Login is not enabled')
+      return
+    }
+    // Navigate to provider authorize endpoint
+    await navigateTo(`/api/auth/provider/${provider.toLowerCase()}/authorize`, { external: true })
+  }
+
   return {
     // State
     state: authState,
@@ -147,8 +305,15 @@ export function useWPAuth() {
 
     // Methods
     login,
+    loginWithOAuth,
+    loginWithProvider,
     logout,
     refresh,
-    getToken
+    getToken,
+    getProviders,
+    hasPasswordAuth,
+    hasOAuthAuth,
+    hasHeadlessLoginAuth,
+    fetchHeadlessLoginProviders
   }
 }

@@ -13,16 +13,17 @@ export function useWPUser() {
   const errorState = useState<string | null>('wpnuxt-user-error', () => null)
 
   /**
-   * Fetch the current user from WordPress
+   * Fetch the current user from WordPress via GraphQL Viewer query
+   * Note: Only works with password auth. OAuth tokens are not recognized by WPGraphQL.
    */
   async function fetchUser(): Promise<WPUser | null> {
     loadingState.value = true
     errorState.value = null
 
     try {
-      const { data, errors } = await useGraphqlQuery<{
-        viewer: WPUser | null
-      }>('Viewer')
+      const { data, errors } = await useGraphqlQuery('Viewer')
+
+      const viewerData = data as { viewer?: WPUser | null } | null
 
       if (errors?.length) {
         errorState.value = errors[0]?.message || 'Failed to fetch user'
@@ -30,7 +31,7 @@ export function useWPUser() {
         return null
       }
 
-      userState.value = data?.viewer || null
+      userState.value = viewerData?.viewer || null
       loadingState.value = false
       return userState.value
     } catch (error) {

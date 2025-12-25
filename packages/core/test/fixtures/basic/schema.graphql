@@ -3,6 +3,30 @@ schema {
   mutation: RootMutation
 }
 
+"""The Headless Login authentication data."""
+type AuthenticationData {
+  """A new authentication token to use in future requests."""
+  authToken: String
+
+  """The authentication token expiration timestamp."""
+  authTokenExpiration: String
+
+  """Whether the user secret has been revoked."""
+  isUserSecretRevoked: Boolean
+
+  """A list of linked identities from the Headless Login provider."""
+  linkedIdentities: [LinkedIdentity]
+
+  """A new refresh token to use in future requests."""
+  refreshToken: String
+
+  """The refresh token expiration timestamp."""
+  refreshTokenExpiration: String
+
+  """The user secret."""
+  userSecret: String
+}
+
 """
 Avatars are profile images for users. WordPress by default uses the Gravatar service to host and fetch avatars from.
 """
@@ -14669,6 +14693,46 @@ interface EnqueuedStylesheetConnectionPageInfo implements PageInfo & WPPageInfo 
   startCursor: String
 }
 
+"""The Login client options for the facebook provider."""
+type FacebookClientOptions implements LoginClientOptions {
+  """The client ID."""
+  clientId: String
+
+  """The client Secret."""
+  clientSecret: String
+
+  """Enable the Facebook Beta Tier."""
+  enableBetaTier: Boolean
+
+  """The Facebook Graph API version."""
+  graphApiVersion: String
+
+  """The client redirect URI."""
+  redirectUri: String
+
+  """
+  The fields to request from the Facebook Graph API. See https://developers.facebook.com/docs/graph-api/reference/user for a list of available fields.
+  """
+  scope: [String]
+
+  """
+  This field exists solely to generate the  ClientOptions interface, in lieu of the shared custom fields that will be added in a future release
+  """
+  todo: Boolean
+}
+
+"""The Headless Login options for the facebook provider."""
+type FacebookLoginOptions implements LoginOptions {
+  """Whether to create users if none exist."""
+  createUserIfNoneExists: Boolean
+
+  """Whether to link existing users."""
+  linkExistingUsers: Boolean
+
+  """Whether to set a WordPress authentication cookie on successful login."""
+  useAuthenticationCookie: Boolean
+}
+
 """The general setting type"""
 type GeneralSettings {
   """A date format for all date strings."""
@@ -14730,6 +14794,40 @@ type GenerateAuthorizationCodePayload {
   error: String
 }
 
+"""The Login client options for the github provider."""
+type GithubClientOptions implements LoginClientOptions {
+  """The client ID."""
+  clientId: String
+
+  """The client Secret."""
+  clientSecret: String
+
+  """The client redirect URI."""
+  redirectUri: String
+
+  """
+  The scope to request from the provider. See https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps#available-scopes for a list of available scopes.
+  """
+  scope: [String]
+
+  """
+  This field exists solely to generate the  ClientOptions interface, in lieu of the shared custom fields that will be added in a future release
+  """
+  todo: Boolean
+}
+
+"""The Headless Login options for the github provider."""
+type GithubLoginOptions implements LoginOptions {
+  """Whether to create users if none exist."""
+  createUserIfNoneExists: Boolean
+
+  """Whether to link existing users."""
+  linkExistingUsers: Boolean
+
+  """Whether to set a WordPress authentication cookie on successful login."""
+  useAuthenticationCookie: Boolean
+}
+
 """Types of styles to load"""
 enum GlobalStylesheetTypesEnum {
   """"""
@@ -14743,6 +14841,66 @@ enum GlobalStylesheetTypesEnum {
 
   """"""
   VARIABLES
+}
+
+"""The Login client options for the google provider."""
+type GoogleClientOptions implements LoginClientOptions {
+  """The client ID."""
+  clientId: String
+
+  """The client Secret."""
+  clientSecret: String
+
+  """
+  The Google Cloud organization the OAuth prompt is optimized for. If `*` the prompt is optimized for general use with any Google Cloud organization.
+  """
+  hostedDomain: String
+
+  """The prompt used for authentication and consent. Defaults to `consent`."""
+  promptType: GoogleProviderPromptTypeEnum
+
+  """The client redirect URI."""
+  redirectUri: String
+
+  """
+  The scope to request from the Google Graph API. See https://developers.facebook.com/docs/graph-api/reference/user for a list of available scopes.
+  """
+  scope: [String]
+
+  """
+  This field exists solely to generate the  ClientOptions interface, in lieu of the shared custom fields that will be added in a future release
+  """
+  todo: Boolean
+}
+
+"""The Headless Login options for the google provider."""
+type GoogleLoginOptions implements LoginOptions {
+  """Whether to create users if none exist."""
+  createUserIfNoneExists: Boolean
+
+  """Whether to link existing users."""
+  linkExistingUsers: Boolean
+
+  """Whether to set a WordPress authentication cookie on successful login."""
+  useAuthenticationCookie: Boolean
+}
+
+"""The Google OAuth2 Provider prompt type."""
+enum GoogleProviderPromptTypeEnum {
+  """
+  The authorization server prompts the user for consent before returning information to the client.
+  """
+  CONSENT
+
+  """
+  The authorization server does not display any authentication or user consent screens; it will return an error if the user is not already authenticated and has not pre-configured consent for the requested scopes. You can use none to check for existing authentication and/or consent.
+  """
+  NONE
+
+  """
+  The authorization server prompts the user to select a user account. This allows a user who has multiple accounts at the authorization server to select amongst the multiple accounts that they may have current sessions for.
+  """
+  SELECT_ACCOUNT
 }
 
 """
@@ -15295,6 +15453,234 @@ interface HierarchicalTermNode implements DatabaseIdentifier & HierarchicalNode 
 
   """The unique resource identifier path"""
   uri: String
+}
+
+"""The Login client options for the instagram provider."""
+type InstagramClientOptions implements LoginClientOptions {
+  """The client ID."""
+  clientId: String
+
+  """The client Secret."""
+  clientSecret: String
+
+  """The client redirect URI."""
+  redirectUri: String
+
+  """
+  The scope to request from the Instagram Graph API. See https://developers.facebook.com/docs/instagram-basic-display-api/overview#permissions for a list of available scopes.
+  """
+  scope: [String]
+
+  """
+  This field exists solely to generate the  ClientOptions interface, in lieu of the shared custom fields that will be added in a future release
+  """
+  todo: Boolean
+}
+
+"""The Headless Login options for the instagram provider."""
+type InstagramLoginOptions implements LoginOptions {
+  """Whether to create users if none exist."""
+  createUserIfNoneExists: Boolean
+
+  """Whether to link existing users."""
+  linkExistingUsers: Boolean
+
+  """Whether to set a WordPress authentication cookie on successful login."""
+  useAuthenticationCookie: Boolean
+}
+
+"""Input for the LinkUserIdentity mutation."""
+input LinkUserIdentityInput {
+  """
+  This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """
+  The user identity to use when logging in. Required by the SiteToken provider.
+  """
+  identity: String
+
+  """The parsed response from an OAuth2 Authentication Provider."""
+  oauthResponse: OAuthProviderResponseInput
+
+  """The Headless Login provider to use when logging in."""
+  provider: LoginProviderEnum!
+
+  """
+  The user ID to link the identity to. Accepts either a global or database ID.
+  """
+  userId: ID!
+}
+
+"""The payload for the LinkUserIdentity mutation."""
+type LinkUserIdentityPayload {
+  """
+  If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """Whether the identity was successfully linked to the user."""
+  success: Boolean
+
+  """The user that was logged in."""
+  user: User
+}
+
+"""The linked identity from the login provider."""
+type LinkedIdentity {
+  """The internal user identifier from the login provider."""
+  id: ID
+
+  """The login provider which provided the identity."""
+  provider: LoginProviderEnum
+}
+
+"""The Login client options for the linkedin provider."""
+type LinkedinClientOptions implements LoginClientOptions {
+  """The client ID."""
+  clientId: String
+
+  """The client Secret."""
+  clientSecret: String
+
+  """The client redirect URI."""
+  redirectUri: String
+
+  """
+  The scope to request from the provider. See https://learn.microsoft.com/en-us/linkedin/shared/authentication/authentication?context=linkedin%2Fcontext#permission-types for a list of available scopes.
+  """
+  scope: [String]
+
+  """
+  This field exists solely to generate the  ClientOptions interface, in lieu of the shared custom fields that will be added in a future release
+  """
+  todo: Boolean
+}
+
+"""The Headless Login options for the linkedin provider."""
+type LinkedinLoginOptions implements LoginOptions {
+  """Whether to create users if none exist."""
+  createUserIfNoneExists: Boolean
+
+  """Whether to link existing users."""
+  linkExistingUsers: Boolean
+
+  """Whether to set a WordPress authentication cookie on successful login."""
+  useAuthenticationCookie: Boolean
+}
+
+"""The Headless Login client."""
+type LoginClient {
+  """The authorization URL."""
+  authorizationUrl: String
+
+  """The client ID."""
+  clientId: ID
+
+  """The client options."""
+  clientOptions: LoginClientOptions
+
+  """Whether the client is enabled."""
+  isEnabled: Boolean
+
+  """The login options."""
+  loginOptions: LoginOptions
+
+  """The client name."""
+  name: String
+
+  """A field used for ordering clients."""
+  order: Int
+
+  """The provider type."""
+  provider: LoginProviderEnum
+}
+
+"""The Client Options for the Headless Login provider."""
+interface LoginClientOptions {
+  """
+  This field exists solely to generate the  ClientOptions interface, in lieu of the shared custom fields that will be added in a future release
+  """
+  todo: Boolean
+}
+
+"""Input for the Login mutation."""
+input LoginInput {
+  """
+  This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The WordPress user credentials. Required by the Password provider."""
+  credentials: PasswordProviderResponseInput
+
+  """
+  The user identity to use when logging in. Required by the SiteToken provider.
+  """
+  identity: String
+
+  """The parsed response from an OAuth2 Authentication Provider."""
+  oauthResponse: OAuthProviderResponseInput
+
+  """The Headless Login provider to use when logging in."""
+  provider: LoginProviderEnum!
+}
+
+"""The login options for the Headless Login provider."""
+interface LoginOptions {
+  """Whether to set a WordPress authentication cookie on successful login."""
+  useAuthenticationCookie: Boolean
+}
+
+"""The payload for the Login mutation."""
+type LoginPayload {
+  """JWT Token that can be used in future requests for Authentication."""
+  authToken: String
+
+  """The authentication token expiration timestamp."""
+  authTokenExpiration: String
+
+  """
+  If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """Refresh Token that can be used to refresh the JWT Token."""
+  refreshToken: String
+
+  """The refresh token expiration timestamp."""
+  refreshTokenExpiration: String
+
+  """The user that was logged in."""
+  user: User
+}
+
+"""The Headless Login Provider."""
+enum LoginProviderEnum {
+  """The Facebook provider."""
+  FACEBOOK
+
+  """The GitHub provider."""
+  GITHUB
+
+  """The Google provider."""
+  GOOGLE
+
+  """The Instagram provider."""
+  INSTAGRAM
+
+  """The LinkedIn provider."""
+  LINKEDIN
+
+  """The OAuth2 (Generic) provider."""
+  OAUTH2_GENERIC
+
+  """The Password provider."""
+  PASSWORD
+
+  """The Site Token provider."""
+  SITETOKEN
 }
 
 """File details for a Media Item"""
@@ -16969,6 +17355,61 @@ interface NodeWithTrackbacks implements Node {
   toPing: [String]
 }
 
+"""The parsed response from the OAuth Provider."""
+input OAuthProviderResponseInput {
+  """The authorization code returned from the OAuth provider."""
+  code: String!
+
+  """The state returned from the OAuth provider."""
+  state: String
+}
+
+"""The Login client options for the oauth2-generic provider."""
+type Oauth2GenericClientOptions implements LoginClientOptions {
+  """The URL to request an access token."""
+  accessTokenUrl: String
+
+  """The URL to redirect the user to in order to authorize the client."""
+  authorizationUrl: String
+
+  """The client ID."""
+  clientId: String
+
+  """The client Secret."""
+  clientSecret: String
+
+  """The client redirect URI."""
+  redirectUri: String
+
+  """The URL to request the resource owner details."""
+  resourceOwnerUrl: String
+
+  """The different scopes to request from the Generic OAuth2 API."""
+  scope: [String]
+
+  """
+  The scope separator to use when building the authorization URL. Defaults to `,`.
+  """
+  scopeSeparator: String
+
+  """
+  This field exists solely to generate the  ClientOptions interface, in lieu of the shared custom fields that will be added in a future release
+  """
+  todo: Boolean
+}
+
+"""The Headless Login options for the oauth2-generic provider."""
+type Oauth2GenericLoginOptions implements LoginOptions {
+  """Whether to create users if none exist."""
+  createUserIfNoneExists: Boolean
+
+  """Whether to link existing users."""
+  linkExistingUsers: Boolean
+
+  """Whether to set a WordPress authentication cookie on successful login."""
+  useAuthenticationCookie: Boolean
+}
+
 """
 A direct one-to-one relationship between objects. Unlike plural connections, this represents a single related object rather than a collection.
 """
@@ -17697,6 +18138,29 @@ input PageToRevisionConnectionWhereArgs {
 
   """Title of the object"""
   title: String
+}
+
+"""The Login client options for the password provider."""
+type PasswordClientOptions implements LoginClientOptions {
+  """
+  This field exists solely to generate the  ClientOptions interface, in lieu of the shared custom fields that will be added in a future release
+  """
+  todo: Boolean
+}
+
+"""The Headless Login options for the password provider."""
+type PasswordLoginOptions implements LoginOptions {
+  """Whether to set a WordPress authentication cookie on successful login."""
+  useAuthenticationCookie: Boolean
+}
+
+"""The parsed response from the Password Provider."""
+input PasswordProviderResponseInput {
+  """The password for the WordPress user."""
+  password: String!
+
+  """The WordPress username to authenticate ass"""
+  username: String!
 }
 
 """An plugin object"""
@@ -20054,6 +20518,70 @@ type ReadingSettings {
   showOnFront: String
 }
 
+"""Input for the RefreshToken mutation."""
+input RefreshTokenInput {
+  """
+  This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """
+  A valid, previously issued JWT refresh token. If valid, a new JWT authentication token will be provided. If invalid, expired, revoked or otherwise invalid, the `authToken` will return null, and the `success` field will return `false`.
+  """
+  refreshToken: String!
+}
+
+"""The payload for the RefreshToken mutation."""
+type RefreshTokenPayload {
+  """JWT Token that can be used in future requests for Authentication."""
+  authToken: String
+
+  """The authentication token expiration timestamp."""
+  authTokenExpiration: String
+
+  """
+  If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """Whether the auth token was successfully refreshed."""
+  success: Boolean
+}
+
+"""Input for the RefreshUserSecret mutation."""
+input RefreshUserSecretInput {
+  """
+  This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The current WordPress user ID. Accepts either a global or database ID."""
+  userId: ID!
+}
+
+"""The payload for the RefreshUserSecret mutation."""
+type RefreshUserSecretPayload {
+  """JWT Token that can be used in future requests for Authentication."""
+  authToken: String
+
+  """
+  If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """JWT Token that can be used in future requests for Authentication."""
+  refreshToken: String
+
+  """The revoked user secret."""
+  revokedUserSecret: String
+
+  """Whether the User secret was successfully revoked."""
+  success: Boolean
+
+  """The new user secret."""
+  userSecret: String
+}
+
 """Input for the registerUser mutation."""
 input RegisterUserInput {
   """User's AOL IM account."""
@@ -20191,6 +20719,31 @@ type RestoreCommentPayload {
   restoredId: ID
 }
 
+"""Input for the RevokeUserSecret mutation."""
+input RevokeUserSecretInput {
+  """
+  This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The WordPress user ID. Accepts either a database or global ID."""
+  userId: ID!
+}
+
+"""The payload for the RevokeUserSecret mutation."""
+type RevokeUserSecretPayload {
+  """
+  If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The revoked user secret."""
+  revokedUserSecret: String
+
+  """Whether the User secret was successfully revoked."""
+  success: Boolean
+}
+
 """The root mutation"""
 type RootMutation {
   """The createCategory mutation"""
@@ -20301,6 +20854,32 @@ type RootMutation {
     count: Int
   ): Int
 
+  """Links an identity to a WordPress user."""
+  linkUserIdentity(
+    """Input for the LinkUserIdentity mutation"""
+    input: LinkUserIdentityInput!
+  ): LinkUserIdentityPayload
+
+  """Logs a user in using the specified provider."""
+  login(
+    """Input for the Login mutation"""
+    input: LoginInput!
+  ): LoginPayload
+
+  """Refreshes the JWT authentication token using a valid refresh token."""
+  refreshToken(
+    """Input for the RefreshToken mutation"""
+    input: RefreshTokenInput!
+  ): RefreshTokenPayload
+
+  """
+  Refreshes the user secret and generates a new JWT authentication token.
+  """
+  refreshUserSecret(
+    """Input for the RefreshUserSecret mutation"""
+    input: RefreshUserSecretInput!
+  ): RefreshUserSecretPayload
+
   """The registerUser mutation"""
   registerUser(
     """Input for the registerUser mutation"""
@@ -20318,6 +20897,12 @@ type RootMutation {
     """Input for the restoreComment mutation"""
     input: RestoreCommentInput!
   ): RestoreCommentPayload
+
+  """Revokes the user secret and invalidates the JWT authentication token."""
+  revokeUserSecret(
+    """Input for the RevokeUserSecret mutation"""
+    input: RevokeUserSecretInput!
+  ): RevokeUserSecretPayload
 
   """Send password reset email to user"""
   sendPasswordResetEmail(
@@ -20533,6 +21118,15 @@ type RootQuery {
     """Types of styles to load."""
     types: [GlobalStylesheetTypesEnum]
   ): String
+
+  """The Headless Login client for the provided client ID."""
+  loginClient(
+    """The Provider slug."""
+    provider: LoginProviderEnum!
+  ): LoginClient
+
+  """The registered Headless Login clients."""
+  loginClients: [LoginClient]
 
   """An object of the mediaItem Type. """
   mediaItem(
@@ -23426,6 +24020,20 @@ type Settings {
   writingSettingsUseSmilies: Boolean
 }
 
+"""The Login client options for the siteToken provider."""
+type SiteTokenClientOptions implements LoginClientOptions {
+  """
+  This field exists solely to generate the  ClientOptions interface, in lieu of the shared custom fields that will be added in a future release
+  """
+  todo: Boolean
+}
+
+"""The Headless Login options for the siteToken provider."""
+type SiteTokenLoginOptions implements LoginOptions {
+  """Whether to set a WordPress authentication cookie on successful login."""
+  useAuthenticationCookie: Boolean
+}
+
 """
 A taxonomy term used to organize and classify content. Tags do not have a hierarchy and are generally used for more specific classifications.
 """
@@ -25205,6 +25813,9 @@ type UpdateUserPayload {
 A registered user account. Users can be assigned roles, author content, and have various capabilities within the site.
 """
 type User implements Commenter & DatabaseIdentifier & Node & UniformResourceIdentifiable {
+  """Headless Login authentication data."""
+  auth: AuthenticationData
+
   """
   Avatar object for user. The avatar object can be retrieved in different sizes by specifying the size argument.
   """

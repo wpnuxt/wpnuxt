@@ -1,8 +1,24 @@
 import { existsSync, cpSync } from 'node:fs'
-import { defineNuxtModule, addPlugin, createResolver, addImports } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, createResolver, addImports, addServerHandler } from '@nuxt/kit'
 import type { WPNuxtAuthConfig } from './runtime/types'
 
 export type { WPNuxtAuthConfig }
+
+// Default OAuth settings for miniOrange WP OAuth Server
+const DEFAULT_OAUTH_CONFIG = {
+  enabled: false,
+  clientId: '',
+  clientSecret: '',
+  authorizationEndpoint: '/wp-json/moserver/authorize',
+  tokenEndpoint: '/wp-json/moserver/token',
+  userInfoEndpoint: '/wp-json/moserver/resource',
+  scopes: ['openid', 'profile', 'email']
+}
+
+// Default Headless Login settings (Google, GitHub, etc. via Headless Login for WPGraphQL)
+const DEFAULT_HEADLESS_LOGIN_CONFIG = {
+  enabled: false
+}
 
 export default defineNuxtModule<WPNuxtAuthConfig>({
   meta: {
@@ -17,7 +33,12 @@ export default defineNuxtModule<WPNuxtAuthConfig>({
     refreshTokenMaxAge: 604800,
     redirectOnLogin: '/',
     redirectOnLogout: '/',
-    loginPage: '/login'
+    loginPage: '/login',
+    providers: {
+      password: { enabled: true },
+      oauth: DEFAULT_OAUTH_CONFIG,
+      headlessLogin: DEFAULT_HEADLESS_LOGIN_CONFIG
+    }
   },
   async setup(options, nuxt) {
     if (!options.enabled) {
@@ -29,7 +50,7 @@ export default defineNuxtModule<WPNuxtAuthConfig>({
     // Extend queries with auth-specific fragments
     const baseDir = nuxt.options.srcDir || nuxt.options.rootDir
     const { resolve } = createResolver(baseDir)
-    const wpNuxtConfig = nuxt.options.wpNuxt as { queries: { mergedOutputFolder: string, extendFolder: string } } | undefined
+    const wpNuxtConfig = (nuxt.options as unknown as Record<string, unknown>).wpNuxt as { queries: { mergedOutputFolder: string, extendFolder: string } } | undefined
     const mergedQueriesPath = resolve(wpNuxtConfig?.queries?.mergedOutputFolder || '.queries/')
     const userQueryPath = resolve(wpNuxtConfig?.queries?.extendFolder || 'extend/queries/')
     const authQueriesPath = resolver.resolve('./runtime/queries')
@@ -44,7 +65,20 @@ export default defineNuxtModule<WPNuxtAuthConfig>({
       cpSync(userQueryPath, mergedQueriesPath, { recursive: true })
     }
 
-    // Add runtime config
+    // Merge OAuth config with defaults
+    const oauthConfig = {
+      ...DEFAULT_OAUTH_CONFIG,
+      ...options.providers?.oauth
+    }
+    const headlessLoginConfig = {
+      ...DEFAULT_HEADLESS_LOGIN_CONFIG,
+      ...options.providers?.headlessLogin
+    }
+    const passwordEnabled = options.providers?.password?.enabled ?? true
+    const oauthEnabled = oauthConfig.enabled && !!oauthConfig.clientId
+    const headlessLoginEnabled = headlessLoginConfig.enabled ?? false
+
+    // Add public runtime config (no secrets)
     nuxt.options.runtimeConfig.public.wpNuxtAuth = {
       cookieName: options.cookieName!,
       refreshCookieName: options.refreshCookieName!,
@@ -52,7 +86,29 @@ export default defineNuxtModule<WPNuxtAuthConfig>({
       refreshTokenMaxAge: options.refreshTokenMaxAge!,
       redirectOnLogin: options.redirectOnLogin!,
       redirectOnLogout: options.redirectOnLogout!,
-      loginPage: options.loginPage!
+      loginPage: options.loginPage!,
+      providers: {
+        password: { enabled: passwordEnabled },
+        oauth: {
+          enabled: oauthEnabled,
+          clientId: oauthConfig.clientId,
+          authorizationEndpoint: oauthConfig.authorizationEndpoint,
+          scopes: oauthConfig.scopes
+        },
+        headlessLogin: {
+          enabled: headlessLoginEnabled
+        }
+      }
+    }
+
+    // Add private runtime config for OAuth secrets
+    if (oauthEnabled) {
+      nuxt.options.runtimeConfig.wpNuxtAuthOAuth = {
+        clientId: oauthConfig.clientId,
+        clientSecret: oauthConfig.clientSecret,
+        tokenEndpoint: oauthConfig.tokenEndpoint,
+        userInfoEndpoint: oauthConfig.userInfoEndpoint
+      }
     }
 
     // Add auth plugin
@@ -64,6 +120,50 @@ export default defineNuxtModule<WPNuxtAuthConfig>({
       { name: 'useWPUser', from: resolver.resolve('./runtime/composables/useWPUser') }
     ])
 
+    // Add server API handlers for password auth
+    if (passwordEnabled) {
+      addServerHandler({
+        route: '/api/auth/login',
+        method: 'post',
+        handler: resolver.resolve('./runtime/server/api/auth/login.post')
+      })
+    }
+
+    // Logout endpoint (always registered - clears httpOnly cookies)
+    addServerHandler({
+      route: '/api/auth/logout',
+      method: 'post',
+      handler: resolver.resolve('./runtime/server/api/auth/logout.post')
+    })
+
+    // Add server API handlers for OAuth (miniOrange)
+    if (oauthEnabled) {
+      addServerHandler({
+        route: '/api/auth/oauth/authorize',
+        method: 'get',
+        handler: resolver.resolve('./runtime/server/api/auth/oauth/authorize.get')
+      })
+      addServerHandler({
+        route: '/api/auth/oauth/callback',
+        method: 'get',
+        handler: resolver.resolve('./runtime/server/api/auth/oauth/callback.get')
+      })
+    }
+
+    // Add server API handlers for Headless Login providers (Google, GitHub, etc.)
+    if (headlessLoginEnabled) {
+      addServerHandler({
+        route: '/api/auth/provider/:provider/authorize',
+        method: 'get',
+        handler: resolver.resolve('./runtime/server/api/auth/provider/[provider]/authorize.get')
+      })
+      addServerHandler({
+        route: '/api/auth/provider/:provider/callback',
+        method: 'get',
+        handler: resolver.resolve('./runtime/server/api/auth/provider/[provider]/callback.get')
+      })
+    }
+
     // Add type declarations
     nuxt.hook('prepare:types', ({ references }) => {
       references.push({
@@ -71,6 +171,10 @@ export default defineNuxtModule<WPNuxtAuthConfig>({
       })
     })
 
-    console.log('[WPNuxt Auth] Module loaded')
+    const providers = []
+    if (passwordEnabled) providers.push('password')
+    if (oauthEnabled) providers.push('oauth')
+    if (headlessLoginEnabled) providers.push('headlessLogin')
+    console.log(`[WPNuxt Auth] Module loaded (providers: ${providers.join(', ') || 'none'})`)
   }
 })
