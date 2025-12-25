@@ -9,6 +9,7 @@ import type { WPNuxtConfig } from './types/config'
 import type { WPNuxtContext } from './types/queries'
 import { generateWPNuxtComposables } from './generate'
 import { getLogger, initLogger, mergeQueries, randHashGenerator } from './utils/index'
+import { validateWordPressEndpoint } from './utils/endpointValidation'
 
 export default defineNuxtModule<WPNuxtConfig>({
   meta: {
@@ -49,6 +50,18 @@ export default defineNuxtModule<WPNuxtConfig>({
     // Set up server and client options for nuxt-graphql-middleware
     setupServerOptions(nuxt, resolver, logger)
     setupClientOptions(nuxt, resolver, logger)
+
+    // Validate WordPress endpoint is reachable and download schema if needed
+    if (wpNuxtConfig.downloadSchema) {
+      const schemaPath = join(nuxt.options.rootDir, 'schema.graphql')
+      logger.debug(`Validating WordPress endpoint: ${wpNuxtConfig.wordpressUrl}${wpNuxtConfig.graphqlEndpoint}`)
+      await validateWordPressEndpoint(
+        wpNuxtConfig.wordpressUrl!,
+        wpNuxtConfig.graphqlEndpoint,
+        { schemaPath }
+      )
+      logger.debug('WordPress endpoint validation passed')
+    }
 
     await registerModules(nuxt, resolver, wpNuxtConfig, mergedQueriesFolder)
 

@@ -1,6 +1,8 @@
 import { existsSync, cpSync } from 'node:fs'
+import { join } from 'node:path'
 import { defineNuxtModule, addPlugin, createResolver, addImports, addServerHandler } from '@nuxt/kit'
 import type { WPNuxtAuthConfig } from './runtime/types'
+import { validateAuthSchema } from './utils/schemaDetection'
 
 export type { WPNuxtAuthConfig }
 
@@ -77,6 +79,17 @@ export default defineNuxtModule<WPNuxtAuthConfig>({
     const passwordEnabled = options.providers?.password?.enabled ?? true
     const oauthEnabled = oauthConfig.enabled && !!oauthConfig.clientId
     const headlessLoginEnabled = headlessLoginConfig.enabled ?? false
+
+    // Validate that Headless Login plugin is installed if password or headless login auth is enabled
+    // (miniOrange OAuth doesn't require this plugin)
+    if (passwordEnabled || headlessLoginEnabled) {
+      // Schema is at the project root (nuxt.options.rootDir), not srcDir
+      const schemaPath = join(nuxt.options.rootDir, 'schema.graphql')
+      validateAuthSchema(schemaPath, {
+        requirePassword: passwordEnabled,
+        requireHeadlessLogin: headlessLoginEnabled
+      })
+    }
 
     // Add public runtime config (no secrets)
     nuxt.options.runtimeConfig.public.wpNuxtAuth = {
