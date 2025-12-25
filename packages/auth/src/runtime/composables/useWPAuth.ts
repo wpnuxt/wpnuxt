@@ -39,6 +39,13 @@ export function useWPAuth() {
     sameSite: 'lax'
   })
 
+  // Cookie for storing user data (used to persist user info across page refreshes)
+  const userDataCookie = useCookie<string | null>('wpnuxt-user', {
+    maxAge: config.tokenMaxAge,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax'
+  })
+
   /**
    * Login with username and password
    */
@@ -82,6 +89,9 @@ export function useWPAuth() {
         authToken.value = data.login.authToken
         refreshTokenCookie.value = data.login.refreshToken
 
+        // Store user data in cookie for persistence across page refreshes
+        userDataCookie.value = JSON.stringify(data.login.user)
+
         // Update state
         authState.value.user = data.login.user
         authState.value.isAuthenticated = true
@@ -116,9 +126,10 @@ export function useWPAuth() {
       // Ignore errors - cookies might already be cleared
     })
 
-    // Clear client-side state
+    // Clear client-side state and cookies
     authToken.value = null
     refreshTokenCookie.value = null
+    userDataCookie.value = null
     authState.value.user = null
     authState.value.isAuthenticated = false
     authState.value.error = null
