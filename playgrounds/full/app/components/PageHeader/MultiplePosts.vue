@@ -19,19 +19,12 @@ defineProps<{
       <LoadingIcon v-else />
     </template>
     <template #links>
-      <UBadge
-        v-if="pending"
-        color="primary"
-        variant="subtle"
-      >
-        Loading...
-      </UBadge>
       <UButton
         class="cursor-pointer"
+        :loading="pending"
+        icon="i-lucide-refresh-cw"
         @click="refreshContent"
-      >
-        Refresh
-      </UButton>
+      />
     </template>
   </UPageHeader>
 </template>

@@ -2,7 +2,7 @@
 @import "@nuxt/ui";
 
 pre {
-  @apply bg-gray-100 p-4 my-4 rounded-md;
+  @apply bg-gray-100 dark:bg-gray-800 p-4 my-4 rounded-md;
 }
 
 figure.size-full {

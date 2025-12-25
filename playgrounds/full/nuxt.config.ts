@@ -13,6 +13,7 @@ const IS_DEV = process.env.NODE_ENV === 'development'
 export default defineNuxtConfig({
   modules: [
     '@wpnuxt/core',
+    '@wpnuxt/auth',
     '@nuxt/ui', // UI components and styling
     '@nuxtjs/mdc' // Renders HTML/Markdown content with beautiful typography
   ],
@@ -21,11 +22,25 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
-  compatibilityDate: '2025-12-23',
+  compatibilityDate: '2025-12-25',
+
+  // Disable error overlay due to bug with path.join() on errors without path
+  graphqlMiddleware: {
+    errorOverlay: false
+  },
 
   wpNuxt: {
     wordpressUrl: 'https://wordpress.wpnuxt.com',
     debug: IS_DEV,
-    downloadSchema: IS_DEV
+    downloadSchema: true
+  },
+
+  wpNuxtAuth: {
+    providers: {
+      password: { enabled: true }, // default
+      headlessLogin: {
+        enabled: true // Providers auto-discovered from WordPress
+      }
+    }
   }
 })

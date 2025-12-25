@@ -13,6 +13,7 @@
   "dependencies": {
     "@nuxt/ui": "4.3.0",
     "@nuxtjs/mdc": "^0.19.1",
+    "@wpnuxt/auth": "workspace:*",
     "@wpnuxt/blocks": "workspace:*",
     "@wpnuxt/core": "workspace:*",
     "nuxt": "4.2.2"
