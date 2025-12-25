@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     url: 'https://wpnuxt.com'
   },
 
-  compatibilityDate: '2025-12-24',
+  compatibilityDate: '2025-12-25',
 
   llms: {
     domain: 'https://wpnuxt.com'
