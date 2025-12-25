@@ -56,5 +56,4 @@ Temporary Items
 .apdisk
 
 .queries
-playground-basic/schema.graphql
-packages/core/test/fixtures/basic/schema.graphql
+schema.graphql

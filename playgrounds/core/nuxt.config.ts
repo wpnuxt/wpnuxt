@@ -1,5 +1,5 @@
 /**
- * Basic Playground
+ * Core Playground
  *
  * Minimal setup with only @wpnuxt/core - no UI framework or content rendering library.
  * Good for testing core WPNuxt functionality (GraphQL queries, composables, etc.)
@@ -15,6 +15,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-12-25',
 
   wpNuxt: {
-    wordpressUrl: 'https://wordpress.wpnuxt.com'
+    wordpressUrl: 'https://wordpress.wpnuxt.com',
+    downloadSchema: true
   }
 })

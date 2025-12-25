@@ -191,8 +191,8 @@ pnpm run dev:prepare
 # Run playground (full features)
 pnpm run dev
 
-# Run basic playground (core only)
-pnpm run dev:basic
+# Run core playground (core only)
+pnpm run dev:core
 
 # Run blocks playground
 pnpm run dev:blocks

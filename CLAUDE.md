@@ -17,9 +17,9 @@ pnpm run dev:prepare           # Build module stub, prepare playgrounds, generat
 ### Development
 ```bash
 pnpm run dev                   # Run main playground (with @nuxt/ui)
-pnpm run dev:basic             # Run basic playground (minimal setup)
+pnpm run dev:core              # Run core playground (minimal setup)
 pnpm run dev:build             # Build main playground
-pnpm run dev:basic:build       # Build basic playground
+pnpm run dev:core:build        # Build core playground
 ```
 
 ### Testing & Linting
@@ -135,7 +135,7 @@ The module relies on `nuxt-graphql-middleware` for GraphQL type generation:
 - Each block type has its own Vue component (CoreParagraph, CoreHeading, CoreImage, etc.)
 - Best for: Sites needing custom rendering per block type, lazy-loading images, or interactive blocks
 
-**Basic Playground (`playgrounds/basic/`)** - `pnpm dev:basic`
+**Core Playground (`playgrounds/core/`)** - `pnpm dev:core`
 - Minimal setup with only @wpnuxt/core
 - No UI framework dependencies
 - Good for testing core functionality

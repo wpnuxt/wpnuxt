@@ -53,8 +53,10 @@ export default defineNuxtModule<WPNuxtConfig>({
     await registerModules(nuxt, resolver, wpNuxtConfig, mergedQueriesFolder)
 
     // Customize the nuxt-graphql-middleware devtools tab for WPNuxt branding
-    nuxt.hook('devtools:customTabs', (tabs) => {
-      const middlewareTab = tabs.find(tab => tab.name === 'nuxt-graphql-middleware')
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore - devtools:customTabs is from @nuxt/devtools
+    nuxt.hook('devtools:customTabs', (tabs: Array<{ name: string, title?: string, icon?: string }>) => {
+      const middlewareTab = tabs.find((tab: { name: string }) => tab.name === 'nuxt-graphql-middleware')
       if (middlewareTab) {
         middlewareTab.title = 'WPNuxt GraphQL'
         middlewareTab.icon = 'simple-icons:wordpress'
@@ -130,9 +132,17 @@ function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig {
   const config: WPNuxtConfig = defu({
     wordpressUrl: process.env.WPNUXT_WORDPRESS_URL,
     graphqlEndpoint: process.env.WPNUXT_GRAPHQL_ENDPOINT,
-    downloadSchema: process.env.WPNUXT_DOWNLOAD_SCHEMA ? process.env.WPNUXT_DOWNLOAD_SCHEMA === 'true' : undefined,
+    // Only override downloadSchema if env var is explicitly set
+    downloadSchema: process.env.WPNUXT_DOWNLOAD_SCHEMA !== undefined
+      ? process.env.WPNUXT_DOWNLOAD_SCHEMA === 'true'
+      : undefined,
     debug: process.env.WPNUXT_DEBUG ? process.env.WPNUXT_DEBUG === 'true' : undefined
   }, options) as WPNuxtConfig
+
+  // Ensure downloadSchema defaults to true if not explicitly set
+  if (config.downloadSchema === undefined) {
+    config.downloadSchema = true
+  }
 
   nuxt.options.runtimeConfig.public.wordpressUrl = config.wordpressUrl
   nuxt.options.runtimeConfig.public.wpNuxt = {
@@ -325,7 +335,7 @@ async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPN
     graphqlEndpoint: `${wpNuxtConfig.wordpressUrl}${wpNuxtConfig.graphqlEndpoint}`,
     autoImportPatterns: [mergedQueriesFolder],
     includeComposables: true,
-    downloadSchema: wpNuxtConfig.downloadSchema,
+    downloadSchema: wpNuxtConfig.downloadSchema ?? true,
     enableFileUploads: true,
     // Use WPNuxt-branded API route prefix
     serverApiPrefix: '/api/wpnuxt',

@@ -1,7 +1,18 @@
 {
-  "extends": "./.nuxt/tsconfig.json",
-  "exclude": ["dist", "node_modules"],
   "compilerOptions": {
-    "declaration": false
-  }
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "declaration": false,
+    "paths": {
+      "#imports": ["./src/runtime/types/stub.d.ts"],
+      "#nuxt-graphql-middleware/*": ["./src/runtime/types/stub.d.ts"],
+      "#build/*": ["./src/runtime/types/stub.d.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["dist", "node_modules", "test", "app"]
 }

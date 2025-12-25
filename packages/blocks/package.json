@@ -34,7 +34,7 @@
   },
   "scripts": {
     "build": "nuxt-module-build build",
-    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare",
+    "dev:prepare": "nuxt-module-build build --stub",
     "typecheck": "vue-tsc --noEmit",
     "clean": "rm -rf dist .nuxt node_modules"
   },
