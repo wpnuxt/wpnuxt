@@ -172,3 +172,14 @@ Generated composables return data extracted from the query response based on the
 
 ### Image Path Handling
 The `useWPContent` composables can transform WordPress image URLs to relative paths using `getRelativeImagePath()` from `src/runtime/util/images.ts`.
+
+## Development Rules for Claude Code
+
+### Forbidden Without Permission
+- Never start the dev server (`pnpm run dev`, `pnpm run dev:*`) - always ask the user to start it manually
+- Never run background shell processes for long-running servers
+
+### After Every Code Change
+- Run `pnpm run lint` to check for linting errors
+- Run `pnpm run typecheck` to verify TypeScript types
+- Report results to the user before continuing
