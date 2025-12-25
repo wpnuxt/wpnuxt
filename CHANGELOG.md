@@ -1,5 +1,33 @@
 # Changelog
 
+## [2.0.0-alpha.2](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.1...v2.0.0-alpha.2) (2025-12-25)
+
+### Features
+
+* **auth:** add comprehensive authentication documentation ([49ce855](https://github.com/wpnuxt/wpnuxt/commit/49ce855e3960b8ae9eb03badd6014a8a000ecf89))
+* **auth:** add user data persistence with cookies ([d2c8288](https://github.com/wpnuxt/wpnuxt/commit/d2c82883a7c3caa6310d6d704843275539b9319e))
+* **auth:** enhance authentication module with OAuth and Headless Login support ([f82ce48](https://github.com/wpnuxt/wpnuxt/commit/f82ce48a9302ce5e522ca7be485d9aca41f08d71))
+* **auth:** enhance authentication queries and file management ([8aa007d](https://github.com/wpnuxt/wpnuxt/commit/8aa007d8a5c4970e724b51ae0c7257db569ca970))
+* **auth:** implement schema validation for authentication capabilities ([24fb6a4](https://github.com/wpnuxt/wpnuxt/commit/24fb6a4fa0e34fb67d74da703a424fd222ecdb9d))
+* **auth:** integrate Headless Login and enhance user profile management ([a00da62](https://github.com/wpnuxt/wpnuxt/commit/a00da6259df68d0e1a8ff7c2813ba7e6826d66bd))
+* **docs:** add initial documentation structure and configuration for WPNuxt ([d259865](https://github.com/wpnuxt/wpnuxt/commit/d259865f989b2120bafb5cabd6847b512d515238))
+* **graphql:** add new schema files for core, blocks, and full playgrounds ([560223e](https://github.com/wpnuxt/wpnuxt/commit/560223e4bd9439bfad44c8ff0e8db1469c54fef4))
+* **mcp:** add MCP server configuration for nuxt-ui-remote ([cbba810](https://github.com/wpnuxt/wpnuxt/commit/cbba8101b37121946d9b80f26a5516df03ebae38))
+
+### Refactoring
+
+* rename basic playground to core playground and update related scripts and documentation ([6847f13](https://github.com/wpnuxt/wpnuxt/commit/6847f13b894ce722d625c8e9a69c18fefb13fe80))
+
+### Documentation
+
+* **claude:** add development rules and guidelines for code contributions ([f5d9141](https://github.com/wpnuxt/wpnuxt/commit/f5d9141523d32763d2e7b085c605827c410f8421))
+
+### Maintenance
+
+* **dependencies:** update nuxt-graphql-middleware to version 5.3.1 and lib0 to version 0.2.116 in pnpm-lock.yaml and package.json ([8780dc8](https://github.com/wpnuxt/wpnuxt/commit/8780dc81674f90497a6dda5a1ca65e4b3c0d9f89))
+* enhance app configuration with new color scheme ([5cebe69](https://github.com/wpnuxt/wpnuxt/commit/5cebe69a552195c8ff2b35de063b64f78e418b18))
+* update compatibility date to December 25, 2025, across multiple configuration files and remove outdated GraphQL schema files ([a70e4f8](https://github.com/wpnuxt/wpnuxt/commit/a70e4f801f5071e87d72f2e4b7cfc731ade3124a))
+
 ## 2.0.0-alpha.1 (2025-12-23)
 
 ### Features
