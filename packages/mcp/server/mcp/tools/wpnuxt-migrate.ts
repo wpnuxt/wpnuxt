@@ -13,7 +13,11 @@ const MIGRATION_PATTERNS = {
       description: 'Extract featured image URL from post',
       replacement: 'Access post.featuredImage?.node?.sourceUrl directly or create a helper',
       helperCode: `export function useFeaturedImage(post: { featuredImage?: { node?: { sourceUrl?: string } } } | undefined): string | undefined {
-  return post?.featuredImage?.node?.sourceUrl
+  const imageUrl = post?.featuredImage?.node?.sourceUrl
+  if (imageUrl && imageUrl.startsWith(useWPUri().url)) {
+    return imageUrl.replace(useWPUri().url, '')
+  }
+  return imageUrl
 }`
     },
     {
@@ -22,7 +26,7 @@ const MIGRATION_PATTERNS = {
       description: 'Get WordPress URL from runtime config',
       replacement: 'Use useRuntimeConfig().public.wordpressUrl',
       helperCode: `export function useWPUri() {
-  return useRuntimeConfig().public.wordpressUrl
+  return { url: useRuntimeConfig().public.wordpressUrl as string }
 }`
     },
     {
@@ -150,7 +154,7 @@ interface MigrationIssue {
   file: string
   line?: number
   pattern: string
-  category: 'composable' | 'directive' | 'config' | 'component'
+  category: 'composable' | 'directive' | 'config' | 'component' | 'usage'
   severity: 'error' | 'warning' | 'info'
   description: string
   replacement: string
@@ -176,12 +180,19 @@ function generateHelperFiles(issues: MigrationIssue[]): HelperFile[] {
   const composablesContent: string[] = []
 
   if (neededHelpers.has('useFeaturedImage')) {
+    // Ensure useWPUri is also included since useFeaturedImage depends on it
+    neededHelpers.add('useWPUri')
     composablesContent.push(`/**
  * Extract featured image URL from a post object.
+ * Converts absolute WordPress URLs to relative paths.
  * Migration helper from WPNuxt 1.x
  */
 export function useFeaturedImage(post: { featuredImage?: { node?: { sourceUrl?: string } } } | undefined): string | undefined {
-  return post?.featuredImage?.node?.sourceUrl
+  const imageUrl = post?.featuredImage?.node?.sourceUrl
+  if (imageUrl && imageUrl.startsWith(useWPUri().url)) {
+    return imageUrl.replace(useWPUri().url, '')
+  }
+  return imageUrl
 }`)
   }
 
@@ -191,7 +202,7 @@ export function useFeaturedImage(post: { featuredImage?: { node?: { sourceUrl?: 
  * Migration helper from WPNuxt 1.x
  */
 export function useWPUri() {
-  return useRuntimeConfig().public.wordpressUrl
+  return { url: useRuntimeConfig().public.wordpressUrl as string }
 }`)
   }
 
@@ -320,18 +331,190 @@ function scanConfigContent(content: string, filename: string): MigrationIssue[] 
   return issues
 }
 
+/**
+ * WPNuxt composables that return Refs and must be called at top level
+ */
+const WPNUXT_COMPOSABLES = [
+  'usePosts', 'usePages', 'useMenu', 'useNode', 'useViewer',
+  'useLazyPosts', 'useLazyPages', 'useLazyMenu', 'useLazyNode', 'useLazyViewer',
+  // Also catch custom query composables (pattern: use + PascalCase)
+  /use[A-Z][a-zA-Z]*(?:Posts?|Pages?|Menu|Node|Query|Content)/
+]
+
+/**
+ * Vue lifecycle hooks where composables should NOT be called
+ */
+const LIFECYCLE_HOOKS = [
+  'onMounted', 'onBeforeMount', 'onUnmounted', 'onBeforeUnmount',
+  'onUpdated', 'onBeforeUpdate', 'onActivated', 'onDeactivated',
+  'onErrorCaptured', 'onServerPrefetch'
+]
+
+/**
+ * Scan for usage anti-patterns:
+ * 1. Composables called inside lifecycle hooks
+ * 2. Composables called inside regular functions (not at top level)
+ * 3. Missing .value access on Refs returned by composables
+ */
+function scanUsagePatterns(content: string, filename: string): MigrationIssue[] {
+  const issues: MigrationIssue[] = []
+  const lines = content.split('\n')
+
+  // Track variables destructured from composables (these are Refs)
+  const refVariables = new Set<string>()
+
+  // Track function boundaries for context
+  let insideFunction = false
+  let insideLifecycleHook = false
+  let braceDepth = 0
+  let lifecycleHookName = ''
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+    const lineNum = i + 1
+
+    // Track brace depth to understand scope
+    const openBraces = (line.match(/\{/g) || []).length
+    const closeBraces = (line.match(/\}/g) || []).length
+    braceDepth += openBraces - closeBraces
+
+    // Detect lifecycle hook start
+    for (const hook of LIFECYCLE_HOOKS) {
+      if (line.includes(`${hook}(`)) {
+        insideLifecycleHook = true
+        lifecycleHookName = hook
+      }
+    }
+
+    // Detect regular async function that might be called in lifecycle hook
+    const asyncFuncMatch = line.match(/async\s+function\s+(\w+)/)
+    if (asyncFuncMatch) {
+      insideFunction = true
+    }
+
+    // Also detect arrow functions assigned to variables
+    const arrowFuncMatch = line.match(/const\s+(\w+)\s*=\s*async\s*\(/)
+    if (arrowFuncMatch) {
+      insideFunction = true
+    }
+
+    // Check for WPNuxt composable calls
+    for (const composable of WPNUXT_COMPOSABLES) {
+      const pattern = typeof composable === 'string' ? composable : composable.source
+      const regex = typeof composable === 'string'
+        ? new RegExp(`\\b${composable}\\s*\\(`)
+        : new RegExp(`\\b${composable.source}\\s*\\(`)
+
+      if (regex.test(line)) {
+        // Extract the composable name from the match
+        const nameMatch = line.match(/\b(use[A-Z][a-zA-Z]*)\s*\(/)
+        const composableName = nameMatch ? nameMatch[1] : pattern
+
+        // Check if inside lifecycle hook
+        if (insideLifecycleHook) {
+          issues.push({
+            file: filename,
+            line: lineNum,
+            pattern: composableName,
+            category: 'usage',
+            severity: 'error',
+            description: `Composable "${composableName}" called inside ${lifecycleHookName}()`,
+            replacement: `Move "${composableName}" to top level of <script setup>. Composables that use useAsyncData must be called at the top level to work with SSR.`,
+            autoFixable: false
+          })
+        }
+
+        // Check if inside a regular function (not at top level)
+        if (insideFunction && !insideLifecycleHook) {
+          issues.push({
+            file: filename,
+            line: lineNum,
+            pattern: composableName,
+            category: 'usage',
+            severity: 'warning',
+            description: `Composable "${composableName}" called inside a function instead of top level`,
+            replacement: `Move "${composableName}" to top level of <script setup>. If the function is called in onMounted, data won't be fetched during SSR.`,
+            autoFixable: false
+          })
+        }
+
+        // Track destructured data variables (they are Refs)
+        const destructureMatch = line.match(/\{\s*data:\s*(\w+)/)
+        if (destructureMatch) {
+          refVariables.add(destructureMatch[1])
+        }
+        // Also track direct data destructure
+        const directDataMatch = line.match(/\{\s*data\s*[,}]/)
+        if (directDataMatch) {
+          refVariables.add('data')
+        }
+      }
+    }
+
+    // Check for missing .value access on Ref variables
+    for (const refVar of refVariables) {
+      // Pattern: refVar || [] or refVar ?? [] (missing .value)
+      const missingValuePattern = new RegExp(`\\b${refVar}\\s*(\\|\\||\\?\\?)\\s*\\[`)
+      if (missingValuePattern.test(line)) {
+        issues.push({
+          file: filename,
+          line: lineNum,
+          pattern: `${refVar} || []`,
+          category: 'usage',
+          severity: 'error',
+          description: `Missing .value access on Ref "${refVar}"`,
+          replacement: `Use "${refVar}.value" to access the reactive data. The data returned from WPNuxt composables is a Ref.`,
+          autoFixable: false
+        })
+      }
+
+      // Pattern: someVar.value = refVar (assigning Ref instead of value)
+      const assignRefPattern = new RegExp(`\\.value\\s*=\\s*${refVar}\\s*(?:[,;\\n]|$)`)
+      if (assignRefPattern.test(line) && !line.includes(`${refVar}.value`)) {
+        issues.push({
+          file: filename,
+          line: lineNum,
+          pattern: `= ${refVar}`,
+          category: 'usage',
+          severity: 'warning',
+          description: `Possibly assigning Ref "${refVar}" instead of its value`,
+          replacement: `If "${refVar}" is a Ref from a composable, use "${refVar}.value" to get the actual data.`,
+          autoFixable: false
+        })
+      }
+    }
+
+    // Reset function tracking when we exit the scope
+    if (braceDepth === 0 && (insideFunction || insideLifecycleHook)) {
+      insideFunction = false
+      insideLifecycleHook = false
+      lifecycleHookName = ''
+    }
+  }
+
+  return issues
+}
+
 export default defineMcpTool({
-  description: `Analyze a project for WPNuxt v1 patterns and generate a migration report with compatibility helpers.
+  description: `Analyze a project for WPNuxt v1 patterns and usage anti-patterns, then generate a migration report with compatibility helpers.
 
 This tool scans for:
+
+**v1 → v2 Migration Issues:**
 - Removed composables (useFeaturedImage, useWPUri, usePrevNextPost, isStaging)
 - Renamed composables (useWPPosts → usePosts, useAsyncWPPosts → useLazyPosts)
 - Renamed directives (v-sanitize → v-sanitize-html)
 - Removed components (<WPContent>, <ContentRenderer>, <StagingBanner>)
 - Changed configuration options
 
+**Usage Anti-Patterns (SSR issues):**
+- Composables called inside lifecycle hooks (onMounted, etc.) - breaks SSR
+- Composables called inside regular functions instead of top level
+- Missing .value access on Refs returned by composables
+- Incorrect data assignment patterns
+
 Returns:
-- List of issues found with file locations
+- List of issues found with file locations and line numbers
 - Severity levels (error = breaking, warning = needs attention)
 - Auto-fix suggestions
 - Generated compatibility helper file content
@@ -339,7 +522,8 @@ Returns:
 The AI assistant should:
 1. Create the compatibility helpers if any removed composables are used
 2. Help update renamed composables
-3. Update the nuxt.config.ts if needed`,
+3. Update the nuxt.config.ts if needed
+4. Fix usage anti-patterns by moving composables to top level`,
   inputSchema: {
     fileContents: z.array(z.object({
       path: z.string().describe('File path relative to project root'),
@@ -354,6 +538,8 @@ The AI assistant should:
       // Scan Vue files and TypeScript files
       if (file.path.endsWith('.vue') || file.path.endsWith('.ts') || file.path.endsWith('.js')) {
         allIssues.push(...scanContent(file.content, file.path))
+        // Also scan for usage anti-patterns
+        allIssues.push(...scanUsagePatterns(file.content, file.path))
       }
 
       // Scan config files for config patterns
@@ -367,7 +553,8 @@ The AI assistant should:
       composable: allIssues.filter(i => i.category === 'composable'),
       directive: allIssues.filter(i => i.category === 'directive'),
       config: allIssues.filter(i => i.category === 'config'),
-      component: allIssues.filter(i => i.category === 'component')
+      component: allIssues.filter(i => i.category === 'component'),
+      usage: allIssues.filter(i => i.category === 'usage')
     }
 
     // Count by severity
@@ -388,38 +575,47 @@ The AI assistant should:
 
     // Generate migration steps
     const migrationSteps: string[] = []
+    let stepNum = 1
+
+    if (issuesByCategory.usage.length > 0) {
+      migrationSteps.push(`${stepNum++}. Fix usage anti-patterns: move composables to top level of <script setup> and use .value for Refs`)
+    }
 
     if (issuesByCategory.config.length > 0) {
-      migrationSteps.push('1. Update nuxt.config.ts with new option names and structure')
+      migrationSteps.push(`${stepNum++}. Update nuxt.config.ts with new option names and structure`)
     }
 
     if (helperFiles.length > 0) {
-      migrationSteps.push(`2. Create compatibility helpers: ${helperFiles.map(f => f.path).join(', ')}`)
+      migrationSteps.push(`${stepNum++}. Create compatibility helpers: ${helperFiles.map(f => f.path).join(', ')}`)
     }
 
     if (issuesByCategory.composable.filter(i => i.autoFixable).length > 0) {
-      migrationSteps.push('3. Rename composables: useWP* → use*, useAsync* → useLazy*')
+      migrationSteps.push(`${stepNum++}. Rename composables: useWP* → use*, useAsync* → useLazy*`)
     }
 
     if (issuesByCategory.directive.length > 0) {
-      migrationSteps.push('4. Update directives: v-sanitize → v-sanitize-html')
+      migrationSteps.push(`${stepNum++}. Update directives: v-sanitize → v-sanitize-html`)
     }
 
     if (issuesByCategory.component.length > 0) {
-      migrationSteps.push('5. Replace removed components with v-sanitize-html or @wpnuxt/blocks')
+      migrationSteps.push(`${stepNum++}. Replace removed components with v-sanitize-html or @wpnuxt/blocks`)
     }
 
-    migrationSteps.push('6. Run pnpm dev:prepare to regenerate types')
-    migrationSteps.push('7. Test all pages')
+    migrationSteps.push(`${stepNum++}. Run pnpm dev:prepare to regenerate types`)
+    migrationSteps.push(`${stepNum++}. Test all pages`)
 
     return jsonResult({
-      summary,
+      summary: {
+        ...summary,
+        usageIssues: issuesByCategory.usage.length
+      },
       migrationSteps,
       issues: {
-        composables: issuesByCategory.composable,
-        directives: issuesByCategory.directive,
-        config: issuesByCategory.config,
-        components: issuesByCategory.component
+        usage: issuesByCategory.usage.length > 0 ? issuesByCategory.usage : undefined,
+        composables: issuesByCategory.composable.length > 0 ? issuesByCategory.composable : undefined,
+        directives: issuesByCategory.directive.length > 0 ? issuesByCategory.directive : undefined,
+        config: issuesByCategory.config.length > 0 ? issuesByCategory.config : undefined,
+        components: issuesByCategory.component.length > 0 ? issuesByCategory.component : undefined
       },
       helperFiles: helperFiles.length > 0 ? helperFiles : undefined,
       migrationGuideUrl: 'https://wpnuxt.com/migration/v1-to-v2'
