@@ -1,8 +1,6 @@
 export default defineNuxtConfig({
   extends: ['docus'],
 
-  modules: ['@nuxtjs/mcp-toolkit'],
-
   css: ['~/assets/css/main.css'],
 
   site: {
@@ -34,6 +32,14 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2025-12-26',
+
+  hooks: {
+    // Force exit after build completes to prevent mcp-toolkit from keeping process alive
+    // See: https://github.com/nuxt-modules/mcp-toolkit/issues/XX (to be reported)
+    close: () => {
+      setTimeout(() => process.exit(0), 1000)
+    }
+  },
 
   llms: {
     domain: 'https://wpnuxt.com'
