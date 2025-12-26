@@ -1,10 +1,11 @@
 /**
  * MCP Client for connecting to Nuxt UI MCP server
  * Provides access to Nuxt UI documentation, components, and setup guides
+ *
+ * Note: SDK is lazy-loaded to prevent keeping Node.js process alive during build
  */
 
-import { Client } from '@modelcontextprotocol/sdk/client/index.js'
-import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js'
+import type { Client } from '@modelcontextprotocol/sdk/client/index.js'
 
 const NUXT_UI_MCP_URL = 'https://ui.nuxt.com/mcp'
 
@@ -27,6 +28,7 @@ let connectionPromise: Promise<Client> | null = null
 
 /**
  * Get or create a connected MCP client for Nuxt UI
+ * SDK is lazy-loaded to avoid keeping Node.js alive during build
  */
 async function getClient(): Promise<Client> {
   if (clientInstance) {
@@ -38,6 +40,10 @@ async function getClient(): Promise<Client> {
   }
 
   connectionPromise = (async () => {
+    // Lazy-load SDK to prevent build from hanging
+    const { Client } = await import('@modelcontextprotocol/sdk/client/index.js')
+    const { StreamableHTTPClientTransport } = await import('@modelcontextprotocol/sdk/client/streamableHttp.js')
+
     const transport = new StreamableHTTPClientTransport(
       new URL(NUXT_UI_MCP_URL)
     )

@@ -33,9 +33,8 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2025-12-26',
 
+  // Force exit after build - workaround for @modelcontextprotocol/sdk keeping process alive
   hooks: {
-    // Force exit after build completes to prevent mcp-toolkit from keeping process alive
-    // See: https://github.com/nuxt-modules/mcp-toolkit/issues/XX (to be reported)
     close: () => {
       setTimeout(() => process.exit(0), 1000)
     }
