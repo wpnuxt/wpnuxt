@@ -177,7 +177,8 @@ The `useWPContent` composables can transform WordPress image URLs to relative pa
 
 ### Forbidden Without Permission
 - Never start the dev server (`pnpm run dev`, `pnpm run dev:*`) - always ask the user to start it manually
-- Never run background shell processes for long-running servers
+- Never run background shell processes for long-running servers                                                            
+- Never commit or push to git without explicit user confirmation - always show staged changes and ask before committing      
 
 ### After Every Code Change
 - Run `pnpm run lint` to check for linting errors
