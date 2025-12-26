@@ -1,5 +1,6 @@
 import { defu } from 'defu'
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync } from 'node:fs'
+import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
@@ -48,8 +49,8 @@ export default defineNuxtModule<WPNuxtConfig>({
     const mergedQueriesFolder = await mergeQueries(nuxt, wpNuxtConfig, resolver)
 
     // Set up server and client options for nuxt-graphql-middleware
-    setupServerOptions(nuxt, resolver, logger)
-    setupClientOptions(nuxt, resolver, logger)
+    await setupServerOptions(nuxt, resolver, logger)
+    await setupClientOptions(nuxt, resolver, logger)
 
     // Validate WordPress endpoint is reachable and download schema if needed
     if (wpNuxtConfig.downloadSchema) {
@@ -225,7 +226,7 @@ export default defineGraphqlServerOptions({
 })
 `
 
-function setupServerOptions(nuxt: Nuxt, _resolver: Resolver, logger: ReturnType<typeof getLogger>) {
+async function setupServerOptions(nuxt: Nuxt, _resolver: Resolver, logger: ReturnType<typeof getLogger>) {
   const serverDir = nuxt.options.serverDir
   const targetPath = join(serverDir, 'graphqlMiddleware.serverOptions.ts')
 
@@ -237,11 +238,11 @@ function setupServerOptions(nuxt: Nuxt, _resolver: Resolver, logger: ReturnType<
 
   // Ensure server directory exists
   if (!existsSync(serverDir)) {
-    mkdirSync(serverDir, { recursive: true })
+    await mkdir(serverDir, { recursive: true })
   }
 
   // Write WPNuxt's default server options
-  writeFileSync(targetPath, SERVER_OPTIONS_TEMPLATE)
+  await writeFile(targetPath, SERVER_OPTIONS_TEMPLATE)
   logger.debug('Created graphqlMiddleware.serverOptions.ts with WPNuxt defaults (cookie/auth forwarding)')
 }
 
@@ -275,7 +276,7 @@ export default defineGraphqlClientOptions<{
 })
 `
 
-function setupClientOptions(nuxt: Nuxt, _resolver: Resolver, logger: ReturnType<typeof getLogger>) {
+async function setupClientOptions(nuxt: Nuxt, _resolver: Resolver, logger: ReturnType<typeof getLogger>) {
   // Client options go in the app directory (Nuxt 4 structure)
   // In Nuxt 4, nuxt.options.dir.app is an absolute path
   const appDir = nuxt.options.dir.app
@@ -289,11 +290,11 @@ function setupClientOptions(nuxt: Nuxt, _resolver: Resolver, logger: ReturnType<
 
   // Ensure app directory exists
   if (!existsSync(appDir)) {
-    mkdirSync(appDir, { recursive: true })
+    await mkdir(appDir, { recursive: true })
   }
 
   // Write WPNuxt's default client options
-  writeFileSync(targetPath, CLIENT_OPTIONS_TEMPLATE)
+  await writeFile(targetPath, CLIENT_OPTIONS_TEMPLATE)
   logger.debug('Created graphqlMiddleware.clientOptions.ts with WPNuxt defaults (preview mode support)')
 }
 
