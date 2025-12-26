@@ -5,8 +5,7 @@
     "dev": "nuxt dev",
     "build": "nuxt build",
     "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "typecheck": "vue-tsc --noEmit"
+    "preview": "nuxt preview"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.10.0",
@@ -15,7 +14,5 @@
     "nuxt": "^4.1.2",
     "zod": "^4.2.1"
   },
-  "devDependencies": {
-    "vue-tsc": "^3.2.1"
-  }
+  "devDependencies": {}
 }
