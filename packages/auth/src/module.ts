@@ -4,6 +4,17 @@ import { defineNuxtModule, addPlugin, createResolver, addImports, addServerHandl
 import type { WPNuxtAuthConfig } from './runtime/types'
 import { validateAuthSchema } from './utils/schemaDetection'
 
+/**
+ * Helper type for accessing WPNuxt config from Nuxt options.
+ * This is needed because @wpnuxt/auth may be installed without @wpnuxt/core types.
+ */
+interface WPNuxtQueriesConfig {
+  queries?: {
+    mergedOutputFolder?: string
+    extendFolder?: string
+  }
+}
+
 export type { WPNuxtAuthConfig }
 
 // Default OAuth settings for miniOrange WP OAuth Server
@@ -52,7 +63,7 @@ export default defineNuxtModule<WPNuxtAuthConfig>({
     // Extend queries with auth-specific fragments
     const baseDir = nuxt.options.srcDir || nuxt.options.rootDir
     const { resolve } = createResolver(baseDir)
-    const wpNuxtConfig = (nuxt.options as unknown as Record<string, unknown>).wpNuxt as { queries: { mergedOutputFolder: string, extendFolder: string } } | undefined
+    const wpNuxtConfig = (nuxt.options as { wpNuxt?: WPNuxtQueriesConfig }).wpNuxt
     const mergedQueriesPath = resolve(wpNuxtConfig?.queries?.mergedOutputFolder || '.queries/')
     const userQueryPath = resolve(wpNuxtConfig?.queries?.extendFolder || 'extend/queries/')
     const authQueriesPath = resolver.resolve('./runtime/queries')

@@ -67,10 +67,8 @@ export default defineNuxtModule<WPNuxtConfig>({
     await registerModules(nuxt, resolver, wpNuxtConfig, mergedQueriesFolder)
 
     // Customize the nuxt-graphql-middleware devtools tab for WPNuxt branding
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore - devtools:customTabs is from @nuxt/devtools
-    nuxt.hook('devtools:customTabs', (tabs: Array<{ name: string, title?: string, icon?: string }>) => {
-      const middlewareTab = tabs.find((tab: { name: string }) => tab.name === 'nuxt-graphql-middleware')
+    nuxt.hook('devtools:customTabs', (tabs) => {
+      const middlewareTab = tabs.find(tab => tab.name === 'nuxt-graphql-middleware')
       if (middlewareTab) {
         middlewareTab.title = 'WPNuxt GraphQL'
         middlewareTab.icon = 'simple-icons:wordpress'
