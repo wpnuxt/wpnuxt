@@ -108,6 +108,6 @@ declare module '#build/graphql-operations' {
 }
 
 declare module '#imports' {
-  export { ref, resolveComponent } from 'vue'
+  export { ref, resolveComponent, getCurrentInstance } from 'vue'
   export function useNuxtApp(): { vueApp: { component: (name: string) => unknown } }
 }
