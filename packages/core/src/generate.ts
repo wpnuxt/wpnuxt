@@ -55,14 +55,10 @@ export async function prepareContext(ctx: WPNuxtContext) {
   }
 
   // Query composable expression
-  const queryFnExp = (q: WPNuxtQuery, typed = false, lazy = false) => {
-    const baseName = fnName(q.name)
-    const functionName = lazy ? `useLazy${q.name}` : baseName
+  const queryFnExp = (q: WPNuxtQuery, typed = false) => {
+    const functionName = fnName(q.name)
 
     if (!typed) {
-      if (lazy) {
-        return `export const ${functionName} = (params, options) => useWPContent('${q.name}', [${formatNodes(q.nodes)}], false, params, { ...options, lazy: true })`
-      }
       return `export const ${functionName} = (params, options) => useWPContent('${q.name}', [${formatNodes(q.nodes)}], false, params, options)`
     }
     return `  export const ${functionName}: (params?: ${q.name}QueryVariables, options?: WPContentOptions) => WPContentResult<${getFragmentType(q)}>`
@@ -81,10 +77,9 @@ export async function prepareContext(ctx: WPNuxtContext) {
   ctx.generateImports = () => {
     const imports: string[] = []
 
-    // Generate query composables (regular and lazy variants)
+    // Generate query composables
     queries.forEach((f) => {
-      imports.push(queryFnExp(f, false, false))
-      imports.push(queryFnExp(f, false, true))
+      imports.push(queryFnExp(f, false))
     })
 
     // Generate mutation composables
@@ -152,8 +147,7 @@ export async function prepareContext(ctx: WPNuxtContext) {
 
     // Add query type declarations
     queries.forEach((f) => {
-      declarations.push(queryFnExp(f, true, false))
-      declarations.push(queryFnExp(f, true, true))
+      declarations.push(queryFnExp(f, true))
     })
 
     // Add mutation type declarations
@@ -166,11 +160,8 @@ export async function prepareContext(ctx: WPNuxtContext) {
   }
 
   ctx.fnImports = [
-    // Auto-import query composables (regular and lazy variants)
-    ...queries.flatMap((fn): Import[] => [
-      { from: '#wpnuxt', name: fnName(fn.name) },
-      { from: '#wpnuxt', name: `useLazy${fn.name}` }
-    ]),
+    // Auto-import query composables
+    ...queries.map((fn): Import => ({ from: '#wpnuxt', name: fnName(fn.name) })),
     // Auto-import mutation composables
     ...mutations.map((m): Import => ({ from: '#wpnuxt', name: mutationFnName(m.name) }))
   ]
@@ -178,7 +169,6 @@ export async function prepareContext(ctx: WPNuxtContext) {
   logger.debug('generated WPNuxt composables: ')
   queries.forEach((f) => {
     logger.debug(` ${fnName(f.name)}()`)
-    logger.debug(` useLazy${f.name}()`)
   })
   mutations.forEach((m) => {
     logger.debug(` ${mutationFnName(m.name)}()`)

@@ -93,7 +93,9 @@ export default defineNuxtModule<WPNuxtConfig>({
 
     addImports([
       { name: 'useWPContent', as: 'useWPContent', from: resolver.resolve('./runtime/composables/useWPContent') },
-      { name: 'useAsyncWPContent', as: 'useAsyncWPContent', from: resolver.resolve('./runtime/composables/useWPContent') }
+      { name: 'useAsyncWPContent', as: 'useAsyncWPContent', from: resolver.resolve('./runtime/composables/useWPContent') },
+      { name: 'getRelativeImagePath', as: 'getRelativeImagePath', from: resolver.resolve('./runtime/util/images') },
+      { name: 'usePrevNextPost', as: 'usePrevNextPost', from: resolver.resolve('./runtime/composables/usePrevNextPost') }
       // Note: useGraphqlMutation is auto-imported via nuxt-graphql-middleware with includeComposables: true
     ])
     addComponentsDir({

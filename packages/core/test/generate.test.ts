@@ -34,7 +34,7 @@ describe('generate', () => {
       const imports = ctx.generateImports!()
 
       expect(imports).toContain('usePosts')
-      expect(imports).toContain('useLazyPosts')
+      expect(imports).not.toContain('useLazyPosts') // lazy variants removed, use { lazy: true } option instead
       expect(imports).toContain('useWPContent(\'Posts\'')
     })
 
@@ -101,9 +101,8 @@ describe('generate', () => {
 
       await prepareContext(ctx)
 
-      expect(ctx.fnImports).toHaveLength(2) // usePosts and useLazyPosts
+      expect(ctx.fnImports).toHaveLength(1) // only usePosts (lazy variants removed)
       expect(ctx.fnImports).toContainEqual({ from: '#wpnuxt', name: 'usePosts' })
-      expect(ctx.fnImports).toContainEqual({ from: '#wpnuxt', name: 'useLazyPosts' })
     })
 
     it('should handle multiple queries and mutations', async () => {
@@ -136,17 +135,17 @@ describe('generate', () => {
 
       const imports = ctx.generateImports!()
 
-      // Should have query composables
+      // Should have query composables (no lazy variants)
       expect(imports).toContain('usePosts')
-      expect(imports).toContain('useLazyPosts')
+      expect(imports).not.toContain('useLazyPosts')
       expect(imports).toContain('usePages')
-      expect(imports).toContain('useLazyPages')
+      expect(imports).not.toContain('useLazyPages')
 
       // Should have mutation composable
       expect(imports).toContain('useMutationCreatePost')
 
-      // Should register all imports
-      expect(ctx.fnImports).toHaveLength(5) // 2 queries * 2 variants + 1 mutation
+      // Should register all imports (no lazy variants)
+      expect(ctx.fnImports).toHaveLength(3) // 2 queries + 1 mutation
     })
 
     it('should handle empty context', async () => {

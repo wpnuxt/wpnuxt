@@ -37,16 +37,24 @@ const _parseDoc = async (doc: string): Promise<WPNuxtQuery[]> => {
   }
 }
 
-function processSelections(selections: readonly SelectionNode[], level: number, query: WPNuxtQuery) {
+function processSelections(selections: readonly SelectionNode[], level: number, query: WPNuxtQuery, canExtract: boolean = true) {
   if (!selections || selections.length === 0) return
-  if (selections.length === 1 && selections[0]?.kind === 'Field') {
-    query.nodes?.push(selections[0].name.value.trim())
+
+  // Only build extraction path if we have a single field selection at each level
+  // Multiple selections means we need the full response (e.g., previousPost + nextPost)
+  const firstSelection = selections[0]
+  const hasSingleField = selections.length === 1 && firstSelection?.kind === 'Field'
+
+  if (hasSingleField && canExtract && firstSelection.kind === 'Field') {
+    query.nodes?.push(firstSelection.name.value.trim())
   }
+
   selections.forEach((s) => {
     if (s.kind === 'FragmentSpread') {
       query.fragments?.push(s.name.value.trim())
     } else if (s.selectionSet?.selections) {
-      processSelections(s.selectionSet.selections, level + 1, query)
+      // Stop extracting path if we had multiple selections at this level
+      processSelections(s.selectionSet.selections, level + 1, query, canExtract && hasSingleField)
     }
   })
 }
