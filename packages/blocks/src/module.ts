@@ -1,6 +1,8 @@
 import { promises as fsp, existsSync, cpSync } from 'node:fs'
 import { join } from 'node:path'
-import { defineNuxtModule, installModule, createResolver, addComponentsDir, addTemplate, hasNuxtModule } from '@nuxt/kit'
+import { defineNuxtModule, installModule, createResolver, addComponentsDir, addTemplate, hasNuxtModule, useLogger } from '@nuxt/kit'
+
+const logger = useLogger('@wpnuxt/blocks')
 
 export interface WPNuxtBlocksConfig {
   /**
@@ -19,6 +21,11 @@ export interface WPNuxtBlocksConfig {
    * @default 'auto' - uses Nuxt UI if available
    */
   nuxtUI?: boolean | 'auto'
+  /**
+   * Skip the WPGraphQL Content Blocks plugin check
+   * @default false
+   */
+  skipPluginCheck?: boolean
 }
 
 export default defineNuxtModule<WPNuxtBlocksConfig>({
@@ -29,7 +36,8 @@ export default defineNuxtModule<WPNuxtBlocksConfig>({
   defaults: {
     enabled: true,
     imageDomains: [],
-    nuxtUI: 'auto'
+    nuxtUI: 'auto',
+    skipPluginCheck: false
   },
   async setup(options, nuxt) {
     if (!options.enabled) {
@@ -54,6 +62,51 @@ export default defineNuxtModule<WPNuxtBlocksConfig>({
 
     // Install @radya/nuxt-dompurify for v-sanitize directive (used by block components)
     await installModule('@radya/nuxt-dompurify')
+
+    // Check for WPGraphQL Content Blocks plugin
+    if (!options.skipPluginCheck) {
+      const wpNuxtConfig = nuxt.options.runtimeConfig?.public?.wpNuxt as { wordpressUrl?: string, graphqlEndpoint?: string } | undefined
+      const wordpressUrl = wpNuxtConfig?.wordpressUrl || process.env.WPNUXT_WORDPRESS_URL
+      const graphqlEndpoint = wpNuxtConfig?.graphqlEndpoint || process.env.WPNUXT_GRAPHQL_ENDPOINT || '/graphql'
+
+      if (wordpressUrl) {
+        const graphqlUrl = `${wordpressUrl}${graphqlEndpoint}`
+
+        // Check if editorBlocks field exists using introspection
+        const introspectionQuery = `
+          query CheckEditorBlocks {
+            __type(name: "Post") {
+              fields {
+                name
+              }
+            }
+          }
+        `
+
+        try {
+          const response = await fetch(graphqlUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: introspectionQuery })
+          })
+
+          if (response.ok) {
+            const data = await response.json() as { data?: { __type?: { fields?: Array<{ name: string }> } } }
+            const fields = data?.data?.__type?.fields || []
+            const hasEditorBlocks = fields.some((f: { name: string }) => f.name === 'editorBlocks')
+
+            if (!hasEditorBlocks) {
+              logger.warn('WPGraphQL Content Blocks plugin not detected on WordPress.')
+              logger.warn('Install it from: https://github.com/wpengine/wp-graphql-content-blocks')
+              logger.warn('Without this plugin, BlockRenderer will not work correctly.')
+            }
+          }
+        } catch (error) {
+          // Silently ignore network errors during build (WordPress may not be reachable)
+          logger.debug('Could not check for WPGraphQL Content Blocks plugin:', error)
+        }
+      }
+    }
 
     // Copy block queries to the merged queries folder
     // @wpnuxt/core creates .queries in srcDir (which is 'app/' in Nuxt 4)
