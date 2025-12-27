@@ -1,11 +1,27 @@
 <script setup lang="ts">
 import type { PostFragment, PageFragment } from '#graphql-operations'
 
-defineProps<{
+interface AdjacentPost {
+  uri?: string | null
+  title?: string | null
+}
+
+const props = defineProps<{
   post: PostFragment | PageFragment | undefined
   pending: boolean
   refreshContent: () => void
+  composableName: string
+  composableScript: string
+  previousPost?: AdjacentPost | null
+  nextPost?: AdjacentPost | null
 }>()
+
+const items = computed(() => [
+  {
+    label: `Fetched ${props.post?.contentTypeName === 'post' ? 'post' : 'page'} content using ${props.composableName}('${props.post?.uri}')`,
+    content: props.composableScript
+  }
+])
 </script>
 
 <template>
@@ -22,22 +38,54 @@ defineProps<{
       </div>
     </template>
     <template #description>
-      <NuxtTime
-        v-if="post?.date"
-        :datetime="post.date"
-        month="long"
-        day="numeric"
-        year="numeric"
-      />
+      <div v-if="!pending && post?.date">
+        <NuxtTime
+          :datetime="post.date"
+          month="long"
+          day="numeric"
+          year="numeric"
+          class="text-primary text-sm"
+        />
+        <UAccordion :items="items" class="mt-2">
+          <template #body="{ item }">
+            <pre>{{ item.content }}</pre>
+          </template>
+        </UAccordion>
+      </div>
       <LoadingIcon v-else />
     </template>
     <template #links>
-      <UButton
-        class="cursor-pointer"
-        :loading="pending"
-        icon="i-lucide-refresh-cw"
-        @click="refreshContent"
-      />
+      <div class="flex items-center gap-2">
+        <!-- Previous/Next Post Navigation -->
+        <UButton
+          :to="previousPost?.uri ?? undefined"
+          :disabled="!previousPost?.uri"
+          icon="i-lucide-chevron-left"
+          color="neutral"
+          variant="outline"
+          size="sm"
+        >
+          Previous
+        </UButton>
+        <!-- Refresh Button -->
+        <UButton
+          class="cursor-pointer"
+          :loading="pending"
+          icon="i-lucide-refresh-cw"
+          size="sm"
+          @click="refreshContent"
+        />
+        <UButton
+          :to="nextPost?.uri ?? undefined"
+          :disabled="!nextPost?.uri"
+          trailing-icon="i-lucide-chevron-right"
+          color="neutral"
+          variant="outline"
+          size="sm"
+        >
+          Next
+        </UButton>
+      </div>
     </template>
   </UPageHeader>
 </template>

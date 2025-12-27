@@ -1,7 +1,5 @@
 <script setup lang="ts">
-// Using useLazyPosts() - same as usePosts with lazy: true option
-// Doesn't block navigation, perfect for showing loading states
-const { data: posts, pending, refresh, clear } = useLazyPosts()
+const { data: posts, pending, refresh, clear } = usePosts({}, { lazy: true })
 </script>
 
 <template>
@@ -11,14 +9,25 @@ const { data: posts, pending, refresh, clear } = useLazyPosts()
         :posts="posts || []"
         :pending="pending"
         :refresh-content="() => { clear(); refresh(); }"
+        composable-name="usePosts"
+        composable-script="const { data: posts, pending, refresh, clear } = usePosts({}, { lazy: true })"
       />
       <UPageBody>
-        <pre>const { data: posts, pending, refresh, clear } = useLazyPosts()</pre>
-        <PostGrid
-          :posts="posts || []"
-          :pending="pending"
-          :lazy="true"
-        />
+        <UBlogPosts>
+          <UBlogPost
+            v-for="post in posts"
+            :key="post.id"
+            :title="post.title ?? undefined"
+            :to="`/${post.slug}`"
+            :date="post.date ?? undefined"
+            :image="getRelativeImagePath(post.featuredImage?.node?.sourceUrl ?? '')"
+            variant="outline"
+          >
+            <template #description>
+              <div v-sanitize-html="post.excerpt" />
+            </template>
+          </UBlogPost>
+        </UBlogPosts>
       </UPageBody>
     </UPage>
   </UContainer>

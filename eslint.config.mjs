@@ -21,7 +21,11 @@ export default createConfigForNuxt({
 },
 {
   rules: {
-    'vue/multi-word-component-names': 0
+    'vue/multi-word-component-names': 0,
+    'vue/max-attributes-per-line': ['error', {
+      singleline: { max: 2 },
+      multiline: { max: 1 }
+    }]
   },
   ignores: [
     'wordpress',

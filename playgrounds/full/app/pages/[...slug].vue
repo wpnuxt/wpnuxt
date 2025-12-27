@@ -5,6 +5,32 @@ const { data: post, pending, refresh, clear } = await useNodeByUri(
   { uri: route.path },
   { watch: [() => route.path] }
 )
+
+// Fetch all posts once for prev/next navigation (cached)
+const { data: allPosts } = await usePosts({ limit: 100 })
+
+// Compute prev/next reactively based on current post
+const previousPost = computed(() => {
+  if (post.value?.contentTypeName !== 'post' || !post.value?.slug || !allPosts.value?.length) {
+    return null
+  }
+  const currentIndex = allPosts.value.findIndex(p => p.slug === post.value?.slug)
+  // Posts sorted by date DESC: prev (older) = higher index
+  return currentIndex >= 0 && currentIndex < allPosts.value.length - 1
+    ? allPosts.value[currentIndex + 1]
+    : null
+})
+
+const nextPost = computed(() => {
+  if (post.value?.contentTypeName !== 'post' || !post.value?.slug || !allPosts.value?.length) {
+    return null
+  }
+  const currentIndex = allPosts.value.findIndex(p => p.slug === post.value?.slug)
+  // Posts sorted by date DESC: next (newer) = lower index
+  return currentIndex > 0
+    ? allPosts.value[currentIndex - 1]
+    : null
+})
 </script>
 
 <template>
@@ -14,14 +40,24 @@ const { data: post, pending, refresh, clear } = await useNodeByUri(
         :post="post"
         :pending="pending"
         :refresh-content="() => { clear(); refresh(); }"
+        :previous-post="previousPost"
+        :next-post="nextPost"
+        composable-name="useNodeByUri"
+        composable-script="const { data: post, pending, refresh, clear } = await useNodeByUri({ uri: route.path })"
       />
       <UPageBody>
-        <pre>const { data: post, pending, refresh, clear } = await useNodeByUri({ uri: route.path })</pre>
-        <UPageCard>
-          <MDC
-            v-if="!pending && post?.content"
-            :value="post.content"
-          />
+        <UPageCard description="Rendered Content from WordPress">
+          <template v-if="!pending && post">
+            <!-- Use BlockRenderer for structured blocks, MDC for HTML content -->
+            <BlockRenderer
+              v-if="post.editorBlocks?.length"
+              :node="post"
+            />
+            <MDC
+              v-else-if="post.content"
+              :value="post.content"
+            />
+          </template>
           <LoadingPage v-else />
         </UPageCard>
       </UPageBody>

@@ -16,7 +16,8 @@
     "@wpnuxt/auth": "workspace:*",
     "@wpnuxt/blocks": "workspace:*",
     "@wpnuxt/core": "workspace:*",
-    "nuxt": "4.2.2"
+    "nuxt": "4.2.2",
+    "vue-json-pretty": "^2.4.0"
   },
   "devDependencies": {
     "@iconify-json/logos": "^1.2.10",

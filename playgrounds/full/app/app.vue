@@ -15,11 +15,15 @@ const menu = computed(() => {
       label: 'Home',
       to: '/'
     },
+    ...wordPressPages,
     {
       label: 'Lazy data fetching',
       to: '/lazy'
     },
-    ...wordPressPages
+    {
+      label: 'Composables',
+      to: '/composables'
+    }
   ]
 })
 </script>
