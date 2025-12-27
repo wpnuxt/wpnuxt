@@ -31,10 +31,10 @@ const MIGRATION_PATTERNS = {
     },
     {
       v1: 'usePrevNextPost',
-      v2: null, // Removed - needs helper
+      v2: 'usePrevNextPost', // Available in v2 - API unchanged
       description: 'Get previous and next posts for navigation',
-      replacement: 'Implement with usePosts() or create a custom query',
-      helperCode: null // Too complex for auto-generation
+      replacement: 'No change needed - usePrevNextPost is available in v2 with the same API',
+      helperCode: null
     },
     {
       v1: 'isStaging',
@@ -501,11 +501,17 @@ export default defineMcpTool({
 This tool scans for:
 
 **v1 → v2 Migration Issues:**
-- Removed composables (useFeaturedImage, useWPUri, usePrevNextPost, isStaging)
+- Removed composables (useFeaturedImage, useWPUri, isStaging)
 - Renamed composables (useWPPosts → usePosts, useAsyncWPPosts → useLazyPosts)
+- Unchanged composables (usePrevNextPost is available in v2 with the same API)
 - Renamed directives (v-sanitize → v-sanitize-html)
 - Removed components (<WPContent>, <ContentRenderer>, <StagingBanner>)
 - Changed configuration options
+
+**New in v2:**
+- usePrevNextPost - gets previous/next posts for navigation
+- useWPContent / useAsyncWPContent - low-level content fetching
+- getRelativeImagePath - image path utility
 
 **Usage Anti-Patterns (SSR issues):**
 - Composables called inside lifecycle hooks (onMounted, etc.) - breaks SSR

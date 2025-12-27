@@ -224,7 +224,7 @@ function generateListPage(
  */
 
 // Fetch ${plural} with pagination
-const { data: ${plural}, pending, error } = await use${pluralCapitalized}({
+const { data: ${plural}, pending, error } = await useLazy${pluralCapitalized}({
   first: 10
 })
 
@@ -295,10 +295,13 @@ function generateSinglePage(ct: ContentType, customRoute?: string): { filename: 
  */
 const route = useRoute()
 
-const { data: ${singular}, pending, error } = await use${singularCapitalized}BySlug({
-  slug: route.params.slug as string
+// Build the full URI from route params
+const uri = computed(() => \`/\${Array.isArray(route.params.slug) ? route.params.slug.join('/') : route.params.slug}/\`)
+
+const { data: ${singular}, pending, error } = await useLazy${singularCapitalized}ByUri({
+  uri: uri.value
 }, {
-  watch: [() => route.params.slug]
+  watch: [uri]
 })
 
 // SEO
