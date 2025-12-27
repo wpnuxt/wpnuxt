@@ -14,6 +14,8 @@ export interface WPContentOptions {
   watch?: (WatchSource<unknown> | object)[]
   /** Transform function to alter the result */
   transform?: (input: unknown) => unknown
+  /** GraphQL caching options. Default: { client: true } */
+  graphqlCaching?: { client?: boolean }
   /** Additional options to pass to useAsyncGraphqlQuery */
   [key: string]: unknown
 }
@@ -22,6 +24,7 @@ export interface WPContentOptions {
  * Fetch WordPress content using GraphQL with reactive state
  *
  * Follows Nuxt's useAsyncData pattern. Returns reactive refs immediately.
+ * Client-side GraphQL caching is enabled by default for better navigation performance.
  *
  * **Standard usage (with or without await - same behavior):**
  * ```ts
@@ -32,9 +35,9 @@ export interface WPContentOptions {
  * - `pending` is true while fetching, false when done
  * - Uses Suspense during navigation (lazy: false by default)
  *
- * **Lazy variant (doesn't block navigation):**
+ * **Lazy loading (doesn't block navigation):**
  * ```ts
- * const { data: posts, pending } = useLazyPosts()
+ * const { data: posts, pending } = usePosts(undefined, { lazy: true })
  * ```
  * - Doesn't use Suspense - navigation happens immediately
  * - Shows loading state (pending: true) while fetching
@@ -46,11 +49,17 @@ export interface WPContentOptions {
  * ```
  * - Skips SSR, only fetches on client
  *
+ * **Disable client caching:**
+ * ```ts
+ * const { data: posts } = usePosts(undefined, { graphqlCaching: { client: false } })
+ * ```
+ * - Useful for real-time data that should always be fresh
+ *
  * @param queryName - The GraphQL query name
  * @param nodes - Array of nested property names to extract from response
  * @param fixImagePaths - Whether to convert image URLs to relative paths
  * @param params - Query variables
- * @param options - Options (lazy, server, immediate, watch, transform, etc.)
+ * @param options - Options (lazy, server, immediate, watch, transform, graphqlCaching, etc.)
  */
 export const useWPContent = <T>(
   queryName: keyof Query,
@@ -59,12 +68,19 @@ export const useWPContent = <T>(
   params?: T,
   options?: WPContentOptions
 ) => {
+  // Merge default options with user-provided options
+  // Enable client-side GraphQL caching by default for better navigation performance
+  const mergedOptions: WPContentOptions = {
+    graphqlCaching: { client: true },
+    ...options
+  }
+
   // Use nuxt-graphql-middleware's built-in client-side caching
   // Returns reactive refs immediately - works for both SSR and CSR
   const { data, pending, refresh, execute, clear, error, status } = useAsyncGraphqlQuery(
     queryName,
     params ?? {},
-    options
+    mergedOptions
   )
 
   const transformedData = computed(() => {
