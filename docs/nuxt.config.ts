@@ -5,7 +5,7 @@ export default defineNuxtConfig({
 
   site: {
     name: 'WPNuxt',
-    url: 'https://wpnuxt.com'
+    url: 'https://wpnuxt-docs.vercel.app'
   },
 
   // Runtime config for MCP WordPress connection
@@ -41,12 +41,12 @@ export default defineNuxtConfig({
   },
 
   llms: {
-    domain: 'https://wpnuxt.com'
+    domain: 'https://wpnuxt-docs.vercel.app'
   },
 
   mcp: {
     name: 'WPNuxt',
-    browserRedirect: '/ai/'
+    browserRedirect: '/ai'
   },
 
   pwa: {
