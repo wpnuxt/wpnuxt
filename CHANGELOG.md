@@ -1,5 +1,41 @@
 # Changelog
 
+## [2.0.0-alpha.3](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.2...v2.0.0-alpha.3) (2025-12-27)
+
+### Features
+
+* **auth:** enhance WPNuxt configuration and improve devtools integration ([e190e84](https://github.com/wpnuxt/wpnuxt/commit/e190e84068fd9dcbacd100c828639e3ae3eefff6))
+* **auth:** update login and logout functions to use $fetch directly ([5b52cbd](https://github.com/wpnuxt/wpnuxt/commit/5b52cbd2222a0c55e6be7977e1a5ca318b241f63))
+* **component:** enhance BlockComponent to check for registered components before resolving ([3875566](https://github.com/wpnuxt/wpnuxt/commit/3875566f095f239010f5798cf141a85d349dfa3c))
+* **docs:** add authentication and troubleshooting sections to configuration documentation ([5492b53](https://github.com/wpnuxt/wpnuxt/commit/5492b53e3492a7026a6ee48f95c6aa9a4429dfec))
+* **graphql:** add GraphQL caching options to useWPContent composable ([8ddfe04](https://github.com/wpnuxt/wpnuxt/commit/8ddfe04abd8750979fd7663e859b1b6a0b7879cc))
+* **logging:** implement centralized logging utility for WPNuxt Auth ([d3ef665](https://github.com/wpnuxt/wpnuxt/commit/d3ef665a2967a7881e9be3e1a320b16b3bdc2c3d))
+* **mcp:** moved the WPNuxt MCP server into the documentation website ([6cbb734](https://github.com/wpnuxt/wpnuxt/commit/6cbb734ecf65ed9444606841d054df1940e1ff2a))
+* **migration:** enhance migration tools and documentation for WPNuxt v2 ([2e563b7](https://github.com/wpnuxt/wpnuxt/commit/2e563b7526b17259a934ff90c0916b0b2d116aea))
+* **migration:** new migration mcp tool for WPNuxt v2 and enhance migration documentation ([af4f8b7](https://github.com/wpnuxt/wpnuxt/commit/af4f8b75e48ca7e935d44d79edfbc428492703c4))
+* **module:** implement WPGraphQL Content Blocks plugin validation and add skipPluginCheck option ([b25e713](https://github.com/wpnuxt/wpnuxt/commit/b25e71330c75b44c22a6ea0873fbee64bf9fd893))
+* **playgrounds:** reworked full playground ([4eb9602](https://github.com/wpnuxt/wpnuxt/commit/4eb9602c2b857fff5c65f38b59849887dbf1ea78))
+
+### Refactoring
+
+* **generate:** remove lazy variants from query composables and update related imports ([7ba7d44](https://github.com/wpnuxt/wpnuxt/commit/7ba7d441ee942e7d207772e5d3dcdeb7848ad9e2))
+* **graphql:** streamline imports and enhance error handling in GraphQL plugins ([07b9737](https://github.com/wpnuxt/wpnuxt/commit/07b973711e0035e882437a68a4ca50447794eaab))
+* **module:** migrate file system operations to async/await pattern ([5344346](https://github.com/wpnuxt/wpnuxt/commit/53443462d1455fc37cd41d6e90e58cca5b176700))
+
+### Documentation
+
+* update CLAUDE.md to include new guidelines for committing and running servers ([ee85aef](https://github.com/wpnuxt/wpnuxt/commit/ee85aef850b65ded4c02576c47cccfdd245db728))
+* update fetching data and custom queries sections to clarify lazy loading options ([b1b8d99](https://github.com/wpnuxt/wpnuxt/commit/b1b8d994853610943ce1b3384398d26125eb60e8))
+
+### Maintenance
+
+* add nuxt-remote configuration to .mcp.json ([319d2c9](https://github.com/wpnuxt/wpnuxt/commit/319d2c99874112427b967d73d4bcc8b9e96b4295))
+* remove mcp-toolkit module and add build completion hook ([1d10ce1](https://github.com/wpnuxt/wpnuxt/commit/1d10ce1aa8eb53fb6c2b06678e46c7e7e4599f3d))
+* trigger redeploy ([5b61e53](https://github.com/wpnuxt/wpnuxt/commit/5b61e536a059d11c5372c31c03baedad87593b3d))
+* update dependencies and remove unused TypeScript configuration ([db50b1d](https://github.com/wpnuxt/wpnuxt/commit/db50b1db5e2136ef69f9312aa7a050d60ba8904c))
+* update MCP client implementation to lazy-load SDK and improve build process ([d0b9ffb](https://github.com/wpnuxt/wpnuxt/commit/d0b9ffbbf2cda028161b4b8b9efb841a984a3fcc))
+* update pnpm-lock.yaml to remove unused dependencies and update package versions ([1e0f83a](https://github.com/wpnuxt/wpnuxt/commit/1e0f83aa2fa32ac2b87bfa5778b1985e3965c68d))
+
 ## [2.0.0-alpha.2](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.1...v2.0.0-alpha.2) (2025-12-25)
 
 ### Features
