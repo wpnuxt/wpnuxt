@@ -1,5 +1,6 @@
 import { defineEventHandler, getRouterParam, setCookie, sendRedirect, createError, getRequestURL } from 'h3'
 import { useRuntimeConfig } from '#imports'
+import { logger } from '../../../../utils/logger'
 
 /**
  * Initiates OAuth flow for a Headless Login provider (Google, GitHub, etc.)
@@ -51,12 +52,12 @@ export default defineEventHandler(async (event) => {
       `
     }
   }).catch((error) => {
-    console.error('[WPNuxt Auth] Failed to fetch login clients:', error)
+    logger.error('Failed to fetch login clients:', error)
     throw createError({ statusCode: 500, message: 'Failed to fetch login providers from WordPress' })
   })
 
   if (response.errors?.length) {
-    console.error('[WPNuxt Auth] GraphQL errors:', response.errors)
+    logger.error('GraphQL errors:', response.errors)
     throw createError({ statusCode: 500, message: response.errors[0]?.message || 'GraphQL error' })
   }
 

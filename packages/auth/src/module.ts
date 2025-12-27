@@ -1,6 +1,6 @@
 import { existsSync, cpSync } from 'node:fs'
 import { join } from 'node:path'
-import { defineNuxtModule, addPlugin, createResolver, addImports, addServerHandler } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, createResolver, addImports, addServerHandler, useLogger } from '@nuxt/kit'
 import type { WPNuxtAuthConfig } from './runtime/types'
 import { validateAuthSchema } from './utils/schemaDetection'
 
@@ -195,10 +195,11 @@ export default defineNuxtModule<WPNuxtAuthConfig>({
       })
     })
 
+    const logger = useLogger('wpnuxt:auth')
     const providers = []
     if (passwordEnabled) providers.push('password')
     if (oauthEnabled) providers.push('oauth')
     if (headlessLoginEnabled) providers.push('headlessLogin')
-    console.log(`[WPNuxt Auth] Module loaded (providers: ${providers.join(', ') || 'none'})`)
+    logger.info(`Module loaded (providers: ${providers.join(', ') || 'none'})`)
   }
 })

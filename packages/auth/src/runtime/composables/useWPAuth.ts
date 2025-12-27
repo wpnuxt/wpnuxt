@@ -1,5 +1,6 @@
 import { computed, useState, useCookie, useRuntimeConfig, navigateTo, useGraphqlMutation } from '#imports'
 import type { AuthState, LoginCredentials, LoginResult, WPUser, AuthProvidersPublic, HeadlessLoginProvider } from '../types'
+import { logger } from '../utils/logger'
 
 /**
  * Available authentication providers
@@ -193,7 +194,7 @@ export function useWPAuth() {
   async function loginWithOAuth(): Promise<void> {
     const providers = getProviders()
     if (!providers.oauth) {
-      console.warn('[WPNuxt Auth] OAuth is not enabled')
+      logger.warn('OAuth is not enabled')
       return
     }
     // Navigate to OAuth authorize endpoint (external redirect)
@@ -236,7 +237,7 @@ export function useWPAuth() {
       const graphqlEndpoint = (runtimeConfig.public.wpNuxt as { graphqlEndpoint?: string } | undefined)?.graphqlEndpoint || '/graphql'
 
       if (!wordpressUrl) {
-        console.warn('[WPNuxt Auth] WordPress URL not configured')
+        logger.warn('WordPress URL not configured')
         return []
       }
 
@@ -268,7 +269,7 @@ export function useWPAuth() {
       })
 
       if (response.errors?.length) {
-        console.warn('[WPNuxt Auth] Failed to fetch login clients:', response.errors[0]?.message)
+        logger.warn('Failed to fetch login clients:', response.errors[0]?.message)
         return []
       }
 
@@ -288,7 +289,7 @@ export function useWPAuth() {
           isEnabled: client.isEnabled
         }))
     } catch (error) {
-      console.warn('[WPNuxt Auth] Failed to fetch login providers:', error)
+      logger.warn('Failed to fetch login providers:', error)
       return []
     }
   }
@@ -299,7 +300,7 @@ export function useWPAuth() {
    */
   async function loginWithProvider(provider: string): Promise<void> {
     if (!hasHeadlessLoginAuth()) {
-      console.warn('[WPNuxt Auth] Headless Login is not enabled')
+      logger.warn('Headless Login is not enabled')
       return
     }
     // Navigate to provider authorize endpoint

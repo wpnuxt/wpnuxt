@@ -1,5 +1,6 @@
 import { defineEventHandler, getQuery, getCookie, setCookie, deleteCookie, sendRedirect, createError, getRequestURL } from 'h3'
 import { useRuntimeConfig } from '#imports'
+import { logger } from '../../../utils/logger'
 
 interface TokenResponse {
   access_token: string
@@ -97,7 +98,7 @@ export default defineEventHandler(async (event) => {
       client_secret: privateConfig.clientSecret
     }).toString()
   }).catch((error) => {
-    console.error('[WPNuxt Auth] Token exchange failed:', error)
+    logger.error('Token exchange failed:', error)
     throw createError({ statusCode: 500, message: 'Failed to exchange authorization code' })
   })
 
@@ -113,7 +114,7 @@ export default defineEventHandler(async (event) => {
       Authorization: `Bearer ${tokenResponse.access_token}`
     }
   }).catch((error) => {
-    console.error('[WPNuxt Auth] User info fetch failed:', error)
+    logger.error('User info fetch failed:', error)
     // Continue without user info - tokens are still valid
     return null
   })

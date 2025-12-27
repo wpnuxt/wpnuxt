@@ -1,5 +1,6 @@
 import { defineEventHandler, getQuery, getRouterParam, getCookie, setCookie, deleteCookie, sendRedirect, createError } from 'h3'
 import { useRuntimeConfig } from '#imports'
+import { logger } from '../../../../utils/logger'
 
 interface LoginPayload {
   authToken: string | null
@@ -129,12 +130,12 @@ export default defineEventHandler(async (event) => {
       }
     }
   }).catch((error) => {
-    console.error('[WPNuxt Auth] Login mutation failed:', error)
+    logger.error('Login mutation failed:', error)
     throw createError({ statusCode: 500, message: 'Failed to authenticate with WordPress' })
   })
 
   if (response.errors?.length) {
-    console.error('[WPNuxt Auth] GraphQL errors:', response.errors)
+    logger.error('GraphQL errors:', response.errors)
     throw createError({ statusCode: 400, message: response.errors[0]?.message || 'Authentication failed' })
   }
 
