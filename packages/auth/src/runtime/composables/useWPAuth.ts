@@ -49,6 +49,11 @@ export function useWPAuth() {
 
   /**
    * Login with username and password
+   *
+   * Uses $fetch directly (not useFetch) because:
+   * 1. Login is a mutation, not data fetching
+   * 2. Response should not be cached or included in payload
+   * 3. We need immediate error handling without reactive state
    */
   async function login(credentials: LoginCredentials): Promise<LoginResult> {
     authState.value.isLoading = true
@@ -120,6 +125,8 @@ export function useWPAuth() {
 
   /**
    * Logout and clear tokens
+   *
+   * Uses $fetch directly for the server call because logout is a mutation
    */
   async function logout(): Promise<void> {
     // Call server endpoint to clear httpOnly cookies
