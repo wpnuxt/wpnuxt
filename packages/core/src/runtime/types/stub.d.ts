@@ -8,8 +8,10 @@
 
 // Stub for #imports
 export const computed: any
+export const defineNuxtPlugin: any
 export const useAsyncGraphqlQuery: any
 export const useGraphqlState: any
+export const useNuxtApp: any
 export const useRuntimeConfig: any
 export const useRoute: any
 

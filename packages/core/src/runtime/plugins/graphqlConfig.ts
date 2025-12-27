@@ -1,10 +1,9 @@
-import { defineNuxtPlugin } from 'nuxt/app'
-import { useGraphqlState, useRuntimeConfig } from '#imports'
+import { defineNuxtPlugin, useGraphqlState, useRuntimeConfig } from '#imports'
 
 // make sure that after deploying a new release (that changes the build hash), all requests to the server route won't be served from cache.
 // https://nuxt-graphql-middleware.dulnan.net/configuration/composable.html#example-alter-the-request-using-interceptors
 
-export default defineNuxtPlugin((_NuxtApp) => {
+export default defineNuxtPlugin(() => {
   const state = useGraphqlState()
 
   if (!state) {

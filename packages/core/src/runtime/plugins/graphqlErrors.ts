@@ -1,4 +1,4 @@
-import { defineNuxtPlugin, useNuxtApp } from 'nuxt/app'
+import { defineNuxtPlugin, useNuxtApp } from '#imports'
 
 /**
  * WPNuxt GraphQL Error Handler Plugin
@@ -14,9 +14,8 @@ export default defineNuxtPlugin(() => {
   const nuxtApp = useNuxtApp()
 
   // Hook provided by nuxt-graphql-middleware for error handling
-  // Type assertion needed as the hook is dynamically registered by the middleware
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ;(nuxtApp.hook as any)('nuxt-graphql-middleware:errors', (errors: unknown[]) => {
+  // Type comes from nuxt-graphql-middleware at runtime, using type assertion for module development
+  nuxtApp.hook('nuxt-graphql-middleware:errors' as 'app:error', (errors: unknown) => {
     if (import.meta.dev) {
       console.error('[WPNuxt] GraphQL errors:', errors)
     }
