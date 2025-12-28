@@ -1,7 +1,14 @@
 import { getRelativeImagePath } from '../util/images'
 import type { Query } from '#nuxt-graphql-middleware/operation-types'
 import type { WatchSource } from 'vue'
+import type { NuxtApp } from 'nuxt/app'
 import { computed, useAsyncGraphqlQuery } from '#imports'
+
+/** Context object passed to getCachedData (Nuxt 4+) */
+interface AsyncDataRequestContext {
+  /** What triggered the request: 'initial', 'refresh:manual', 'refresh:hook', or 'watch' */
+  cause: 'initial' | 'refresh:manual' | 'refresh:hook' | 'watch'
+}
 
 export interface WPContentOptions {
   /** Whether to resolve the async function after loading the route, instead of blocking client-side navigation. Default: false */
@@ -16,8 +23,37 @@ export interface WPContentOptions {
   transform?: (input: unknown) => unknown
   /** GraphQL caching options. Default: { client: true } */
   graphqlCaching?: { client?: boolean }
+  /** Enable client-side GraphQL caching. Default: true. Set to false for real-time data. */
+  clientCache?: boolean
+  /** Custom cache key suffix for payload deduplication. Useful for locale-specific or complex caching scenarios. */
+  cacheKey?: string
+  /** Custom function to control when cached data should be used. */
+  getCachedData?: (key: string, nuxtApp: NuxtApp, ctx: AsyncDataRequestContext) => unknown
   /** Additional options to pass to useAsyncGraphqlQuery */
   [key: string]: unknown
+}
+
+/**
+ * Default getCachedData function for optimized caching behavior.
+ *
+ * - Returns payload data during hydration (SSR → client handoff)
+ * - Returns cached data for client-side navigation (prevents unnecessary refetches)
+ * - Returns undefined for manual refreshes (ensures fresh data)
+ */
+function defaultGetCachedData(key: string, nuxtApp: NuxtApp, ctx: AsyncDataRequestContext): unknown {
+  // Always use payload during hydration (SSR → client)
+  if (nuxtApp.isHydrating) {
+    return nuxtApp.payload.data[key]
+  }
+
+  // For manual refresh, always fetch fresh data
+  if (ctx.cause === 'refresh:manual' || ctx.cause === 'refresh:hook') {
+    return undefined
+  }
+
+  // For client-side navigation ('initial') and watch-triggered refetches ('watch'),
+  // use cached data if available to prevent unnecessary refetches
+  return nuxtApp.payload.data[key] ?? nuxtApp.static.data[key]
 }
 
 /**
@@ -51,15 +87,23 @@ export interface WPContentOptions {
  *
  * **Disable client caching:**
  * ```ts
- * const { data: posts } = usePosts(undefined, { graphqlCaching: { client: false } })
+ * const { data: posts } = usePosts(undefined, { clientCache: false })
  * ```
  * - Useful for real-time data that should always be fresh
+ *
+ * **Custom cache key:**
+ * ```ts
+ * const { data: posts } = usePosts({ category: 'news' }, {
+ *   cacheKey: `posts-news-${locale.value}`
+ * })
+ * ```
+ * - Useful for locale-specific or complex caching scenarios
  *
  * @param queryName - The GraphQL query name
  * @param nodes - Array of nested property names to extract from response
  * @param fixImagePaths - Whether to convert image URLs to relative paths
  * @param params - Query variables
- * @param options - Options (lazy, server, immediate, watch, transform, graphqlCaching, etc.)
+ * @param options - Options (lazy, server, immediate, watch, transform, clientCache, cacheKey, etc.)
  */
 export const useWPContent = <T>(
   queryName: keyof Query,
@@ -68,11 +112,34 @@ export const useWPContent = <T>(
   params?: T,
   options?: WPContentOptions
 ) => {
-  // Merge default options with user-provided options
-  // Enable client-side GraphQL caching by default for better navigation performance
-  const mergedOptions: WPContentOptions = {
-    graphqlCaching: { client: true },
-    ...options
+  // Extract WPNuxt-specific options
+  const { clientCache, cacheKey, getCachedData: userGetCachedData, ...restOptions } = options ?? {}
+
+  // Determine graphqlCaching based on clientCache option (default: true)
+  const graphqlCaching = clientCache === false
+    ? { client: false }
+    : restOptions.graphqlCaching ?? { client: true }
+
+  // Generate a consistent cache key based on query name and params
+  // This ensures the same query+params always uses the same key for getCachedData lookups
+  const paramsKey = params ? JSON.stringify(params) : '{}'
+  const baseKey = `wpnuxt-${String(queryName)}-${paramsKey}`
+  const finalKey = cacheKey ? `${baseKey}-${cacheKey}` : baseKey
+
+  // Determine getCachedData behavior:
+  // - If user provides custom getCachedData, use it
+  // - If clientCache is false, don't use getCachedData (always fetch fresh)
+  // - Otherwise, use default implementation
+  const effectiveGetCachedData = userGetCachedData
+    ?? (clientCache === false ? undefined : defaultGetCachedData)
+
+  // Build merged options
+  const mergedOptions: Record<string, unknown> = {
+    ...restOptions,
+    graphqlCaching,
+    // Explicit key ensures consistent cache lookups
+    key: finalKey,
+    ...(effectiveGetCachedData && { getCachedData: effectiveGetCachedData })
   }
 
   // Use nuxt-graphql-middleware's built-in client-side caching
