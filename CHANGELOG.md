@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.0.0-alpha.4](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.3...v2.0.0-alpha.4) (2025-12-28)
+
+### Features
+
+* **composables:** enhance useWPContent with advanced caching options ([df11b7d](https://github.com/wpnuxt/wpnuxt/commit/df11b7dc26d6c32a19eb42c65d6d5c63b2b6888a))
+* **composables:** enhance WPNuxt composables with lazy loading and new utility functions ([34c3b1a](https://github.com/wpnuxt/wpnuxt/commit/34c3b1a60e2e5ad227285c95fa60d4cfb6216020))
+* **query-options:** add interactive demo for WPNuxt query options ([85c4dfa](https://github.com/wpnuxt/wpnuxt/commit/85c4dfab6e0f8cbbe4910548181c70f2c7050800))
+* **query-options:** enhance lazy loading behavior description and UI ([3cb4228](https://github.com/wpnuxt/wpnuxt/commit/3cb42288630d51dcfb5e50bf6ea4e1d3f1b2b3a0))
+* **routes:** replace lazy loading page with query options demo ([b24b9b5](https://github.com/wpnuxt/wpnuxt/commit/b24b9b5c5f746beee15852d413a53d9bdd413bf3))
+
+### Documentation
+
+* **caching:** enhance caching documentation with detailed explanations and examples ([352254e](https://github.com/wpnuxt/wpnuxt/commit/352254efa50d537d4693c76b8cc8e425def77cbc))
+
+### Maintenance
+
+* **package:** add publishConfig for public access ([d9c3125](https://github.com/wpnuxt/wpnuxt/commit/d9c3125cee13af96a0362adaf21f19e68a4b0b15))
+* update Nuxt configuration URLs and browser redirect ([41330bd](https://github.com/wpnuxt/wpnuxt/commit/41330bdd61e5d1aad7fcdaab6a91dc8c18f50900))
+
 ## [2.0.0-alpha.3](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.2...v2.0.0-alpha.3) (2025-12-27)
 
 ### Features
