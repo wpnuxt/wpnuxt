@@ -43,6 +43,35 @@ const ssrFetchCount = useState('query-options-ssr-count', () => 0)
 const clientFetchCount = useState('query-options-client-count', () => 0)
 const lastFetchTime = useState<string | null>('query-options-last-fetch', () => null)
 
+// Describe expected lazy behavior based on current options
+const lazyBehavior = computed(() => {
+  const { lazy, server } = options.value
+
+  if (!lazy) {
+    // lazy=false: navigation blocks until data is ready
+    return {
+      color: 'neutral' as const,
+      message: 'Navigation blocks until data ready',
+      note: 'Browser shows loading indicator in the tab'
+    }
+  }
+
+  // lazy=true: page loads immediately
+  if (server) {
+    return {
+      color: 'success' as const,
+      message: 'Page shows immediately with SSR data',
+      note: 'No loading spinner because data is in HTML'
+    }
+  }
+
+  return {
+    color: 'info' as const,
+    message: 'Page shows loading spinner',
+    note: 'Data fetched on client after page loads'
+  }
+})
+
 function resetCounter() {
   ssrFetchCount.value = 0
   clientFetchCount.value = 0
@@ -333,11 +362,6 @@ function setOption<K extends keyof typeof defaults>(key: K, value: typeof defaul
                 <span class="font-semibold text-green-500">{{ clientFetchCount }}</span>
                 <span class="text-neutral-500 dark:text-neutral-400"> client</span>
               </span>
-              <span class="text-neutral-300 dark:text-neutral-600">|</span>
-              <span>
-                <span class="text-neutral-500 dark:text-neutral-400">Last: </span>
-                <span class="font-medium">{{ lastFetchTime || '-' }}</span>
-              </span>
               <UButton
                 color="neutral"
                 variant="outline"
@@ -349,6 +373,20 @@ function setOption<K extends keyof typeof defaults>(key: K, value: typeof defaul
               </UButton>
               <span class="ml-auto text-neutral-400 dark:text-neutral-500 text-sm">
                 Navigate away and back to test caching
+              </span>
+            </div>
+            <!-- Lazy option behavior -->
+            <div class="flex flex-wrap items-center gap-4 text-sm p-2 border-t border-neutral-200 dark:border-neutral-700">
+              <span class="text-neutral-500 dark:text-neutral-400">Lazy behavior:</span>
+              <UBadge
+                :color="lazyBehavior.color"
+                variant="subtle"
+                size="sm"
+              >
+                {{ lazyBehavior.message }}
+              </UBadge>
+              <span class="text-neutral-400 dark:text-neutral-500 text-xs">
+                {{ lazyBehavior.note }}
               </span>
             </div>
           </template>

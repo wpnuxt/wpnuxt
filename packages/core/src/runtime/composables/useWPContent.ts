@@ -128,10 +128,10 @@ export const useWPContent = <T>(
 
   // Determine getCachedData behavior:
   // - If user provides custom getCachedData, use it
-  // - If clientCache is false, don't use getCachedData (always fetch fresh)
+  // - If clientCache is false, always return undefined to force fresh fetch
   // - Otherwise, use default implementation
   const effectiveGetCachedData = userGetCachedData
-    ?? (clientCache === false ? undefined : defaultGetCachedData)
+    ?? (clientCache === false ? () => undefined : defaultGetCachedData)
 
   // Build merged options
   const mergedOptions: Record<string, unknown> = {
@@ -139,7 +139,7 @@ export const useWPContent = <T>(
     graphqlCaching,
     // Explicit key ensures consistent cache lookups
     key: finalKey,
-    ...(effectiveGetCachedData && { getCachedData: effectiveGetCachedData })
+    getCachedData: effectiveGetCachedData
   }
 
   // Use nuxt-graphql-middleware's built-in client-side caching
