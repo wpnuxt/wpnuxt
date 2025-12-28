@@ -37,7 +37,7 @@ export default defineNuxtConfig({
       interval: 1000,
       failOnError: false,
       autoSubfolderIndex: false,
-      routes: IS_DEV ? [] : ['/', '/composables', '/login', '/profile', '/lazy']
+      routes: IS_DEV ? [] : ['/', '/composables', '/login', '/profile', '/query-options']
     }
   },
 

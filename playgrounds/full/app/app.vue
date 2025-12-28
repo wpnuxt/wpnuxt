@@ -17,8 +17,8 @@ const menu = computed(() => {
     },
     ...wordPressPages,
     {
-      label: 'Lazy data fetching',
-      to: '/lazy'
+      label: 'Query Options',
+      to: '/query-options'
     },
     {
       label: 'Composables',
