@@ -141,7 +141,7 @@ function setOption<K extends keyof typeof defaults>(key: K, value: typeof defaul
       <UPageHeader title="Query Options Demo">
         <template #description>
           <p class="text-sm text-neutral-500 dark:text-neutral-400">
-            Configure how data is fetched. Change options and refresh the page to see the effect.
+            Configure how data is fetched. Change options and either refresh the page or navigate away and back to see the effect.
           </p>
         </template>
       </UPageHeader>
