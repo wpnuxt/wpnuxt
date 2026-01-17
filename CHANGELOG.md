@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.0.0-alpha.5](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.4...v2.0.0-alpha.5) (2026-01-17)
+
+### Features
+
+* **auth:** enhance token refresh handling and error reporting ([0ffca6b](https://github.com/wpnuxt/wpnuxt/commit/0ffca6b2c5d9796ae05c6bdd5e3c9bab6772bfb4))
+* **auth:** update API routes and enhance error handling ([498e266](https://github.com/wpnuxt/wpnuxt/commit/498e2661f1e71475ff6247b457bf5038fb9ca946))
+* **blocks:** enhance component registration and image block handling ([115e626](https://github.com/wpnuxt/wpnuxt/commit/115e62606534ba833cc74b64c4c7bdde25e09822))
+
+### Refactoring
+
+* **auth:** remove unnecessary login endpoint workaround ([#4](https://github.com/wpnuxt/wpnuxt/issues/4)) ([c52f6d3](https://github.com/wpnuxt/wpnuxt/commit/c52f6d3a93b31609c16957b37090be985a0a5083))
+* **caching:** enhance useWPContent with retry logic ([0211f6e](https://github.com/wpnuxt/wpnuxt/commit/0211f6e9e773deffa84a2d523ec01280c8ce2f68))
+
+### Documentation
+
+* **composables:** document retry and timeout options for usePosts ([a23dcb6](https://github.com/wpnuxt/wpnuxt/commit/a23dcb6ef76f333063a2cf97ea1b0bef0ac5007d))
+
+### Maintenance
+
+* **dependencies:** update @iconify-json/lucide to version 1.2.86 and adjust pnpm-lock.yaml for improved compatibility ([c55145e](https://github.com/wpnuxt/wpnuxt/commit/c55145eeaf1f07804f8fc2ef3bd625100f60343e))
+
+### Tests
+
+* **errors:** add unit tests for WPNuxt error handling and utility functions ([083fd25](https://github.com/wpnuxt/wpnuxt/commit/083fd25729f0f16b894bcea48396c75eeafd1b45))
+
 ## [2.0.0-alpha.4](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.3...v2.0.0-alpha.4) (2025-12-28)
 
 ### Features
