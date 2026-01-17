@@ -1,8 +1,8 @@
 import { getRelativeImagePath } from '../util/images'
 import type { Query } from '#nuxt-graphql-middleware/operation-types'
-import type { WatchSource } from 'vue'
+import type { WatchSource, Ref } from 'vue'
 import type { NuxtApp } from 'nuxt/app'
-import { computed, useAsyncGraphqlQuery } from '#imports'
+import { computed, ref, watch as vueWatch, useAsyncGraphqlQuery } from '#imports'
 
 /** Context object passed to getCachedData (Nuxt 4+) */
 interface AsyncDataRequestContext {
@@ -29,6 +29,10 @@ export interface WPContentOptions {
   cacheKey?: string
   /** Custom function to control when cached data should be used. */
   getCachedData?: (key: string, nuxtApp: NuxtApp, ctx: AsyncDataRequestContext) => unknown
+  /** Number of automatic retries on failure. Set to 0 or false to disable. Default: 0 (disabled) */
+  retry?: number | false
+  /** Base delay in milliseconds between retries (uses exponential backoff). Default: 1000 */
+  retryDelay?: number
   /** Additional options to pass to useAsyncGraphqlQuery */
   [key: string]: unknown
 }
@@ -113,7 +117,20 @@ export const useWPContent = <T>(
   options?: WPContentOptions
 ) => {
   // Extract WPNuxt-specific options
-  const { clientCache, cacheKey, getCachedData: userGetCachedData, ...restOptions } = options ?? {}
+  const {
+    clientCache,
+    cacheKey,
+    getCachedData: userGetCachedData,
+    retry: retryOption,
+    retryDelay: retryDelayOption,
+    ...restOptions
+  } = options ?? {}
+
+  // Retry configuration
+  const maxRetries = retryOption === false ? 0 : (retryOption ?? 0)
+  const baseRetryDelay = retryDelayOption ?? 1000
+  const retryCount = ref(0)
+  const isRetrying = ref(false)
 
   // Determine graphqlCaching based on clientCache option (default: true)
   const graphqlCaching = clientCache === false
@@ -150,11 +167,71 @@ export const useWPContent = <T>(
     mergedOptions
   )
 
+  // Transformation error state
+  const transformError: Ref<Error | null> = ref(null)
+
+  // Automatic retry logic with exponential backoff
+  if (maxRetries > 0) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    vueWatch(error, async (newError: any) => {
+      // Only retry on client-side and if we haven't exceeded max retries
+      if (newError && !isRetrying.value && retryCount.value < maxRetries && import.meta.client) {
+        isRetrying.value = true
+        retryCount.value++
+
+        // Exponential backoff: delay * 2^(attempt-1)
+        const delay = baseRetryDelay * Math.pow(2, retryCount.value - 1)
+
+        if (import.meta.dev) {
+          console.warn(`[wpnuxt] Query "${String(queryName)}" failed, retrying in ${delay}ms (attempt ${retryCount.value}/${maxRetries})`)
+        }
+
+        await new Promise(resolve => setTimeout(resolve, delay))
+
+        try {
+          await refresh()
+        } finally {
+          isRetrying.value = false
+        }
+      }
+    })
+
+    // Reset retry count on successful fetch
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    vueWatch(data, (newData: any) => {
+      if (newData && retryCount.value > 0) {
+        retryCount.value = 0
+      }
+    })
+  }
+
   const transformedData = computed(() => {
-    // useAsyncGraphqlQuery returns data wrapped in { data: GraphQLResponse }
-    // The actual query response is in data.value.data
-    const queryResult = data.value && typeof data.value === 'object' && data.value !== null && 'data' in data.value ? (data.value as Record<string, unknown>).data : undefined
-    return queryResult ? transformData(queryResult, nodes, fixImagePaths) : undefined
+    // Reset transform error on each computation
+    transformError.value = null
+
+    try {
+      // useAsyncGraphqlQuery returns data wrapped in { data: GraphQLResponse }
+      // The actual query response is in data.value.data
+      const queryResult = data.value && typeof data.value === 'object' && data.value !== null && 'data' in data.value
+        ? (data.value as Record<string, unknown>).data
+        : undefined
+
+      if (!queryResult) return undefined
+
+      return transformData(queryResult, nodes, fixImagePaths)
+    } catch (err) {
+      // Log in development, silent in production
+      if (import.meta.dev) {
+        console.warn(`[wpnuxt] Data transformation error for "${String(queryName)}":`, err)
+      }
+
+      // Set transform error for consumer to handle
+      transformError.value = err instanceof Error
+        ? err
+        : new Error('Failed to transform query response')
+
+      return undefined
+    }
   })
 
   return {
@@ -164,7 +241,13 @@ export const useWPContent = <T>(
     execute,
     clear,
     error,
-    status
+    status,
+    /** Error from data transformation (separate from fetch error) */
+    transformError,
+    /** Current retry attempt count (0 if no retries or retries disabled) */
+    retryCount,
+    /** Whether a retry is currently in progress */
+    isRetrying
   }
 }
 

@@ -1,4 +1,4 @@
-import { defineEventHandler, setCookie, getRequestURL, setResponseStatus, setResponseHeader } from 'h3'
+import { defineEventHandler, setCookie, getRequestURL, setResponseStatus, setResponseHeader, createError } from 'h3'
 import { useRuntimeConfig } from '#imports'
 
 /**
@@ -10,11 +10,17 @@ export default defineEventHandler(async (event) => {
   const wordpressUrl = config.public.wordpressUrl as string | undefined
 
   if (!wordpressUrl) {
-    throw new Error('WordPress URL not configured')
+    throw createError({
+      statusCode: 500,
+      message: '[wpnuxt:auth] WordPress URL not configured'
+    })
   }
 
   if (!publicConfig.providers.oauth.enabled) {
-    throw new Error('OAuth authentication is not enabled')
+    throw createError({
+      statusCode: 403,
+      message: '[wpnuxt:auth] OAuth authentication is not enabled'
+    })
   }
 
   // Generate state parameter for CSRF protection
