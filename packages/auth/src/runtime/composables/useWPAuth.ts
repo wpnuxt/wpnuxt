@@ -50,38 +50,25 @@ export function useWPAuth() {
   /**
    * Login with username and password
    *
-   * Uses $fetch directly (not useFetch) because:
-   * 1. Login is a mutation, not data fetching
-   * 2. Response should not be cached or included in payload
-   * 3. We need immediate error handling without reactive state
+   * Uses useGraphqlMutation to call the Login mutation through nuxt-graphql-middleware.
    */
   async function login(credentials: LoginCredentials): Promise<LoginResult> {
     authState.value.isLoading = true
     authState.value.error = null
 
     try {
-      // Use custom endpoint to bypass nuxt-graphql-middleware body parsing bug
-      const response = await $fetch<{
-        data?: {
-          login: {
-            authToken: string
-            authTokenExpiration: string
-            refreshToken: string
-            refreshTokenExpiration: string
-            user: WPUser
-          }
+      const { data, errors } = await useGraphqlMutation<{
+        login: {
+          authToken: string
+          authTokenExpiration: string
+          refreshToken: string
+          refreshTokenExpiration: string
+          user: WPUser
         }
-        errors?: Array<{ message: string }>
-      }>('/api/auth/login', {
-        method: 'POST',
-        body: {
-          username: credentials.username,
-          password: credentials.password
-        }
+      }>('Login', {
+        username: credentials.username,
+        password: credentials.password
       })
-
-      const data = response.data
-      const errors = response.errors
 
       if (errors?.length) {
         const errorMessage = errors[0]?.message || 'Login failed'
