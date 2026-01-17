@@ -33,6 +33,8 @@ export interface WPContentOptions {
   retry?: number | false
   /** Base delay in milliseconds between retries (uses exponential backoff). Default: 1000 */
   retryDelay?: number
+  /** Request timeout in milliseconds. Default: 30000 (30 seconds). Set to 0 to disable. */
+  timeout?: number
   /** Additional options to pass to useAsyncGraphqlQuery */
   [key: string]: unknown
 }
@@ -123,6 +125,7 @@ export const useWPContent = <T>(
     getCachedData: userGetCachedData,
     retry: retryOption,
     retryDelay: retryDelayOption,
+    timeout: timeoutOption,
     ...restOptions
   } = options ?? {}
 
@@ -131,6 +134,9 @@ export const useWPContent = <T>(
   const baseRetryDelay = retryDelayOption ?? 1000
   const retryCount = ref(0)
   const isRetrying = ref(false)
+
+  // Timeout configuration (default: 30 seconds, 0 to disable)
+  const timeoutMs = timeoutOption ?? 30000
 
   // Determine graphqlCaching based on clientCache option (default: true)
   const graphqlCaching = clientCache === false
@@ -150,13 +156,34 @@ export const useWPContent = <T>(
   const effectiveGetCachedData = userGetCachedData
     ?? (clientCache === false ? () => undefined : defaultGetCachedData)
 
+  // Create AbortController for timeout if enabled
+  let abortController: AbortController | undefined
+  let timeoutId: ReturnType<typeof setTimeout> | undefined
+
+  if (timeoutMs > 0) {
+    abortController = new AbortController()
+    timeoutId = setTimeout(() => {
+      abortController?.abort()
+      if (import.meta.dev) {
+        console.warn(`[wpnuxt] Query "${String(queryName)}" timed out after ${timeoutMs}ms`)
+      }
+    }, timeoutMs)
+  }
+
   // Build merged options
   const mergedOptions: Record<string, unknown> = {
     ...restOptions,
     graphqlCaching,
     // Explicit key ensures consistent cache lookups
     key: finalKey,
-    getCachedData: effectiveGetCachedData
+    getCachedData: effectiveGetCachedData,
+    // Pass abort signal for timeout support
+    ...(abortController && {
+      fetchOptions: {
+        ...(restOptions.fetchOptions as Record<string, unknown> ?? {}),
+        signal: abortController.signal
+      }
+    })
   }
 
   // Use nuxt-graphql-middleware's built-in client-side caching
@@ -169,6 +196,17 @@ export const useWPContent = <T>(
 
   // Transformation error state
   const transformError: Ref<Error | null> = ref(null)
+
+  // Clear timeout when request completes (success or error)
+  if (timeoutId !== undefined) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    vueWatch(pending, (isPending: any) => {
+      if (!isPending && timeoutId !== undefined) {
+        clearTimeout(timeoutId)
+        timeoutId = undefined
+      }
+    })
+  }
 
   // Automatic retry logic with exponential backoff
   if (maxRetries > 0) {

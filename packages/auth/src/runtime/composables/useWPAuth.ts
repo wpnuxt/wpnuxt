@@ -138,11 +138,22 @@ export function useWPAuth() {
   }
 
   /**
-   * Refresh the auth token using the refresh token
+   * Result of a token refresh operation
    */
-  async function refresh(): Promise<boolean> {
+  interface RefreshResult {
+    success: boolean
+    error?: string
+  }
+
+  /**
+   * Refresh the auth token using the refresh token.
+   *
+   * On failure, clears all auth state and tokens (graceful degradation).
+   * Returns a result object with success status and optional error message.
+   */
+  async function refresh(): Promise<RefreshResult> {
     if (!refreshTokenCookie.value) {
-      return false
+      return { success: false, error: 'No refresh token available' }
     }
 
     try {
@@ -150,18 +161,57 @@ export function useWPAuth() {
         refreshToken: refreshTokenCookie.value
       })
 
-      const refreshData = data as { refreshToken?: { authToken: string, success: boolean } } | null
+      // Handle GraphQL errors
+      if (errors?.length) {
+        const errorMessage = errors[0]?.message || 'Token refresh failed'
 
-      if (errors?.length || !refreshData?.refreshToken?.success) {
-        await logout()
-        return false
+        // Clear all auth state on refresh failure (graceful degradation)
+        authToken.value = null
+        refreshTokenCookie.value = null
+        userDataCookie.value = null
+        authState.value.isAuthenticated = false
+        authState.value.user = null
+        authState.value.error = errorMessage
+
+        return { success: false, error: errorMessage }
       }
 
+      const refreshData = data as { refreshToken?: { authToken: string, success: boolean } } | null
+
+      // Handle unsuccessful refresh response
+      if (!refreshData?.refreshToken?.success) {
+        const errorMessage = 'Token refresh was not successful'
+
+        // Clear all auth state
+        authToken.value = null
+        refreshTokenCookie.value = null
+        userDataCookie.value = null
+        authState.value.isAuthenticated = false
+        authState.value.user = null
+        authState.value.error = errorMessage
+
+        return { success: false, error: errorMessage }
+      }
+
+      // Success - update token
       authToken.value = refreshData.refreshToken.authToken
-      return true
-    } catch {
-      await logout()
-      return false
+      authState.value.error = null
+
+      return { success: true }
+    } catch (error) {
+      const errorMessage = error instanceof Error
+        ? error.message
+        : 'Token refresh failed unexpectedly'
+
+      // Clear all auth state on error (graceful degradation)
+      authToken.value = null
+      refreshTokenCookie.value = null
+      userDataCookie.value = null
+      authState.value.isAuthenticated = false
+      authState.value.user = null
+      authState.value.error = errorMessage
+
+      return { success: false, error: errorMessage }
     }
   }
 
