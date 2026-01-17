@@ -4,12 +4,6 @@ import type { WatchSource, Ref } from 'vue'
 import type { NuxtApp } from 'nuxt/app'
 import { computed, ref, watch as vueWatch, useAsyncGraphqlQuery } from '#imports'
 
-/** Context object passed to getCachedData (Nuxt 4+) */
-interface AsyncDataRequestContext {
-  /** What triggered the request: 'initial', 'refresh:manual', 'refresh:hook', or 'watch' */
-  cause: 'initial' | 'refresh:manual' | 'refresh:hook' | 'watch'
-}
-
 export interface WPContentOptions {
   /** Whether to resolve the async function after loading the route, instead of blocking client-side navigation. Default: false */
   lazy?: boolean
@@ -21,12 +15,8 @@ export interface WPContentOptions {
   watch?: (WatchSource<unknown> | object)[]
   /** Transform function to alter the result */
   transform?: (input: unknown) => unknown
-  /** GraphQL caching options. Default: { client: true } */
-  graphqlCaching?: { client?: boolean }
   /** Enable client-side GraphQL caching. Default: true. Set to false for real-time data. */
   clientCache?: boolean
-  /** Custom cache key suffix for payload deduplication. Useful for locale-specific or complex caching scenarios. */
-  cacheKey?: string
   /** Custom function to control when cached data should be used. */
   getCachedData?: (key: string, nuxtApp: NuxtApp, ctx: AsyncDataRequestContext) => unknown
   /** Number of automatic retries on failure. Set to 0 or false to disable. Default: 0 (disabled) */
@@ -35,15 +25,21 @@ export interface WPContentOptions {
   retryDelay?: number
   /** Request timeout in milliseconds. Default: 0 (disabled). Set to e.g. 30000 for 30 seconds. */
   timeout?: number
-  /** Additional options to pass to useAsyncGraphqlQuery */
+  /** Additional options to pass to useAsyncData */
   [key: string]: unknown
+}
+
+/** Context object passed to getCachedData (Nuxt 4+) */
+interface AsyncDataRequestContext {
+  /** What triggered the request: 'initial', 'refresh:manual', 'refresh:hook', or 'watch' */
+  cause: 'initial' | 'refresh:manual' | 'refresh:hook' | 'watch'
 }
 
 /**
  * Fetch WordPress content using GraphQL with reactive state
  *
  * Follows Nuxt's useAsyncData pattern. Returns reactive refs immediately.
- * Client-side GraphQL caching is enabled by default for better navigation performance.
+ * Supports SSG (static site generation) with proper payload caching.
  *
  * **Standard usage (with or without await - same behavior):**
  * ```ts
@@ -74,19 +70,11 @@ export interface WPContentOptions {
  * ```
  * - Useful for real-time data that should always be fresh
  *
- * **Custom cache key:**
- * ```ts
- * const { data: posts } = usePosts({ category: 'news' }, {
- *   cacheKey: `posts-news-${locale.value}`
- * })
- * ```
- * - Useful for locale-specific or complex caching scenarios
- *
  * @param queryName - The GraphQL query name
  * @param nodes - Array of nested property names to extract from response
  * @param fixImagePaths - Whether to convert image URLs to relative paths
  * @param params - Query variables
- * @param options - Options (lazy, server, immediate, watch, transform, clientCache, cacheKey, etc.)
+ * @param options - Options (lazy, server, immediate, watch, transform, clientCache, etc.)
  */
 export const useWPContent = <T>(
   queryName: keyof Query,
@@ -98,7 +86,6 @@ export const useWPContent = <T>(
   // Extract WPNuxt-specific options
   const {
     clientCache,
-    cacheKey,
     getCachedData: userGetCachedData,
     retry: retryOption,
     retryDelay: retryDelayOption,
@@ -113,27 +100,7 @@ export const useWPContent = <T>(
   const isRetrying = ref(false)
 
   // Timeout configuration (default: disabled, set to e.g. 30000 to enable)
-  // Note: timeout and graphqlCaching conflict - when timeout aborts a request,
-  // the cache holds the broken promise. So we disable caching when timeout is set.
   const timeoutMs = timeoutOption ?? 0
-
-  // Determine graphqlCaching based on clientCache option (default: true)
-  const graphqlCaching = clientCache === false
-    ? { client: false }
-    : restOptions.graphqlCaching ?? { client: true }
-
-  // Generate a consistent cache key based on query name and params
-  // This ensures the same query+params always uses the same key for getCachedData lookups
-  const paramsKey = params ? JSON.stringify(params) : '{}'
-  const baseKey = `wpnuxt-${String(queryName)}-${paramsKey}`
-  const finalKey = cacheKey ? `${baseKey}-${cacheKey}` : baseKey
-
-  // Determine getCachedData behavior:
-  // - If user provides custom getCachedData, use it
-  // - If clientCache is false, always return undefined to force fresh fetch
-  // - Otherwise, let nuxt-graphql-middleware handle caching (don't override)
-  const effectiveGetCachedData = userGetCachedData
-    ?? (clientCache === false ? () => undefined : undefined)
 
   // Create AbortController for timeout if enabled
   let abortController: AbortController | undefined
@@ -149,15 +116,36 @@ export const useWPContent = <T>(
     }, timeoutMs)
   }
 
-  // Build merged options
-  const mergedOptions: Record<string, unknown> = {
+  // Custom getCachedData that supports SSG by checking static.data
+  // nuxt-graphql-middleware's built-in getCachedData only checks payload.data,
+  // but for SSG we also need to check static.data (prerendered payloads)
+  // By passing our own getCachedData, we prevent the built-in one from being used
+  const ssgGetCachedData = userGetCachedData ?? (clientCache === false
+    ? () => undefined
+    : (key: string, app: NuxtApp, ctx: { cause: string }) => {
+        // During hydration, use payload data
+        if (app.isHydrating) {
+          return app.payload.data[key]
+        }
+        // For refresh actions, don't use cache (same as nuxt-graphql-middleware behavior)
+        if (ctx.cause === 'refresh:manual' || ctx.cause === 'refresh:hook') {
+          return undefined
+        }
+        // For SSG client navigation, check static.data (prerendered payloads)
+        // Also check payload.data for SSR/ISR scenarios
+        // Finally check the LRU cache for subsequent navigations
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return app.static.data[key] ?? app.payload.data[key] ?? (app as any).$graphqlCache?.get(key)
+      })
+
+  // Build options for useAsyncGraphqlQuery
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const asyncDataOptions: Record<string, any> = {
     ...restOptions,
-    graphqlCaching,
-    // Explicit key ensures consistent cache lookups
-    key: finalKey,
-    // Only set getCachedData if user provided one or wants to disable caching
-    // Otherwise let nuxt-graphql-middleware handle it with $graphqlCache
-    ...(effectiveGetCachedData && { getCachedData: effectiveGetCachedData }),
+    // Our getCachedData that properly checks static.data for SSG
+    getCachedData: ssgGetCachedData,
+    // Enable graphql caching so the LRU cache is populated for subsequent navigations
+    graphqlCaching: { client: clientCache !== false },
     // Pass abort signal for timeout support
     ...(abortController && {
       fetchOptions: {
@@ -167,12 +155,12 @@ export const useWPContent = <T>(
     })
   }
 
-  // Use nuxt-graphql-middleware's built-in client-side caching
-  // Returns reactive refs immediately - works for both SSR and CSR
+  // Use useAsyncGraphqlQuery with our custom getCachedData for SSG support
+  // Our getCachedData takes precedence over the built-in one
   const { data, pending, refresh, execute, clear, error, status } = useAsyncGraphqlQuery(
-    queryName,
+    String(queryName) as keyof Query,
     params ?? {},
-    mergedOptions
+    asyncDataOptions
   )
 
   // Transformation error state
@@ -230,7 +218,7 @@ export const useWPContent = <T>(
     transformError.value = null
 
     try {
-      // useAsyncGraphqlQuery returns data wrapped in { data: GraphQLResponse }
+      // performRequest returns data wrapped in { data: GraphQLResponse }
       // The actual query response is in data.value.data
       const queryResult = data.value && typeof data.value === 'object' && data.value !== null && 'data' in data.value
         ? (data.value as Record<string, unknown>).data
