@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@iconify-json/logos": "^1.2.10",
-    "@iconify-json/lucide": "^1.2.85",
+    "@iconify-json/lucide": "^1.2.86",
     "@iconify-json/svg-spinners": "^1.2.4",
     "vue-tsc": "^3.2.2"
   }

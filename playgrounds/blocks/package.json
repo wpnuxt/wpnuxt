@@ -17,7 +17,7 @@
     "nuxt": "4.2.2"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.2.85",
+    "@iconify-json/lucide": "^1.2.86",
     "vue-tsc": "^3.2.2"
   }
 }
