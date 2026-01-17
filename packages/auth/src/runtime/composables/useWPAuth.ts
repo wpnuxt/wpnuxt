@@ -120,7 +120,7 @@ export function useWPAuth() {
    */
   async function logout(): Promise<void> {
     // Call server endpoint to clear httpOnly cookies
-    await $fetch('/api/auth/logout', { method: 'POST' }).catch(() => {
+    await $fetch('/api/_wpnuxt-auth/logout', { method: 'POST' }).catch(() => {
       // Ignore errors - cookies might already be cleared
     })
 
@@ -195,7 +195,7 @@ export function useWPAuth() {
       return
     }
     // Navigate to OAuth authorize endpoint (external redirect)
-    await navigateTo('/api/auth/oauth/authorize', { external: true })
+    await navigateTo('/api/_wpnuxt-auth/oauth/authorize', { external: true })
   }
 
   /**
@@ -301,7 +301,7 @@ export function useWPAuth() {
       return
     }
     // Navigate to provider authorize endpoint
-    await navigateTo(`/api/auth/provider/${provider.toLowerCase()}/authorize`, { external: true })
+    await navigateTo(`/api/_wpnuxt-auth/provider/${provider.toLowerCase()}/authorize`, { external: true })
   }
 
   return {

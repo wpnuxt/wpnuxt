@@ -6,6 +6,9 @@ import type { ConsolaInstance } from 'consola'
 import type { Nuxt } from 'nuxt/schema'
 import type { WPNuxtConfig } from '../types/config'
 
+// Re-export error utilities
+export { createModuleError, formatErrorMessage, type WPNuxtModule } from './errors'
+
 export function randHashGenerator(length = 12) {
   return Math.random()
     .toString(36)

@@ -38,7 +38,7 @@ export async function validateWordPressEndpoint(
 
     if (!response.ok) {
       throw new Error(
-        `[WPNuxt] WordPress GraphQL endpoint returned HTTP ${response.status}.
+        `[wpnuxt:core] WordPress GraphQL endpoint returned HTTP ${response.status}.
 
 URL: ${fullUrl}
 
@@ -57,7 +57,7 @@ Check your wpNuxt.wordpressUrl configuration in nuxt.config.ts`
     // Check if it's a valid GraphQL response
     if (!data || (typeof data !== 'object')) {
       throw new Error(
-        `[WPNuxt] WordPress GraphQL endpoint returned invalid response.
+        `[wpnuxt:core] WordPress GraphQL endpoint returned invalid response.
 
 URL: ${fullUrl}
 
@@ -69,7 +69,7 @@ The endpoint did not return valid JSON. Make sure WPGraphQL plugin is installed 
     if (data.errors && !data.data) {
       const errorMessage = data.errors[0]?.message || 'Unknown error'
       throw new Error(
-        `[WPNuxt] WordPress GraphQL endpoint returned an error: ${errorMessage}
+        `[wpnuxt:core] WordPress GraphQL endpoint returned an error: ${errorMessage}
 
 URL: ${fullUrl}
 
@@ -89,7 +89,7 @@ Make sure WPGraphQL plugin is installed and activated on your WordPress site.`
       } catch (err) {
         const error = err as Error & { stderr?: Buffer }
         throw new Error(
-          `[WPNuxt] Failed to download GraphQL schema.
+          `[wpnuxt:core] Failed to download GraphQL schema.
 
 URL: ${fullUrl}
 Error: ${error.stderr?.toString() || error.message}
@@ -100,7 +100,7 @@ Make sure WPGraphQL plugin is installed and activated on your WordPress site.`
     }
   } catch (error) {
     // Re-throw our custom errors
-    if (error instanceof Error && error.message.startsWith('[WPNuxt]')) {
+    if (error instanceof Error && error.message.startsWith('[wpnuxt:core]')) {
       throw error
     }
 
@@ -110,7 +110,7 @@ Make sure WPGraphQL plugin is installed and activated on your WordPress site.`
 
     if (err.name === 'AbortError') {
       throw new Error(
-        `[WPNuxt] WordPress GraphQL endpoint timed out after 10 seconds.
+        `[wpnuxt:core] WordPress GraphQL endpoint timed out after 10 seconds.
 
 URL: ${fullUrl}
 
@@ -120,7 +120,7 @@ The server did not respond in time. Check if the WordPress site is accessible.`
 
     if (errorCode === 'ENOTFOUND' || err.message?.includes('getaddrinfo')) {
       throw new Error(
-        `[WPNuxt] WordPress site not found - DNS lookup failed.
+        `[wpnuxt:core] WordPress site not found - DNS lookup failed.
 
 URL: ${fullUrl}
 
@@ -135,7 +135,7 @@ Check your wpNuxt.wordpressUrl configuration in nuxt.config.ts`
 
     if (errorCode === 'ECONNREFUSED') {
       throw new Error(
-        `[WPNuxt] Connection refused to WordPress site.
+        `[wpnuxt:core] Connection refused to WordPress site.
 
 URL: ${fullUrl}
 
@@ -145,7 +145,7 @@ The server is not accepting connections. Check if the WordPress site is running.
 
     // Generic network error
     throw new Error(
-      `[WPNuxt] Failed to connect to WordPress GraphQL endpoint.
+      `[wpnuxt:core] Failed to connect to WordPress GraphQL endpoint.
 
 URL: ${fullUrl}
 Error: ${err.message || 'Unknown error'}

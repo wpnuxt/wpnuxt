@@ -1,10 +1,11 @@
 import { parse, GraphQLError } from 'graphql'
 import type { SelectionNode, OperationDefinitionNode } from 'graphql'
 import type { WPNuxtQuery } from '../types/queries'
+import { createModuleError } from './errors'
 
 const _parseDoc = async (doc: string): Promise<WPNuxtQuery[]> => {
   if (!doc || typeof doc !== 'string' || doc.trim().length === 0) {
-    throw new Error('WPNuxt: Invalid GraphQL document - document is empty or not a string')
+    throw createModuleError('core', 'Invalid GraphQL document - document is empty or not a string')
   }
 
   try {
@@ -15,7 +16,7 @@ const _parseDoc = async (doc: string): Promise<WPNuxtQuery[]> => {
       .map((definition) => {
         const operationDefinition = definition as OperationDefinitionNode
         if (!operationDefinition.name?.value) {
-          throw new Error('WPNuxt: GraphQL operation is missing a name. All queries and mutations must have a name.')
+          throw createModuleError('core', 'GraphQL operation is missing a name. All queries and mutations must have a name.')
         }
 
         const query: WPNuxtQuery = {
@@ -31,7 +32,7 @@ const _parseDoc = async (doc: string): Promise<WPNuxtQuery[]> => {
     return operations
   } catch (error) {
     if (error instanceof GraphQLError) {
-      throw new TypeError(`WPNuxt: Failed to parse GraphQL document - ${error.message}`)
+      throw createModuleError('core', `Failed to parse GraphQL document - ${error.message}`)
     }
     throw error
   }

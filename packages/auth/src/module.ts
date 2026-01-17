@@ -36,7 +36,10 @@ const DEFAULT_HEADLESS_LOGIN_CONFIG = {
 export default defineNuxtModule<WPNuxtAuthConfig>({
   meta: {
     name: '@wpnuxt/auth',
-    configKey: 'wpNuxtAuth'
+    configKey: 'wpNuxtAuth',
+    compatibility: {
+      nuxt: '>=3.0.0'
+    }
   },
   defaults: {
     enabled: true,
@@ -145,8 +148,9 @@ export default defineNuxtModule<WPNuxtAuthConfig>({
     ])
 
     // Logout endpoint (always registered - clears httpOnly cookies)
+    // Uses _wpnuxt-auth prefix to avoid conflicts with user routes
     addServerHandler({
-      route: '/api/auth/logout',
+      route: '/api/_wpnuxt-auth/logout',
       method: 'post',
       handler: resolver.resolve('./runtime/server/api/auth/logout.post')
     })
@@ -154,12 +158,12 @@ export default defineNuxtModule<WPNuxtAuthConfig>({
     // Add server API handlers for OAuth (miniOrange)
     if (oauthEnabled) {
       addServerHandler({
-        route: '/api/auth/oauth/authorize',
+        route: '/api/_wpnuxt-auth/oauth/authorize',
         method: 'get',
         handler: resolver.resolve('./runtime/server/api/auth/oauth/authorize.get')
       })
       addServerHandler({
-        route: '/api/auth/oauth/callback',
+        route: '/api/_wpnuxt-auth/oauth/callback',
         method: 'get',
         handler: resolver.resolve('./runtime/server/api/auth/oauth/callback.get')
       })
@@ -168,12 +172,12 @@ export default defineNuxtModule<WPNuxtAuthConfig>({
     // Add server API handlers for Headless Login providers (Google, GitHub, etc.)
     if (headlessLoginEnabled) {
       addServerHandler({
-        route: '/api/auth/provider/:provider/authorize',
+        route: '/api/_wpnuxt-auth/provider/:provider/authorize',
         method: 'get',
         handler: resolver.resolve('./runtime/server/api/auth/provider/[provider]/authorize.get')
       })
       addServerHandler({
-        route: '/api/auth/provider/:provider/callback',
+        route: '/api/_wpnuxt-auth/provider/:provider/callback',
         method: 'get',
         handler: resolver.resolve('./runtime/server/api/auth/provider/[provider]/callback.get')
       })

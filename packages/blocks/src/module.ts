@@ -31,7 +31,10 @@ export interface WPNuxtBlocksConfig {
 export default defineNuxtModule<WPNuxtBlocksConfig>({
   meta: {
     name: '@wpnuxt/blocks',
-    configKey: 'wpNuxtBlocks'
+    configKey: 'wpNuxtBlocks',
+    compatibility: {
+      nuxt: '>=3.0.0'
+    }
   },
   defaults: {
     enabled: true,

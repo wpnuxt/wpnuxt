@@ -86,7 +86,7 @@ export function validateAuthSchema(
 
   if (capabilities === null) {
     throw new Error(
-      `[WPNuxt Auth] Cannot validate GraphQL schema - file not found or unreadable.
+      `[wpnuxt:auth] Cannot validate GraphQL schema - file not found or unreadable.
 
 Schema path: ${schemaPath}
 
@@ -100,7 +100,7 @@ To fix this, run: pnpm dev:prepare`
   // Check for Headless Login plugin
   if (!capabilities.hasHeadlessLogin) {
     throw new Error(
-      `[WPNuxt Auth] Headless Login for WPGraphQL plugin not detected.
+      `[wpnuxt:auth] Headless Login for WPGraphQL plugin not detected.
 
 The @wpnuxt/auth module requires this WordPress plugin for authentication.
 Your WordPress GraphQL schema is missing the required 'loginClients' query.
@@ -117,7 +117,7 @@ To disable @wpnuxt/auth, remove it from your nuxt.config.ts modules.`
   // Check for password auth if required
   if (options.requirePassword && !capabilities.hasPasswordAuth) {
     throw new Error(
-      `[WPNuxt Auth] Password authentication not available in GraphQL schema.
+      `[wpnuxt:auth] Password authentication not available in GraphQL schema.
 
 The 'login' mutation is missing from your WordPress GraphQL schema.
 Make sure Headless Login for WPGraphQL is properly configured with PASSWORD provider enabled.`
@@ -127,7 +127,7 @@ Make sure Headless Login for WPGraphQL is properly configured with PASSWORD prov
   // Check for headless login providers if required
   if (options.requireHeadlessLogin && capabilities.detectedProviders.length === 0) {
     throw new Error(
-      `[WPNuxt Auth] No OAuth providers detected in GraphQL schema.
+      `[wpnuxt:auth] No OAuth providers detected in GraphQL schema.
 
 Headless Login is installed but no providers are configured.
 Configure OAuth providers (Google, GitHub, etc.) in WordPress admin under:

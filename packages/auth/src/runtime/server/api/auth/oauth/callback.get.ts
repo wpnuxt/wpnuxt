@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
 
   // Build callback URL for token exchange
   const requestUrl = getRequestURL(event)
-  const callbackUrl = `${requestUrl.origin}/api/auth/oauth/callback`
+  const callbackUrl = `${requestUrl.origin}/api/_wpnuxt-auth/oauth/callback`
 
   // Exchange authorization code for tokens
   const tokenUrl = new URL(privateConfig.tokenEndpoint, wordpressUrl)

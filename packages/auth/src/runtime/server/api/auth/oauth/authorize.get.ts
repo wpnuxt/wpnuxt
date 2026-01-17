@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
 
   // Build the callback URL
   const requestUrl = getRequestURL(event)
-  const callbackUrl = `${requestUrl.origin}/api/auth/oauth/callback`
+  const callbackUrl = `${requestUrl.origin}/api/_wpnuxt-auth/oauth/callback`
 
   // Build authorization URL
   const authUrl = new URL(

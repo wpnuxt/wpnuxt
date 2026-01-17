@@ -9,13 +9,16 @@ import type { Import } from 'unimport'
 import type { WPNuxtConfig } from './types/config'
 import type { WPNuxtContext } from './types/queries'
 import { generateWPNuxtComposables } from './generate'
-import { getLogger, initLogger, mergeQueries, randHashGenerator } from './utils/index'
+import { getLogger, initLogger, mergeQueries, randHashGenerator, createModuleError } from './utils/index'
 import { validateWordPressEndpoint } from './utils/endpointValidation'
 
 export default defineNuxtModule<WPNuxtConfig>({
   meta: {
-    name: 'wpnuxt',
-    configKey: 'wpNuxt'
+    name: '@wpnuxt/core',
+    configKey: 'wpNuxt',
+    compatibility: {
+      nuxt: '>=3.0.0'
+    }
   },
   defaults: {
     wordpressUrl: undefined,
@@ -52,16 +55,37 @@ export default defineNuxtModule<WPNuxtConfig>({
     await setupServerOptions(nuxt, resolver, logger)
     await setupClientOptions(nuxt, resolver, logger)
 
-    // Validate WordPress endpoint is reachable and download schema if needed
+    // Validate WordPress endpoint and download schema if needed
+    const schemaPath = join(nuxt.options.rootDir, 'schema.graphql')
+    const schemaExists = existsSync(schemaPath)
+
     if (wpNuxtConfig.downloadSchema) {
-      const schemaPath = join(nuxt.options.rootDir, 'schema.graphql')
-      logger.debug(`Validating WordPress endpoint: ${wpNuxtConfig.wordpressUrl}${wpNuxtConfig.graphqlEndpoint}`)
-      await validateWordPressEndpoint(
-        wpNuxtConfig.wordpressUrl!,
-        wpNuxtConfig.graphqlEndpoint,
-        { schemaPath }
-      )
-      logger.debug('WordPress endpoint validation passed')
+      if (!schemaExists) {
+        // Schema doesn't exist - must download it (blocking, required for app to work)
+        logger.debug(`Downloading schema from: ${wpNuxtConfig.wordpressUrl}${wpNuxtConfig.graphqlEndpoint}`)
+        await validateWordPressEndpoint(
+          wpNuxtConfig.wordpressUrl!,
+          wpNuxtConfig.graphqlEndpoint,
+          { schemaPath }
+        )
+        logger.debug('Schema downloaded successfully')
+      } else {
+        // Schema exists - defer validation to ready hook (non-blocking)
+        nuxt.hook('ready', async () => {
+          try {
+            await validateWordPressEndpoint(
+              wpNuxtConfig.wordpressUrl!,
+              wpNuxtConfig.graphqlEndpoint
+            )
+            logger.debug('WordPress endpoint validation passed')
+          } catch (error) {
+            // Log warning but don't block app - schema already exists
+            const message = error instanceof Error ? error.message : String(error)
+            logger.warn(`WordPress endpoint validation failed: ${message.split('\n')[0]}`)
+            logger.warn('App will continue with existing schema.graphql file')
+          }
+        })
+      }
     }
 
     await registerModules(nuxt, resolver, wpNuxtConfig, mergedQueriesFolder)
@@ -171,10 +195,10 @@ function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig {
 
   // validate config
   if (!config.wordpressUrl?.trim()) {
-    throw new Error('WPNuxt error: WordPress url is missing')
+    throw createModuleError('core', 'WordPress URL is required. Set it in nuxt.config.ts or via WPNUXT_WORDPRESS_URL environment variable.')
   }
   if (config.wordpressUrl.endsWith('/')) {
-    throw new Error(`WPNuxt error: WordPress url should not have a trailing slash: ${config.wordpressUrl}`)
+    throw createModuleError('core', `WordPress URL should not have a trailing slash: ${config.wordpressUrl}`)
   }
   return config
 }

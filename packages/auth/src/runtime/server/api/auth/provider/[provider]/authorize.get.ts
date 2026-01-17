@@ -114,7 +114,7 @@ export default defineEventHandler(async (event) => {
 
   // Build callback URL
   const requestUrl = getRequestURL(event)
-  const callbackUrl = `${requestUrl.origin}/api/auth/provider/${provider}/callback`
+  const callbackUrl = `${requestUrl.origin}/api/_wpnuxt-auth/provider/${provider}/callback`
   authUrl.searchParams.set('redirect_uri', callbackUrl)
 
   // Redirect to provider's OAuth page
