@@ -144,15 +144,6 @@ export default defineNuxtModule<WPNuxtAuthConfig>({
       { name: 'useWPUser', from: resolver.resolve('./runtime/composables/useWPUser') }
     ])
 
-    // Add server API handlers for password auth
-    if (passwordEnabled) {
-      addServerHandler({
-        route: '/api/auth/login',
-        method: 'post',
-        handler: resolver.resolve('./runtime/server/api/auth/login.post')
-      })
-    }
-
     // Logout endpoint (always registered - clears httpOnly cookies)
     addServerHandler({
       route: '/api/auth/logout',

@@ -9,6 +9,7 @@
  * needing custom control over individual Gutenberg blocks.
  */
 const IS_DEV = process.env.NODE_ENV === 'development'
+const IS_CI = process.env.CI === 'true'
 
 export default defineNuxtConfig({
   modules: [
@@ -56,7 +57,7 @@ export default defineNuxtConfig({
   wpNuxt: {
     wordpressUrl: 'https://wordpress.wpnuxt.com',
     debug: IS_DEV,
-    downloadSchema: true
+    downloadSchema: !IS_CI // Use committed schema in CI (WordPress not accessible)
   },
 
   wpNuxtAuth: {
