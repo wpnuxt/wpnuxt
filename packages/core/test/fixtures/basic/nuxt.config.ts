@@ -6,6 +6,6 @@ export default defineNuxtConfig({
   ],
   wpNuxt: {
     wordpressUrl: 'https://wordpress.wpnuxt.com',
-    downloadSchema: true
+    downloadSchema: false // Use committed schema.graphql (avoids network calls in CI)
   }
 })
