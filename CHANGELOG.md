@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.0.0-alpha.6](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.5...v2.0.0-alpha.6) (2026-01-17)
+
+### Bug Fixes
+
+* **nuxt.config:** disable schema download in CI to avoid network calls ([69a4c5b](https://github.com/wpnuxt/wpnuxt/commit/69a4c5be3fd5aa9ad4c358001eee09efefafe520))
+
+### Refactoring
+
+* **useWPContent:** update timeout handling and remove default caching function ([f152b22](https://github.com/wpnuxt/wpnuxt/commit/f152b2238e01a1d587937b57a0fee35c180f336e))
+
+### Documentation
+
+* **composables:** clarify timeout option in usePosts documentation ([c42353a](https://github.com/wpnuxt/wpnuxt/commit/c42353a0e7810edd61d8fca4a25b8d05661f03ee))
+
 ## [2.0.0-alpha.5](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.4...v2.0.0-alpha.5) (2026-01-17)
 
 ### Features
