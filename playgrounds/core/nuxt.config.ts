@@ -5,6 +5,8 @@
  * Good for testing core WPNuxt functionality (GraphQL queries, composables, etc.)
  * without any additional dependencies.
  */
+const IS_CI = process.env.CI === 'true'
+
 export default defineNuxtConfig({
   modules: ['@wpnuxt/core'],
 
@@ -16,6 +18,6 @@ export default defineNuxtConfig({
 
   wpNuxt: {
     wordpressUrl: 'https://wordpress.wpnuxt.com',
-    downloadSchema: true
+    downloadSchema: !IS_CI // Use committed schema in CI (WordPress not accessible)
   }
 })
