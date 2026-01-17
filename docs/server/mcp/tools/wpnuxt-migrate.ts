@@ -1,6 +1,57 @@
 import { z } from 'zod'
 
 /**
+ * Complete list of WPNuxt composable renames from v1 to v2
+ * The prefix changed from 'useWP' to 'use' and 'useAsyncWP' to 'useLazy'
+ */
+const COMPOSABLE_RENAMES: Record<string, string> = {
+  // Sync composables: useWP* → use*
+  useWPMenu: 'useMenu',
+  useWPPosts: 'usePosts',
+  useWPPages: 'usePages',
+  useWPPostByUri: 'usePostByUri',
+  useWPPostById: 'usePostById',
+  useWPPageByUri: 'usePageByUri',
+  useWPPageById: 'usePageById',
+  useWPNodeByUri: 'useNodeByUri',
+  useWPGeneralSettings: 'useGeneralSettings',
+  useWPViewer: 'useViewer',
+  useWPRevisions: 'useRevisions',
+  useWPPostsByCategoryName: 'usePostsByCategoryName',
+  useWPPostsByCategoryId: 'usePostsByCategoryId',
+
+  // Async composables: useAsyncWP* → useLazy*
+  useAsyncWPMenu: 'useLazyMenu',
+  useAsyncWPPosts: 'useLazyPosts',
+  useAsyncWPPages: 'useLazyPages',
+  useAsyncWPPostByUri: 'useLazyPostByUri',
+  useAsyncWPPostById: 'useLazyPostById',
+  useAsyncWPPageByUri: 'useLazyPageByUri',
+  useAsyncWPPageById: 'useLazyPageById',
+  useAsyncWPNodeByUri: 'useLazyNodeByUri',
+  useAsyncWPGeneralSettings: 'useLazyGeneralSettings',
+  useAsyncWPViewer: 'useLazyViewer',
+  useAsyncWPRevisions: 'useLazyRevisions',
+  useAsyncWPPostsByCategoryName: 'useLazyPostsByCategoryName',
+  useAsyncWPPostsByCategoryId: 'useLazyPostsByCategoryId',
+
+  // useAsync* without WP → useLazy* (for projects that already dropped WP prefix)
+  useAsyncMenu: 'useLazyMenu',
+  useAsyncPosts: 'useLazyPosts',
+  useAsyncPages: 'useLazyPages',
+  useAsyncPostByUri: 'useLazyPostByUri',
+  useAsyncPostById: 'useLazyPostById',
+  useAsyncPageByUri: 'useLazyPageByUri',
+  useAsyncPageById: 'useLazyPageById',
+  useAsyncNodeByUri: 'useLazyNodeByUri',
+  useAsyncGeneralSettings: 'useLazyGeneralSettings',
+  useAsyncViewer: 'useLazyViewer',
+  useAsyncRevisions: 'useLazyRevisions',
+  useAsyncPostsByCategoryName: 'useLazyPostsByCategoryName',
+  useAsyncPostsByCategoryId: 'useLazyPostsByCategoryId'
+}
+
+/**
  * Migration patterns for WPNuxt 1.x to 2.x
  *
  * Each pattern specifies what to look for and how to fix it.
@@ -165,6 +216,67 @@ interface HelperFile {
   path: string
   content: string
   description: string
+}
+
+interface FindReplaceItem {
+  find: string
+  replace: string
+  description: string
+}
+
+/**
+ * Generate a list of find/replace operations for composable renames
+ * based on what was actually found in the scanned files
+ */
+function generateFindReplaceList(issues: MigrationIssue[]): FindReplaceItem[] {
+  const findReplaceList: FindReplaceItem[] = []
+  const seenPatterns = new Set<string>()
+
+  for (const issue of issues) {
+    if (issue.category === 'composable' && issue.autoFixable) {
+      // Check if it's a known rename
+      if (COMPOSABLE_RENAMES[issue.pattern] && !seenPatterns.has(issue.pattern)) {
+        seenPatterns.add(issue.pattern)
+        findReplaceList.push({
+          find: issue.pattern,
+          replace: COMPOSABLE_RENAMES[issue.pattern],
+          description: issue.description
+        })
+      } else if (!seenPatterns.has(issue.pattern)) {
+        // Handle dynamic patterns (custom queries with useWP prefix)
+        seenPatterns.add(issue.pattern)
+
+        let replacement = issue.pattern
+        if (issue.pattern.startsWith('useAsyncWP')) {
+          replacement = issue.pattern.replace('useAsyncWP', 'useLazy')
+        } else if (issue.pattern.startsWith('useWP')) {
+          replacement = issue.pattern.replace('useWP', 'use')
+        } else if (issue.pattern.startsWith('useAsync')) {
+          replacement = issue.pattern.replace('useAsync', 'useLazy')
+        }
+
+        if (replacement !== issue.pattern) {
+          findReplaceList.push({
+            find: issue.pattern,
+            replace: replacement,
+            description: issue.description
+          })
+        }
+      }
+    }
+
+    // Handle directives
+    if (issue.category === 'directive' && issue.autoFixable && !seenPatterns.has(issue.pattern)) {
+      seenPatterns.add(issue.pattern)
+      findReplaceList.push({
+        find: issue.pattern,
+        replace: 'v-sanitize-html',
+        description: issue.description
+      })
+    }
+  }
+
+  return findReplaceList
 }
 
 function generateHelperFiles(issues: MigrationIssue[]): HelperFile[] {
@@ -355,10 +467,15 @@ const LIFECYCLE_HOOKS = [
  * 1. Composables called inside lifecycle hooks
  * 2. Composables called inside regular functions (not at top level)
  * 3. Missing .value access on Refs returned by composables
+ * 4. Direct array method calls on composable results (v1 → v2 breaking change)
  */
 function scanUsagePatterns(content: string, filename: string): MigrationIssue[] {
   const issues: MigrationIssue[] = []
   const lines = content.split('\n')
+
+  // Track variables assigned directly from composables (not destructured)
+  // These are the full result objects, not the data refs
+  const composableResultVars = new Set<string>()
 
   // Track variables destructured from composables (these are Refs)
   const refVariables = new Set<string>()
@@ -448,6 +565,34 @@ function scanUsagePatterns(content: string, filename: string): MigrationIssue[] 
         if (directDataMatch) {
           refVariables.add('data')
         }
+
+        // Track variables assigned directly from composables (not destructured)
+        // Pattern: const menu = useMenu(...) - NOT destructured
+        const directAssignMatch = line.match(/const\s+(\w+)\s*=\s*(use(?:WP|Lazy|Async)?[A-Z]\w*)\s*\(/)
+        if (directAssignMatch && !line.includes('{')) {
+          composableResultVars.add(directAssignMatch[1])
+        }
+      }
+    }
+
+    // Check for array methods called directly on composable result variables
+    // This is a common v1 → v2 migration issue
+    const arrayMethods = ['map', 'filter', 'find', 'forEach', 'some', 'every', 'reduce', 'flatMap', 'includes', 'indexOf', 'length']
+    for (const varName of composableResultVars) {
+      for (const method of arrayMethods) {
+        const pattern = new RegExp(`\\b${varName}\\.${method}\\b`)
+        if (pattern.test(line)) {
+          issues.push({
+            file: filename,
+            line: lineNum,
+            pattern: `${varName}.${method}`,
+            category: 'usage',
+            severity: 'error',
+            description: `Array method "${method}" called directly on composable result "${varName}"`,
+            replacement: `In WPNuxt v2, composables return { data, pending, ... }. Destructure the data: "const { data: ${varName} } = use...(...)" and use "${varName}.value?.${method}(...)"`,
+            autoFixable: false
+          })
+        }
       }
     }
 
@@ -518,6 +663,7 @@ This tool scans for:
 - Composables called inside regular functions instead of top level
 - Missing .value access on Refs returned by composables
 - Incorrect data assignment patterns
+- **v1→v2 breaking change**: Array methods (.map, .filter, etc.) called directly on composable results instead of on data.value
 
 Returns:
 - List of issues found with file locations and line numbers
@@ -570,6 +716,9 @@ The AI assistant should:
     // Generate helper files if needed
     const helperFiles = generateHelpers ? generateHelperFiles(allIssues) : []
 
+    // Generate find/replace list for auto-fixable issues
+    const findReplaceList = generateFindReplaceList(allIssues)
+
     // Generate summary
     const summary = {
       totalIssues: allIssues.length,
@@ -616,6 +765,7 @@ The AI assistant should:
         usageIssues: issuesByCategory.usage.length
       },
       migrationSteps,
+      findReplaceList: findReplaceList.length > 0 ? findReplaceList : undefined,
       issues: {
         usage: issuesByCategory.usage.length > 0 ? issuesByCategory.usage : undefined,
         composables: issuesByCategory.composable.length > 0 ? issuesByCategory.composable : undefined,
