@@ -57,15 +57,7 @@ export function useWPAuth() {
     authState.value.error = null
 
     try {
-      const { data, errors } = await useGraphqlMutation<{
-        login: {
-          authToken: string
-          authTokenExpiration: string
-          refreshToken: string
-          refreshTokenExpiration: string
-          user: WPUser
-        }
-      }>('Login', {
+      const { data, errors } = await useGraphqlMutation('Login', {
         username: credentials.username,
         password: credentials.password
       })
@@ -77,25 +69,36 @@ export function useWPAuth() {
         return { success: false, error: errorMessage }
       }
 
-      if (data?.login) {
+      // Type assertion for the login response
+      const loginData = data as {
+        login?: {
+          authToken: string
+          authTokenExpiration: string
+          refreshToken: string
+          refreshTokenExpiration: string
+          user: WPUser
+        }
+      } | null
+
+      if (loginData?.login) {
         // Store tokens in cookies
-        authToken.value = data.login.authToken
-        refreshTokenCookie.value = data.login.refreshToken
+        authToken.value = loginData.login.authToken
+        refreshTokenCookie.value = loginData.login.refreshToken
 
         // Store user data in cookie for persistence across page refreshes
-        userDataCookie.value = JSON.stringify(data.login.user)
+        userDataCookie.value = JSON.stringify(loginData.login.user)
 
         // Update state
-        authState.value.user = data.login.user
+        authState.value.user = loginData.login.user
         authState.value.isAuthenticated = true
         authState.value.isLoading = false
 
         return {
           success: true,
-          user: data.login.user,
+          user: loginData.login.user,
           tokens: {
-            authToken: data.login.authToken,
-            refreshToken: data.login.refreshToken
+            authToken: loginData.login.authToken,
+            refreshToken: loginData.login.refreshToken
           }
         }
       }
