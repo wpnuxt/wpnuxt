@@ -33,33 +33,10 @@ export interface WPContentOptions {
   retry?: number | false
   /** Base delay in milliseconds between retries (uses exponential backoff). Default: 1000 */
   retryDelay?: number
-  /** Request timeout in milliseconds. Default: 30000 (30 seconds). Set to 0 to disable. */
+  /** Request timeout in milliseconds. Default: 0 (disabled). Set to e.g. 30000 for 30 seconds. */
   timeout?: number
   /** Additional options to pass to useAsyncGraphqlQuery */
   [key: string]: unknown
-}
-
-/**
- * Default getCachedData function for optimized caching behavior.
- *
- * - Returns payload data during hydration (SSR → client handoff)
- * - Returns cached data for client-side navigation (prevents unnecessary refetches)
- * - Returns undefined for manual refreshes (ensures fresh data)
- */
-function defaultGetCachedData(key: string, nuxtApp: NuxtApp, ctx: AsyncDataRequestContext): unknown {
-  // Always use payload during hydration (SSR → client)
-  if (nuxtApp.isHydrating) {
-    return nuxtApp.payload.data[key]
-  }
-
-  // For manual refresh, always fetch fresh data
-  if (ctx.cause === 'refresh:manual' || ctx.cause === 'refresh:hook') {
-    return undefined
-  }
-
-  // For client-side navigation ('initial') and watch-triggered refetches ('watch'),
-  // use cached data if available to prevent unnecessary refetches
-  return nuxtApp.payload.data[key] ?? nuxtApp.static.data[key]
 }
 
 /**
@@ -135,8 +112,10 @@ export const useWPContent = <T>(
   const retryCount = ref(0)
   const isRetrying = ref(false)
 
-  // Timeout configuration (default: 30 seconds, 0 to disable)
-  const timeoutMs = timeoutOption ?? 30000
+  // Timeout configuration (default: disabled, set to e.g. 30000 to enable)
+  // Note: timeout and graphqlCaching conflict - when timeout aborts a request,
+  // the cache holds the broken promise. So we disable caching when timeout is set.
+  const timeoutMs = timeoutOption ?? 0
 
   // Determine graphqlCaching based on clientCache option (default: true)
   const graphqlCaching = clientCache === false
@@ -152,9 +131,9 @@ export const useWPContent = <T>(
   // Determine getCachedData behavior:
   // - If user provides custom getCachedData, use it
   // - If clientCache is false, always return undefined to force fresh fetch
-  // - Otherwise, use default implementation
+  // - Otherwise, let nuxt-graphql-middleware handle caching (don't override)
   const effectiveGetCachedData = userGetCachedData
-    ?? (clientCache === false ? () => undefined : defaultGetCachedData)
+    ?? (clientCache === false ? () => undefined : undefined)
 
   // Create AbortController for timeout if enabled
   let abortController: AbortController | undefined
@@ -176,7 +155,9 @@ export const useWPContent = <T>(
     graphqlCaching,
     // Explicit key ensures consistent cache lookups
     key: finalKey,
-    getCachedData: effectiveGetCachedData,
+    // Only set getCachedData if user provided one or wants to disable caching
+    // Otherwise let nuxt-graphql-middleware handle it with $graphqlCache
+    ...(effectiveGetCachedData && { getCachedData: effectiveGetCachedData }),
     // Pass abort signal for timeout support
     ...(abortController && {
       fetchOptions: {
@@ -198,6 +179,7 @@ export const useWPContent = <T>(
   const transformError: Ref<Error | null> = ref(null)
 
   // Clear timeout when request completes (success or error)
+  // Uses immediate: true to handle cached data where pending starts as false
   if (timeoutId !== undefined) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     vueWatch(pending, (isPending: any) => {
@@ -205,7 +187,7 @@ export const useWPContent = <T>(
         clearTimeout(timeoutId)
         timeoutId = undefined
       }
-    })
+    }, { immediate: true })
   }
 
   // Automatic retry logic with exponential backoff
