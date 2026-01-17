@@ -94,6 +94,16 @@ export interface HeadlessLoginProvider {
 }
 
 /**
+ * GraphQL response for loginClients query
+ */
+export interface LoginClientsResponse {
+  data?: {
+    loginClients?: HeadlessLoginProvider[]
+  }
+  errors?: Array<{ message: string }>
+}
+
+/**
  * Headless Login OAuth configuration
  * Uses Headless Login for WPGraphQL plugin for external OAuth providers (Google, GitHub, etc.)
  * This gives full WPGraphQL compatibility - OAuth users get the same data as password users

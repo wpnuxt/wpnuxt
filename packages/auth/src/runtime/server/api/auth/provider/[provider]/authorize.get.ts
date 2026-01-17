@@ -1,6 +1,7 @@
 import { defineEventHandler, getRouterParam, setCookie, sendRedirect, createError, getRequestURL } from 'h3'
 import { useRuntimeConfig } from '#imports'
 import { logger } from '../../../../utils/logger'
+import type { LoginClientsResponse, HeadlessLoginProvider } from '../../../../../types'
 
 /**
  * Initiates OAuth flow for a Headless Login provider (Google, GitHub, etc.)
@@ -24,17 +25,7 @@ export default defineEventHandler(async (event) => {
   // Query WordPress for available login clients
   const graphqlUrl = `${wordpressUrl}${graphqlEndpoint}`
 
-  const response = await $fetch<{
-    data?: {
-      loginClients?: Array<{
-        name: string
-        provider: string
-        authorizationUrl: string
-        isEnabled: boolean
-      }>
-    }
-    errors?: Array<{ message: string }>
-  }>(graphqlUrl, {
+  const response = await $fetch(graphqlUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -54,7 +45,7 @@ export default defineEventHandler(async (event) => {
   }).catch((error) => {
     logger.error('Failed to fetch login clients:', error)
     throw createError({ statusCode: 500, message: 'Failed to fetch login providers from WordPress' })
-  })
+  }) as LoginClientsResponse
 
   if (response.errors?.length) {
     logger.error('GraphQL errors:', response.errors)
@@ -66,13 +57,13 @@ export default defineEventHandler(async (event) => {
   // Find the requested provider (case-insensitive match)
   const providerUpperCase = provider.toUpperCase()
   const loginClient = loginClients.find(
-    client => client.provider === providerUpperCase && client.isEnabled
+    (client: HeadlessLoginProvider) => client.provider === providerUpperCase && client.isEnabled
   )
 
   if (!loginClient) {
     throw createError({
       statusCode: 404,
-      message: `Provider '${provider}' not found or not enabled. Available providers: ${loginClients.filter(c => c.isEnabled).map(c => c.name).join(', ')}`
+      message: `Provider '${provider}' not found or not enabled. Available providers: ${loginClients.filter((c: HeadlessLoginProvider) => c.isEnabled).map((c: HeadlessLoginProvider) => c.name).join(', ')}`
     })
   }
 

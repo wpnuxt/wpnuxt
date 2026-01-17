@@ -1,5 +1,5 @@
 import { computed, useState, useCookie, useRuntimeConfig, navigateTo, useGraphqlMutation } from '#imports'
-import type { AuthState, LoginCredentials, LoginResult, WPUser, AuthProvidersPublic, HeadlessLoginProvider } from '../types'
+import type { AuthState, LoginCredentials, LoginResult, WPUser, AuthProvidersPublic, HeadlessLoginProvider, LoginClientsResponse } from '../types'
 import { logger } from '../utils/logger'
 
 /**
@@ -288,17 +288,7 @@ export function useWPAuth() {
         return []
       }
 
-      const response = await $fetch<{
-        data?: {
-          loginClients?: Array<{
-            name: string
-            provider: string
-            authorizationUrl: string
-            isEnabled: boolean
-          }>
-        }
-        errors?: Array<{ message: string }>
-      }>(`${wordpressUrl}${graphqlEndpoint}`, {
+      const response = await $fetch(`${wordpressUrl}${graphqlEndpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: {
@@ -313,7 +303,7 @@ export function useWPAuth() {
             }
           `
         }
-      })
+      }) as LoginClientsResponse
 
       if (response.errors?.length) {
         logger.warn('Failed to fetch login clients:', response.errors[0]?.message)
@@ -323,13 +313,13 @@ export function useWPAuth() {
       // Filter for enabled OAuth providers (exclude PASSWORD and SITETOKEN)
       const clients = response.data?.loginClients || []
       return clients
-        .filter(client =>
+        .filter((client: HeadlessLoginProvider) =>
           client.isEnabled
           && client.provider !== 'PASSWORD'
           && client.provider !== 'SITETOKEN'
           && client.authorizationUrl
         )
-        .map(client => ({
+        .map((client: HeadlessLoginProvider) => ({
           name: client.name,
           provider: client.provider,
           authorizationUrl: client.authorizationUrl,

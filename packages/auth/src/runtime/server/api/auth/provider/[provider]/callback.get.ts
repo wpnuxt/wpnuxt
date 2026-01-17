@@ -82,7 +82,7 @@ export default defineEventHandler(async (event) => {
   // Call WordPress GraphQL login mutation
   const graphqlUrl = `${wordpressUrl}${graphqlEndpoint}`
 
-  const response = await $fetch<GraphQLResponse>(graphqlUrl, {
+  const response = await $fetch(graphqlUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -132,7 +132,7 @@ export default defineEventHandler(async (event) => {
   }).catch((error) => {
     logger.error('Login mutation failed:', error)
     throw createError({ statusCode: 500, message: 'Failed to authenticate with WordPress' })
-  })
+  }) as GraphQLResponse
 
   if (response.errors?.length) {
     logger.error('GraphQL errors:', response.errors)
