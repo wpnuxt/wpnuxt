@@ -1,6 +1,6 @@
 {
   "name": "@wpnuxt/auth",
-  "version": "2.0.0-alpha.6",
+  "version": "2.0.0-alpha.7",
   "description": "Authentication module for WPNuxt using WPGraphQL JWT",
   "keywords": [
     "nuxt",

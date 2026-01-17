@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0-alpha.7](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.6...v2.0.0-alpha.7) (2026-01-17)
+
+### Bug Fixes
+
+* **auth:** fixed typecheck errors ([cb843ba](https://github.com/wpnuxt/wpnuxt/commit/cb843bae6198b371ed4cb4b9faa26fdaac1cd754))
+* **useWPContent:** safeguard against undefined static data access ([57aef3c](https://github.com/wpnuxt/wpnuxt/commit/57aef3c7b5c1d761cb32896475adbbfad03f2fcb))
+
+### Refactoring
+
+* **useWPContent:** streamline caching logic and enhance SSG support ([7d0a958](https://github.com/wpnuxt/wpnuxt/commit/7d0a9586b3d68bbce93dd2a152578555fa810628))
+
 ## [2.0.0-alpha.6](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.5...v2.0.0-alpha.6) (2026-01-17)
 
 ### Bug Fixes
