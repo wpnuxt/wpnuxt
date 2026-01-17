@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { pascalCase } from 'scule'
-import { resolveComponent, getCurrentInstance } from '#imports'
+import { computed, resolveComponent, getCurrentInstance } from 'vue'
 import type { EditorBlock } from '#wpnuxt/blocks'
 
 const props = defineProps<{
@@ -8,26 +8,57 @@ const props = defineProps<{
 }>()
 
 /**
+ * Cache for component registration checks.
+ * Avoids traversing appContext.components on every render.
+ * Cache is module-scoped and persists across component instances.
+ */
+const registrationCache = new Map<string, boolean>()
+
+/**
  * Check if a component is registered in the app before trying to resolve it.
- * This avoids Vue warnings for missing components.
+ * Results are cached to avoid repeated lookups on pages with many blocks.
  */
 function isComponentRegistered(name: string): boolean {
+  // Check cache first
+  if (registrationCache.has(name)) {
+    return registrationCache.get(name)!
+  }
+
   const instance = getCurrentInstance()
-  if (!instance) return false
+  if (!instance) {
+    registrationCache.set(name, false)
+    return false
+  }
 
   // Check global components
   const appComponents = instance.appContext.components
-  if (name in appComponents) return true
+  const isGlobal = name in appComponents
 
   // Check local components (from auto-imports or local registration)
   const localComponents = (instance.type as { components?: Record<string, unknown> }).components
-  if (localComponents && name in localComponents) return true
+  const isLocal = !!(localComponents && name in localComponents)
 
-  return false
+  const result = isGlobal || isLocal
+  registrationCache.set(name, result)
+
+  return result
 }
 
-const componentToRender = (() => {
-  // only process top level blocks
+// Clear cache on hot module replacement (development only)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const hot = (import.meta as any).hot
+if (hot) {
+  hot.on('vite:beforeUpdate', () => {
+    registrationCache.clear()
+  })
+}
+
+/**
+ * Computed component to render based on block type.
+ * Uses computed for proper reactivity when block changes.
+ */
+const componentToRender = computed(() => {
+  // Only process top level blocks
   if (props.block.parentClientId === null || props.block.parentClientId === undefined) {
     if (props.block.name) {
       const componentName = pascalCase(props.block.name)
@@ -40,7 +71,7 @@ const componentToRender = (() => {
     return resolveComponent('EditorBlock')
   }
   return undefined
-})()
+})
 </script>
 
 <template>

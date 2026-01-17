@@ -10,6 +10,48 @@ import { parseDoc } from './utils/useParser'
 // Cache regex for performance
 const SCHEMA_PATTERN = /schema\.(?:gql|graphql)$/i
 
+/**
+ * Query complexity thresholds for warnings
+ */
+const COMPLEXITY_THRESHOLDS = {
+  /** Maximum recommended extraction depth */
+  maxDepth: 5,
+  /** Maximum recommended number of fragments */
+  maxFragments: 4
+}
+
+/**
+ * Analyze query complexity and log warnings for potentially expensive queries.
+ * This helps developers identify queries that might impact performance.
+ */
+function analyzeQueryComplexity(queries: WPNuxtQuery[]): void {
+  const logger = getLogger()
+
+  for (const query of queries) {
+    const warnings: string[] = []
+
+    // Check extraction depth
+    const depth = query.nodes?.length ?? 0
+    if (depth > COMPLEXITY_THRESHOLDS.maxDepth) {
+      warnings.push(`deep extraction path (${depth} levels)`)
+    }
+
+    // Check number of fragments (may indicate complex data requirements)
+    const fragmentCount = query.fragments?.length ?? 0
+    if (fragmentCount > COMPLEXITY_THRESHOLDS.maxFragments) {
+      warnings.push(`many fragments (${fragmentCount})`)
+    }
+
+    // Log warnings for potentially expensive queries
+    if (warnings.length > 0) {
+      logger.warn(
+        `Query "${query.name}" may be expensive: ${warnings.join(', ')}. `
+        + `Consider splitting into smaller queries or reducing data fetched.`
+      )
+    }
+  }
+}
+
 const allowDocument = (f: string, resolver: Resolver) => {
   // Skip if filename contains 'schema'
   if (SCHEMA_PATTERN.test(f)) return false
@@ -41,6 +83,9 @@ export async function prepareContext(ctx: WPNuxtContext) {
   // Separate queries and mutations
   const queries = ctx.fns.filter(f => f.operation === 'query')
   const mutations = ctx.fns.filter(f => f.operation === 'mutation')
+
+  // Analyze query complexity and warn about potentially expensive queries
+  analyzeQueryComplexity(queries)
 
   const fnName = (fn: string) => ctx.composablesPrefix + upperFirst(fn)
   const mutationFnName = (fn: string) => `useMutation${upperFirst(fn)}`

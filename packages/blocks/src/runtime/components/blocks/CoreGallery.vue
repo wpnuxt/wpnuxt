@@ -1,15 +1,22 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { CoreGallery, CoreImage } from '#wpnuxt/blocks'
 
 const props = defineProps<{
   block: CoreGallery
 }>()
-const imageBlocks: CoreImage[] = []
-props.block?.innerBlocks?.forEach((innerBlock) => {
-  if (innerBlock && innerBlock.name === 'core/image') {
-    const imgBlock = innerBlock as CoreImage
-    imageBlocks.push(imgBlock)
-  }
+
+/**
+ * Memoized list of image blocks from gallery innerBlocks.
+ * Uses computed for reactivity and to avoid rebuilding on every render.
+ */
+const imageBlocks = computed<CoreImage[]>(() => {
+  if (!props.block?.innerBlocks) return []
+
+  return props.block.innerBlocks.filter(
+    (block): block is CoreImage =>
+      block !== null && block.__typename === 'CoreImage'
+  )
 })
 </script>
 
