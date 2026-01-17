@@ -135,7 +135,7 @@ export const useWPContent = <T>(
         // Also check payload.data for SSR/ISR scenarios
         // Finally check the LRU cache for subsequent navigations
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return app.static.data[key] ?? app.payload.data[key] ?? (app as any).$graphqlCache?.get(key)
+        return app.static?.data?.[key] ?? app.payload.data[key] ?? (app as any).$graphqlCache?.get(key)
       })
 
   // Build options for useAsyncGraphqlQuery
