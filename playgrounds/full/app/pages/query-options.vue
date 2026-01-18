@@ -133,6 +133,9 @@ async function handleRefresh() {
 function setOption<K extends keyof typeof defaults>(key: K, value: typeof defaults[K]) {
   optionsCookie.value = { ...options.value, [key]: value }
 }
+
+// Check if we're in static mode
+const { isStaticMode, modeDescription } = useRenderingMode()
 </script>
 
 <template>
@@ -144,7 +147,39 @@ function setOption<K extends keyof typeof defaults>(key: K, value: typeof defaul
             Configure how data is fetched. Change options and either refresh the page or navigate away and back to see the effect.
           </p>
         </template>
+        <template #links>
+          <UBadge
+            :color="isStaticMode ? 'warning' : 'success'"
+            variant="subtle"
+          >
+            {{ modeDescription }}
+          </UBadge>
+        </template>
       </UPageHeader>
+
+      <!-- Static mode warning -->
+      <UAlert
+        v-if="isStaticMode"
+        class="mb-6"
+        title="Limited functionality in static mode"
+        icon="i-lucide-alert-triangle"
+      >
+        <template #description>
+          <p>
+            This page demonstrates interactive query options that require a server.
+            In static (SSG) mode, options cannot be changed dynamically and refresh won't fetch new data.
+          </p>
+          <p class="mt-2">
+            <NuxtLink
+              to="https://demo.wpnuxt.com/query-options/"
+              external
+              class="text-primary hover:underline font-medium"
+            >
+              View the full demo with server support →
+            </NuxtLink>
+          </p>
+        </template>
+      </UAlert>
 
       <UPageBody>
         <!-- Options Form -->
@@ -405,7 +440,7 @@ function setOption<K extends keyof typeof defaults>(key: K, value: typeof defaul
             v-for="post in posts"
             :key="post.id"
             :title="post.title ?? undefined"
-            :to="`/${post.slug}`"
+            :to="post.uri"
             :date="post.date ?? undefined"
             :image="getRelativeImagePath(post.featuredImage?.node?.sourceUrl ?? '')"
             variant="outline"

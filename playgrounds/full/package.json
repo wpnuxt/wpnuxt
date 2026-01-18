@@ -6,6 +6,7 @@
     "dev": "nuxi dev",
     "build": "nuxi build",
     "generate": "nuxi generate",
+    "preview": "nuxi preview",
     "nuxt:prepare": "nuxi prepare",
     "typecheck": "vue-tsc --noEmit",
     "clean": "rm -rf .nuxt .output node_modules"

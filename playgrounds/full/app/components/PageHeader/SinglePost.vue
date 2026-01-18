@@ -16,6 +16,8 @@ const props = defineProps<{
   nextPost?: AdjacentPost | null
 }>()
 
+const { hasServerApi } = useRenderingMode()
+
 const items = computed(() => [
   {
     label: `Fetched ${props.post?.contentTypeName === 'post' ? 'post' : 'page'} content using ${props.composableName}('${props.post?.uri}')`,
@@ -67,14 +69,19 @@ const items = computed(() => [
         >
           Previous
         </UButton>
-        <!-- Refresh Button -->
-        <UButton
-          class="cursor-pointer"
-          :loading="pending"
-          icon="i-lucide-refresh-cw"
-          size="sm"
-          @click="refreshContent"
-        />
+        <!-- Refresh Button (only available when server API is accessible) -->
+        <UTooltip
+          v-if="hasServerApi"
+          text="Refresh content from WordPress"
+        >
+          <UButton
+            class="cursor-pointer"
+            :loading="pending"
+            icon="i-lucide-refresh-cw"
+            size="sm"
+            @click="refreshContent"
+          />
+        </UTooltip>
         <UButton
           :to="nextPost?.uri ?? undefined"
           :disabled="!nextPost?.uri"

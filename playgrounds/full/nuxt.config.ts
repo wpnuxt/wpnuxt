@@ -11,6 +11,9 @@
 const IS_DEV = process.env.NODE_ENV === 'development'
 const IS_CI = process.env.CI === 'true'
 
+const WORDPRESS_URL = 'https://wordpress.wpnuxt.com'
+const GRAPHQL_ENDPOINT = '/graphql'
+
 export default defineNuxtConfig({
   modules: [
     '@wpnuxt/core',
@@ -37,8 +40,15 @@ export default defineNuxtConfig({
       concurrency: 10,
       interval: 1000,
       failOnError: false,
-      autoSubfolderIndex: false,
-      routes: IS_DEV ? [] : ['/', '/composables', '/login', '/profile', '/query-options']
+      routes: IS_DEV ? [] : ['/', '/composables/', '/login/', '/profile/', '/query-options/']
+    }
+  },
+
+  hooks: {
+    async 'prerender:routes'(ctx) {
+      if (!IS_DEV && !IS_CI) {
+        await fetchWordPressRoutes(ctx.routes)
+      }
     }
   },
 
@@ -55,7 +65,7 @@ export default defineNuxtConfig({
   },
 
   wpNuxt: {
-    wordpressUrl: 'https://wordpress.wpnuxt.com',
+    wordpressUrl: WORDPRESS_URL,
     debug: IS_DEV,
     downloadSchema: !IS_CI // Use committed schema in CI (WordPress not accessible)
   },
@@ -73,3 +83,50 @@ export default defineNuxtConfig({
     imageDomains: ['wordpress.wpnuxt.com']
   }
 })
+
+/**
+ * Fetches all WordPress posts and pages and adds them to prerender routes
+ */
+async function fetchWordPressRoutes(routes: Set<string>) {
+  console.log('[wpnuxt] Fetching WordPress routes for prerendering...')
+
+  try {
+    const response = await fetch(`${WORDPRESS_URL}${GRAPHQL_ENDPOINT}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `
+          query AllContentForPrerender {
+            posts(first: 100) {
+              nodes { uri }
+            }
+            pages(first: 100) {
+              nodes { uri }
+            }
+          }
+        `
+      })
+    })
+
+    const data = await response.json() as {
+      data?: {
+        posts?: { nodes: Array<{ uri: string }> }
+        pages?: { nodes: Array<{ uri: string }> }
+      }
+    }
+
+    const posts = data.data?.posts?.nodes || []
+    const pages = data.data?.pages?.nodes || []
+
+    for (const post of posts) {
+      if (post.uri) routes.add(post.uri)
+    }
+    for (const page of pages) {
+      if (page.uri) routes.add(page.uri)
+    }
+
+    console.log(`[wpnuxt] Added ${posts.length} posts and ${pages.length} pages to prerender routes`)
+  } catch (error) {
+    console.warn('[wpnuxt] Failed to fetch WordPress routes:', error)
+  }
+}
