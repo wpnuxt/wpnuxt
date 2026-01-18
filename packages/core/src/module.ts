@@ -1,7 +1,7 @@
 import { defu } from 'defu'
 import { existsSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
@@ -48,6 +48,10 @@ export default defineNuxtModule<WPNuxtConfig>({
     nuxt.options.runtimeConfig.public.buildHash = randHashGenerator()
     addPlugin(resolver.resolve('./runtime/plugins/graphqlConfig'))
     addPlugin(resolver.resolve('./runtime/plugins/graphqlErrors'))
+
+    // Configure trailing slash handling to match WordPress URI format
+    // This ensures both server-side and client-side URLs use trailing slashes
+    configureTrailingSlash(nuxt, logger)
 
     const mergedQueriesFolder = await mergeQueries(nuxt, wpNuxtConfig, resolver)
 
@@ -320,6 +324,67 @@ async function setupClientOptions(nuxt: Nuxt, _resolver: Resolver, logger: Retur
   // Write WPNuxt's default client options
   await writeFile(targetPath, CLIENT_OPTIONS_TEMPLATE)
   logger.debug('Created graphqlMiddleware.clientOptions.ts with WPNuxt defaults (preview mode support)')
+}
+
+/**
+ * Configure trailing slash handling to match WordPress URI format.
+ *
+ * WordPress always uses trailing slashes in URIs (e.g., /hello-world/).
+ * This configuration ensures:
+ * 1. Server-side redirects from /path to /path/ for consistent URLs
+ * 2. Client-side navigation also uses trailing slashes
+ *
+ * This is critical for SSG caching to work correctly - the cache key
+ * must be consistent between prerender time and runtime.
+ */
+function configureTrailingSlash(nuxt: Nuxt, logger: ReturnType<typeof getLogger>) {
+  const handlerPath = join(nuxt.options.buildDir, 'wpnuxt', 'trailing-slash-handler.ts')
+
+  const handlerCode = `import { defineEventHandler, sendRedirect, getRequestURL } from 'h3'
+
+export default defineEventHandler((event) => {
+  const url = getRequestURL(event)
+  const path = url.pathname
+
+  // Skip if:
+  // - Already has trailing slash
+  // - Is root path
+  // - Is an API route
+  // - Has a file extension (likely a static file)
+  // - Is a Nuxt internal route (_nuxt, __nuxt)
+  if (
+    path.endsWith('/') ||
+    path === '' ||
+    path.startsWith('/api/') ||
+    path.startsWith('/_nuxt/') ||
+    path.startsWith('/__nuxt') ||
+    path.includes('.')
+  ) {
+    return
+  }
+
+  // Redirect to trailing slash version
+  return sendRedirect(event, path + '/' + url.search, 301)
+})
+`
+
+  // Write the handler file before build starts
+  nuxt.hook('build:before', async () => {
+    await mkdir(dirname(handlerPath), { recursive: true })
+    await writeFile(handlerPath, handlerCode)
+    logger.debug('Created trailing slash handler at ' + handlerPath)
+  })
+
+  // Register the handler with Nitro
+  nuxt.hook('nitro:config', (nitroConfig) => {
+    nitroConfig.handlers = nitroConfig.handlers || []
+    nitroConfig.handlers.unshift({
+      route: '/**',
+      handler: handlerPath
+    })
+  })
+
+  logger.debug('Configured trailing slash handling for WordPress URI compatibility')
 }
 
 /**

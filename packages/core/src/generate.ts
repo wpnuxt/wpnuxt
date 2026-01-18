@@ -120,19 +120,33 @@ export async function prepareContext(ctx: WPNuxtContext) {
   }
 
   ctx.generateImports = () => {
+    const lines: string[] = []
+
+    // Add explicit imports to ensure normalization code is included in the bundle
+    // This is critical for SSG where auto-imports might not resolve correctly
     const imports: string[] = []
+    if (queries.length > 0) {
+      imports.push('useWPContent')
+    }
+    if (mutations.length > 0) {
+      imports.push('useGraphqlMutation')
+    }
+    if (imports.length > 0) {
+      lines.push(`import { ${imports.join(', ')} } from '#imports'`)
+      lines.push('')
+    }
 
     // Generate query composables
     queries.forEach((f) => {
-      imports.push(queryFnExp(f, false))
+      lines.push(queryFnExp(f, false))
     })
 
     // Generate mutation composables
     mutations.forEach((m) => {
-      imports.push(mutationFnExp(m, false))
+      lines.push(mutationFnExp(m, false))
     })
 
-    return imports.join('\n')
+    return lines.join('\n')
   }
 
   // Collect types for queries and mutations

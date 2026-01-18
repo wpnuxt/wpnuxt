@@ -93,6 +93,10 @@ export const useWPContent = <T>(
     ...restOptions
   } = options ?? {}
 
+  // Normalize URI parameter to ensure consistent cache keys between SSG prerender and runtime
+  // WordPress returns URIs with trailing slashes, but route.path may not have one
+  const normalizedParams = normalizeUriParam(params)
+
   // Retry configuration
   const maxRetries = retryOption === false ? 0 : (retryOption ?? 0)
   const baseRetryDelay = retryDelayOption ?? 1000
@@ -159,7 +163,7 @@ export const useWPContent = <T>(
   // Our getCachedData takes precedence over the built-in one
   const { data, pending, refresh, execute, clear, error, status } = useAsyncGraphqlQuery(
     String(queryName) as keyof Query,
-    params ?? {},
+    normalizedParams ?? {},
     asyncDataOptions
   )
 
@@ -282,4 +286,26 @@ const findData = (data: unknown, nodes: string[]): unknown => {
     }
     return undefined
   }, data)
+}
+
+/**
+ * Normalizes URI parameters to ensure consistent cache keys between SSG prerender and runtime.
+ * WordPress returns URIs with trailing slashes (e.g., '/hello-world/'), but Nuxt's route.path
+ * may not have one (e.g., '/hello-world'). This mismatch causes different cache key hashes,
+ * leading to cache misses during SSG client-side navigation.
+ */
+const normalizeUriParam = <T>(params: T): T => {
+  if (!params || typeof params !== 'object') return params
+
+  const paramsObj = params as Record<string, unknown>
+
+  // Check for 'uri' parameter and normalize it
+  if ('uri' in paramsObj && typeof paramsObj.uri === 'string') {
+    const uri = paramsObj.uri
+    // Add trailing slash if missing (matches WordPress URI format)
+    const normalizedUri = uri.endsWith('/') ? uri : `${uri}/`
+    return { ...paramsObj, uri: normalizedUri } as T
+  }
+
+  return params
 }
