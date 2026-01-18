@@ -12,6 +12,7 @@
     "clean": "rm -rf .nuxt .output node_modules"
   },
   "dependencies": {
+    "@nuxt/icon": "^2.2.0",
     "@nuxt/ui": "4.3.0",
     "@nuxtjs/mdc": "^0.20.0",
     "@wpnuxt/auth": "workspace:*",

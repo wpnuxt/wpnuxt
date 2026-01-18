@@ -1,24 +1,22 @@
 {
   "private": true,
-  "name": "@wpnuxt/playground-blocks",
+  "name": "@wpnuxt/playground-ssg",
   "type": "module",
   "scripts": {
     "dev": "nuxi dev",
-    "build": "nuxi build",
     "generate": "nuxi generate",
+    "preview": "nuxi preview",
     "nuxt:prepare": "nuxi prepare",
-    "typecheck": "vue-tsc --noEmit",
-    "clean": "rm -rf .nuxt .output node_modules"
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@nuxt/icon": "^2.2.0",
     "@nuxt/ui": "4.3.0",
-    "@wpnuxt/blocks": "workspace:*",
+    "@nuxtjs/mdc": "^0.20.0",
     "@wpnuxt/core": "workspace:*",
     "nuxt": "4.2.2"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.2.86",
     "vue-tsc": "^3.2.2"
   }
 }
