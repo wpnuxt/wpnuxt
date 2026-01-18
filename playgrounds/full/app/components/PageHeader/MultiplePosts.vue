@@ -9,8 +9,6 @@ const props = defineProps<{
   composableScript: string
 }>()
 
-const { hasServerApi } = useRenderingMode()
-
 const items = computed(() => [
   {
     label: `Fetched ${props.posts?.length} posts using ${props.composableName}()`,
@@ -33,7 +31,6 @@ const items = computed(() => [
     </template>
     <template #links>
       <UButton
-        v-if="hasServerApi"
         class="cursor-pointer"
         :loading="pending"
         icon="i-lucide-refresh-cw"

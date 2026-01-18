@@ -9,6 +9,7 @@
     "dev:core": "pnpm --filter @wpnuxt/playground-core dev",
     "dev:blocks": "pnpm --filter @wpnuxt/playground-blocks dev",
     "dev:full": "pnpm --filter @wpnuxt/playground-full dev",
+    "dev:ssg": "pnpm --filter @wpnuxt/playground-ssg dev",
     "dev:docs": "pnpm --filter @wpnuxt/docs dev",
     "dev": "pnpm dev:full",
     "lint": "eslint .",

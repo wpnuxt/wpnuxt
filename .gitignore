@@ -57,4 +57,5 @@ Temporary Items
 
 .queries
 IMPROVEMENT_PLAN.md
-playgrounds/full/rebuildSSG.sh
+**/rebuildSSG.sh
+playgrounds/ssg/.vercel/
