@@ -1,4 +1,0 @@
-{
-  "buildCommand": "node vercel-build.mjs",
-  "framework": null
-}

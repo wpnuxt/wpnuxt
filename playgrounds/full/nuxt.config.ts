@@ -10,7 +10,6 @@
  */
 const IS_DEV = process.env.NODE_ENV === 'development'
 const IS_CI = process.env.CI === 'true'
-const IS_VERCEL_SSG = process.env.VERCEL_SSG === 'true'
 
 const WORDPRESS_URL = 'https://wordpress.wpnuxt.com'
 const GRAPHQL_ENDPOINT = '/graphql'
@@ -37,8 +36,6 @@ export default defineNuxtConfig({
   // Prerendering configuration for static site generation
   // Adjust concurrency and interval based on server capabilities
   nitro: {
-    // Use vercel-static preset for SSG deployment on Vercel
-    preset: IS_VERCEL_SSG ? 'vercel-static' : undefined,
     prerender: {
       concurrency: 10,
       interval: 1000,
