@@ -12,6 +12,7 @@
     "@nuxtjs/mcp-toolkit": "^0.6.2",
     "@shikijs/engine-javascript": "^3.21.0",
     "docus": "^5.4.4",
+    "shiki": "^3.21.0",
     "nuxt": "^4.3.0",
     "zod": "^4.3.6"
   }
