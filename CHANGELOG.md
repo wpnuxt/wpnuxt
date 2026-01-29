@@ -1,5 +1,40 @@
 # Changelog
 
+## [2.0.0-alpha.8](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.7...v2.0.0-alpha.8) (2026-01-29)
+
+### Features
+
+* **auth, blocks, core:** improve type definitions ([7fc2f15](https://github.com/wpnuxt/wpnuxt/commit/7fc2f15c993f0f33cc45e604b98eca19cb83ac40))
+* **auth:** add E2E tests and update dependencies ([50d8e78](https://github.com/wpnuxt/wpnuxt/commit/50d8e78fb9c2201c1a3653f1ae933fb0b9772e06))
+* enhance SSG support and URI normalization ([813b690](https://github.com/wpnuxt/wpnuxt/commit/813b690cf624483362f11fd2bae5818013a93456))
+* **migration:** update @wpnuxt/auth module and composables ([c263dbe](https://github.com/wpnuxt/wpnuxt/commit/c263dbe4b79ce2be31567b18cf6f70f7ab35c0d3))
+* **nuxt.config:** add Vercel SSG preset for static site generation ([6a5aa6b](https://github.com/wpnuxt/wpnuxt/commit/6a5aa6be668b70a9a3d4353d6f949bc8604cd3ad))
+* **playgrounds:** add Vercel build configuration ([f5362da](https://github.com/wpnuxt/wpnuxt/commit/f5362da4e9de2eb4a5c2de8cf592c11d440d8ca2))
+* **vercel-build:** add module build commands for WPNuxt ([f2a4e3b](https://github.com/wpnuxt/wpnuxt/commit/f2a4e3bab4869797d6f3418747b5cfe1febab9de))
+
+### Bug Fixes
+
+* **graphql:** new downloaded graphql schema ([6f2d084](https://github.com/wpnuxt/wpnuxt/commit/6f2d084dc09ec9505c9d5af12cdec75d9f00734a))
+
+### Refactoring
+
+* **content:** reorganize data transformation utilities ([1bf3571](https://github.com/wpnuxt/wpnuxt/commit/1bf3571d78d64c6a55a4e9f689ec8cd6bb7acfe0))
+* **docs:** move docus app to a separate repo, keep content in docs folder ([#7](https://github.com/wpnuxt/wpnuxt/issues/7)) ([2ab4bef](https://github.com/wpnuxt/wpnuxt/commit/2ab4bef5b91c264030529585948109906916a1c6))
+* **generate:** enhance type handling for queries and fragments ([d9028d6](https://github.com/wpnuxt/wpnuxt/commit/d9028d6e53b3e00725e634e96d0c2b689934b8cd))
+* **playgrounds:** remove @nuxtjs/mdc and update content rendering ([7e02841](https://github.com/wpnuxt/wpnuxt/commit/7e02841dd2ad7386f16e6570fda23bfa15b08e12))
+
+### Maintenance
+
+* **docs:** moved landing page to wpnuxt-docs repo ([781e431](https://github.com/wpnuxt/wpnuxt/commit/781e43168373a1f244d941cf1aec724942b6afaa))
+* fix vercel deployments: add @shikijs/engine-javascript dependency to multiple package.json files ([761b697](https://github.com/wpnuxt/wpnuxt/commit/761b697c2158e73000864da22953090739bb8f5b))
+* fix vercel shiki hoisting for docs deployment ([a1913ff](https://github.com/wpnuxt/wpnuxt/commit/a1913ff838eff134fe9edd7fec0de8b8ef7239fc))
+* update dependencies and package versions ([5fba859](https://github.com/wpnuxt/wpnuxt/commit/5fba8596c8677ace15e836ecc09d6c15d6329470))
+* update package dependencies across playgrounds ([fb4531f](https://github.com/wpnuxt/wpnuxt/commit/fb4531f59ab287e28e6a3468551e5d733318df75))
+
+### Tests
+
+* **useWPContent:** add comprehensive tests for useWPContent composable ([d42f142](https://github.com/wpnuxt/wpnuxt/commit/d42f14284a8a1f011c5de949d1ad067753369520))
+
 ## [2.0.0-alpha.7](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.6...v2.0.0-alpha.7) (2026-01-17)
 
 ### Bug Fixes
