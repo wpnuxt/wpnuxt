@@ -52,7 +52,7 @@
     "clean": "rm -rf dist .nuxt node_modules"
   },
   "dependencies": {
-    "@nuxt/kit": "4.2.2",
+    "@nuxt/kit": "4.3.0",
     "@radya/nuxt-dompurify": "^1.0.5",
     "defu": "^6.1.4",
     "graphql": "^16.12.0",
@@ -62,12 +62,12 @@
   "devDependencies": {
     "@nuxt/devtools": "^3.1.1",
     "@nuxt/module-builder": "^1.0.2",
-    "@nuxt/schema": "4.2.2",
+    "@nuxt/schema": "4.3.0",
     "@nuxt/test-utils": "^3.23.0",
-    "@types/node": "^25.0.9",
-    "nuxt": "4.2.2",
-    "vitest": "^4.0.17",
-    "vue-tsc": "^3.2.2"
+    "@types/node": "^25.0.10",
+    "nuxt": "4.3.0",
+    "vitest": "^4.0.18",
+    "vue-tsc": "^3.2.3"
   },
   "peerDependencies": {
     "nuxt": "^4.0.0"
