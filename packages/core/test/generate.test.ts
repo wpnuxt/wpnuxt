@@ -201,8 +201,10 @@ describe('generate', () => {
 
       const declarations = ctx.generateDeclarations!()
 
-      // Should fallback to 'any' type when no fragments
-      expect(declarations).toContain('any')
+      // Should use root query type with path accessor when no fragments
+      expect(declarations).toContain('NonNullable<GeneralSettingsRootQuery>[\'generalSettings\']')
+      expect(declarations).toContain('GeneralSettingsRootQuery')
+      expect(declarations).not.toContain(': any')
     })
   })
 })

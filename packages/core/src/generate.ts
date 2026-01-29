@@ -93,10 +93,35 @@ export async function prepareContext(ctx: WPNuxtContext) {
   // Helper to format node array
   const formatNodes = (nodes?: string[]) => nodes?.map(n => `'${n}'`).join(',') ?? ''
 
-  // Helper to get fragment type string
+  /**
+   * Get the return type for a query.
+   * - Queries with fragments: use fragment types (e.g., PostFragment[])
+   * - Queries without fragments: use the query's root type with path accessors
+   */
   const getFragmentType = (q: WPNuxtQuery) => {
-    const fragmentSuffix = q.fragments?.length && q.nodes?.includes('nodes') ? '[]' : ''
-    return q.fragments?.length ? q.fragments.map(f => `${f}Fragment${fragmentSuffix}`).join(' | ') : 'any'
+    // If query uses fragments, derive type from fragment names
+    if (q.fragments?.length) {
+      const fragmentSuffix = q.nodes?.includes('nodes') ? '[]' : ''
+      return q.fragments.map(f => `${f}Fragment${fragmentSuffix}`).join(' | ')
+    }
+
+    // No fragments - use the query's root type with extraction path
+    if (q.nodes?.length) {
+      // Build type accessor path: QueryRootQuery['field1']['field2']...
+      // Use NonNullable to unwrap optional fields
+      let typePath = `${q.name}RootQuery`
+      for (const node of q.nodes) {
+        typePath = `NonNullable<${typePath}>['${node}']`
+      }
+      // If extracting from 'nodes' array, get array element type
+      if (q.nodes.includes('nodes')) {
+        typePath = `${typePath}[number]`
+      }
+      return typePath
+    }
+
+    // Fallback for queries with no nodes path
+    return `${q.name}RootQuery`
   }
 
   // Query composable expression
@@ -153,7 +178,13 @@ export async function prepareContext(ctx: WPNuxtContext) {
   const typeSet = new Set<string>()
   queries.forEach((o) => {
     typeSet.add(`${o.name}QueryVariables`)
-    o.fragments?.forEach(f => typeSet.add(`${f}Fragment`))
+    if (o.fragments?.length) {
+      // Query uses fragments - import fragment types
+      o.fragments.forEach(f => typeSet.add(`${f}Fragment`))
+    } else {
+      // Query without fragments - import root query type
+      typeSet.add(`${o.name}RootQuery`)
+    }
   })
   mutations.forEach((m) => {
     typeSet.add(`${m.name}MutationVariables`)
