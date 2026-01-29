@@ -5,12 +5,30 @@ import { dirname, join } from 'node:path'
 import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
+import type { NitroConfig } from 'nitropack'
 import type { Import } from 'unimport'
 import type { WPNuxtConfig } from './types/config'
 import type { WPNuxtContext } from './types/queries'
 import { generateWPNuxtComposables } from './generate'
 import { getLogger, initLogger, mergeQueries, randHashGenerator, createModuleError } from './utils/index'
 import { validateWordPressEndpoint } from './utils/endpointValidation'
+
+/**
+ * Extended Nuxt options interface that includes properties available at runtime
+ * but not fully typed in Nuxt's schema types.
+ *
+ * Note: Nuxt 4 types are still evolving. These properties exist at runtime
+ * and are documented, but the type definitions lag behind.
+ * @see https://github.com/nuxt/nuxt/issues/32561
+ */
+interface NuxtOptionsWithNitro {
+  nitro: NitroConfig
+  routeRules: Record<string, { ssr?: boolean, [key: string]: unknown }>
+  runtimeConfig: {
+    public: Record<string, unknown>
+    [key: string]: unknown
+  }
+}
 
 export default defineNuxtModule<WPNuxtConfig>({
   meta: {
@@ -25,7 +43,8 @@ export default defineNuxtModule<WPNuxtConfig>({
     graphqlEndpoint: '/graphql',
     queries: {
       extendFolder: 'extend/queries/',
-      mergedOutputFolder: '.queries/'
+      mergedOutputFolder: '.queries/',
+      warnOnOverride: true
     },
     downloadSchema: true,
     debug: false,
@@ -95,7 +114,9 @@ export default defineNuxtModule<WPNuxtConfig>({
     await registerModules(nuxt, resolver, wpNuxtConfig, mergedQueriesFolder)
 
     // Customize the nuxt-graphql-middleware devtools tab for WPNuxt branding
-    nuxt.hook('devtools:customTabs', (tabs) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore - devtools:customTabs hook exists at runtime but type availability varies
+    nuxt.hook('devtools:customTabs', (tabs: Array<{ name: string, title?: string, icon?: string }>) => {
       const middlewareTab = tabs.find(tab => tab.name === 'nuxt-graphql-middleware')
       if (middlewareTab) {
         middlewareTab.title = 'WPNuxt GraphQL'
@@ -106,8 +127,10 @@ export default defineNuxtModule<WPNuxtConfig>({
     // Configure Nitro route rules for caching GraphQL requests if enabled
     if (wpNuxtConfig.cache?.enabled !== false) {
       const maxAge = wpNuxtConfig.cache?.maxAge ?? 300
-      nuxt.options.nitro.routeRules = nuxt.options.nitro.routeRules || {}
-      nuxt.options.nitro.routeRules['/api/wpnuxt/**'] = {
+      const nitroOptions = nuxt.options as unknown as NuxtOptionsWithNitro
+      nitroOptions.nitro = nitroOptions.nitro || {}
+      nitroOptions.nitro.routeRules = nitroOptions.nitro.routeRules || {}
+      nitroOptions.nitro.routeRules['/api/wpnuxt/**'] = {
         cache: {
           maxAge,
           swr: wpNuxtConfig.cache?.swr !== false
@@ -145,11 +168,15 @@ export default defineNuxtModule<WPNuxtConfig>({
     nuxt.options.alias['#wpnuxt'] = resolver.resolve(nuxt.options.buildDir, 'wpnuxt')
     nuxt.options.alias['#wpnuxt/*'] = resolver.resolve(nuxt.options.buildDir, 'wpnuxt', '*')
     nuxt.options.alias['#wpnuxt/types'] = resolver.resolve('./types')
-    nuxt.options.nitro.alias = nuxt.options.nitro.alias || {}
-    nuxt.options.nitro.alias['#wpnuxt/types'] = resolver.resolve('./types')
 
-    nuxt.options.nitro.externals = nuxt.options.nitro.externals || {}
-    nuxt.options.nitro.externals.inline = nuxt.options.nitro.externals.inline || []
+    // Configure Nitro aliases and externals
+    const nitroOpts = nuxt.options as unknown as NuxtOptionsWithNitro
+    nitroOpts.nitro = nitroOpts.nitro || {}
+    nitroOpts.nitro.alias = nitroOpts.nitro.alias || {}
+    nitroOpts.nitro.alias['#wpnuxt/types'] = resolver.resolve('./types')
+
+    nitroOpts.nitro.externals = nitroOpts.nitro.externals || {}
+    nitroOpts.nitro.externals.inline = nitroOpts.nitro.externals.inline || []
 
     addTemplate({
       write: true,
@@ -376,7 +403,9 @@ export default defineEventHandler((event) => {
   })
 
   // Register the handler with Nitro
-  nuxt.hook('nitro:config', (nitroConfig) => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore - nitro:config hook exists at runtime but type availability varies
+  nuxt.hook('nitro:config', (nitroConfig: NitroConfig) => {
     nitroConfig.handlers = nitroConfig.handlers || []
     nitroConfig.handlers.unshift({
       route: '/**',
@@ -397,27 +426,28 @@ export default defineEventHandler((event) => {
  * @see https://github.com/wpnuxt/wpnuxt/issues/2
  */
 function configureVercelSettings(nuxt: Nuxt, logger: ReturnType<typeof getLogger>) {
+  const opts = nuxt.options as unknown as NuxtOptionsWithNitro
+  opts.nitro = opts.nitro || {}
+
   // Detect if we're building for Vercel
-  const isVercel = process.env.VERCEL === '1' || nuxt.options.nitro.preset === 'vercel'
+  const isVercel = process.env.VERCEL === '1' || opts.nitro.preset === 'vercel'
 
   if (isVercel) {
     logger.debug('Vercel deployment detected, applying recommended settings')
 
     // Enable native SWR for proper Vercel ISR handling
     // This fixes issues with GraphQL response data not being properly passed to the client
-    nuxt.options.nitro.future = nuxt.options.nitro.future || {}
-    if (nuxt.options.nitro.future.nativeSWR === undefined) {
-      nuxt.options.nitro.future.nativeSWR = true
+    opts.nitro.future = opts.nitro.future || {}
+    if (opts.nitro.future.nativeSWR === undefined) {
+      opts.nitro.future.nativeSWR = true
       logger.debug('Enabled nitro.future.nativeSWR for Vercel ISR compatibility')
     }
 
     // Ensure SSR is enabled for all routes (fixes catch-all route issues)
     // Users can override specific routes if needed
-    nuxt.options.routeRules = nuxt.options.routeRules || {}
-    if (!nuxt.options.routeRules['/**']) {
-      // Note: ssr property exists in NuxtConfig but NitroRouteConfig type is incomplete in Nuxt 4
-      // See: https://github.com/nuxt/nuxt/issues/32561
-      nuxt.options.routeRules['/**'] = { ssr: true } as Record<string, unknown>
+    opts.routeRules = opts.routeRules || {}
+    if (!opts.routeRules['/**']) {
+      opts.routeRules['/**'] = { ssr: true }
       logger.debug('Enabled SSR for all routes (routeRules[\'/**\'] = { ssr: true })')
     }
   }

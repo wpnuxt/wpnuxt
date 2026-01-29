@@ -9,6 +9,8 @@ export default defineBuildConfig({
     { input: 'src/client-options', name: 'client-options' }
   ],
   externals: [
+    'vue',
+    '#imports',
     'nuxt-graphql-middleware/server-options',
     'nuxt-graphql-middleware/client-options'
   ],

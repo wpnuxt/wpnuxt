@@ -4,6 +4,32 @@ import type { WatchSource, Ref } from 'vue'
 import type { NuxtApp } from 'nuxt/app'
 import { computed, ref, watch as vueWatch, useAsyncGraphqlQuery } from '#imports'
 
+/** Extended NuxtApp with nuxt-graphql-middleware internals */
+interface NuxtAppWithGraphqlCache extends NuxtApp {
+  $graphqlCache?: {
+    get: (key: string) => unknown
+  }
+}
+
+/** Context object passed to getCachedData (Nuxt 4+) */
+interface AsyncDataRequestContext {
+  /** What triggered the request: 'initial', 'refresh:manual', 'refresh:hook', or 'watch' */
+  cause: 'initial' | 'refresh:manual' | 'refresh:hook' | 'watch'
+}
+
+/** Options passed to useAsyncGraphqlQuery */
+interface AsyncGraphqlQueryOptions {
+  lazy?: boolean
+  server?: boolean
+  immediate?: boolean
+  watch?: (WatchSource<unknown> | object)[]
+  transform?: (input: unknown) => unknown
+  getCachedData?: (key: string, nuxtApp: NuxtApp, ctx: AsyncDataRequestContext) => unknown
+  graphqlCaching?: { client: boolean }
+  fetchOptions?: Record<string, unknown>
+  [key: string]: unknown
+}
+
 export interface WPContentOptions {
   /** Whether to resolve the async function after loading the route, instead of blocking client-side navigation. Default: false */
   lazy?: boolean
@@ -27,12 +53,6 @@ export interface WPContentOptions {
   timeout?: number
   /** Additional options to pass to useAsyncData */
   [key: string]: unknown
-}
-
-/** Context object passed to getCachedData (Nuxt 4+) */
-interface AsyncDataRequestContext {
-  /** What triggered the request: 'initial', 'refresh:manual', 'refresh:hook', or 'watch' */
-  cause: 'initial' | 'refresh:manual' | 'refresh:hook' | 'watch'
 }
 
 /**
@@ -126,7 +146,7 @@ export const useWPContent = <T>(
   // By passing our own getCachedData, we prevent the built-in one from being used
   const ssgGetCachedData = userGetCachedData ?? (clientCache === false
     ? () => undefined
-    : (key: string, app: NuxtApp, ctx: { cause: string }) => {
+    : (key: string, app: NuxtApp, ctx: AsyncDataRequestContext) => {
         // During hydration, use payload data
         if (app.isHydrating) {
           return app.payload.data[key]
@@ -138,13 +158,11 @@ export const useWPContent = <T>(
         // For SSG client navigation, check static.data (prerendered payloads)
         // Also check payload.data for SSR/ISR scenarios
         // Finally check the LRU cache for subsequent navigations
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return app.static?.data?.[key] ?? app.payload.data[key] ?? (app as any).$graphqlCache?.get(key)
+        return app.static?.data?.[key] ?? app.payload.data[key] ?? (app as NuxtAppWithGraphqlCache).$graphqlCache?.get(key)
       })
 
   // Build options for useAsyncGraphqlQuery
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const asyncDataOptions: Record<string, any> = {
+  const asyncDataOptions: AsyncGraphqlQueryOptions = {
     ...restOptions,
     // Our getCachedData that properly checks static.data for SSG
     getCachedData: ssgGetCachedData,
@@ -173,8 +191,7 @@ export const useWPContent = <T>(
   // Clear timeout when request completes (success or error)
   // Uses immediate: true to handle cached data where pending starts as false
   if (timeoutId !== undefined) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vueWatch(pending, (isPending: any) => {
+    vueWatch(pending, (isPending: boolean) => {
       if (!isPending && timeoutId !== undefined) {
         clearTimeout(timeoutId)
         timeoutId = undefined
@@ -184,8 +201,7 @@ export const useWPContent = <T>(
 
   // Automatic retry logic with exponential backoff
   if (maxRetries > 0) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vueWatch(error, async (newError: any) => {
+    vueWatch(error, async (newError) => {
       // Only retry on client-side and if we haven't exceeded max retries
       if (newError && !isRetrying.value && retryCount.value < maxRetries && import.meta.client) {
         isRetrying.value = true
@@ -209,8 +225,7 @@ export const useWPContent = <T>(
     })
 
     // Reset retry count on successful fetch
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vueWatch(data, (newData: any) => {
+    vueWatch(data, (newData: unknown) => {
       if (newData && retryCount.value > 0) {
         retryCount.value = 0
       }

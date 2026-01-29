@@ -11,7 +11,7 @@ export default defineNuxtPlugin(() => {
   }
 
   // A hash generated at build time and passed in publicRuntimeConfig.
-  const { buildHash } = useRuntimeConfig().public
+  const { buildHash } = useRuntimeConfig().public as { buildHash?: string }
 
   state.fetchOptions = {
     async onRequest({ options }: { options: { params?: Record<string, unknown> } }) {

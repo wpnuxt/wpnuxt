@@ -17,7 +17,7 @@ export interface WPNuxtAuthPublicConfig {
 }
 
 // Extend Nuxt's public runtime config
-declare module 'nuxt/schema' {
+declare module '@nuxt/schema' {
   interface PublicRuntimeConfig {
     wpNuxtAuth: WPNuxtAuthPublicConfig
   }

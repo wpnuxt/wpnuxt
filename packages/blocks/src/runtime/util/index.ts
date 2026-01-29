@@ -1,11 +1,12 @@
 import { convertFontSize } from './attributeFontSize'
 import { getColor } from './attributeColor'
+import type { EditorBlock } from '../types'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getCssClasses = function getCssClasses(block: any) {
-  const text = convertFontSize(block.attributes?.fontSize, 'text-')
-  const color = getColor(block.attributes?.textColor)
-  const passedOn = (block?.attributes?.className != null ? block?.attributes?.className + ' ' : ' ')
+const getCssClasses = function getCssClasses(block: EditorBlock) {
+  const attrs = block.attributes as Record<string, string | undefined> | null | undefined
+  const text = convertFontSize(attrs?.fontSize, 'text-')
+  const color = getColor(attrs?.textColor)
+  const passedOn = attrs?.className != null ? attrs.className + ' ' : ' '
 
   return passedOn + text + ' ' + color
 }

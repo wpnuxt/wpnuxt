@@ -32,6 +32,12 @@ export interface WPNuxtConfig {
      * @default '.queries/'
      */
     mergedOutputFolder: string
+
+    /**
+     * Whether to warn when a user query file overrides a default query file
+     * @default true
+     */
+    warnOnOverride?: boolean
   }
 
   /**

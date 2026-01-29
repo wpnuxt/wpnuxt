@@ -1,4 +1,5 @@
-import { existsSync, cpSync, promises as fsp } from 'node:fs'
+import { existsSync, cpSync, promises as fsp, readdirSync, statSync } from 'node:fs'
+import { relative, join } from 'node:path'
 import { createResolver, useLogger } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
 import { ref } from 'vue'
@@ -43,6 +44,15 @@ export async function mergeQueries(nuxt: Nuxt, wpNuxtConfig: WPNuxtConfig, resol
   // Copy default queries
   cpSync(defaultQueriesPath, queryOutputPath, { recursive: true })
 
+  // Detect conflicts between default and user queries
+  const conflicts = findConflicts(userQueryPath, queryOutputPath)
+  if (conflicts.length && wpNuxtConfig.queries.warnOnOverride) {
+    logger.warn('The following user query files will override default queries:')
+    for (const file of conflicts) {
+      logger.warn(` - ${file}`)
+    }
+  }
+
   // Extend with user queries if they exist
   if (existsSync(userQueryPath)) {
     logger.debug('Extending queries:', userQueryPath)
@@ -51,4 +61,28 @@ export async function mergeQueries(nuxt: Nuxt, wpNuxtConfig: WPNuxtConfig, resol
 
   logger.debug('Merged queries folder:', queryOutputPath)
   return queryOutputPath
+}
+
+export function findConflicts(userQueryPath: string, outputPath: string): string[] {
+  const conflicts: string[] = []
+  function walk(dir: string) {
+    const entries = readdirSync(dir)
+    for (const entry of entries) {
+      const fullPath = join(dir, entry)
+      const stat = statSync(fullPath)
+      if (stat.isDirectory()) {
+        walk(fullPath)
+      } else if (stat.isFile()) {
+        const rel = relative(userQueryPath, fullPath)
+        const target = join(outputPath, rel)
+        if (existsSync(target)) {
+          conflicts.push(rel)
+        }
+      }
+    }
+  }
+  if (existsSync(userQueryPath)) {
+    walk(userQueryPath)
+  }
+  return conflicts
 }

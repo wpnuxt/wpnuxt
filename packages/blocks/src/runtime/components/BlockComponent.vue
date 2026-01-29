@@ -14,6 +14,9 @@ const props = defineProps<{
  */
 const registrationCache = new Map<string, boolean>()
 
+// Capture the instance during setup - getCurrentInstance() must be called synchronously
+const instance = getCurrentInstance()
+
 /**
  * Check if a component is registered in the app before trying to resolve it.
  * Results are cached to avoid repeated lookups on pages with many blocks.
@@ -24,7 +27,6 @@ function isComponentRegistered(name: string): boolean {
     return registrationCache.get(name)!
   }
 
-  const instance = getCurrentInstance()
   if (!instance) {
     registrationCache.set(name, false)
     return false
@@ -45,8 +47,10 @@ function isComponentRegistered(name: string): boolean {
 }
 
 // Clear cache on hot module replacement (development only)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const hot = (import.meta as any).hot
+interface ViteHotContext {
+  on: (event: string, callback: () => void) => void
+}
+const hot = (import.meta as ImportMeta & { hot?: ViteHotContext }).hot
 if (hot) {
   hot.on('vite:beforeUpdate', () => {
     registrationCache.clear()
