@@ -12,19 +12,19 @@
     "clean": "rm -rf .nuxt .output node_modules"
   },
   "dependencies": {
-    "@nuxt/icon": "^2.2.0",
-    "@nuxt/ui": "4.3.0",
+    "@nuxt/icon": "^2.2.1",
+    "@nuxt/ui": "4.4.0",
     "@nuxtjs/mdc": "^0.20.0",
     "@wpnuxt/auth": "workspace:*",
     "@wpnuxt/blocks": "workspace:*",
     "@wpnuxt/core": "workspace:*",
-    "nuxt": "4.2.2",
+    "nuxt": "4.3.0",
     "vue-json-pretty": "^2.4.0"
   },
   "devDependencies": {
     "@iconify-json/logos": "^1.2.10",
     "@iconify-json/lucide": "^1.2.86",
     "@iconify-json/svg-spinners": "^1.2.4",
-    "vue-tsc": "^3.2.2"
+    "vue-tsc": "^3.2.3"
   }
 }

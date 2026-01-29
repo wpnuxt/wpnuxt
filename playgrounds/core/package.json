@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@wpnuxt/core": "workspace:*",
-    "nuxt": "4.2.2"
+    "nuxt": "4.3.0"
   },
   "devDependencies": {
-    "vue-tsc": "^3.2.2"
+    "vue-tsc": "^3.2.3"
   }
 }

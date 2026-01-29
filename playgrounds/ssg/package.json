@@ -10,13 +10,13 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/icon": "^2.2.0",
-    "@nuxt/ui": "4.3.0",
+    "@nuxt/icon": "^2.2.1",
+    "@nuxt/ui": "4.4.0",
     "@nuxtjs/mdc": "^0.20.0",
     "@wpnuxt/core": "workspace:*",
-    "nuxt": "4.2.2"
+    "nuxt": "4.3.0"
   },
   "devDependencies": {
-    "vue-tsc": "^3.2.2"
+    "vue-tsc": "^3.2.3"
   }
 }
