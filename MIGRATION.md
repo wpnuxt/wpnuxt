@@ -174,8 +174,8 @@ const { mutate } = useMutationLogin()
 
 | Removed | Alternative |
 |---------|-------------|
-| `<WPContent>` | Use `<MDC>` from @nuxtjs/mdc or `<BlockRenderer>` from @wpnuxt/blocks |
-| `<ContentRenderer>` | Use `<MDC>` or `<BlockRenderer>` |
+| `<WPContent>` | Use `<BlockRenderer>` from @wpnuxt/blocks or `<div v-sanitize-html class="prose">` |
+| `<ContentRenderer>` | Use `<BlockRenderer>` or prose-styled HTML with `v-sanitize-html` |
 | `<StagingBanner>` | Implement in your app if needed |
 | `<WordPressLogo>` | Use your own SVG or `<WPNuxtLogo>` |
 
@@ -196,7 +196,7 @@ The HTML sanitization directive changed:
 
 ```vue
 <!-- OLD -->
-<div v-sanitize="htmlContent" />
+<div v-sanitize-html="htmlContent" />
 
 <!-- NEW -->
 <div v-sanitize-html="htmlContent" />

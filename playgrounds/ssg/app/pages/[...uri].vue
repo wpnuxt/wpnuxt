@@ -18,9 +18,10 @@ const { data: node } = await useNodeByUri({ uri })
       Back
     </UButton>
     <UPageHeader :title="node.title" />
-    <MDC
+    <div
       v-if="node.content"
-      :value="node.content"
+      v-sanitize-html="node.content"
+      class="prose prose-lg dark:prose-invert max-w-none"
     />
   </article>
 </template>

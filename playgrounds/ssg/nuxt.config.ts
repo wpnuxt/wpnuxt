@@ -13,8 +13,7 @@ const GRAPHQL_ENDPOINT = '/graphql'
 export default defineNuxtConfig({
   modules: [
     '@wpnuxt/core',
-    '@nuxt/ui',
-    '@nuxtjs/mdc'
+    '@nuxt/ui'
   ],
 
   css: ['~/assets/css/main.css'],

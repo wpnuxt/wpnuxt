@@ -971,7 +971,7 @@ type CommentAuthor implements Commenter & DatabaseIdentifier & Node {
   """The unique identifier stored in the database"""
   databaseId: Int!
 
-  """The email for the comment author"""
+  """The email for the comment author."""
   email: String
 
   """The globally unique identifier for the comment author object"""
@@ -1210,7 +1210,7 @@ type CommentToCommenterConnectionEdge implements CommenterConnectionEdge & Edge 
   """
   cursor: String
 
-  """The email address representing the author for this particular comment"""
+  """Email address representing the author for this particular comment"""
   email: String
 
   """

@@ -1,9 +1,9 @@
 /**
  * Full Playground
  *
- * Demonstrates WPNuxt with @nuxt/ui and @nuxtjs/mdc for beautiful content rendering.
- * Uses MDC's <MDC :value="post.content" /> to render pre-rendered HTML from WordPress
- * with automatic typography and styling.
+ * Demonstrates WPNuxt with @nuxt/ui for beautiful content rendering.
+ * Uses Tailwind Typography (prose classes) for HTML content from WordPress
+ * and BlockRenderer for structured Gutenberg blocks.
  *
  * Best for: Content sites that want great styling out of the box without
  * needing custom control over individual Gutenberg blocks.
@@ -19,8 +19,7 @@ export default defineNuxtConfig({
     '@wpnuxt/auth',
     '@wpnuxt/blocks',
     '@nuxt/image',
-    '@nuxt/ui',
-    '@nuxtjs/mdc'
+    '@nuxt/ui'
   ],
 
   devtools: { enabled: true },

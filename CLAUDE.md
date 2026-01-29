@@ -124,9 +124,9 @@ The module relies on `nuxt-graphql-middleware` for GraphQL type generation:
 ### Playgrounds
 
 **Full Playground (`playgrounds/full/`)** - `pnpm dev:full`
-- Full-featured example using **@nuxt/ui v4** and **@nuxtjs/mdc**
-- Renders WordPress content using MDC's `<MDC :value="post.content" />` component
-- MDC parses the pre-rendered HTML from WordPress and applies beautiful typography
+- Full-featured example using **@nuxt/ui v4**
+- Renders WordPress HTML content using Tailwind Typography (`prose` classes) with `v-sanitize-html` directive
+- Uses `<BlockRenderer>` for structured Gutenberg blocks, falls back to prose-styled HTML
 - Best for: Simple content sites where you want great styling out of the box
 
 **Blocks Playground (`playgrounds/blocks/`)** - `pnpm dev:blocks`

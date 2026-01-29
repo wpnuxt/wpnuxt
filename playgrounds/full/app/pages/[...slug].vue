@@ -48,14 +48,15 @@ const nextPost = computed(() => {
       <UPageBody>
         <UPageCard description="Rendered Content from WordPress">
           <template v-if="!pending && post">
-            <!-- Use BlockRenderer for structured blocks, MDC for HTML content -->
+            <!-- Use BlockRenderer for structured blocks, prose for HTML content -->
             <BlockRenderer
               v-if="post.editorBlocks?.length"
               :node="post"
             />
-            <MDC
+            <div
               v-else-if="post.content"
-              :value="post.content"
+              v-sanitize-html="post.content"
+              class="prose prose-lg dark:prose-invert max-w-none"
             />
           </template>
           <LoadingPage v-else />
