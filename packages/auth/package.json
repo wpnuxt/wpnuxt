@@ -36,6 +36,8 @@
   "scripts": {
     "build": "nuxt-module-build build",
     "dev:prepare": "nuxt-module-build build --stub",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
     "typecheck": "vue-tsc --noEmit",
     "clean": "rm -rf dist .nuxt node_modules"
   },
@@ -45,8 +47,10 @@
   "devDependencies": {
     "@nuxt/module-builder": "^1.0.2",
     "@nuxt/schema": "4.3.0",
+    "@nuxt/test-utils": "^3.23.0",
     "@types/node": "^25.0.10",
     "nuxt": "4.3.0",
+    "vitest": "^4.0.18",
     "vue-tsc": "^3.2.3"
   },
   "peerDependencies": {
