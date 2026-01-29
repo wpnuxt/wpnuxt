@@ -18,7 +18,7 @@ This monorepo contains the following packages:
 |---------|-------------|---------|
 | [@wpnuxt/core](./packages/core) | Core WordPress integration with GraphQL | [![npm](https://img.shields.io/npm/v/@wpnuxt/core.svg?style=flat&colorA=020420&colorB=00DC82)](https://npmjs.com/package/@wpnuxt/core) |
 | [@wpnuxt/blocks](./packages/blocks) | Gutenberg block rendering components | [![npm](https://img.shields.io/npm/v/@wpnuxt/blocks.svg?style=flat&colorA=020420&colorB=00DC82)](https://npmjs.com/package/@wpnuxt/blocks) |
-| [@wpnuxt/auth](./packages/auth) | WordPress authentication (JWT) | Coming soon |
+| [@wpnuxt/auth](./packages/auth) | WordPress authentication (JWT) | [![npm](https://img.shields.io/npm/v/@wpnuxt/auth.svg?style=flat&colorA=020420&colorB=00DC82)](https://npmjs.com/package/@wpnuxt/auth) |
 
 ## Features
 
@@ -63,8 +63,8 @@ const { data: posts } = await usePosts()
 // Fetch a single post by URI
 const { data: post } = await usePostByUri({ uri: '/my-post' })
 
-// Lazy loading with reactive state
-const { data: pages, pending, refresh } = await useLazyPages()
+// Lazy loading (non-blocking) with reactive state
+const { data: pages, pending, refresh } = usePages(undefined, { lazy: true })
 </script>
 
 <template>
@@ -132,7 +132,7 @@ query CustomPosts($categoryId: Int!) {
 }
 ```
 
-This generates `useCustomPosts()` and `useLazyCustomPosts()` composables automatically.
+This generates a `useCustomPosts()` composable. Use `{ lazy: true }` option for non-blocking behavior.
 
 ## Using @wpnuxt/blocks
 
@@ -214,7 +214,7 @@ See the [Migration Guide](/MIGRATION.md) for detailed instructions on upgrading 
 Key changes:
 - Nuxt 4 required (was Nuxt 3)
 - Composables renamed: `useWPPosts` → `usePosts`
-- Async variants renamed: `useAsyncPosts` → `useLazyPosts`
+- Async variants: `useAsyncPosts` → `usePosts(undefined, { lazy: true })`
 - Directive changed: `v-sanitize` → `v-sanitize-html`
 
 ## License

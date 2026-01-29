@@ -20,7 +20,7 @@ The package names remain the same, but the repository structure has changed:
 |-------------|-------------|-------|
 | `@wpnuxt/core@1.x` | `@wpnuxt/core@2.x` | Same npm package name |
 | `@wpnuxt/blocks@0.x` | `@wpnuxt/blocks@2.x` | Same npm package name |
-| `@wpnuxt/auth@0.x` | `@wpnuxt/auth@2.x` | **Not yet migrated** |
+| `@wpnuxt/auth@0.x` | `@wpnuxt/auth@2.x` | Same npm package name |
 
 ### Update Dependencies
 
@@ -111,12 +111,14 @@ WPNUXT_CACHE_MAX_AGE=300
 WPNUXT_LOG_LEVEL=3
 WPNUXT_STAGING=false
 
-# NEW
+# NEW (only these environment variables are supported)
 WPNUXT_WORDPRESS_URL=https://example.com
 WPNUXT_GRAPHQL_ENDPOINT=/graphql
 WPNUXT_DOWNLOAD_SCHEMA=true
 WPNUXT_DEBUG=false
 ```
+
+> **Note:** Cache settings can only be configured in `nuxt.config.ts`, not via environment variables.
 
 ## Composable Changes
 
@@ -129,9 +131,9 @@ The `composablesPrefix` option was removed. The prefix is now always `use`:
 const { data } = await useWPPosts()
 const { data } = await useAsyncWPPosts()
 
-// NEW (fixed 'use' prefix)
-const { data } = await usePosts()
-const { data } = await useLazyPosts()  // Renamed from useAsync*
+// NEW (fixed 'use' prefix, lazy is now an option)
+const { data } = usePosts()                         // Blocking (default)
+const { data } = usePosts(undefined, { lazy: true }) // Non-blocking (replaces useAsync*)
 ```
 
 ### Removed Composables
@@ -140,23 +142,11 @@ The following composables were **intentionally removed** from 2.x:
 
 | Removed | Alternative |
 |---------|-------------|
-| `usePrevNextPost()` | Implement in your app using `usePosts()` |
 | `useFeaturedImage()` | Access `featuredImage` directly from post data |
 | `isStaging()` | Use environment variables: `process.env.NODE_ENV` |
 | `useWPUri()` | Use `useRoute().params` directly |
 
-#### Example: Replacing usePrevNextPost
-
-```typescript
-// OLD
-const { prev, next } = usePrevNextPost(currentPostId)
-
-// NEW: Implement yourself
-const { data: posts } = await usePosts()
-const currentIndex = posts.value?.findIndex(p => p.id === currentPostId)
-const prev = currentIndex > 0 ? posts.value[currentIndex - 1] : null
-const next = currentIndex < posts.value.length - 1 ? posts.value[currentIndex + 1] : null
-```
+> **Note:** `usePrevNextPost()` is available in v2 and works out of the box.
 
 #### Example: Replacing useFeaturedImage
 
@@ -308,22 +298,51 @@ defineProps<{
 
 ## @wpnuxt/auth Migration
 
-**Note:** The auth module is **not yet migrated** to the new monorepo. If you're using `@wpnuxt/auth`, you'll need to wait for the migration or implement authentication manually.
+The auth module has been migrated to 2.x with a new composable-based API.
 
-### Manual Authentication Alternative
+### Module Configuration
 
 ```typescript
-// Use nuxt-graphql-middleware's mutation composable directly
-const { mutate } = useGraphqlMutation('Login')
-
-async function login(username: string, password: string) {
-  const { data } = await mutate({
-    username,
-    password
-  })
-  // Handle tokens, etc.
-}
+// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@wpnuxt/core', '@wpnuxt/auth'],
+  wpNuxtAuth: {
+    // Configuration options
+  }
+})
 ```
+
+### Using useWPAuth
+
+```typescript
+// NEW: Use the useWPAuth composable
+const {
+  login,
+  logout,
+  user,
+  isAuthenticated,
+  isLoading,
+  error
+} = useWPAuth()
+
+// Login with username/password
+await login({ username: 'user', password: 'pass' })
+
+// Check authentication status
+if (isAuthenticated.value) {
+  console.log('Logged in as:', user.value?.name)
+}
+
+// Logout
+await logout()
+```
+
+### Supported Authentication Methods
+
+The auth module supports multiple authentication providers:
+- **Password auth**: Headless Login for WPGraphQL plugin
+- **OAuth2**: miniOrange WP OAuth Server plugin
+- **Headless Login**: External OAuth providers (Google, GitHub, etc.)
 
 ## Checklist
 
@@ -335,7 +354,7 @@ Use this checklist to track your migration progress:
 - [ ] Update `nuxt.config.ts` configuration options
 - [ ] Update environment variables
 - [ ] Rename composables (e.g., `useWPPosts` → `usePosts`)
-- [ ] Replace `useAsync*` with `useLazy*`
+- [ ] Replace `useAsync*` with `lazy: true` option (e.g., `usePosts(undefined, { lazy: true })`)
 - [ ] Replace removed composables with alternatives
 - [ ] Replace removed components
 - [ ] Update `v-sanitize` to `v-sanitize-html`
