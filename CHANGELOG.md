@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.0.0-alpha.9](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.8...v2.0.0-alpha.9) (2026-02-05)
+
+### Features
+
+* **blocks:** add environment configuration files and custom GraphQL queries documentation ([a303a20](https://github.com/wpnuxt/wpnuxt/commit/a303a209572d2bd4fc2cbcb896ecce6345b90260))
+* **module:** enhance setup process with logging and validation utilities ([228b5d4](https://github.com/wpnuxt/wpnuxt/commit/228b5d455aff53f1bcfd2a56bab2d5db4942d1ef))
+* **module:** enhance WordPress URL configuration checks in setupEnvFiles ([ab3dec4](https://github.com/wpnuxt/wpnuxt/commit/ab3dec482f9926a426d46c04b72687be8f0ca8c9))
+* **module:** onInstall hook to enhance setup process with MCP configuration and environment file prompts ([df11a65](https://github.com/wpnuxt/wpnuxt/commit/df11a65d27b972f126390d1772f3d225a63bac3b))
+
+### Refactoring
+
+* **module:** move setup tasks to separate install.ts file ([1774a13](https://github.com/wpnuxt/wpnuxt/commit/1774a13a94a8c5b0166c28d2484523a0683aff6d))
+
+### Maintenance
+
+* **dependencies:** update @types/node to version 25.2.1 across multiple packages and bump @iconify-json/lucide to version 1.2.88 in playgrounds ([0b27ba4](https://github.com/wpnuxt/wpnuxt/commit/0b27ba420175b0051aa3692ae9a68de051f4ca47))
+
 ## [2.0.0-alpha.8](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.7...v2.0.0-alpha.8) (2026-01-29)
 
 ### Features
