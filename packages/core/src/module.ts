@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { consola } from 'consola'
+import type { ConsolaInstance } from 'consola'
 import { version } from '../package.json'
 import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports, useLogger } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
@@ -12,8 +13,23 @@ import type { Import } from 'unimport'
 import type { WPNuxtConfig } from './types/config'
 import type { WPNuxtContext } from './types/queries'
 import { generateWPNuxtComposables } from './generate'
-import { getLogger, initLogger, mergeQueries, randHashGenerator, createModuleError } from './utils/index'
+import { getLogger, initLogger, mergeQueries, randHashGenerator, createModuleError, validateWordPressUrl, atomicWriteFile } from './utils/index'
 import { validateWordPressEndpoint } from './utils/endpointValidation'
+
+/**
+ * Result from a setup function in the onInstall hook.
+ * Used to track success/failure/skip status for the summary display.
+ */
+interface SetupResult {
+  /** Name of the setup step (for logging) */
+  name: string
+  /** Whether the setup completed successfully */
+  success: boolean
+  /** Optional message to display in the summary */
+  message?: string
+  /** Whether this step was skipped (e.g., already configured) */
+  skipped?: boolean
+}
 
 /**
  * Extended Nuxt options interface that includes properties available at runtime
@@ -200,17 +216,71 @@ export default defineNuxtModule<WPNuxtConfig>({
   },
 
   async onInstall(nuxt) {
+    // Create a shared logger for all setup functions
+    const logger = useLogger('wpnuxt', {
+      level: process.env.WPNUXT_DEBUG === 'true' ? 4 : 3
+    })
+
+    const results: SetupResult[] = []
+
     // Run env setup first (may prompt user for WordPress URL)
-    await setupEnvFiles(nuxt)
+    results.push(await setupEnvFiles(nuxt, logger))
 
     // Run remaining setup tasks in parallel
-    await Promise.all([
-      setupMcpConfig(nuxt),
-      setupGitignore(nuxt),
-      setupQueriesFolder(nuxt)
+    const parallel = await Promise.all([
+      setupMcpConfig(nuxt, logger),
+      setupGitignore(nuxt, logger),
+      setupQueriesFolder(nuxt, logger)
     ])
+    results.push(...parallel)
+
+    // Display summary of what was set up
+    displayInstallSummary(results, logger)
   }
 })
+
+/**
+ * Displays a summary of the install process results.
+ *
+ * Shows a box with successful setup items and next steps.
+ * Logs skipped items at debug level.
+ *
+ * @param results - Array of SetupResult from each setup function
+ * @param logger - Consola logger instance
+ */
+function displayInstallSummary(results: SetupResult[], logger: ConsolaInstance): void {
+  const successes = results.filter(r => r.success && !r.skipped)
+  const skipped = results.filter(r => r.skipped)
+  const failures = results.filter(r => !r.success)
+
+  // Only show summary box if something was actually set up
+  if (successes.length > 0) {
+    const lines = [
+      ...successes.map(r => `✓ ${r.message || r.name}`),
+      '',
+      'Next steps:',
+      '  1. Ensure WPGraphQL is installed on WordPress',
+      '  2. Run `pnpm dev` to start development',
+      '',
+      'Docs: https://wpnuxt.com'
+    ]
+
+    consola.box({
+      title: 'WPNuxt Setup Complete',
+      message: lines.join('\n')
+    })
+  }
+
+  // Log skipped items at debug level
+  if (skipped.length > 0) {
+    logger.debug(`Skipped (already configured): ${skipped.map(r => r.name).join(', ')}`)
+  }
+
+  // Log failures as warnings (individual functions already logged details)
+  if (failures.length > 0) {
+    logger.debug(`Failed: ${failures.map(r => r.name).join(', ')}`)
+  }
+}
 
 function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig {
   const config: WPNuxtConfig = defu({
@@ -473,6 +543,12 @@ function configureVercelSettings(nuxt: Nuxt, logger: ReturnType<typeof getLogger
  *
  * Creates or updates .mcp.json in the project root to enable
  * Claude and other AI tools to use WPNuxt-specific capabilities.
+ *
+ * **File artifact:** `.mcp.json` in project root
+ *
+ * @param nuxt - Nuxt instance
+ * @param logger - Consola logger instance
+ * @returns SetupResult indicating success/failure/skip status
  */
 const MCP_CONFIG = {
   wpnuxt: {
@@ -481,9 +557,8 @@ const MCP_CONFIG = {
   }
 }
 
-async function setupMcpConfig(nuxt: Nuxt) {
+async function setupMcpConfig(nuxt: Nuxt, logger: ConsolaInstance): Promise<SetupResult> {
   const mcpPath = join(nuxt.options.rootDir, '.mcp.json')
-  const logger = useLogger('wpnuxt')
 
   try {
     let config: { mcpServers?: Record<string, unknown> } = { mcpServers: {} }
@@ -497,7 +572,7 @@ async function setupMcpConfig(nuxt: Nuxt) {
       // Check if wpnuxt is already configured
       if (config.mcpServers.wpnuxt) {
         logger.debug('MCP config already includes wpnuxt server')
-        return
+        return { name: 'MCP config', success: true, skipped: true }
       }
     }
 
@@ -507,20 +582,21 @@ async function setupMcpConfig(nuxt: Nuxt) {
       ...MCP_CONFIG
     }
 
-    await writeFile(mcpPath, JSON.stringify(config, null, 2) + '\n')
-    logger.info('Created .mcp.json with WPNuxt MCP server configuration')
-    logger.info('AI assistants like Claude can now use WPNuxt tools to help you build your project')
+    await atomicWriteFile(mcpPath, JSON.stringify(config, null, 2) + '\n')
+    return {
+      name: 'MCP config',
+      success: true,
+      message: 'Created .mcp.json with WPNuxt MCP server'
+    }
   } catch (error) {
     // Don't fail module installation if MCP setup fails
-    logger.warn('Failed to setup MCP configuration:', error)
+    const message = error instanceof Error ? error.message : String(error)
+    logger.warn(`Failed to setup MCP configuration: ${message}`)
+    return { name: 'MCP config', success: false, message }
   }
 }
 
-/**
- * Environment variables setup.
- *
- * Prompts user for WordPress URL and creates .env and .env.example files.
- */
+/** Template for .env.example file. */
 const ENV_EXAMPLE_CONTENT = `# WPNuxt Configuration
 # Required: Your WordPress site URL (must have WPGraphQL plugin installed)
 WPNUXT_WORDPRESS_URL=https://your-wordpress-site.com
@@ -532,66 +608,108 @@ WPNUXT_WORDPRESS_URL=https://your-wordpress-site.com
 # WPNUXT_DEBUG=true
 `
 
-async function setupEnvFiles(nuxt: Nuxt) {
+/**
+ * Checks if the current environment is interactive (supports prompts).
+ * Returns false in CI, test, or other non-interactive environments.
+ */
+function isInteractiveEnvironment(): boolean {
+  return !(
+    process.env.CI === 'true'
+    || process.env.CI === '1'
+    || process.env.VITEST === 'true'
+    || process.env.TEST === 'true'
+    || process.env.NODE_ENV === 'test'
+  )
+}
+
+/**
+ * Checks if WordPress URL is already configured in any location.
+ *
+ * @param nuxt - Nuxt instance
+ * @param envPath - Path to .env file
+ * @returns Object with hasUrl flag, source location, and current env content
+ */
+async function checkExistingEnvConfig(nuxt: Nuxt, envPath: string): Promise<{
+  hasUrl: boolean
+  source?: string
+  envContent: string
+}> {
+  // Check 1: nuxt.config.ts (wpNuxt.wordpressUrl)
+  const nuxtConfig = nuxt.options as { wpNuxt?: { wordpressUrl?: string } }
+  if (nuxtConfig.wpNuxt?.wordpressUrl) {
+    return { hasUrl: true, source: 'nuxt.config.ts', envContent: '' }
+  }
+
+  // Check 2: Environment variable already set
+  if (process.env.WPNUXT_WORDPRESS_URL) {
+    return { hasUrl: true, source: 'WPNUXT_WORDPRESS_URL env var', envContent: '' }
+  }
+
+  // Check 3: .env file
+  if (existsSync(envPath)) {
+    const envContent = await readFile(envPath, 'utf-8')
+    if (/^WPNUXT_WORDPRESS_URL\s*=\s*.+/m.test(envContent)) {
+      return { hasUrl: true, source: '.env file', envContent }
+    }
+    return { hasUrl: false, envContent }
+  }
+
+  return { hasUrl: false, envContent: '' }
+}
+
+/**
+ * Environment variables setup.
+ *
+ * Prompts user for WordPress URL (in interactive environments) and creates
+ * .env and .env.example files. Validates user input before saving.
+ *
+ * **File artifacts:**
+ * - `.env` - User's environment variables (may be created or updated)
+ * - `.env.example` - Template for required environment variables
+ *
+ * @param nuxt - Nuxt instance
+ * @param logger - Consola logger instance
+ * @returns SetupResult indicating success/failure/skip status
+ */
+async function setupEnvFiles(nuxt: Nuxt, logger: ConsolaInstance): Promise<SetupResult> {
   const envPath = join(nuxt.options.rootDir, '.env')
   const envExamplePath = join(nuxt.options.rootDir, '.env.example')
-  const logger = useLogger('wpnuxt')
 
   try {
     // Check if WordPress URL is already configured anywhere
-    let envContent = ''
-    let hasWordPressUrl = false
+    const existingConfig = await checkExistingEnvConfig(nuxt, envPath)
+    let envContent = existingConfig.envContent
+    let urlConfigured = false
 
-    // Check 1: nuxt.config.ts (wpNuxt.wordpressUrl)
-    const nuxtConfig = nuxt.options as { wpNuxt?: { wordpressUrl?: string } }
-    if (nuxtConfig.wpNuxt?.wordpressUrl) {
-      hasWordPressUrl = true
-      logger.debug('WordPress URL already configured in nuxt.config.ts')
-    }
+    if (existingConfig.hasUrl) {
+      logger.debug(`WordPress URL already configured in ${existingConfig.source}`)
+      urlConfigured = true
+    } else if (isInteractiveEnvironment()) {
+      // Prompt for WordPress URL
+      consola.box({
+        title: 'WPNuxt Setup',
+        message: 'Configure your WordPress connection'
+      })
 
-    // Check 2: Environment variable already set
-    if (!hasWordPressUrl && process.env.WPNUXT_WORDPRESS_URL) {
-      hasWordPressUrl = true
-      logger.debug('WordPress URL already set via WPNUXT_WORDPRESS_URL env var')
-    }
+      const wordpressUrl = await consola.prompt(
+        'What is your WordPress site URL?',
+        {
+          type: 'text',
+          placeholder: 'https://your-wordpress-site.com',
+          initial: ''
+        }
+      )
 
-    // Check 3: .env file
-    if (!hasWordPressUrl && existsSync(envPath)) {
-      envContent = await readFile(envPath, 'utf-8')
-      if (/^WPNUXT_WORDPRESS_URL\s*=\s*.+/m.test(envContent)) {
-        hasWordPressUrl = true
-        logger.debug('WordPress URL already configured in .env')
-      }
-    }
+      // User provided a URL (not cancelled or empty)
+      if (wordpressUrl && typeof wordpressUrl === 'string' && wordpressUrl.trim()) {
+        // Validate the URL
+        const validation = validateWordPressUrl(wordpressUrl)
 
-    // Prompt for WordPress URL if not already configured
-    if (!hasWordPressUrl) {
-      // Skip prompt in CI/test environments
-      const isNonInteractive = process.env.CI === 'true'
-        || process.env.CI === '1'
-        || process.env.VITEST === 'true'
-        || process.env.TEST === 'true'
-        || process.env.NODE_ENV === 'test'
-
-      if (!isNonInteractive) {
-        consola.box({
-          title: 'WPNuxt Setup',
-          message: 'Configure your WordPress connection'
-        })
-
-        const wordpressUrl = await consola.prompt(
-          'What is your WordPress site URL?',
-          {
-            type: 'text',
-            placeholder: 'https://your-wordpress-site.com',
-            initial: ''
-          }
-        )
-
-        // User provided a URL (not cancelled or empty)
-        if (wordpressUrl && typeof wordpressUrl === 'string' && wordpressUrl.trim()) {
-          const url = wordpressUrl.trim().replace(/\/+$/, '') // Remove trailing slashes
-          const envLine = `WPNUXT_WORDPRESS_URL=${url}\n`
+        if (!validation.valid) {
+          logger.warn(`Invalid URL: ${validation.error}`)
+          logger.info('Skipped WordPress URL configuration. Add WPNUXT_WORDPRESS_URL to your .env file later.')
+        } else {
+          const envLine = `WPNUXT_WORDPRESS_URL=${validation.normalizedUrl}\n`
 
           if (envContent) {
             envContent = envContent.trimEnd() + '\n\n' + envLine
@@ -599,42 +717,75 @@ async function setupEnvFiles(nuxt: Nuxt) {
             envContent = envLine
           }
 
-          await writeFile(envPath, envContent)
-          logger.success(`WordPress URL saved to .env: ${url}`)
-        } else {
-          logger.info('Skipped WordPress URL configuration. Add WPNUXT_WORDPRESS_URL to your .env file later.')
+          await atomicWriteFile(envPath, envContent)
+          logger.success(`WordPress URL saved to .env: ${validation.normalizedUrl}`)
+          urlConfigured = true
         }
+      } else {
+        logger.info('Skipped WordPress URL configuration. Add WPNUXT_WORDPRESS_URL to your .env file later.')
       }
+    } else {
+      logger.debug('Non-interactive environment detected, skipping WordPress URL prompt')
     }
 
     // Always create/update .env.example as reference
     let exampleContent = ''
+    let exampleUpdated = false
+
     if (existsSync(envExamplePath)) {
       exampleContent = await readFile(envExamplePath, 'utf-8')
       if (exampleContent.includes('WPNUXT_WORDPRESS_URL')) {
         logger.debug('.env.example already includes WPNuxt configuration')
-        return
+      } else {
+        exampleContent = exampleContent.trimEnd() + '\n\n' + ENV_EXAMPLE_CONTENT
+        await atomicWriteFile(envExamplePath, exampleContent)
+        exampleUpdated = true
       }
-      exampleContent = exampleContent.trimEnd() + '\n\n' + ENV_EXAMPLE_CONTENT
     } else {
       exampleContent = ENV_EXAMPLE_CONTENT
+      await atomicWriteFile(envExamplePath, exampleContent)
+      exampleUpdated = true
     }
 
-    await writeFile(envExamplePath, exampleContent)
-    logger.info('Added WPNuxt configuration to .env.example')
+    // Determine result based on what was done
+    if (urlConfigured && exampleUpdated) {
+      return {
+        name: 'Environment files',
+        success: true,
+        message: 'Configured .env with WordPress URL'
+      }
+    } else if (urlConfigured) {
+      return { name: 'Environment files', success: true, skipped: true }
+    } else if (exampleUpdated) {
+      return {
+        name: 'Environment files',
+        success: true,
+        message: 'Created .env.example template'
+      }
+    } else {
+      return { name: 'Environment files', success: true, skipped: true }
+    }
   } catch (error) {
-    logger.warn('Failed to setup environment files:', error)
+    const message = error instanceof Error ? error.message : String(error)
+    logger.warn(`Failed to setup environment files: ${message}`)
+    return { name: 'Environment files', success: false, message }
   }
 }
 
 /**
  * Gitignore configuration.
  *
- * Ensures .queries/ folder (generated merged queries) is ignored.
+ * Ensures `.queries/` folder (generated merged queries) is ignored.
+ * This folder is regenerated during build and should not be committed.
+ *
+ * **File artifact:** Modifies `.gitignore` in project root
+ *
+ * @param nuxt - Nuxt instance
+ * @param logger - Consola logger instance
+ * @returns SetupResult indicating success/failure/skip status
  */
-async function setupGitignore(nuxt: Nuxt) {
+async function setupGitignore(nuxt: Nuxt, logger: ConsolaInstance): Promise<SetupResult> {
   const gitignorePath = join(nuxt.options.rootDir, '.gitignore')
-  const logger = useLogger('wpnuxt')
 
   try {
     let content = ''
@@ -645,7 +796,7 @@ async function setupGitignore(nuxt: Nuxt) {
       // Check if .queries is already ignored
       if (content.includes('.queries')) {
         logger.debug('.gitignore already includes .queries')
-        return
+        return { name: 'Gitignore', success: true, skipped: true }
       }
 
       // Append to existing file
@@ -654,18 +805,20 @@ async function setupGitignore(nuxt: Nuxt) {
       content = '# WPNuxt generated files\n.queries/\n'
     }
 
-    await writeFile(gitignorePath, content)
-    logger.info('Added .queries/ to .gitignore')
+    await atomicWriteFile(gitignorePath, content)
+    return {
+      name: 'Gitignore',
+      success: true,
+      message: 'Added .queries/ to .gitignore'
+    }
   } catch (error) {
-    logger.warn('Failed to setup .gitignore:', error)
+    const message = error instanceof Error ? error.message : String(error)
+    logger.warn(`Failed to setup .gitignore: ${message}`)
+    return { name: 'Gitignore', success: false, message }
   }
 }
 
-/**
- * Custom queries folder setup.
- *
- * Creates extend/queries/ folder with a README explaining how to use it.
- */
+/** README content for the extend/queries/ folder. */
 const QUERIES_README = `# Custom GraphQL Queries
 
 Place your custom \`.gql\` or \`.graphql\` files here to extend or override the default WPNuxt queries.
@@ -708,27 +861,46 @@ You can use these fragments from WPNuxt's defaults:
 See https://wpnuxt.com/guide/custom-queries for more details.
 `
 
-async function setupQueriesFolder(nuxt: Nuxt) {
+/**
+ * Creates `extend/queries/` folder with a README explaining how to use it.
+ * This folder is for user-created custom GraphQL queries that extend or
+ * override the default WPNuxt queries. Unlike `.queries/` (which is generated
+ * and gitignored), `extend/queries/` should be committed to version control.
+ *
+ * **File artifacts:**
+ * - `extend/queries/` directory
+ * - `extend/queries/README.md` with usage instructions
+ *
+ * @param nuxt - Nuxt instance
+ * @param logger - Consola logger instance
+ * @returns SetupResult indicating success/failure/skip status
+ */
+async function setupQueriesFolder(nuxt: Nuxt, logger: ConsolaInstance): Promise<SetupResult> {
   const queriesPath = join(nuxt.options.rootDir, 'extend', 'queries')
   const readmePath = join(queriesPath, 'README.md')
-  const logger = useLogger('wpnuxt')
 
   try {
     // Check if README already exists (indicates setup was done)
     if (existsSync(readmePath)) {
       logger.debug('extend/queries/ folder already exists')
-      return
+      return { name: 'Queries folder', success: true, skipped: true }
     }
 
     // Create the folder
     await mkdir(queriesPath, { recursive: true })
 
     // Add README
-    await writeFile(readmePath, QUERIES_README)
+    await atomicWriteFile(readmePath, QUERIES_README)
 
-    logger.info('Created extend/queries/ folder for custom GraphQL queries')
+    return {
+      name: 'Queries folder',
+      success: true,
+      message: 'Created extend/queries/ for custom GraphQL queries'
+    }
   } catch (error) {
-    logger.warn('Failed to setup extend/queries/ folder:', error)
+    const message = error instanceof Error ? error.message : String(error)
+    logger.warn(`Failed to setup extend/queries/ folder: ${message}`)
+    return { name: 'Queries folder', success: false, message }
   }
 }
 

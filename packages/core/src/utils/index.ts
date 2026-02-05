@@ -1,4 +1,5 @@
 import { existsSync, cpSync, promises as fsp, readdirSync, statSync } from 'node:fs'
+import { rename, writeFile } from 'node:fs/promises'
 import { relative, join } from 'node:path'
 import { createResolver, useLogger } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
@@ -9,6 +10,55 @@ import type { WPNuxtConfig } from '../types/config'
 
 // Re-export error utilities
 export { createModuleError, formatErrorMessage, type WPNuxtModule } from './errors'
+
+/**
+ * Validates and normalizes a WordPress URL.
+ *
+ * - Adds https:// prefix if no protocol is specified
+ * - Validates URL format and protocol (http/https only)
+ * - Removes trailing slashes
+ *
+ * @param url - The URL to validate
+ * @returns Validation result with normalized URL or error message
+ */
+export function validateWordPressUrl(url: string): { valid: boolean, error?: string, normalizedUrl?: string } {
+  if (!url?.trim()) {
+    return { valid: false, error: 'URL cannot be empty' }
+  }
+
+  let normalizedUrl = url.trim()
+
+  // Add https:// if no protocol specified
+  if (!normalizedUrl.startsWith('http://') && !normalizedUrl.startsWith('https://')) {
+    normalizedUrl = `https://${normalizedUrl}`
+  }
+
+  try {
+    const parsed = new URL(normalizedUrl)
+    if (!['http:', 'https:'].includes(parsed.protocol)) {
+      return { valid: false, error: 'URL must use http or https protocol' }
+    }
+    // Remove trailing slashes
+    return { valid: true, normalizedUrl: normalizedUrl.replace(/\/+$/, '') }
+  } catch {
+    return { valid: false, error: 'Invalid URL format' }
+  }
+}
+
+/**
+ * Writes a file atomically using a temp file and rename.
+ *
+ * This ensures that if the write fails partway through, the original
+ * file remains intact. The rename operation is atomic on most filesystems.
+ *
+ * @param path - The target file path
+ * @param content - The content to write
+ */
+export async function atomicWriteFile(path: string, content: string): Promise<void> {
+  const tempPath = `${path}.${Date.now()}.tmp`
+  await writeFile(tempPath, content, 'utf-8')
+  await rename(tempPath, path)
+}
 
 export function randHashGenerator(length = 12) {
   return Math.random()
