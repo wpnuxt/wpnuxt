@@ -56,6 +56,29 @@ export interface WPContentOptions {
 }
 
 /**
+ * Stable getCachedData function for SSG support.
+ * Defined at module level to ensure the same function reference is used
+ * across SSR and hydration, preventing "incompatible options" warnings.
+ */
+const defaultGetCachedData = (key: string, app: NuxtApp, ctx: AsyncDataRequestContext): unknown => {
+  // During hydration, use payload data
+  if (app.isHydrating) {
+    return app.payload.data[key]
+  }
+  // For refresh actions, don't use cache (same as nuxt-graphql-middleware behavior)
+  if (ctx.cause === 'refresh:manual' || ctx.cause === 'refresh:hook') {
+    return undefined
+  }
+  // For SSG client navigation, check static.data (prerendered payloads)
+  // Also check payload.data for SSR/ISR scenarios
+  // Finally check the LRU cache for subsequent navigations
+  return app.static?.data?.[key] ?? app.payload.data[key] ?? (app as NuxtAppWithGraphqlCache).$graphqlCache?.get(key)
+}
+
+/** getCachedData that always returns undefined (disables caching) */
+const noCacheGetCachedData = (): undefined => undefined
+
+/**
  * Fetch WordPress content using GraphQL with reactive state
  *
  * Follows Nuxt's useAsyncData pattern. Returns reactive refs immediately.
@@ -140,32 +163,16 @@ export const useWPContent = <T>(
     }, timeoutMs)
   }
 
-  // Custom getCachedData that supports SSG by checking static.data
-  // nuxt-graphql-middleware's built-in getCachedData only checks payload.data,
-  // but for SSG we also need to check static.data (prerendered payloads)
-  // By passing our own getCachedData, we prevent the built-in one from being used
-  const ssgGetCachedData = userGetCachedData ?? (clientCache === false
-    ? () => undefined
-    : (key: string, app: NuxtApp, ctx: AsyncDataRequestContext) => {
-        // During hydration, use payload data
-        if (app.isHydrating) {
-          return app.payload.data[key]
-        }
-        // For refresh actions, don't use cache (same as nuxt-graphql-middleware behavior)
-        if (ctx.cause === 'refresh:manual' || ctx.cause === 'refresh:hook') {
-          return undefined
-        }
-        // For SSG client navigation, check static.data (prerendered payloads)
-        // Also check payload.data for SSR/ISR scenarios
-        // Finally check the LRU cache for subsequent navigations
-        return app.static?.data?.[key] ?? app.payload.data[key] ?? (app as NuxtAppWithGraphqlCache).$graphqlCache?.get(key)
-      })
+  // Use stable getCachedData functions to prevent "incompatible options" warnings
+  // during hydration (function references must be identical on SSR and client)
+  const getCachedDataFn = userGetCachedData
+    ?? (clientCache === false ? noCacheGetCachedData : defaultGetCachedData)
 
   // Build options for useAsyncGraphqlQuery
   const asyncDataOptions: AsyncGraphqlQueryOptions = {
     ...restOptions,
     // Our getCachedData that properly checks static.data for SSG
-    getCachedData: ssgGetCachedData,
+    getCachedData: getCachedDataFn,
     // Enable graphql caching so the LRU cache is populated for subsequent navigations
     graphqlCaching: { client: clientCache !== false },
     // Pass abort signal for timeout support
