@@ -538,13 +538,30 @@ async function setupEnvFiles(nuxt: Nuxt) {
   const logger = useLogger('wpnuxt')
 
   try {
-    // Check if .env already has WPNUXT_WORDPRESS_URL configured
+    // Check if WordPress URL is already configured anywhere
     let envContent = ''
     let hasWordPressUrl = false
 
-    if (existsSync(envPath)) {
+    // Check 1: nuxt.config.ts (wpNuxt.wordpressUrl)
+    const nuxtConfig = nuxt.options as { wpNuxt?: { wordpressUrl?: string } }
+    if (nuxtConfig.wpNuxt?.wordpressUrl) {
+      hasWordPressUrl = true
+      logger.debug('WordPress URL already configured in nuxt.config.ts')
+    }
+
+    // Check 2: Environment variable already set
+    if (!hasWordPressUrl && process.env.WPNUXT_WORDPRESS_URL) {
+      hasWordPressUrl = true
+      logger.debug('WordPress URL already set via WPNUXT_WORDPRESS_URL env var')
+    }
+
+    // Check 3: .env file
+    if (!hasWordPressUrl && existsSync(envPath)) {
       envContent = await readFile(envPath, 'utf-8')
-      hasWordPressUrl = /^WPNUXT_WORDPRESS_URL\s*=\s*.+/m.test(envContent)
+      if (/^WPNUXT_WORDPRESS_URL\s*=\s*.+/m.test(envContent)) {
+        hasWordPressUrl = true
+        logger.debug('WordPress URL already configured in .env')
+      }
     }
 
     // Prompt for WordPress URL if not already configured
