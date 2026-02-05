@@ -1,0 +1,20 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/wp-env.json",
+  "plugins": [
+    "https://downloads.wordpress.org/plugin/wp-graphql.zip",
+    "https://github.com/wpengine/wp-graphql-content-blocks/releases/latest/download/wp-graphql-content-blocks.zip",
+    "https://github.com/AxeWP/wp-graphql-headless-login/releases/latest/download/wp-graphql-headless-login.zip"
+  ],
+  "port": 4000,
+  "config": {
+    "WP_DEBUG": true,
+    "GRAPHQL_DEBUG": true
+  },
+  "mappings": {
+    "wp-cli.yml": "./wordpress/wp-cli.yml",
+    "demo-content": "./wordpress/demo-content"
+  },
+  "lifecycleScripts": {
+    "afterStart": "./wordpress/setup.sh"
+  }
+}
