@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.0.0-alpha.10](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.9...v2.0.0-alpha.10) (2026-02-05)
+
+### Features
+
+* **auth:** improve validation for headless login and password features ([92613ff](https://github.com/wpnuxt/wpnuxt/commit/92613ff06279c5dba9b7d49f48f929fada2f2259))
+* **content:** implement stable caching functions for SSG support in useWPContent ([8c87296](https://github.com/wpnuxt/wpnuxt/commit/8c8729674ae23c8f63c6c6f4d9a2a9d9b8306116))
+* **docs:** add comprehensive documentation for WPNuxt setup and features ([f644cff](https://github.com/wpnuxt/wpnuxt/commit/f644cff28416c1af5cfdb77d7eaf5b05b7c0744a))
+* **setup:** add WPNuxt local development configuration and demo content ([52bc196](https://github.com/wpnuxt/wpnuxt/commit/52bc1967adf3853c030573b015d970c0ddb3ed51))
+
+### Maintenance
+
+* **release-it:** update release hooks to streamline build process ([047cf61](https://github.com/wpnuxt/wpnuxt/commit/047cf61bdafa28143835a999c2327607ac31b867))
+* update @wpnuxt/core version to 2.0.0-alpha.9 in multiple .nuxtrc files ([4e88b3c](https://github.com/wpnuxt/wpnuxt/commit/4e88b3cf161ae2df5e43fe614460c7245a40ee31))
+
 ## [2.0.0-alpha.9](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.8...v2.0.0-alpha.9) (2026-02-05)
 
 ### Features
