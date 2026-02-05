@@ -549,10 +549,14 @@ async function setupEnvFiles(nuxt: Nuxt) {
 
     // Prompt for WordPress URL if not already configured
     if (!hasWordPressUrl) {
-      // Check if we're in a CI environment (skip prompt)
-      const isCI = process.env.CI === 'true' || process.env.CI === '1'
+      // Skip prompt in CI/test environments
+      const isNonInteractive = process.env.CI === 'true'
+        || process.env.CI === '1'
+        || process.env.VITEST === 'true'
+        || process.env.TEST === 'true'
+        || process.env.NODE_ENV === 'test'
 
-      if (!isCI) {
+      if (!isNonInteractive) {
         consola.box({
           title: 'WPNuxt Setup',
           message: 'Configure your WordPress connection'

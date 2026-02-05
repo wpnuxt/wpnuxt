@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "wpnuxt": {
+      "type": "http",
+      "url": "https://wpnuxt.com/mcp"
+    }
+  }
+}
