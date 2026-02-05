@@ -1,8 +1,10 @@
 import { defu } from 'defu'
 import { existsSync } from 'node:fs'
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
-import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports } from '@nuxt/kit'
+import { consola } from 'consola'
+import { version } from '../package.json'
+import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports, useLogger } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
 import type { NitroConfig } from 'nitropack'
@@ -33,6 +35,7 @@ interface NuxtOptionsWithNitro {
 export default defineNuxtModule<WPNuxtConfig>({
   meta: {
     name: '@wpnuxt/core',
+    version,
     configKey: 'wpNuxt',
     compatibility: {
       nuxt: '>=3.0.0'
@@ -194,6 +197,18 @@ export default defineNuxtModule<WPNuxtConfig>({
     logger.trace('Finished generating composables')
 
     logger.info(`WPNuxt module loaded in ${new Date().getTime() - startTime}ms`)
+  },
+
+  async onInstall(nuxt) {
+    // Run env setup first (may prompt user for WordPress URL)
+    await setupEnvFiles(nuxt)
+
+    // Run remaining setup tasks in parallel
+    await Promise.all([
+      setupMcpConfig(nuxt),
+      setupGitignore(nuxt),
+      setupQueriesFolder(nuxt)
+    ])
   }
 })
 
@@ -450,6 +465,249 @@ function configureVercelSettings(nuxt: Nuxt, logger: ReturnType<typeof getLogger
       opts.routeRules['/**'] = { ssr: true }
       logger.debug('Enabled SSR for all routes (routeRules[\'/**\'] = { ssr: true })')
     }
+  }
+}
+
+/**
+ * MCP (Model Context Protocol) configuration for AI assistants.
+ *
+ * Creates or updates .mcp.json in the project root to enable
+ * Claude and other AI tools to use WPNuxt-specific capabilities.
+ */
+const MCP_CONFIG = {
+  wpnuxt: {
+    type: 'http',
+    url: 'https://wpnuxt.com/mcp'
+  }
+}
+
+async function setupMcpConfig(nuxt: Nuxt) {
+  const mcpPath = join(nuxt.options.rootDir, '.mcp.json')
+  const logger = useLogger('wpnuxt')
+
+  try {
+    let config: { mcpServers?: Record<string, unknown> } = { mcpServers: {} }
+
+    // Read existing config if it exists
+    if (existsSync(mcpPath)) {
+      const content = await readFile(mcpPath, 'utf-8')
+      config = JSON.parse(content)
+      config.mcpServers = config.mcpServers || {}
+
+      // Check if wpnuxt is already configured
+      if (config.mcpServers.wpnuxt) {
+        logger.debug('MCP config already includes wpnuxt server')
+        return
+      }
+    }
+
+    // Add WPNuxt MCP server
+    config.mcpServers = {
+      ...config.mcpServers,
+      ...MCP_CONFIG
+    }
+
+    await writeFile(mcpPath, JSON.stringify(config, null, 2) + '\n')
+    logger.info('Created .mcp.json with WPNuxt MCP server configuration')
+    logger.info('AI assistants like Claude can now use WPNuxt tools to help you build your project')
+  } catch (error) {
+    // Don't fail module installation if MCP setup fails
+    logger.warn('Failed to setup MCP configuration:', error)
+  }
+}
+
+/**
+ * Environment variables setup.
+ *
+ * Prompts user for WordPress URL and creates .env and .env.example files.
+ */
+const ENV_EXAMPLE_CONTENT = `# WPNuxt Configuration
+# Required: Your WordPress site URL (must have WPGraphQL plugin installed)
+WPNUXT_WORDPRESS_URL=https://your-wordpress-site.com
+
+# Optional: Custom GraphQL endpoint (default: /graphql)
+# WPNUXT_GRAPHQL_ENDPOINT=/graphql
+
+# Optional: Enable debug mode for verbose logging
+# WPNUXT_DEBUG=true
+`
+
+async function setupEnvFiles(nuxt: Nuxt) {
+  const envPath = join(nuxt.options.rootDir, '.env')
+  const envExamplePath = join(nuxt.options.rootDir, '.env.example')
+  const logger = useLogger('wpnuxt')
+
+  try {
+    // Check if .env already has WPNUXT_WORDPRESS_URL configured
+    let envContent = ''
+    let hasWordPressUrl = false
+
+    if (existsSync(envPath)) {
+      envContent = await readFile(envPath, 'utf-8')
+      hasWordPressUrl = /^WPNUXT_WORDPRESS_URL\s*=\s*.+/m.test(envContent)
+    }
+
+    // Prompt for WordPress URL if not already configured
+    if (!hasWordPressUrl) {
+      // Check if we're in a CI environment (skip prompt)
+      const isCI = process.env.CI === 'true' || process.env.CI === '1'
+
+      if (!isCI) {
+        consola.box({
+          title: 'WPNuxt Setup',
+          message: 'Configure your WordPress connection'
+        })
+
+        const wordpressUrl = await consola.prompt(
+          'What is your WordPress site URL?',
+          {
+            type: 'text',
+            placeholder: 'https://your-wordpress-site.com',
+            initial: ''
+          }
+        )
+
+        // User provided a URL (not cancelled or empty)
+        if (wordpressUrl && typeof wordpressUrl === 'string' && wordpressUrl.trim()) {
+          const url = wordpressUrl.trim().replace(/\/+$/, '') // Remove trailing slashes
+          const envLine = `WPNUXT_WORDPRESS_URL=${url}\n`
+
+          if (envContent) {
+            envContent = envContent.trimEnd() + '\n\n' + envLine
+          } else {
+            envContent = envLine
+          }
+
+          await writeFile(envPath, envContent)
+          logger.success(`WordPress URL saved to .env: ${url}`)
+        } else {
+          logger.info('Skipped WordPress URL configuration. Add WPNUXT_WORDPRESS_URL to your .env file later.')
+        }
+      }
+    }
+
+    // Always create/update .env.example as reference
+    let exampleContent = ''
+    if (existsSync(envExamplePath)) {
+      exampleContent = await readFile(envExamplePath, 'utf-8')
+      if (exampleContent.includes('WPNUXT_WORDPRESS_URL')) {
+        logger.debug('.env.example already includes WPNuxt configuration')
+        return
+      }
+      exampleContent = exampleContent.trimEnd() + '\n\n' + ENV_EXAMPLE_CONTENT
+    } else {
+      exampleContent = ENV_EXAMPLE_CONTENT
+    }
+
+    await writeFile(envExamplePath, exampleContent)
+    logger.info('Added WPNuxt configuration to .env.example')
+  } catch (error) {
+    logger.warn('Failed to setup environment files:', error)
+  }
+}
+
+/**
+ * Gitignore configuration.
+ *
+ * Ensures .queries/ folder (generated merged queries) is ignored.
+ */
+async function setupGitignore(nuxt: Nuxt) {
+  const gitignorePath = join(nuxt.options.rootDir, '.gitignore')
+  const logger = useLogger('wpnuxt')
+
+  try {
+    let content = ''
+
+    if (existsSync(gitignorePath)) {
+      content = await readFile(gitignorePath, 'utf-8')
+
+      // Check if .queries is already ignored
+      if (content.includes('.queries')) {
+        logger.debug('.gitignore already includes .queries')
+        return
+      }
+
+      // Append to existing file
+      content = content.trimEnd() + '\n\n# WPNuxt generated files\n.queries/\n'
+    } else {
+      content = '# WPNuxt generated files\n.queries/\n'
+    }
+
+    await writeFile(gitignorePath, content)
+    logger.info('Added .queries/ to .gitignore')
+  } catch (error) {
+    logger.warn('Failed to setup .gitignore:', error)
+  }
+}
+
+/**
+ * Custom queries folder setup.
+ *
+ * Creates extend/queries/ folder with a README explaining how to use it.
+ */
+const QUERIES_README = `# Custom GraphQL Queries
+
+Place your custom \`.gql\` or \`.graphql\` files here to extend or override the default WPNuxt queries.
+
+## How it works
+
+1. Files here are merged with WPNuxt's default queries during build
+2. If a file has the same name as a default query, yours will override it
+3. New files will generate new composables automatically
+
+## Example
+
+Create a file \`CustomPosts.gql\`:
+
+\`\`\`graphql
+query CustomPosts($first: Int = 10) {
+  posts(first: $first) {
+    nodes {
+      id
+      title
+      date
+      # Add your custom fields here
+    }
+  }
+}
+\`\`\`
+
+This generates \`useCustomPosts()\` and \`useAsyncCustomPosts()\` composables.
+
+## Available Fragments
+
+You can use these fragments from WPNuxt's defaults:
+- \`...Post\` - Standard post fields
+- \`...Page\` - Standard page fields
+- \`...ContentNode\` - Common content fields
+- \`...FeaturedImage\` - Featured image with sizes
+
+## Documentation
+
+See https://wpnuxt.com/guide/custom-queries for more details.
+`
+
+async function setupQueriesFolder(nuxt: Nuxt) {
+  const queriesPath = join(nuxt.options.rootDir, 'extend', 'queries')
+  const readmePath = join(queriesPath, 'README.md')
+  const logger = useLogger('wpnuxt')
+
+  try {
+    // Check if README already exists (indicates setup was done)
+    if (existsSync(readmePath)) {
+      logger.debug('extend/queries/ folder already exists')
+      return
+    }
+
+    // Create the folder
+    await mkdir(queriesPath, { recursive: true })
+
+    // Add README
+    await writeFile(readmePath, QUERIES_README)
+
+    logger.info('Created extend/queries/ folder for custom GraphQL queries')
+  } catch (error) {
+    logger.warn('Failed to setup extend/queries/ folder:', error)
   }
 }
 

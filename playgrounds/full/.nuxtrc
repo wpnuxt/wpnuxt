@@ -1,2 +1,4 @@
 imports.autoImport=true
 typescript.includeWorkspace=true
+
+setups.@wpnuxt/core="2.0.0-alpha.8"
