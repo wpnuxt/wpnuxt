@@ -96,7 +96,10 @@ export default defineNuxtModule<WPNuxtAuthConfig>({
 
     // Validate that Headless Login plugin is installed if password or headless login auth is enabled
     // (miniOrange OAuth doesn't require this plugin)
-    if (passwordEnabled || headlessLoginEnabled) {
+    // Use a flag to prevent duplicate validation errors in dev mode (server + client builds)
+    const nuxtWithFlag = nuxt as typeof nuxt & { _wpnuxtAuthValidated?: boolean }
+    if ((passwordEnabled || headlessLoginEnabled) && !nuxtWithFlag._wpnuxtAuthValidated) {
+      nuxtWithFlag._wpnuxtAuthValidated = true
       // Schema is at the project root (nuxt.options.rootDir), not srcDir
       const schemaPath = join(nuxt.options.rootDir, 'schema.graphql')
       validateAuthSchema(schemaPath, {

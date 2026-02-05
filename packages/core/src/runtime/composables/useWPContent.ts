@@ -245,7 +245,21 @@ export const useWPContent = <T>(
 
       if (!queryResult) return undefined
 
-      return transformData(queryResult, nodes, fixImagePaths)
+      const result = transformData(queryResult, nodes, fixImagePaths)
+
+      // Development warning for empty Menu results
+      if (import.meta.dev && String(queryName) === 'Menu' && !result) {
+        console.warn(
+          `[wpnuxt] Menu not found. This usually means no classic WordPress menu exists with the specified name.\n\n`
+          + `If you're using a block theme (WordPress 6.0+), menus are managed differently:\n`
+          + `1. Classic menus: Go to /wp-admin/nav-menus.php to create a menu\n`
+          + `2. Make sure the menu name matches your query parameter (default: "main")\n\n`
+          + `Example: useMenu({ name: 'main' }) requires a menu named "main" in WordPress.\n\n`
+          + `See: https://wpnuxt.com/guide/menus`
+        )
+      }
+
+      return result
     } catch (err) {
       // Log in development, silent in production
       if (import.meta.dev) {
