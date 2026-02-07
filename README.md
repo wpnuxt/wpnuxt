@@ -1,8 +1,8 @@
+> [!IMPORTANT]
+> **This repository has been deprecated.** WPNuxt has moved to a unified monorepo at **[wpnuxt/wpnuxt](https://github.com/wpnuxt/wpnuxt)**.
+> Please use the new repository for all issues, pull requests, and future development.
 
-This module is still being developed and not ready for production usage yet.
-There will be many smaller alpha releases the coming weeks, often with breaking changes.
-
-I am working towards a stable release. And will inform about it here
+---
 
 # WPNuxt
 
