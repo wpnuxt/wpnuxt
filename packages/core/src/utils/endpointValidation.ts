@@ -10,12 +10,13 @@ import { execSync } from 'node:child_process'
  * @param graphqlEndpoint - The GraphQL endpoint path (default: /graphql)
  * @param options - Additional options
  * @param options.schemaPath - Path to save schema if downloading
+ * @param options.authToken - Bearer token for authenticated introspection
  * @throws Error with helpful message if endpoint is not reachable
  */
 export async function validateWordPressEndpoint(
   wordpressUrl: string,
   graphqlEndpoint: string = '/graphql',
-  options: { schemaPath?: string } = {}
+  options: { schemaPath?: string, authToken?: string } = {}
 ): Promise<void> {
   const fullUrl = `${wordpressUrl}${graphqlEndpoint}`
 
@@ -23,11 +24,16 @@ export async function validateWordPressEndpoint(
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 10000) // 10 second timeout
 
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json'
+    }
+    if (options.authToken) {
+      headers['Authorization'] = `Bearer ${options.authToken}`
+    }
+
     const response = await fetch(fullUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers,
       body: JSON.stringify({
         query: '{ __typename }'
       }),
@@ -80,7 +86,8 @@ Make sure WPGraphQL plugin is installed and activated on your WordPress site.`
     // If schemaPath is provided and schema doesn't exist, download it using get-graphql-schema
     if (options.schemaPath && !existsSync(options.schemaPath)) {
       try {
-        execSync(`npx get-graphql-schema "${fullUrl}" > "${options.schemaPath}"`, {
+        const authFlag = options.authToken ? ` -h "Authorization=Bearer ${options.authToken}"` : ''
+        execSync(`npx get-graphql-schema "${fullUrl}"${authFlag} > "${options.schemaPath}"`, {
           stdio: 'pipe',
           timeout: 60000 // 60 second timeout
         })

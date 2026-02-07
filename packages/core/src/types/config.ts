@@ -51,6 +51,20 @@ export interface WPNuxtConfig {
   downloadSchema: boolean
 
   /**
+   * Bearer token for authenticated schema introspection at build time.
+   *
+   * Required when your WordPress GraphQL endpoint has public introspection disabled.
+   * The token is sent as an `Authorization: Bearer <token>` header during:
+   * - Endpoint validation (introspection query)
+   * - Schema download (get-graphql-schema)
+   *
+   * Can also be set via `WPNUXT_SCHEMA_AUTH_TOKEN` environment variable.
+   *
+   * This token is only used at build time and is NOT included in client bundles.
+   */
+  schemaAuthToken?: string
+
+  /**
    * Whether to enable debug mode
    *
    * @default false
