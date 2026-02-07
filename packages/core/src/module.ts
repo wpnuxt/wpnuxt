@@ -92,7 +92,7 @@ export default defineNuxtModule<WPNuxtConfig>({
         await validateWordPressEndpoint(
           wpNuxtConfig.wordpressUrl!,
           wpNuxtConfig.graphqlEndpoint,
-          { schemaPath }
+          { schemaPath, authToken: wpNuxtConfig.schemaAuthToken }
         )
         logger.debug('Schema downloaded successfully')
       } else {
@@ -101,7 +101,8 @@ export default defineNuxtModule<WPNuxtConfig>({
           try {
             await validateWordPressEndpoint(
               wpNuxtConfig.wordpressUrl!,
-              wpNuxtConfig.graphqlEndpoint
+              wpNuxtConfig.graphqlEndpoint,
+              { authToken: wpNuxtConfig.schemaAuthToken }
             )
             logger.debug('WordPress endpoint validation passed')
           } catch (error) {
@@ -212,6 +213,7 @@ function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig {
   const config: WPNuxtConfig = defu({
     wordpressUrl: process.env.WPNUXT_WORDPRESS_URL,
     graphqlEndpoint: process.env.WPNUXT_GRAPHQL_ENDPOINT,
+    schemaAuthToken: process.env.WPNUXT_SCHEMA_AUTH_TOKEN,
     // Only override downloadSchema if env var is explicitly set
     downloadSchema: process.env.WPNUXT_DOWNLOAD_SCHEMA !== undefined
       ? process.env.WPNUXT_DOWNLOAD_SCHEMA === 'true'
@@ -510,7 +512,15 @@ async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPN
       scalars: {
         DateTime: 'string',
         ID: 'string'
-      }
+      },
+      // Pass auth headers for schema download when token is configured
+      ...(wpNuxtConfig.schemaAuthToken && {
+        urlSchemaOptions: {
+          headers: {
+            Authorization: `Bearer ${wpNuxtConfig.schemaAuthToken}`
+          }
+        }
+      })
     },
     experimental: {
       // Use improved query parameter encoding for better URL handling
