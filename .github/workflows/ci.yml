@@ -1,50 +1,117 @@
-name: ci-main
+name: CI
 
 on:
   push:
-    paths-ignore:
-      - "docs/**"
-      - "*.md"
     branches:
       - main
-      - refactoring-claude-ai
+      - dev
   pull_request:
-    paths-ignore:
-      - "docs/**"
-      - "*.md"
     branches:
       - main
+      - dev
+
+env:
+  WPNUXT_WORDPRESS_URL: ${{ secrets.WPNUXT_WORDPRESS_URL }}
 
 jobs:
-  ci:
+  # Lint runs independently (no dev:prepare needed)
+  lint:
     runs-on: ubuntu-latest
-
-    env:
-      NUXT_UI_PRO_LICENSE: ${{ secrets.NUXT_UI_PRO_LICENSE }}
+    name: Lint
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        id: pnpm-install
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          run_install: false
+          node-version: 20
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
-      - name: Lint
+      - name: Run linter
         run: pnpm run lint
 
-      - name: Type check
+  # Test and typecheck run in parallel (both need dev:prepare)
+  test:
+    runs-on: ubuntu-latest
+    name: Test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare module
+        run: pnpm run dev:prepare
+
+      - name: Run tests
+        run: pnpm run test
+
+  typecheck:
+    runs-on: ubuntu-latest
+    name: Type Check
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare for type checking
+        run: pnpm run dev:prepare
+
+      - name: Run type check
         run: pnpm run typecheck
 
-      - name: Generate coverage report
-        run: pnpm run coverage
+  # Build only runs after all checks pass
+  build:
+    runs-on: ubuntu-latest
+    name: Build
+    needs: [lint, test, typecheck]
 
-      - name: Module Build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build module
         run: pnpm run build
-
-      - name: Playground Build
-        run: pnpm run dev:build

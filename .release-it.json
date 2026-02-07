@@ -1,12 +1,48 @@
 {
   "git": {
-    "commitMessage": "chore(release): release v${version}"
+    "commitMessage": "chore: release v${version}",
+    "tagName": "v${version}",
+    "requireCleanWorkingDir": true,
+    "requireBranch": "main"
+  },
+  "npm": {
+    "publish": false
   },
   "github": {
     "release": true,
-    "releaseName": "v${version}"
+    "draft": true,
+    "releaseName": "v${version}",
+    "web": true
   },
   "hooks": {
-    "after:bump": "npx changelogen@latest --no-commit --no-tag --output --r $(node -p \"require('./package.json').version\")"
+    "before:init": ["pnpm lint", "pnpm typecheck", "pnpm test"],
+    "after:bump": "pnpm build",
+    "after:release": "echo Successfully released ${name} v${version} to GitHub! && pnpm publish -r --access public --no-git-checks"
+  },
+  "plugins": {
+    "@release-it/bumper": {
+      "out": [
+        "packages/*/package.json"
+      ]
+    },
+    "@release-it/conventional-changelog": {
+      "ignoreRecommendedBump": true,
+      "preset": {
+        "name": "conventionalcommits",
+        "types": [
+          { "type": "feat", "section": "Features" },
+          { "type": "fix", "section": "Bug Fixes" },
+          { "type": "perf", "section": "Performance Improvements" },
+          { "type": "refactor", "section": "Refactoring" },
+          { "type": "docs", "section": "Documentation" },
+          { "type": "chore", "section": "Maintenance" },
+          { "type": "test", "section": "Tests" },
+          { "type": "build", "section": "Build System" },
+          { "type": "ci", "section": "CI/CD" }
+        ]
+      },
+      "infile": "CHANGELOG.md",
+      "header": "# Changelog"
+    }
   }
 }

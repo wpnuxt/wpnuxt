@@ -1,3 +1,0 @@
-WPNuwt is a new Nuxt module to make it easy to set up a headless WordPress with a Nuxt frontend.
-
-Find out more at <a href="https://wpnuxt.com">WPNuxt.com</a>

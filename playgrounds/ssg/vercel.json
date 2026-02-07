@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm --filter @wpnuxt/core build && nuxi generate",
+  "outputDirectory": ".output/public",
+  "trailingSlash": true
+}

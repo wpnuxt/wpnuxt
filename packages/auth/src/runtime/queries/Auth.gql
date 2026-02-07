@@ -1,0 +1,137 @@
+# Login with username and password
+# Requires: Headless Login for WPGraphQL plugin
+mutation Login($username: String!, $password: String!) {
+  login(input: {
+    provider: PASSWORD
+    credentials: {
+      username: $username
+      password: $password
+    }
+  }) {
+    authToken
+    authTokenExpiration
+    refreshToken
+    refreshTokenExpiration
+    user {
+      id
+      databaseId
+      name
+      email
+      firstName
+      lastName
+      username
+      avatar {
+        url
+      }
+      roles {
+        nodes {
+          name
+        }
+      }
+    }
+  }
+}
+
+# Refresh authentication token
+mutation RefreshToken($refreshToken: String!) {
+  refreshToken(input: { refreshToken: $refreshToken }) {
+    authToken
+    authTokenExpiration
+    success
+  }
+}
+
+# Register a new user (requires user registration to be enabled in WordPress)
+mutation RegisterUser($username: String!, $email: String!, $password: String!) {
+  registerUser(input: { username: $username, email: $email, password: $password }) {
+    user {
+      id
+      databaseId
+      username
+      email
+      name
+    }
+  }
+}
+
+# Update the current user's profile
+mutation UpdateUser($id: ID!, $firstName: String, $lastName: String, $nickname: String, $description: String) {
+  updateUser(input: { id: $id, firstName: $firstName, lastName: $lastName, nickname: $nickname, description: $description }) {
+    user {
+      id
+      databaseId
+      username
+      email
+      firstName
+      lastName
+      nickname
+      name
+      description
+    }
+  }
+}
+
+# Send password reset email
+mutation SendPasswordResetEmail($username: String!) {
+  sendPasswordResetEmail(input: { username: $username }) {
+    success
+  }
+}
+
+# Reset password with key from email
+mutation ResetUserPassword($key: String!, $login: String!, $password: String!) {
+  resetUserPassword(input: { key: $key, login: $login, password: $password }) {
+    user {
+      id
+      databaseId
+      username
+      email
+    }
+  }
+}
+
+# Get available login clients/providers from Headless Login for WPGraphQL
+query LoginClients {
+  loginClients {
+    name
+    provider
+    authorizationUrl
+    isEnabled
+  }
+}
+
+# Login with an OAuth provider (Google, GitHub, etc.) using authorization code
+# Requires: Headless Login for WPGraphQL plugin with provider configured
+mutation LoginWithProvider($provider: LoginProviderEnum!, $code: String!, $state: String) {
+  login(input: {
+    provider: $provider
+    oauthResponse: {
+      code: $code
+      state: $state
+    }
+  }) {
+    authToken
+    authTokenExpiration
+    refreshToken
+    refreshTokenExpiration
+    user {
+      id
+      databaseId
+      name
+      email
+      firstName
+      lastName
+      username
+      nickname
+      description
+      avatar {
+        url
+      }
+      roles {
+        nodes {
+          name
+        }
+      }
+    }
+  }
+}

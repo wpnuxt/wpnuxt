@@ -1,0 +1,11 @@
+fragment GeneralSettings on GeneralSettings {
+  title
+  description
+  url
+  dateFormat
+  language
+  startOfWeek
+  timezone
+  timeFormat
+  email
+}

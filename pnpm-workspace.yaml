@@ -1,13 +1,13 @@
 packages:
-  - .
-  - playground
-
-ignoredBuiltDependencies:
-  - '@parcel/watcher'
-  - unrs-resolver
-  - vue-demi
+  - packages/*
+  - playgrounds/*
+  - docs
 
 onlyBuiltDependencies:
+  - '@parcel/watcher'
   - '@tailwindcss/oxide'
+  - better-sqlite3
   - esbuild
   - sharp
+  - unrs-resolver
+  - vue-demi

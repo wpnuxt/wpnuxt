@@ -1,0 +1,6 @@
+{
+  "extends": "./.nuxt/tsconfig.json",
+  "exclude": [
+    "../../packages/mcp/**/*"
+  ]
+}

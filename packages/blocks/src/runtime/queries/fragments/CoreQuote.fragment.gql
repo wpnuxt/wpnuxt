@@ -1,0 +1,18 @@
+fragment CoreQuote on CoreQuote {
+  attributes {
+    anchor
+    backgroundColor
+    citation
+    className
+    cssClassName
+    fontFamily
+    fontSize
+    gradient
+    layout
+    lock
+    metadata
+    style
+    textColor
+    value
+  }
+}

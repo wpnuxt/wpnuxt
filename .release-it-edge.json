@@ -1,9 +1,0 @@
-{
-  "git": {
-    "push": true
-  },
-  "github": {
-    "release": true,
-    "releaseName": "v${version}"
-  }
-}

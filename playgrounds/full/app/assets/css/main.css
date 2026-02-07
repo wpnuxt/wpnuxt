@@ -1,0 +1,26 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme static {
+  --font-sans: 'DM Sans', sans-serif;
+
+  --color-reefgold-50: #faf9f0;
+  --color-reefgold-100: #f5f3e1;
+  --color-reefgold-200: #e6e2b5;
+  --color-reefgold-300: #d6d090;
+  --color-reefgold-400: #baaf4e;
+  --color-reefgold-500: #9c8e1b;
+  --color-reefgold-600: #8c7815;
+  --color-reefgold-700: #755d0f;
+  --color-reefgold-800: #5e4509;
+  --color-reefgold-900: #452e06;
+  --color-reefgold-950: #2e1b02;
+}
+
+pre {
+  @apply bg-gray-300 dark:bg-neutral-950 p-4 my-3 rounded-md;
+}
+
+figure.size-full {
+  @apply w-full h-auto;
+}

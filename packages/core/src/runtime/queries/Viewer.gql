@@ -1,0 +1,14 @@
+query Viewer {
+  viewer {
+    id
+    userId
+    username
+    firstName
+    lastName
+    name
+    description
+    locale
+    url
+    uri
+  }
+}

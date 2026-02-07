@@ -1,0 +1,29 @@
+fragment CoreImage on CoreImage {
+  attributes {
+    align
+    alt
+    anchor
+    aspectRatio
+    borderColor
+    className
+    cssClassName
+    height
+    href
+    id
+    linkClass
+    linkDestination
+    linkTarget
+    lock
+    rel
+    scale
+    sizeSlug
+    src
+    style
+    title
+    url
+    width
+    caption
+    lightbox
+    metadata
+  }
+}

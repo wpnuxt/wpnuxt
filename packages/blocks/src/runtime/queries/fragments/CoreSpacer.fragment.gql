@@ -1,0 +1,11 @@
+fragment CoreSpacer on CoreSpacer {
+  attributes {
+    anchor
+    className
+    spacerHeight: height
+    spacerWidth: width
+    lock
+    metadata
+    style
+  }
+}
