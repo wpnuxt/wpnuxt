@@ -14,6 +14,7 @@
   "dependencies": {
     "@nuxt/icon": "^2.2.1",
     "@nuxt/ui": "4.4.0",
+    "@tailwindcss/typography": "^0.5.19",
     "@wpnuxt/auth": "workspace:*",
     "@wpnuxt/blocks": "workspace:*",
     "@wpnuxt/core": "workspace:*",
