@@ -65,6 +65,16 @@ export interface WPNuxtConfig {
   schemaAuthToken?: string
 
   /**
+   * Whether to replace internal WordPress links with client-side navigation (NuxtLink).
+   *
+   * When enabled, clicks on `<a>` tags pointing to the WordPress domain inside
+   * `<WPContent>` are intercepted and handled via `navigateTo()`.
+   *
+   * @default true
+   */
+  replaceLinks?: boolean
+
+  /**
    * Whether to enable debug mode
    *
    * @default false

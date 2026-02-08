@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { convertFontSize, getCssClasses } from '../../util'
 import type { CoreButton } from '#wpnuxt/blocks'
-import { ref, useNuxtApp } from '#imports'
+import { computed, ref, useNuxtApp, useRuntimeConfig, isInternalLink, toRelativePath } from '#imports'
 
 type ButtonVariant = 'solid' | 'outline' | 'soft' | 'subtle' | 'ghost' | 'link'
 type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
@@ -21,13 +21,27 @@ if (props.block.attributes?.metadata) {
 // Check if Nuxt UI is available
 const nuxtApp = useNuxtApp()
 const hasNuxtUI = !!(nuxtApp.vueApp.component('UButton'))
+
+const config = useRuntimeConfig()
+const wordpressUrl = (config.public.wpNuxt as Record<string, unknown>)?.wordpressUrl as string
+
+const isInternal = computed(() => {
+  const url = props.block.attributes?.url
+  return !!url && isInternalLink(url, wordpressUrl)
+})
+
+const buttonUrl = computed(() => {
+  const url = props.block.attributes?.url
+  if (!url) return undefined
+  return isInternal.value ? toRelativePath(url) : url
+})
 </script>
 
 <template>
   <!-- Use Nuxt UI UButton when available -->
   <UButton
     v-if="hasNuxtUI"
-    :to="block.attributes.url ?? undefined"
+    :to="buttonUrl"
     :target="block.attributes.linkTarget"
     :rel="block.attributes.rel"
     :style="block.attributes.style"
@@ -38,7 +52,17 @@ const hasNuxtUI = !!(nuxtApp.vueApp.component('UButton'))
     <span v-sanitize-html="block.attributes.text" />
   </UButton>
 
-  <!-- Fallback to native link/button when Nuxt UI is not available -->
+  <!-- Fallback: use NuxtLink for internal, <a> for external -->
+  <NuxtLink
+    v-else-if="block.attributes.url && isInternal"
+    :to="buttonUrl"
+    :target="block.attributes.linkTarget ?? undefined"
+    :rel="block.attributes.rel ?? undefined"
+    :style="block.attributes.style"
+    :class="['wp-block-button__link', getCssClasses(block)]"
+  >
+    <span v-sanitize-html="block.attributes.text" />
+  </NuxtLink>
   <a
     v-else-if="block.attributes.url"
     :href="block.attributes.url"

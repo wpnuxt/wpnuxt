@@ -15,6 +15,7 @@ declare module 'nuxt/schema' {
     wpNuxt?: {
       wordpressUrl?: string
       graphqlEndpoint?: string
+      replaceLinks?: boolean
       cache?: {
         enabled?: boolean
         maxAge?: number

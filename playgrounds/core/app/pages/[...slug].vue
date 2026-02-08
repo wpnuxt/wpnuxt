@@ -14,7 +14,7 @@ const { data: node, pending } = await useNodeByUri(
     </p>
     <div v-else-if="node">
       <h1>{{ node.title }}</h1>
-      <div v-sanitize-html="node.content" />
+      <WPContent :node="node" />
     </div>
   </div>
 </template>

@@ -108,6 +108,9 @@ declare module '#build/graphql-operations' {
 }
 
 declare module '#imports' {
-  export { ref, resolveComponent, getCurrentInstance } from 'vue'
+  export { ref, computed, resolveComponent, getCurrentInstance } from 'vue'
   export function useNuxtApp(): { vueApp: { component: (name: string) => unknown } }
+  export function useRuntimeConfig(): { public: Record<string, unknown> }
+  export function isInternalLink(url: string, wordpressUrl: string): boolean
+  export function toRelativePath(url: string): string
 }

@@ -39,17 +39,10 @@ const { data: node, pending } = await useNodeByUri(
           </div>
         </header>
 
-        <!-- Render blocks using BlockRenderer -->
-        <div class="prose prose-lg max-w-none">
-          <BlockRenderer
-            v-if="node.editorBlocks"
-            :node="node"
-          />
-          <div
-            v-else-if="node.content"
-            v-sanitize-html="node.content"
-          />
-        </div>
+        <WPContent
+          :node="node"
+          class="prose prose-lg max-w-none"
+        />
       </article>
     </template>
 

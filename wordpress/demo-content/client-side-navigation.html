@@ -1,0 +1,136 @@
+<!-- wp:paragraph -->
+<p>When building a headless WordPress site with WPNuxt, links in your WordPress content point to your WordPress domain by default. Clicking them would cause a full page reload instead of smooth client-side navigation. The <code>&lt;WPContent&gt;</code> component fixes this automatically.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":2} -->
+<h2 class="wp-block-heading">How It Works</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Wrap your rendered WordPress content in <code>&lt;WPContent&gt;</code> and any link pointing to your WordPress site gets intercepted. Instead of a full reload, WPNuxt uses Nuxt's <code>navigateTo()</code> for instant, SPA-style navigation.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>No changes to your WordPress content are needed. Internal links are detected automatically based on your configured <code>wordpressUrl</code>.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":2} -->
+<h2 class="wp-block-heading">Internal Links</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>These links point to pages on this WordPress site. In a WPNuxt frontend wrapped with <code>&lt;WPContent&gt;</code>, clicking them uses client-side navigation with no full page reload:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list -->
+<ul class="wp-block-list">
+<li><a href="http://localhost:4000/hello-world-from-wpnuxt/">Hello World from WPNuxt</a> — the welcome post</li>
+<li><a href="http://localhost:4000/test-page/">Test Page</a> — a demo page with blocks</li>
+<li><a href="http://localhost:4000/getting-started-with-wpnuxt/">Getting Started</a> — installation guide</li>
+<li><a href="http://localhost:4000/">Homepage</a> — back to the homepage</li>
+</ul>
+<!-- /wp:list -->
+
+<!-- wp:heading {"level":2} -->
+<h2 class="wp-block-heading">External Links</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Links to other websites are left untouched and open as you would expect:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list -->
+<ul class="wp-block-list">
+<li><a href="https://wpnuxt.com">WPNuxt Documentation</a> — the official docs</li>
+<li><a href="https://github.com/wpnuxt/wpnuxt">WPNuxt on GitHub</a> — source code and issues</li>
+<li><a href="https://nuxt.com">Nuxt</a> — the Vue framework powering it all</li>
+<li><a href="https://wordpress.org">WordPress.org</a> — where it all begins</li>
+</ul>
+<!-- /wp:list -->
+
+<!-- wp:heading {"level":2} -->
+<h2 class="wp-block-heading">What Gets Intercepted?</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The <code>&lt;WPContent&gt;</code> component is smart about which clicks it handles.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p><strong>Intercepted</strong> (client-side navigation):</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list -->
+<ul class="wp-block-list">
+<li>Links matching your WordPress domain, like <a href="http://localhost:4000/hello-world-from-wpnuxt/">this internal link</a></li>
+<li>Relative paths like <a href="/test-page/">this one</a></li>
+</ul>
+<!-- /wp:list -->
+
+<!-- wp:paragraph -->
+<p><strong>Not intercepted</strong> (default browser behavior):</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list -->
+<ul class="wp-block-list">
+<li>External links like <a href="https://github.com/wpnuxt/wpnuxt">GitHub</a></li>
+<li>Links with <code>target="_blank"</code> like <a href="http://localhost:4000/hello-world-from-wpnuxt/" target="_blank" rel="noreferrer noopener">this link that opens in a new tab</a></li>
+<li>Ctrl+click or Cmd+click (user wants a new tab)</li>
+<li>Email links like <a href="mailto:hello@example.com">hello@example.com</a></li>
+<li>Phone links like <a href="tel:+1234567890">+1 234 567 890</a></li>
+<li>Links with <code>rel="external"</code></li>
+</ul>
+<!-- /wp:list -->
+
+<!-- wp:heading {"level":2} -->
+<h2 class="wp-block-heading">Button Blocks</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Button blocks work too. Internal URLs get client-side navigation, external ones behave normally:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="http://localhost:4000/test-page/">Visit Test Page (internal)</a></div>
+<!-- /wp:button -->
+
+<!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://wpnuxt.com">Visit WPNuxt Docs (external)</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons -->
+
+<!-- wp:heading {"level":2} -->
+<h2 class="wp-block-heading">Usage</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>In your Nuxt page, wrap your content with the component:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:code -->
+<pre class="wp-block-code"><code>&lt;WPContent :node="post" /&gt;</code></pre>
+<!-- /wp:code -->
+
+<!-- wp:paragraph -->
+<p>When <code>@wpnuxt/blocks</code> is installed, <code>&lt;WPContent&gt;</code> automatically uses <code>&lt;BlockRenderer&gt;</code> for structured blocks. No extra setup needed.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":2} -->
+<h2 class="wp-block-heading">Configuration</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Link replacement is enabled by default. To disable it globally, add <code>replaceLinks: false</code> to your <code>nuxt.config.ts</code>:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:code -->
+<pre class="wp-block-code"><code>wpNuxt: {
+  wordpressUrl: 'https://wordpress.example.com',
+  replaceLinks: false
+}</code></pre>
+<!-- /wp:code -->
+
+<!-- wp:paragraph -->
+<p>You can also disable it per instance with the prop: <code>&lt;WPContent :node="post" :replace-links="false" /&gt;</code>.</p>
+<!-- /wp:paragraph -->

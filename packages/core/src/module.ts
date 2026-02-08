@@ -50,6 +50,7 @@ export default defineNuxtModule<WPNuxtConfig>({
       warnOnOverride: true
     },
     downloadSchema: true,
+    replaceLinks: true,
     debug: false,
     cache: {
       enabled: true,
@@ -143,6 +144,42 @@ export default defineNuxtModule<WPNuxtConfig>({
       logger.debug(`Server-side caching enabled for GraphQL requests (maxAge: ${maxAge}s, SWR: ${wpNuxtConfig.cache?.swr !== false})`)
     }
 
+    // Proxy /wp-content/uploads/ to WordPress for plain <img> tags and v-html content
+    {
+      const nitroOptions = nuxt.options as unknown as NuxtOptionsWithNitro
+      nitroOptions.nitro = nitroOptions.nitro || {}
+      nitroOptions.nitro.routeRules = nitroOptions.nitro.routeRules || {}
+      nitroOptions.nitro.routeRules['/wp-content/uploads/**'] = {
+        proxy: `${wpNuxtConfig.wordpressUrl}/wp-content/uploads/**`
+      }
+      logger.debug(`Configured WordPress uploads proxy: /wp-content/uploads/** → ${wpNuxtConfig.wordpressUrl}/wp-content/uploads/**`)
+    }
+
+    // Configure @nuxt/image for WordPress images
+    // Templates should always use relative paths (/wp-content/uploads/...) via getRelativeImagePath()
+    // - CDN providers (twicpics, cloudinary, etc.) append relative paths to their baseURL — works natively
+    // - IPX needs full HTTP URLs to fetch remotely, so we add an alias + domain to handle that
+    if (hasNuxtModule('@nuxt/image')) {
+      const imageConfig = (nuxt.options as unknown as Record<string, unknown>).image as Record<string, unknown> || {}
+      const provider = process.env.NUXT_IMAGE_PROVIDER || (imageConfig.provider as string) || 'ipx'
+
+      if (provider === 'ipx') {
+        const wpHost = new URL(wpNuxtConfig.wordpressUrl!).host
+        const domains = (imageConfig.domains as string[]) || []
+        if (!domains.includes(wpHost)) {
+          domains.push(wpHost)
+        }
+        imageConfig.domains = domains
+
+        const alias = (imageConfig.alias as Record<string, string>) || {}
+        alias['/wp-content'] = `${wpNuxtConfig.wordpressUrl}/wp-content`
+        imageConfig.alias = alias;
+
+        (nuxt.options as unknown as Record<string, unknown>).image = imageConfig
+        logger.debug(`Configured IPX for WordPress: alias /wp-content → ${wpNuxtConfig.wordpressUrl}/wp-content, domain '${wpHost}' added`)
+      }
+    }
+
     // Configure Vercel-specific settings for proper SSR and ISR handling
     configureVercelSettings(nuxt, logger)
 
@@ -150,6 +187,8 @@ export default defineNuxtModule<WPNuxtConfig>({
       { name: 'useWPContent', as: 'useWPContent', from: resolver.resolve('./runtime/composables/useWPContent') },
       { name: 'useAsyncWPContent', as: 'useAsyncWPContent', from: resolver.resolve('./runtime/composables/useWPContent') },
       { name: 'getRelativeImagePath', as: 'getRelativeImagePath', from: resolver.resolve('./runtime/util/images') },
+      { name: 'isInternalLink', as: 'isInternalLink', from: resolver.resolve('./runtime/util/links') },
+      { name: 'toRelativePath', as: 'toRelativePath', from: resolver.resolve('./runtime/util/links') },
       { name: 'usePrevNextPost', as: 'usePrevNextPost', from: resolver.resolve('./runtime/composables/usePrevNextPost') }
       // Note: useGraphqlMutation is auto-imported via nuxt-graphql-middleware with includeComposables: true
     ])
@@ -230,6 +269,7 @@ function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig {
   nuxt.options.runtimeConfig.public.wpNuxt = {
     wordpressUrl: config.wordpressUrl,
     graphqlEndpoint: config.graphqlEndpoint,
+    replaceLinks: config.replaceLinks ?? true,
     cache: {
       enabled: config.cache?.enabled ?? true,
       maxAge: config.cache?.maxAge ?? 300,

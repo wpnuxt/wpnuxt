@@ -4,12 +4,15 @@
  * Actual types are generated at runtime in consuming applications.
  */
 
-import type { Ref, ComputedRef, WatchSource, WatchCallback, WatchOptions } from 'vue'
+import type { Ref, ComputedRef, Component, WatchSource, WatchCallback, WatchOptions } from 'vue'
 import type { NuxtApp } from 'nuxt/app'
 
-// Stub for #imports - Vue reactivity
+// Stub for #imports - Vue reactivity & lifecycle
 export function computed<T>(getter: () => T): ComputedRef<T>
 export function ref<T>(value: T): Ref<T>
+export function resolveComponent(name: string): Component | string
+export function onMounted(callback: () => void): void
+export function onBeforeUnmount(callback: () => void): void
 export function watch<T>(
   source: WatchSource<T> | WatchSource<T>[],
   callback: WatchCallback<T>,
@@ -21,6 +24,7 @@ export function defineNuxtPlugin(plugin: (nuxtApp: NuxtApp) => void | Promise<vo
 export function useNuxtApp(): NuxtApp
 export function useRuntimeConfig(): Record<string, unknown>
 export function useRoute(): { path: string, params: Record<string, string>, query: Record<string, string> }
+export function navigateTo(to: string): Promise<void>
 
 // Stub for #imports - nuxt-graphql-middleware
 export function useAsyncGraphqlQuery<T = unknown>(

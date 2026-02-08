@@ -40,15 +40,53 @@ test_page_id=$(wp-env run cli wp post create /var/www/html/demo-content/test-pag
 echo "Created test page with ID: $test_page_id"
 
 # Create demo posts
-wp-env run cli wp post create /var/www/html/demo-content/hello-world.html \
+hello_id=$(wp-env run cli wp post create /var/www/html/demo-content/hello-world.html \
   --post_type=post \
   --post_title="Hello World from WPNuxt" \
-  --post_status=publish
+  --post_status=publish \
+  --porcelain)
+echo "Created hello-world post with ID: $hello_id"
 
-wp-env run cli wp post create /var/www/html/demo-content/getting-started.html \
+getting_started_id=$(wp-env run cli wp post create /var/www/html/demo-content/getting-started.html \
   --post_type=post \
   --post_title="Getting Started with WPNuxt" \
-  --post_status=publish
+  --post_status=publish \
+  --porcelain)
+echo "Created getting-started post with ID: $getting_started_id"
+
+navigation_id=$(wp-env run cli wp post create /var/www/html/demo-content/client-side-navigation.html \
+  --post_type=post \
+  --post_title="Client-Side Navigation for WordPress Links" \
+  --post_status=publish \
+  --porcelain)
+echo "Created client-side-navigation post with ID: $navigation_id"
+
+# Import featured images and assign to posts
+echo "Importing featured images..."
+
+test_page_img=$(wp-env run cli wp media import /var/www/html/demo-content/images/test-page.jpg \
+  --title="Test Page" \
+  --porcelain)
+wp-env run cli wp post meta update "$test_page_id" _thumbnail_id "$test_page_img"
+echo "Assigned featured image $test_page_img to test page $test_page_id"
+
+hello_img=$(wp-env run cli wp media import /var/www/html/demo-content/images/hello-world.jpg \
+  --title="Hello World" \
+  --porcelain)
+wp-env run cli wp post meta update "$hello_id" _thumbnail_id "$hello_img"
+echo "Assigned featured image $hello_img to hello-world post $hello_id"
+
+getting_started_img=$(wp-env run cli wp media import /var/www/html/demo-content/images/getting-started.jpg \
+  --title="Getting Started" \
+  --porcelain)
+wp-env run cli wp post meta update "$getting_started_id" _thumbnail_id "$getting_started_img"
+echo "Assigned featured image $getting_started_img to getting-started post $getting_started_id"
+
+navigation_img=$(wp-env run cli wp media import /var/www/html/demo-content/images/client-side-navigation.jpg \
+  --title="Client-Side Navigation" \
+  --porcelain)
+wp-env run cli wp post meta update "$navigation_id" _thumbnail_id "$navigation_img"
+echo "Assigned featured image $navigation_img to client-side-navigation post $navigation_id"
 
 # Create and assign menus
 echo "Setting up navigation menu..."
