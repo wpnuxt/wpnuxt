@@ -60,6 +60,13 @@ pnpm run release               # Lint, test, build, create changelog, publish, a
 - `useAsyncWPContent()` - wraps `useAsyncGraphqlQuery()`
 - Both extract nested data using the `nodes` path and optionally fix image paths
 
+**Runtime Components (`src/runtime/components/WPContent.vue`)**
+- `<WPContent>` - renders WordPress content with automatic internal link interception
+- Uses `BlockRenderer` when `@wpnuxt/blocks` is installed, falls back to `v-sanitize-html`
+- Intercepts clicks on internal `<a>` tags and uses `navigateTo()` for client-side navigation
+- Props: `node` (content object), `replaceLinks` (per-instance override of global config)
+- Auto-imported utilities: `isInternalLink()` and `toRelativePath()` from `src/runtime/util/links.ts`
+
 ### Query System
 
 **Default Queries (`src/runtime/queries/`)**
@@ -103,6 +110,7 @@ wpNuxt: {
     extendFolder: string            // Default: 'extend/queries/'
     mergedOutputFolder: string      // Default: '.queries/'
   }
+  replaceLinks: boolean             // Default: true (intercept internal links in <WPContent>)
   downloadSchema: boolean           // Default: true (downloads schema.graphql from WP)
   debug: boolean                    // Default: false (enables debug logging)
 }
