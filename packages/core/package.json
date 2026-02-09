@@ -27,12 +27,10 @@
     },
     "./server-options": {
       "types": "./dist/server-options.d.mts",
-      "development": "./src/server-options.ts",
       "import": "./dist/server-options.mjs"
     },
     "./client-options": {
       "types": "./dist/client-options.d.mts",
-      "development": "./src/client-options.ts",
       "import": "./dist/client-options.mjs"
     }
   },
