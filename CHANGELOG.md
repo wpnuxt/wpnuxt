@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.0.0-alpha.13](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.12...v2.0.0-alpha.13) (2026-02-09)
+
+### Features
+
+* **core:** detect BlockRenderer at build time and update type definitions ([4fcc4b2](https://github.com/wpnuxt/wpnuxt/commit/4fcc4b29737aebd5921e9a7aed6ea3f7ca3acea0))
+
+### Bug Fixes
+
+* **core:** skip WordPress URL validation during nuxt prepare ([ba41dae](https://github.com/wpnuxt/wpnuxt/commit/ba41dae30a6d3713697d5ff89fb9104f9ed92f38))
+
+### Maintenance
+
+* update release-it configuration to use full check after bump ([ef0c99d](https://github.com/wpnuxt/wpnuxt/commit/ef0c99dc609ef81dc6deaf1c250ccfd249914d47))
+
 ## [2.0.0-alpha.12](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.11...v2.0.0-alpha.12) (2026-02-09)
 
 ### Features
