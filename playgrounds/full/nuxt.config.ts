@@ -19,7 +19,8 @@ export default defineNuxtConfig({
     '@wpnuxt/auth',
     '@wpnuxt/blocks',
     '@nuxt/image',
-    '@nuxt/ui'
+    '@nuxt/ui',
+    'nuxt-easy-lightbox'
   ],
 
   devtools: { enabled: true },
@@ -37,10 +38,7 @@ export default defineNuxtConfig({
   },
 
   image: {
-    provider: 'twicpics',
-    twicpics: {
-      baseURL: 'https://vernaillen.twic.pics/wpnuxt-demo'
-    }
+    domains: ['wordpress.wpnuxt.com']
   },
 
   wpNuxt: {

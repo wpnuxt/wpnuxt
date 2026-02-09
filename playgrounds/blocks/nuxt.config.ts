@@ -21,7 +21,8 @@ export default defineNuxtConfig({
   modules: [
     '@wpnuxt/core',
     '@wpnuxt/blocks', // Gutenberg block components
-    '@nuxt/ui' // Optional: enables enhanced components like UButton for CoreButton
+    '@nuxt/ui', // Optional: enables enhanced components like UButton for CoreButton
+    'nuxt-easy-lightbox'
   ],
 
   devtools: { enabled: true },

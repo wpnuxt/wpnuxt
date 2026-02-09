@@ -17,6 +17,7 @@ defineProps<{
           :alt="block.attributes?.alt ?? undefined"
           :width="block.attributes?.width ?? undefined"
           :height="block.attributes?.height ?? undefined"
+          :fit="block.attributes?.scale ?? undefined"
           placeholder
           class="max-w-full transition-transform duration-300 scale-90 hover:scale-100"
         />

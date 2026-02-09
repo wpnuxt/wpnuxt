@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const route = useRoute()
 
-const { data: node, pending } = await useNodeByUri(
+const { data: page, pending } = await usePageByUri(
   { uri: route.path },
   { watch: [() => route.path] }
 )
@@ -16,32 +16,26 @@ const { data: node, pending } = await useNodeByUri(
       Loading...
     </div>
 
-    <template v-else-if="node">
+    <template v-else-if="page">
       <div class="mb-8">
         <NuxtLink
           to="/"
           class="text-primary-500 hover:underline"
         >
-          &larr; Back to posts
+          &larr; Back to home
         </NuxtLink>
       </div>
 
       <article class="max-w-3xl mx-auto">
         <header class="mb-8">
           <h1 class="text-4xl font-bold mb-4">
-            {{ node.title }}
+            {{ page.title }}
           </h1>
-          <div
-            v-if="node.date"
-            class="text-gray-500 text-sm"
-          >
-            {{ new Date(node.date).toLocaleDateString() }}
-          </div>
         </header>
 
         <WPContent
-          :node="node"
-          class="prose prose-lg max-w-none"
+          :node="page"
+          class="prose prose-lg dark:prose-invert max-w-none"
         />
       </article>
     </template>

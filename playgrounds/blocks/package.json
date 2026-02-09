@@ -16,7 +16,8 @@
     "@tailwindcss/typography": "^0.5.19",
     "@wpnuxt/blocks": "workspace:*",
     "@wpnuxt/core": "workspace:*",
-    "nuxt": "4.3.1"
+    "nuxt": "4.3.1",
+    "nuxt-easy-lightbox": "^1.1.0"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.89",
