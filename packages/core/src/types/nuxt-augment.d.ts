@@ -17,6 +17,7 @@ declare module 'nuxt/schema' {
       graphqlEndpoint?: string
       replaceLinks?: boolean
       imageRelativePaths?: boolean
+      hasBlocks?: boolean
       cache?: {
         enabled?: boolean
         maxAge?: number

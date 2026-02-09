@@ -2,6 +2,11 @@
 import { isInternalLink, toRelativePath } from '../util/links'
 import { ref, resolveComponent, onMounted, onBeforeUnmount, useRuntimeConfig, navigateTo } from '#imports'
 
+// Detect BlockRenderer at build time via runtimeConfig flag (set by core module when @wpnuxt/blocks is installed)
+const wpNuxtConfig = useRuntimeConfig().public.wpNuxt as Record<string, unknown>
+const hasBlockRenderer = !!wpNuxtConfig?.hasBlocks
+const blockRenderer = hasBlockRenderer ? resolveComponent('BlockRenderer') : null
+
 const props = withDefaults(defineProps<{
   /** The content node to render (with optional editorBlocks and content) */
   node?: { editorBlocks?: unknown[], content?: string | null, [key: string]: unknown }
@@ -13,10 +18,6 @@ const props = withDefaults(defineProps<{
 })
 
 const containerRef = ref<HTMLElement | null>(null)
-
-// Detect BlockRenderer at runtime (available when @wpnuxt/blocks is installed)
-const blockRenderer = resolveComponent('BlockRenderer')
-const hasBlockRenderer = typeof blockRenderer !== 'string'
 
 function shouldReplaceLinks(): boolean {
   if (props.replaceLinks !== undefined) {
