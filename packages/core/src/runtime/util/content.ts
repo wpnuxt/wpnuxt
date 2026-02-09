@@ -22,6 +22,17 @@ export const findData = (data: unknown, nodes: string[]): unknown => {
   }, data)
 }
 
+function addRelativePath(item: unknown): void {
+  if (!item || typeof item !== 'object' || !('featuredImage' in item)) return
+  const featuredImage = (item as Record<string, unknown>).featuredImage
+  if (featuredImage && typeof featuredImage === 'object' && 'node' in featuredImage) {
+    const node = featuredImage.node
+    if (node && typeof node === 'object' && 'sourceUrl' in node && typeof node.sourceUrl === 'string') {
+      (node as Record<string, unknown>).relativePath = getRelativeImagePath(node.sourceUrl)
+    }
+  }
+}
+
 /**
  * Transforms extracted data and optionally fixes image paths.
  *
@@ -32,13 +43,11 @@ export const findData = (data: unknown, nodes: string[]): unknown => {
  */
 export const transformData = <T>(data: unknown, nodes: string[], fixImagePaths: boolean): T => {
   const transformedData = findData(data, nodes)
-  if (fixImagePaths && transformedData && typeof transformedData === 'object' && 'featuredImage' in transformedData) {
-    const featuredImage = (transformedData as Record<string, unknown>).featuredImage
-    if (featuredImage && typeof featuredImage === 'object' && 'node' in featuredImage) {
-      const node = featuredImage.node
-      if (node && typeof node === 'object' && 'sourceUrl' in node && typeof node.sourceUrl === 'string') {
-        (node as Record<string, unknown>).relativePath = getRelativeImagePath(node.sourceUrl)
-      }
+  if (fixImagePaths && transformedData) {
+    if (Array.isArray(transformedData)) {
+      transformedData.forEach(addRelativePath)
+    } else {
+      addRelativePath(transformedData)
     }
   }
   return transformedData as T

@@ -111,6 +111,7 @@ wpNuxt: {
     mergedOutputFolder: string      // Default: '.queries/'
   }
   replaceLinks: boolean             // Default: true (intercept internal links in <WPContent>)
+  imageRelativePaths: boolean       // Default: false (convert featured image URLs to relative paths)
   downloadSchema: boolean           // Default: true (downloads schema.graphql from WP)
   debug: boolean                    // Default: false (enables debug logging)
 }

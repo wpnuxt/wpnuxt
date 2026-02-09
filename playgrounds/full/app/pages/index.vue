@@ -20,7 +20,7 @@ const { data: posts, pending, refresh, clear } = await usePosts()
             :title="post.title ?? undefined"
             :to="post.uri"
             :date="post.date ?? undefined"
-            :image="getRelativeImagePath(post.featuredImage?.node?.sourceUrl ?? '')"
+            :image="post.featuredImage?.node?.relativePath ?? ''"
             variant="outline"
           >
             <template #description>

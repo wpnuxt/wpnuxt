@@ -130,6 +130,50 @@ describe('content utilities', () => {
       const data = { posts: [] }
       expect(transformData(data, ['nonexistent'], false)).toBeUndefined()
     })
+
+    it('should add relativePath to each item in an array of posts', () => {
+      const data = {
+        posts: {
+          nodes: [
+            { title: 'Post 1', featuredImage: { node: { sourceUrl: 'https://example.com/wp-content/uploads/img1.jpg' } } },
+            { title: 'Post 2', featuredImage: { node: { sourceUrl: 'https://example.com/wp-content/uploads/img2.jpg' } } }
+          ]
+        }
+      }
+      const result = transformData<{ title: string, featuredImage: { node: { sourceUrl: string, relativePath?: string } } }[]>(data, ['posts', 'nodes'], true)
+      expect(result[0]!.featuredImage.node.relativePath).toBe('/wp-content/uploads/img1.jpg')
+      expect(result[1]!.featuredImage.node.relativePath).toBe('/wp-content/uploads/img2.jpg')
+    })
+
+    it('should not modify array items without featuredImage', () => {
+      const data = {
+        posts: {
+          nodes: [
+            { title: 'Post 1' },
+            { title: 'Post 2' }
+          ]
+        }
+      }
+      const result = transformData<{ title: string }[]>(data, ['posts', 'nodes'], true)
+      expect(result).toEqual([{ title: 'Post 1' }, { title: 'Post 2' }])
+    })
+
+    it('should handle mixed array with some items having featuredImage', () => {
+      interface PostWithImage { title: string, featuredImage?: { node: { sourceUrl: string, relativePath?: string } } }
+      const data = {
+        posts: {
+          nodes: [
+            { title: 'Post 1', featuredImage: { node: { sourceUrl: 'https://example.com/wp-content/uploads/img1.jpg' } } },
+            { title: 'Post 2' },
+            { title: 'Post 3', featuredImage: { node: { sourceUrl: 'https://example.com/wp-content/uploads/img3.jpg' } } }
+          ]
+        }
+      }
+      const result = transformData<PostWithImage[]>(data, ['posts', 'nodes'], true)
+      expect(result[0]!.featuredImage?.node.relativePath).toBe('/wp-content/uploads/img1.jpg')
+      expect(result[1]).toEqual({ title: 'Post 2' })
+      expect(result[2]!.featuredImage?.node.relativePath).toBe('/wp-content/uploads/img3.jpg')
+    })
   })
 
   describe('normalizeUriParam', () => {

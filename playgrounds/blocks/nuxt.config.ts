@@ -33,7 +33,8 @@ export default defineNuxtConfig({
   wpNuxt: {
     wordpressUrl: 'https://wordpress.wpnuxt.com',
     debug: IS_DEV,
-    downloadSchema: !IS_CI // Use committed schema in CI (WordPress not accessible)
+    downloadSchema: !IS_CI, // Use committed schema in CI (WordPress not accessible)
+    imageRelativePaths: true
   },
 
   wpNuxtBlocks: {

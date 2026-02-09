@@ -75,6 +75,20 @@ export interface WPNuxtConfig {
   replaceLinks?: boolean
 
   /**
+   * Whether to convert featured image `sourceUrl` values to relative paths.
+   *
+   * When enabled, a `relativePath` property is added to `featuredImage.node`
+   * by stripping the WordPress domain from `sourceUrl`.
+   *
+   * Set to `true` when using relative image paths with Nuxt Image or a proxy.
+   * Leave `false` (default) for SSG or external image providers (Vercel, Cloudflare)
+   * that need full URLs.
+   *
+   * @default false
+   */
+  imageRelativePaths?: boolean
+
+  /**
    * Whether to enable debug mode
    *
    * @default false

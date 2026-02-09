@@ -45,6 +45,7 @@ export default defineNuxtConfig({
 
   wpNuxt: {
     wordpressUrl: WORDPRESS_URL,
+    imageRelativePaths: true,
     debug: IS_DEV,
     downloadSchema: !IS_CI // Use committed schema in CI (WordPress not accessible)
   },

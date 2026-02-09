@@ -102,7 +102,7 @@ export async function prepareContext(ctx: WPNuxtContext) {
     // If query uses fragments, derive type from fragment names
     if (q.fragments?.length) {
       const fragmentSuffix = q.nodes?.includes('nodes') ? '[]' : ''
-      return q.fragments.map(f => `${f}Fragment${fragmentSuffix}`).join(' | ')
+      return q.fragments.map(f => `WithImagePath<${f}Fragment>${fragmentSuffix}`).join(' | ')
     }
 
     // No fragments - use the query's root type with extraction path
@@ -231,6 +231,11 @@ export async function prepareContext(ctx: WPNuxtContext) {
       '}',
       '',
       'type WPMutationResult<T> = GraphqlResponse<T>',
+      '',
+      '/** Adds relativePath to featuredImage.node when present (injected at runtime by transformData) */',
+      'type WithImagePath<T> = T extends { featuredImage?: unknown }',
+      '  ? T & { featuredImage?: { node: { relativePath?: string } } }',
+      '  : T',
       '',
       'declare module \'#wpnuxt\' {'
     ]

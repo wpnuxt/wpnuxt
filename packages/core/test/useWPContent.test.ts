@@ -16,7 +16,8 @@ vi.mock('#imports', () => ({
   computed: vi.fn(fn => ({ value: fn() })),
   ref: vi.fn(val => ({ value: val })),
   watch: vi.fn(),
-  useAsyncGraphqlQuery: vi.fn()
+  useAsyncGraphqlQuery: vi.fn(),
+  useRuntimeConfig: vi.fn(() => ({ public: { wpNuxt: {} } }))
 }))
 
 // Mock import.meta
@@ -64,7 +65,8 @@ describe('useWPContent', () => {
       }),
       ref: mockRef,
       watch: mockWatch,
-      useAsyncGraphqlQuery: mockUseAsyncGraphqlQuery
+      useAsyncGraphqlQuery: mockUseAsyncGraphqlQuery,
+      useRuntimeConfig: vi.fn(() => ({ public: { wpNuxt: {} } }))
     }))
   })
 

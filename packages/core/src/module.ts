@@ -51,6 +51,7 @@ export default defineNuxtModule<WPNuxtConfig>({
     },
     downloadSchema: true,
     replaceLinks: true,
+    imageRelativePaths: false,
     debug: false,
     cache: {
       enabled: true,
@@ -270,6 +271,7 @@ function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig {
     wordpressUrl: config.wordpressUrl,
     graphqlEndpoint: config.graphqlEndpoint,
     replaceLinks: config.replaceLinks ?? true,
+    imageRelativePaths: config.imageRelativePaths ?? false,
     cache: {
       enabled: config.cache?.enabled ?? true,
       maxAge: config.cache?.maxAge ?? 300,

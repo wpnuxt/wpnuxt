@@ -179,8 +179,8 @@ describe('generate', () => {
 
       const declarations = ctx.generateDeclarations!()
 
-      // Should have array suffix for nodes
-      expect(declarations).toContain('PostFragment[]')
+      // Should have array suffix for nodes, wrapped with WithImagePath
+      expect(declarations).toContain('WithImagePath<PostFragment>[]')
     })
 
     it('should handle query without fragments', async () => {

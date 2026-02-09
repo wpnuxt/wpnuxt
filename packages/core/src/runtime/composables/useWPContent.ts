@@ -2,7 +2,7 @@ import { transformData, normalizeUriParam } from '../util/content'
 import type { Query } from '#nuxt-graphql-middleware/operation-types'
 import type { WatchSource, Ref } from 'vue'
 import type { NuxtApp } from 'nuxt/app'
-import { computed, ref, watch as vueWatch, useAsyncGraphqlQuery } from '#imports'
+import { computed, ref, watch as vueWatch, useAsyncGraphqlQuery, useRuntimeConfig } from '#imports'
 
 /** Extended NuxtApp with nuxt-graphql-middleware internals */
 interface NuxtAppWithGraphqlCache extends NuxtApp {
@@ -126,6 +126,10 @@ export const useWPContent = <T>(
   params?: T,
   options?: WPContentOptions
 ) => {
+  // Read imageRelativePaths from runtimeConfig (overrides the fixImagePaths parameter)
+  const runtimeWpNuxt = (useRuntimeConfig().public as { wpNuxt?: { imageRelativePaths?: boolean } }).wpNuxt
+  const imageRelativePaths = runtimeWpNuxt?.imageRelativePaths ?? fixImagePaths
+
   // Extract WPNuxt-specific options
   const {
     clientCache,
@@ -252,7 +256,7 @@ export const useWPContent = <T>(
 
       if (!queryResult) return undefined
 
-      const result = transformData(queryResult, nodes, fixImagePaths)
+      const result = transformData(queryResult, nodes, imageRelativePaths)
 
       // Development warning for empty Menu results
       if (import.meta.dev && String(queryName) === 'Menu' && !result) {
