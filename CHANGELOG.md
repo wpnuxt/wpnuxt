@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.0-alpha.14](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.13...v2.0.0-alpha.14) (2026-02-09)
+
+### Features
+
+* **core:** enhance WordPress URL configuration and validation ([3263275](https://github.com/wpnuxt/wpnuxt/commit/3263275edb5803a55bc18562afe7a15574d0efe3))
+
 ## [2.0.0-alpha.13](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.12...v2.0.0-alpha.13) (2026-02-09)
 
 ### Features
