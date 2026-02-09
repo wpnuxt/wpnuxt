@@ -2,15 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "pnpm --filter @wpnuxt/core build && nuxi generate",
   "outputDirectory": ".output/public",
-  "trailingSlash": true,
-  "images": {
-    "sizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    "domains": ["wordpress.wpnuxt.com"],
-    "remotePatterns": [
-      {
-        "protocol": "https",
-        "hostname": "wordpress.wpnuxt.com"
-      }
-    ]
-  }
+  "trailingSlash": true
 }

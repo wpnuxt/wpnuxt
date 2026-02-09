@@ -41,7 +41,6 @@ export default defineNuxtConfig({
   },
 
   image: {
-    provider: IS_VERCEL ? 'vercel' : 'ipx',
     domains: ['wordpress.wpnuxt.com']
   },
 
