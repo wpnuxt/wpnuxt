@@ -5,8 +5,8 @@ query Pages($limit: Int = 10) {
     }
   }
 }
-query PageByUri($uri: String!) {
-  nodeByUri(uri: $uri) {
+query PageByUri($uri: ID!) {
+  page(id: $uri, idType: URI) {
     ...Page
   }
 }

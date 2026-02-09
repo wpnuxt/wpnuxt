@@ -5,8 +5,8 @@ query Posts($limit: Int = 10) {
     }
   }
 }
-query PostByUri($uri: String!) {
-  nodeByUri(uri: $uri) {
+query PostByUri($uri: ID!) {
+  post(id: $uri, idType: URI) {
     ...Post
   }
 }
