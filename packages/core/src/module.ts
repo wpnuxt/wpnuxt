@@ -61,7 +61,12 @@ export default defineNuxtModule<WPNuxtConfig>({
   },
   async setup(options, nuxt) {
     const startTime = new Date().getTime()
-    const wpNuxtConfig = loadConfig(options, nuxt) as WPNuxtConfig
+    const wpNuxtConfig = loadConfig(options, nuxt)
+    if (!wpNuxtConfig) {
+      const logger = initLogger(false)
+      logger.warn('WordPress URL not configured. Skipping WPNuxt setup. Set it in nuxt.config.ts or via WPNUXT_WORDPRESS_URL environment variable.')
+      return
+    }
     const logger = initLogger(wpNuxtConfig.debug)
 
     logger.debug('Starting WPNuxt in debug mode')
@@ -249,7 +254,7 @@ export default defineNuxtModule<WPNuxtConfig>({
 // Config Loading
 // =============================================================================
 
-function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig {
+function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig | null {
   const config: WPNuxtConfig = defu({
     wordpressUrl: process.env.WPNUXT_WORDPRESS_URL,
     graphqlEndpoint: process.env.WPNUXT_GRAPHQL_ENDPOINT,
@@ -272,6 +277,7 @@ function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig {
     graphqlEndpoint: config.graphqlEndpoint,
     replaceLinks: config.replaceLinks ?? true,
     imageRelativePaths: config.imageRelativePaths ?? false,
+    hasBlocks: hasNuxtModule('@wpnuxt/blocks'),
     cache: {
       enabled: config.cache?.enabled ?? true,
       maxAge: config.cache?.maxAge ?? 300,
@@ -281,6 +287,10 @@ function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig {
 
   // validate config
   if (!config.wordpressUrl?.trim()) {
+    // During `nuxt prepare` (e.g. postinstall), skip validation so types can be generated
+    if (nuxt.options._prepare) {
+      return null
+    }
     throw createModuleError('core', 'WordPress URL is required. Set it in nuxt.config.ts or via WPNUXT_WORDPRESS_URL environment variable.')
   }
   if (config.wordpressUrl.endsWith('/')) {
