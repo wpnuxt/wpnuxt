@@ -1,6 +1,7 @@
+import { consola } from 'consola'
 import { defu } from 'defu'
 import { existsSync } from 'node:fs'
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { version } from '../package.json'
 import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports } from '@nuxt/kit'
@@ -11,7 +12,7 @@ import type { Import } from 'unimport'
 import type { WPNuxtConfig } from './types/config'
 import type { WPNuxtContext } from './types/queries'
 import { generateWPNuxtComposables } from './generate'
-import { getLogger, initLogger, mergeQueries, randHashGenerator, createModuleError } from './utils/index'
+import { getLogger, initLogger, mergeQueries, randHashGenerator, createModuleError, validateWordPressUrl, atomicWriteFile } from './utils/index'
 import { validateWordPressEndpoint } from './utils/endpointValidation'
 import { runInstall } from './install'
 
@@ -61,7 +62,7 @@ export default defineNuxtModule<WPNuxtConfig>({
   },
   async setup(options, nuxt) {
     const startTime = new Date().getTime()
-    const wpNuxtConfig = loadConfig(options, nuxt)
+    const wpNuxtConfig = await loadConfig(options, nuxt)
     if (!wpNuxtConfig) {
       const logger = initLogger(false)
       logger.warn('WordPress URL not configured. Skipping WPNuxt setup. Set it in nuxt.config.ts or via WPNUXT_WORDPRESS_URL environment variable.')
@@ -254,7 +255,7 @@ export default defineNuxtModule<WPNuxtConfig>({
 // Config Loading
 // =============================================================================
 
-function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig | null {
+async function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): Promise<WPNuxtConfig | null> {
   const config: WPNuxtConfig = defu({
     wordpressUrl: process.env.WPNUXT_WORDPRESS_URL,
     graphqlEndpoint: process.env.WPNUXT_GRAPHQL_ENDPOINT,
@@ -271,6 +272,49 @@ function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig | 
     config.downloadSchema = true
   }
 
+  // validate config
+  if (!config.wordpressUrl?.trim()) {
+    // During `nuxt prepare` (e.g. postinstall), skip validation so types can be generated
+    if (nuxt.options._prepare) {
+      return null
+    }
+
+    // In interactive dev mode, prompt the user for the WordPress URL
+    if (nuxt.options.dev && process.stdout.isTTY) {
+      const wordpressUrl = await consola.prompt(
+        'Enter your WordPress site URL (must have WPGraphQL installed):',
+        { type: 'text', placeholder: 'https://your-wordpress-site.com' }
+      )
+
+      if (wordpressUrl && typeof wordpressUrl === 'string' && wordpressUrl.trim()) {
+        const validation = validateWordPressUrl(wordpressUrl)
+        if (validation.valid && validation.normalizedUrl) {
+          config.wordpressUrl = validation.normalizedUrl
+          // Save to .env so user doesn't get prompted again
+          const envPath = join(nuxt.options.rootDir, '.env')
+          const envLine = `WPNUXT_WORDPRESS_URL=${validation.normalizedUrl}\n`
+          if (existsSync(envPath)) {
+            const existing = await readFile(envPath, 'utf-8')
+            await atomicWriteFile(envPath, existing.trimEnd() + '\n' + envLine)
+          } else {
+            await atomicWriteFile(envPath, envLine)
+          }
+          consola.success(`WordPress URL saved to .env: ${validation.normalizedUrl}`)
+        } else {
+          throw createModuleError('core', `Invalid WordPress URL: ${validation.error}`)
+        }
+      } else {
+        throw createModuleError('core', 'WordPress URL is required. Set it in nuxt.config.ts or via WPNUXT_WORDPRESS_URL environment variable.')
+      }
+    } else {
+      throw createModuleError('core', 'WordPress URL is required. Set it in nuxt.config.ts or via WPNUXT_WORDPRESS_URL environment variable.')
+    }
+  }
+  if (config.wordpressUrl.endsWith('/')) {
+    throw createModuleError('core', `WordPress URL should not have a trailing slash: ${config.wordpressUrl}`)
+  }
+
+  // Set runtimeConfig after validation (wordpressUrl is guaranteed to be set)
   nuxt.options.runtimeConfig.public.wordpressUrl = config.wordpressUrl
   nuxt.options.runtimeConfig.public.wpNuxt = {
     wordpressUrl: config.wordpressUrl,
@@ -285,17 +329,6 @@ function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): WPNuxtConfig | 
     }
   }
 
-  // validate config
-  if (!config.wordpressUrl?.trim()) {
-    // During `nuxt prepare` (e.g. postinstall), skip validation so types can be generated
-    if (nuxt.options._prepare) {
-      return null
-    }
-    throw createModuleError('core', 'WordPress URL is required. Set it in nuxt.config.ts or via WPNUXT_WORDPRESS_URL environment variable.')
-  }
-  if (config.wordpressUrl.endsWith('/')) {
-    throw createModuleError('core', `WordPress URL should not have a trailing slash: ${config.wordpressUrl}`)
-  }
   return config
 }
 
