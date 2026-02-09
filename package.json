@@ -21,10 +21,10 @@
     "release": "release-it"
   },
   "devDependencies": {
-    "@nuxt/eslint-config": "^1.12.1",
+    "@nuxt/eslint-config": "^1.14.0",
     "@release-it/bumper": "^7.0.5",
-    "@release-it/conventional-changelog": "^10.0.0",
-    "eslint": "^9.39.2",
+    "@release-it/conventional-changelog": "^10.0.5",
+    "eslint": "^10.0.0",
     "release-it": "^19.2.4"
   },
   "packageManager": "pnpm@10.28.2",

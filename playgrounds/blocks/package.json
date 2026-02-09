@@ -13,12 +13,13 @@
   "dependencies": {
     "@nuxt/icon": "^2.2.1",
     "@nuxt/ui": "4.4.0",
+    "@tailwindcss/typography": "^0.5.19",
     "@wpnuxt/blocks": "workspace:*",
     "@wpnuxt/core": "workspace:*",
-    "nuxt": "4.3.0"
+    "nuxt": "4.3.1"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.2.88",
+    "@iconify-json/lucide": "^1.2.89",
     "vue-tsc": "^3.2.3"
   }
 }
