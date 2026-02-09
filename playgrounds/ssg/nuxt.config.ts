@@ -13,6 +13,7 @@ const GRAPHQL_ENDPOINT = '/graphql'
 export default defineNuxtConfig({
   modules: [
     '@wpnuxt/core',
+    '@nuxt/image',
     '@nuxt/ui'
   ],
 
@@ -37,6 +38,11 @@ export default defineNuxtConfig({
         await fetchWordPressRoutes(ctx.routes)
       }
     }
+  },
+
+  image: {
+    provider: IS_VERCEL ? 'vercel' : 'ipx',
+    domains: ['wordpress.wpnuxt.com']
   },
 
   wpNuxt: {

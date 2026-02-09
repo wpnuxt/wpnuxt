@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import type { MenuItemFragment } from '#graphql-operations'
+import type { NavigationMenuItem } from '@nuxt/ui'
 
-const { data } = await useMenu({ name: 'main' })
-const menu = computed(() => {
-  return data.value?.map((item: MenuItemFragment) => ({
-    label: item.label,
-    to: item.uri
-  })) ?? []
-})
+const { data: menu } = await useMenu({ name: 'main' })
+const menuItems: ComputedRef<NavigationMenuItem[]> = computed(() => [
+  { label: 'Home', to: '/', exact: true },
+  ...(menu.value?.map((item: MenuItemFragment) => ({ label: item.label, to: item.uri })) ?? [])
+])
 </script>
 
 <template>
@@ -20,10 +19,10 @@ const menu = computed(() => {
         </h1>
       </template>
       <template #default>
-        <UNavigationMenu :items="menu" />
+        <UNavigationMenu :items="menuItems" />
       </template>
       <template #body>
-        <UNavigationMenu :items="menu" orientation="vertical" />
+        <UNavigationMenu :items="menuItems" orientation="vertical" />
       </template>
     </UHeader>
     <UContainer class="py-8">
