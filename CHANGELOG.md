@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.0.0-alpha.12](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.11...v2.0.0-alpha.12) (2026-02-09)
+
+### Features
+
+* add remote image patterns to Vercel configuration ([66368de](https://github.com/wpnuxt/wpnuxt/commit/66368decb8b63b988a1ccf1bfe064fdb4d4004e7))
+* update Vercel image configuration ([4ac857e](https://github.com/wpnuxt/wpnuxt/commit/4ac857e34554750223719613ac7667ac0c7c5f68))
+
+### Maintenance
+
+* remove development paths from package.json for server and client options ([d457ff0](https://github.com/wpnuxt/wpnuxt/commit/d457ff06b45c62b9a421613b57375d56f8172c74))
+* remove unused image provider configuration ([d06cd7c](https://github.com/wpnuxt/wpnuxt/commit/d06cd7cce7b25ea8b56badcdface6fee6697ffa6))
+* update @wpnuxt/core version in .nuxtrc files ([368258a](https://github.com/wpnuxt/wpnuxt/commit/368258a024fc47f46358c1ea31d46d6048d00888))
+
 ## [2.0.0-alpha.11](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2026-02-09)
 
 ### Features
