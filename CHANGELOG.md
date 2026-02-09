@@ -1,5 +1,595 @@
 # Changelog
 
+## [2.0.0-alpha.11](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2026-02-09)
+
+### Features
+
+* add development entry points for server and client options ([bb9afad](https://github.com/wpnuxt/wpnuxt/commit/bb9afad5f39cfba17bd3607aed3eaef6518099ca))
+* add imageRelativePaths config option ([8d0fddc](https://github.com/wpnuxt/wpnuxt/commit/8d0fddc312ee33c615cc152f21d334e1d333bfd3))
+* add schemaAuthToken for authenticated schema introspection ([#208](https://github.com/wpnuxt/wpnuxt/issues/208)) ([a0da704](https://github.com/wpnuxt/wpnuxt/commit/a0da704e3fe2354a1a95b130d0354a4677148b43)), closes [#37](https://github.com/wpnuxt/wpnuxt/issues/37)
+* add Tailwind CSS typography plugin and update dependencies ([bc61b86](https://github.com/wpnuxt/wpnuxt/commit/bc61b86d48c1548cbaba2ffb5ec388dbcf3d82fa))
+* add WPContent component for client-side navigation of internal links ([9f3f1d7](https://github.com/wpnuxt/wpnuxt/commit/9f3f1d73bb66e26daf0c6aee2dc6f04fe24af75f)), closes [#116](https://github.com/wpnuxt/wpnuxt/issues/116)
+* enhance block components in playgrounds ([b46f6c3](https://github.com/wpnuxt/wpnuxt/commit/b46f6c33165a318b92a596ceb0feae569f38b7d1))
+* integrate Nuxt Image module and enhance menu handling ([d2793f9](https://github.com/wpnuxt/wpnuxt/commit/d2793f93ddf085db0dac8cc0df5f3c226a50411d))
+
+### Bug Fixes
+
+* **core:** use type-specific GraphQL fields in PageByUri/PostByUri queries ([1fa08d5](https://github.com/wpnuxt/wpnuxt/commit/1fa08d5eb8bbba28e612a90279d042358b4dc2b0))
+
+### Documentation
+
+* add comprehensive guide on how WPNuxt works ([265b0ed](https://github.com/wpnuxt/wpnuxt/commit/265b0ed76ebe85ecee7c8c07ff93d85106bf2879))
+* add deprecation notice pointing to wpnuxt/wpnuxt monorepo ([80172fc](https://github.com/wpnuxt/wpnuxt/commit/80172fcb0259db2235ed63e68409c93440a563e2))
+* enhance WordPress setup and troubleshooting sections ([fe8cb21](https://github.com/wpnuxt/wpnuxt/commit/fe8cb21e57c87de4b7fe2bb8593e79755f20c7e4))
+* enhance WPNuxt documentation with new guides and updates ([841b3bf](https://github.com/wpnuxt/wpnuxt/commit/841b3bf8ef52315bfdcd44302dab79f5009dc614))
+* update README and setup documentation for WPNuxt v2 alpha ([ae5295a](https://github.com/wpnuxt/wpnuxt/commit/ae5295a2c6288f4fe796d3392055780a1cd822b9))
+* update WPContent documentation and configuration details ([0f6f21d](https://github.com/wpnuxt/wpnuxt/commit/0f6f21dc6e548539acabbdc9c3859702550a7709))
+
+### Maintenance
+
+* **docs:** move docs to content subfolder, so edit links and references from the docus docs app will be correct ([bb59427](https://github.com/wpnuxt/wpnuxt/commit/bb594272c3ba850688fae68249940136e786511c))
+* trigger deployment after repo rename ([c711cdd](https://github.com/wpnuxt/wpnuxt/commit/c711cdd779a7a745736400e43fd58f8c9a2f127e))
+* update dependencies across multiple packages ([0629745](https://github.com/wpnuxt/wpnuxt/commit/0629745a8c6a924de13c666e8bf5c3e24426d2de))
+## [1.0.0-edge.31](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2025-12-18)
+
+### Maintenance
+
+* **release:** release v1.0.0-edge.31 ([037dfc6](https://github.com/wpnuxt/wpnuxt/commit/037dfc6bcccf898dbf06e194e7d2d12b5e3950ef))
+* update dependencies and upgrade Nuxt to 4.2.2 and @nuxt/ui to 4.3.0 ([f4d7fa7](https://github.com/wpnuxt/wpnuxt/commit/f4d7fa71671dfa291d677964557281b9e4fdd6e2))
+## [1.0.0-edge.30](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2025-05-04)
+
+### Bug Fixes
+
+* **useWPContent:** prevent undefined access in findData function ([#205](https://github.com/wpnuxt/wpnuxt/issues/205)) ([3dd47dd](https://github.com/wpnuxt/wpnuxt/commit/3dd47dd38c577bae66e2ecc7c8721bf502546a63))
+
+### Maintenance
+
+* update dependencies - nuxt-graphql-middleware v5, nuxt 3.17.1, etc ([3877104](https://github.com/wpnuxt/wpnuxt/commit/38771042e813be0140501e07c5a718637fc29ced))
+## [1.0.0-edge.27](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2025-03-13)
+
+### Maintenance
+
+* update dependencies - ([2953a2c](https://github.com/wpnuxt/wpnuxt/commit/2953a2ca93c399a42e3796178e9ff25530f3cda5))
+* update dependencies - nuxt 3.16.0, etc ([42095d9](https://github.com/wpnuxt/wpnuxt/commit/42095d9844e6fea6a81da21fe1abdaad9a0e9747))
+## [1.0.0-edge.26](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2025-01-09)
+
+### Maintenance
+
+* update dependencies - ([0d18fc0](https://github.com/wpnuxt/wpnuxt/commit/0d18fc0381c11fb8b3a582001fd5bd5e04d5a355))
+* update dependencies - ([fc0bea6](https://github.com/wpnuxt/wpnuxt/commit/fc0bea619802a081546de035b1573a994b1130bd))
+## [1.0.0-edge.25](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-12-23)
+
+### Maintenance
+
+* update dependencies - ([efba306](https://github.com/wpnuxt/wpnuxt/commit/efba30673dd8fb171af4abc8b2840a3461d8d69a))
+## [1.0.0-edge.24](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-10-20)
+
+### Maintenance
+
+* update dependencies - nuxt-graphql-middleware ([c4a9829](https://github.com/wpnuxt/wpnuxt/commit/c4a982924ae867f8d496a771a3a30de02890e6fb))
+## [1.0.0-edge.23](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-09-21)
+
+### Maintenance
+
+* update dependencies - nuxt 3.13.2 & other dependency updates ([2e541f4](https://github.com/wpnuxt/wpnuxt/commit/2e541f41d45cf2c89bdd642d69d7e947bdef6a87))
+## [1.0.0-edge.22](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-09-04)
+
+### Maintenance
+
+* update dependencies - nuxt 3.13.1 ([92fa631](https://github.com/wpnuxt/wpnuxt/commit/92fa63151b1ee19f526dfa1c37806528d9b54c88))
+## [1.0.0-edge.21](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-30)
+## [1.0.0-edge.20](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-30)
+## [1.0.0-edge.19](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-30)
+## [1.0.0-edge.18](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-29)
+## [1.0.0-edge.17](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-29)
+## [1.0.0-edge.14](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-25)
+## [1.0.0-edge.13](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-24)
+## [1.0.0-edge.12](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-23)
+
+### Maintenance
+
+* **release:** release v1.0.0-edge.12 ([f2bed30](https://github.com/wpnuxt/wpnuxt/commit/f2bed30444493fac2ee8ce4e8ebded0cdc4bd4c1))
+* update dependencies - upgrade to nuxt 3.13.0 ([5d9e0cc](https://github.com/wpnuxt/wpnuxt/commit/5d9e0ccfa8577d77e8bd0840a9cf9d8ed7e6587a))
+## [1.0.0-edge.11](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-19)
+## [1.0.0-edge.10](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-19)
+## [1.0.0-edge.9](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-19)
+## [1.0.0-edge.8](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-18)
+
+### Maintenance
+
+* update dependencies - ([701d8ce](https://github.com/wpnuxt/wpnuxt/commit/701d8ce9fddb63c430e7ec7c6db3dd21111c8fdf))
+* update dependencies - ([145d8a4](https://github.com/wpnuxt/wpnuxt/commit/145d8a40d935eb6e8040d7d313c946051bf27200))
+## [1.0.0-edge.7](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-16)
+
+### Documentation
+
+* installation ([99dcfb7](https://github.com/wpnuxt/wpnuxt/commit/99dcfb750f0cefc7d7c1904761e561780aa715a6))
+
+### Maintenance
+
+* update dependencies - ([5407f9b](https://github.com/wpnuxt/wpnuxt/commit/5407f9b6bfe7fbc2755e0bda7e4868157759b030))
+## [1.0.0-edge.6](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-12)
+## [1.0.0-edge.5](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-11)
+
+### Maintenance
+
+* update dependencies - ([ab131f1](https://github.com/wpnuxt/wpnuxt/commit/ab131f119ed535ce19c91d93905ea7909df336de))
+## [1.0.0-edge.4](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-10)
+
+### Maintenance
+
+* **deps:** update all non-major dependencies ([#171](https://github.com/wpnuxt/wpnuxt/issues/171)) ([ce3cded](https://github.com/wpnuxt/wpnuxt/commit/ce3cded7cd1b3c8071e8bfe3d5904d8cf9e6a496))
+* **deps:** update dependency @vueuse/nuxt to ^10.11.1 ([#174](https://github.com/wpnuxt/wpnuxt/issues/174)) ([a6c1adc](https://github.com/wpnuxt/wpnuxt/commit/a6c1adcd0c89387d053afb9566228d3f02fba165))
+## [0.5.8](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-04)
+
+### Maintenance
+
+* **release:** release v0.5.8 ([0609ab4](https://github.com/wpnuxt/wpnuxt/commit/0609ab4b9b5b7c51afe8b4187c130edf7bd7cc98))
+## [0.5.7](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-04)
+
+### Maintenance
+
+* **deps:** update all non-major dependencies ([#168](https://github.com/wpnuxt/wpnuxt/issues/168)) ([0218605](https://github.com/wpnuxt/wpnuxt/commit/02186054c36722d048089719a447d86b6d68b992))
+* **release:** release v0.5.7 ([2e97947](https://github.com/wpnuxt/wpnuxt/commit/2e979476d56a912462226eeab9be8a7f337c885a))
+## [0.5.6](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-08-01)
+
+### Maintenance
+
+* **deps:** update all non-major dependencies to ^4.19.2 ([#159](https://github.com/wpnuxt/wpnuxt/issues/159)) ([affc876](https://github.com/wpnuxt/wpnuxt/commit/affc87656e1ed2cee616cecc3e6adfec5a8cd7e2))
+* **deps:** update devdependency @nuxt/test-utils to ^3.14.0 ([#163](https://github.com/wpnuxt/wpnuxt/issues/163)) ([cfd417d](https://github.com/wpnuxt/wpnuxt/commit/cfd417d079fdcf461efab3e9d5b84fc276efbe6d))
+* **release:** release v0.5.6 ([7723c31](https://github.com/wpnuxt/wpnuxt/commit/7723c3154560d10d6bb4fc830590c10c47e6a0df))
+* update dependencies - ([ce3c1ee](https://github.com/wpnuxt/wpnuxt/commit/ce3c1ee93d639a014d819a268d439be218b04a1b))
+* update dependencies - ([d717e0e](https://github.com/wpnuxt/wpnuxt/commit/d717e0e293e445edb1a20d5862d703055179589e))
+* update dependencies - ([29d66d0](https://github.com/wpnuxt/wpnuxt/commit/29d66d0afc409336339db21c772fc1441c5e5693))
+* update dependencies - ([705650a](https://github.com/wpnuxt/wpnuxt/commit/705650a0cbb9f0b5a882d1e8d5599c1b2f05fb8a))
+* update dependencies - nuxt-graphql-middleware 4.1.1 ([fd47665](https://github.com/wpnuxt/wpnuxt/commit/fd47665adf8138d046f8db633c083f2d63d54247))
+## [0.5.5](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-07-26)
+
+### Maintenance
+
+* **release:** release v0.5.5 ([cae5531](https://github.com/wpnuxt/wpnuxt/commit/cae5531115d9b488650a18f0be71e6d60796b238))
+## [0.5.4](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-07-15)
+
+### Maintenance
+
+* **deps:** @wordpress/env:10.3.0 ([4c2de80](https://github.com/wpnuxt/wpnuxt/commit/4c2de808477ab18d02236b75984bf9b1e30a376c))
+* **release:** release v0.5.4 ([7e89fa9](https://github.com/wpnuxt/wpnuxt/commit/7e89fa907487926ca04b207d20b3c3aea371e2d3))
+## [0.5.3](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-07-09)
+
+### Maintenance
+
+* **deps:** update all non-major dependencies ([#150](https://github.com/wpnuxt/wpnuxt/issues/150)) ([3a5429d](https://github.com/wpnuxt/wpnuxt/commit/3a5429d9e0cfdd2cce047ca1e36a277bb8da93f9)), closes [#152](https://github.com/wpnuxt/wpnuxt/issues/152)
+* **deps:** update vitest monorepo to v2 (major) ([857cd57](https://github.com/wpnuxt/wpnuxt/commit/857cd572a952f991de88b95c23ef165f5741e290))
+* **release:** release v0.5.3 ([5ac4bbd](https://github.com/wpnuxt/wpnuxt/commit/5ac4bbdc9bfd3d9393d8c9ac19b5fd89ad834734))
+## [0.5.2](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-07-05)
+
+### Maintenance
+
+* **deps:** update all non-major dependencies ([#136](https://github.com/wpnuxt/wpnuxt/issues/136)) ([80aaacd](https://github.com/wpnuxt/wpnuxt/commit/80aaacd478f6077f872c406a1777dfa0fcb20884))
+* **deps:** update all non-major dependencies ([#142](https://github.com/wpnuxt/wpnuxt/issues/142)) ([4b1eedc](https://github.com/wpnuxt/wpnuxt/commit/4b1eedc07c233442c28dd09420c5a9690c2bfae5))
+* **release:** release v0.5.2 ([7552dac](https://github.com/wpnuxt/wpnuxt/commit/7552dac69f75a1cd30908090d202544a8665cad4))
+## [0.5.1](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-06-22)
+
+### Maintenance
+
+* **release:** release v0.5.1 ([626f128](https://github.com/wpnuxt/wpnuxt/commit/626f128c93484be156d6234f06a9ca762c8a269e))
+## [0.5.0](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-06-22)
+
+### Maintenance
+
+* **deps:** update all non-major dependencies ([#129](https://github.com/wpnuxt/wpnuxt/issues/129)) ([220eab4](https://github.com/wpnuxt/wpnuxt/commit/220eab4fe29c4e5ac8e2695df6e3cbc10a38e26f))
+* **release:** release v0.5.0 ([09c2f6e](https://github.com/wpnuxt/wpnuxt/commit/09c2f6e037aece160eaf28b5c8285bd0128f9abd))
+## [0.4.4](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-06-17)
+
+### Maintenance
+
+* **deps:** Nuxt 3.12.1 ([8b61270](https://github.com/wpnuxt/wpnuxt/commit/8b61270bd801534d3eec48faf998ab87a00d551c))
+* **deps:** update all non-major dependencies ([#126](https://github.com/wpnuxt/wpnuxt/issues/126)) ([dfec370](https://github.com/wpnuxt/wpnuxt/commit/dfec37045ef3dac4442b2d87149daaf057624029))
+* **deps:** update devdependency @nuxthq/studio to v2 ([#128](https://github.com/wpnuxt/wpnuxt/issues/128)) ([e6b1cdc](https://github.com/wpnuxt/wpnuxt/commit/e6b1cdcf70453dac22e08e7d4f7b3c951ee1a4f3))
+* **deps:** update nuxt framework to ^3.12.2 ([#127](https://github.com/wpnuxt/wpnuxt/issues/127)) ([16b0633](https://github.com/wpnuxt/wpnuxt/commit/16b063301be2740b3662507a082f55af8e8a3889))
+* **release:** release v0.4.4 ([e5b396c](https://github.com/wpnuxt/wpnuxt/commit/e5b396c60a43410cde85a5e046626861d6f772e3))
+* **release:** release v0.4.4-edge.5 ([33d7a58](https://github.com/wpnuxt/wpnuxt/commit/33d7a5804850778019911923642422f3fe86448d))
+* **release:** release v0.4.4-edge.7 ([fab5f9e](https://github.com/wpnuxt/wpnuxt/commit/fab5f9ede699ca0d33531fe8e3cc7e9067fd9108))
+## [0.4.4-edge.4](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-05-30)
+
+### Maintenance
+
+* **deps:** update all non-major dependencies ([#119](https://github.com/wpnuxt/wpnuxt/issues/119)) ([e3f76e0](https://github.com/wpnuxt/wpnuxt/commit/e3f76e04810fa7e19e182be54fde9f6563d9791a))
+* **deps:** update devdependency @types/node to v20.12.13 ([#123](https://github.com/wpnuxt/wpnuxt/issues/123)) ([8c57c72](https://github.com/wpnuxt/wpnuxt/commit/8c57c72ab49b11d28550d3e71e15528b9929ab21))
+* **release:** release v0.4.4-edge.2 ([373ca20](https://github.com/wpnuxt/wpnuxt/commit/373ca2041897d38d5052753cc2c6e91b1a6f90a6))
+* **release:** release v0.4.4-edge.4 ([0af7edd](https://github.com/wpnuxt/wpnuxt/commit/0af7edd1c74574970ad120c95e51c7e24defe934))
+## [0.4.3](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-05-26)
+
+### Maintenance
+
+* **release:** release v0.4.3 ([3d0b72f](https://github.com/wpnuxt/wpnuxt/commit/3d0b72f925ff9da52503607f97bfe92954f6c34e))
+## [0.4.2](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-05-26)
+
+### Maintenance
+
+* **deps:** update all non-major dependencies ([#111](https://github.com/wpnuxt/wpnuxt/issues/111)) ([fee7b55](https://github.com/wpnuxt/wpnuxt/commit/fee7b55423e3c93db8cd657469170a5500cbec62))
+* **deps:** update all non-major dependencies to ^4.18.0 ([#113](https://github.com/wpnuxt/wpnuxt/issues/113)) ([bd22628](https://github.com/wpnuxt/wpnuxt/commit/bd226289bc632635859e7539f2668ea1547daaad))
+* **deps:** update devdependency @nuxt/module-builder to ^0.7.0 ([#114](https://github.com/wpnuxt/wpnuxt/issues/114)) ([93dd750](https://github.com/wpnuxt/wpnuxt/commit/93dd7509f4afb9194c47d6ab191aaa266425a958))
+* **deps:** update devdependency @nuxt/test-utils to ^3.13.1 ([#112](https://github.com/wpnuxt/wpnuxt/issues/112)) ([bb89cdb](https://github.com/wpnuxt/wpnuxt/commit/bb89cdbab3d2aca2fedebd468f7412b7c50752e9))
+* **release:** release v0.4.2 ([c4a90be](https://github.com/wpnuxt/wpnuxt/commit/c4a90be309396cdd646d0325734505a5738641c4))
+## [0.4.1](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-05-18)
+
+### Maintenance
+
+* **release:** release v0.4.1 ([4eea4b7](https://github.com/wpnuxt/wpnuxt/commit/4eea4b71c58fb0fa574931584d58b227a4147e0c))
+## [0.4.0](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-05-18)
+
+### Maintenance
+
+* **deps:** update all non-major dependencies ([#104](https://github.com/wpnuxt/wpnuxt/issues/104)) ([458079e](https://github.com/wpnuxt/wpnuxt/commit/458079ec595f3139394617d0bdac1687902ee058))
+* **deps:** update devdependency @nuxt/test-utils to ^3.13.0 ([#103](https://github.com/wpnuxt/wpnuxt/issues/103)) ([6957dac](https://github.com/wpnuxt/wpnuxt/commit/6957dacdf4965075997b1d325ef37b43fd54adaf))
+* **deps:** update devdependency vue-tsc to ^2.0.18 ([#102](https://github.com/wpnuxt/wpnuxt/issues/102)) ([42cc510](https://github.com/wpnuxt/wpnuxt/commit/42cc510b73ce0092ba8b84624c74d0faf8167b2b))
+* **release:** release v0.4.0 ([d2a3c77](https://github.com/wpnuxt/wpnuxt/commit/d2a3c7750910e39dd9bec2d9839a18563c8bb517))
+## [0.3.11](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-05-14)
+
+### Maintenance
+
+* **deps:** update all non-major dependencies to ^0.3.12 ([#83](https://github.com/wpnuxt/wpnuxt/issues/83)) ([d34420c](https://github.com/wpnuxt/wpnuxt/commit/d34420c356b8f0d28985e68c1140d56b4f5ca6fd))
+* **deps:** update devdependency @nuxt/devtools to ^1.3.1 ([#89](https://github.com/wpnuxt/wpnuxt/issues/89)) ([ef2da29](https://github.com/wpnuxt/wpnuxt/commit/ef2da29ea9c570726329dd78e378854eff9f44be))
+* **deps:** update devdependency @types/node to v20.12.12 ([#97](https://github.com/wpnuxt/wpnuxt/issues/97)) ([552346c](https://github.com/wpnuxt/wpnuxt/commit/552346c1abceb06da24107678988f0bc360333d9))
+* **deps:** update devdependency vue-tsc to ^2.0.17 ([#86](https://github.com/wpnuxt/wpnuxt/issues/86)) ([cd5ca35](https://github.com/wpnuxt/wpnuxt/commit/cd5ca35687f471815876700547b80010ccfaebd6))
+* **release:** release v0.3.11 ([cdeb9ab](https://github.com/wpnuxt/wpnuxt/commit/cdeb9ab9e0936720e49bb91fb4c783d78e95316c))
+## [0.3.10](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-05-09)
+
+### Maintenance
+
+* **release:** release v0.3.10 ([d77181d](https://github.com/wpnuxt/wpnuxt/commit/d77181d64cf583b6f01d3337c598cfe8d56f2743))
+## [0.3.9](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-05-08)
+
+### Maintenance
+
+* **deps:** update all non-major dependencies ([#70](https://github.com/wpnuxt/wpnuxt/issues/70)) ([1039124](https://github.com/wpnuxt/wpnuxt/commit/10391247eda1e1cb7fc03cc1a9127baf33a25432))
+* **deps:** update all non-major dependencies ([#72](https://github.com/wpnuxt/wpnuxt/issues/72)) ([9c3270e](https://github.com/wpnuxt/wpnuxt/commit/9c3270e4ec4bdfaed96d185fd9325669d6f21fb7))
+* **deps:** update devdependency @types/node to v20.12.11 ([#77](https://github.com/wpnuxt/wpnuxt/issues/77)) ([6a4a24f](https://github.com/wpnuxt/wpnuxt/commit/6a4a24f63417bbfa3a6cdfbc666034943cccd53c))
+* **deps:** update node.js to v22 ([#71](https://github.com/wpnuxt/wpnuxt/issues/71)) ([6d4c8d1](https://github.com/wpnuxt/wpnuxt/commit/6d4c8d1b0960a6adfbce81c29fe87f7f09e35531))
+* **release:** release v0.3.9 ([ff11230](https://github.com/wpnuxt/wpnuxt/commit/ff1123032292b86df25206257078c4ecbd96f364))
+* **release:** v0.3.8 ([d508794](https://github.com/wpnuxt/wpnuxt/commit/d508794183e5e9a0ebc15de8926f2b5895d79eab))
+## [0.3.8](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-04-25)
+
+### Maintenance
+
+* **release:** v0.3.7 ([695df6a](https://github.com/wpnuxt/wpnuxt/commit/695df6a4c7dc8c6065ac0f1e4622c3cb5ef5fc22))
+## [0.3.7](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-04-24)
+
+### Maintenance
+
+* **release:** v0.3.6 ([bada49d](https://github.com/wpnuxt/wpnuxt/commit/bada49d981a826d7756938bcb49cb1537f60f693))
+## [0.3.6](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-04-24)
+
+### Maintenance
+
+* **deps:** update all non-major dependencies ([#66](https://github.com/wpnuxt/wpnuxt/issues/66)) ([f1a1a39](https://github.com/wpnuxt/wpnuxt/commit/f1a1a39995ec192e4829babcb835158085703e60))
+* **release:** v0.3.5 ([8ff0720](https://github.com/wpnuxt/wpnuxt/commit/8ff07203124bd0ffdd4972ca538b416c77a7d1d6))
+## [0.3.5](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-04-24)
+
+### Maintenance
+
+* **release:** v0.3.4 ([d9768ba](https://github.com/wpnuxt/wpnuxt/commit/d9768baee5ee692b7b3bd5d1aaab9d119ee82821))
+## [0.3.4](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-04-18)
+## [0.3.2](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-04-16)
+
+### Maintenance
+
+* **deps:** update devdependency @nuxt/test-utils to ^3.12.1 ([#60](https://github.com/wpnuxt/wpnuxt/issues/60)) ([4d0f25e](https://github.com/wpnuxt/wpnuxt/commit/4d0f25ea0794f12dd80c752b82e64b1ce95f4745))
+* **release:** v0.3.1 ([b3da3e0](https://github.com/wpnuxt/wpnuxt/commit/b3da3e037265aaca85f022226c264c37f8a4acea))
+* **release:** v0.3.2 ([2eb8be8](https://github.com/wpnuxt/wpnuxt/commit/2eb8be8740c20979d228851d4cec25df011b1c94))
+## [0.3.1](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-04-16)
+
+### Maintenance
+
+* **release:** v0.2.21 ([6d1460c](https://github.com/wpnuxt/wpnuxt/commit/6d1460c7e7de0f054705d014840afd51154bf6bc))
+## [0.2.21](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-04-15)
+
+### Maintenance
+
+* **release:** v0.2.20 ([7cad8c2](https://github.com/wpnuxt/wpnuxt/commit/7cad8c2b10ca6f31c29e02e681fc300e07b86994))
+## [0.2.20](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-04-10)
+
+### Maintenance
+
+* **release:** v0.2.19 ([b2a297e](https://github.com/wpnuxt/wpnuxt/commit/b2a297eba27727ea2af186cf8f6b72526322a102))
+## [0.2.19](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-04-10)
+
+### Maintenance
+
+* **release:** v0.2.18 ([23e3159](https://github.com/wpnuxt/wpnuxt/commit/23e3159d774885c4b5e8c49895268f452a126584))
+## [0.2.18](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-04-10)
+
+### Maintenance
+
+* **release:** v0.2.17 ([3fec241](https://github.com/wpnuxt/wpnuxt/commit/3fec241c1a0f319187816d7a66cedbd9114ab00c))
+## [0.2.17](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-04-10)
+
+### Maintenance
+
+* **deps:** update all non-major dependencies ([#46](https://github.com/wpnuxt/wpnuxt/issues/46)) ([69c45de](https://github.com/wpnuxt/wpnuxt/commit/69c45de0821b14a9f8afd10883ed3635f335c10d))
+* **deps:** update all non-major dependencies ([#54](https://github.com/wpnuxt/wpnuxt/issues/54)) ([73ba61c](https://github.com/wpnuxt/wpnuxt/commit/73ba61c03efe9424970f7e8c21ae1a8757160843))
+* **deps:** update dependency nuxt-og-image to v3 ([1942104](https://github.com/wpnuxt/wpnuxt/commit/19421049bf18a04f6eaa178f3b0bf0507c38fa06))
+* **deps:** update nuxt framework to ^3.11.2 ([#52](https://github.com/wpnuxt/wpnuxt/issues/52)) ([bd6a160](https://github.com/wpnuxt/wpnuxt/commit/bd6a16009f831c9ca18e0030e276fb56db825ee7))
+* **release:** v0.2.16 ([d1c0b04](https://github.com/wpnuxt/wpnuxt/commit/d1c0b04269482be52aaeefa8d5edb70dc53368f4))
+## [0.2.16](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-04-03)
+
+### Maintenance
+
+* **release:** v0.2.15 ([d929485](https://github.com/wpnuxt/wpnuxt/commit/d92948530ec5d0122860ea1f60b24cedd505dcb0))
+## [0.2.15](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-04-02)
+
+### Maintenance
+
+* **deps:** update all non-major dependencies ([#44](https://github.com/wpnuxt/wpnuxt/issues/44)) ([a0ad5c8](https://github.com/wpnuxt/wpnuxt/commit/a0ad5c828e814c4cd9a996dee20ddb14b5db7b6c))
+* **release:** v0.2.14 ([b65afb5](https://github.com/wpnuxt/wpnuxt/commit/b65afb546b6db791d4924599b3e3cb188c6b46c4))
+## [0.2.14](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-03-27)
+
+### Maintenance
+
+* **deps:** update node.js to v21.7 ([#36](https://github.com/wpnuxt/wpnuxt/issues/36)) ([9b6750a](https://github.com/wpnuxt/wpnuxt/commit/9b6750abc87b2ef416225cc2dc2b0265ac87981d))
+* **release:** v0.2.12 ([d9cd094](https://github.com/wpnuxt/wpnuxt/commit/d9cd094e7b57be6785bd552ae626a50b4838a664))
+* **release:** v0.2.13 ([765ab34](https://github.com/wpnuxt/wpnuxt/commit/765ab34416d40555190219d17238be066f6313b4))
+## [0.2.12](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-03-19)
+
+### Maintenance
+
+* **release:** v0.2.11 ([791ba62](https://github.com/wpnuxt/wpnuxt/commit/791ba62308960ae936436748dd25f8fd38120e98))
+## [0.2.11](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-03-19)
+
+### Maintenance
+
+* package updates nuxt 3.11.1 ([52588c2](https://github.com/wpnuxt/wpnuxt/commit/52588c2962d743eb88ebe4933cd606e8dcec15b7))
+* package updates regenerated lock file ([9434549](https://github.com/wpnuxt/wpnuxt/commit/943454969db850f5e61c3710543c90deac40a37a))
+* **release:** v0.2.10 ([042be40](https://github.com/wpnuxt/wpnuxt/commit/042be4028cbf66a5cfbc1cdce565a5b7c5d8758b))
+## [0.2.10](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-03-18)
+
+### Maintenance
+
+* package updates ([003a7b4](https://github.com/wpnuxt/wpnuxt/commit/003a7b4fbd2c673ca33d977d6cb73e3235f1d29b))
+* package updates nuxt 3.11.0 ([4c88971](https://github.com/wpnuxt/wpnuxt/commit/4c88971fb5074927dd688a4177bf0ed5511b9603))
+* **release:** v0.2.9 ([21a80bb](https://github.com/wpnuxt/wpnuxt/commit/21a80bbc0ad971b97cf6367fc2e87595dc17354c))
+## [0.2.9](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-03-12)
+
+### Maintenance
+
+* package updates ([bc729dd](https://github.com/wpnuxt/wpnuxt/commit/bc729ddb2eb180f950392b227733b2c5804e7d49))
+* **release:** v0.2.8 ([8b17da0](https://github.com/wpnuxt/wpnuxt/commit/8b17da02e696fb966357244e627ffdf6e934eb11))
+## [0.2.8](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-03-04)
+
+### Maintenance
+
+* **release:** v0.2.6 ([2e3314d](https://github.com/wpnuxt/wpnuxt/commit/2e3314d13c914938adc3ed32a5e84ef9437f2079))
+* **release:** v0.2.7 ([f6e4f5c](https://github.com/wpnuxt/wpnuxt/commit/f6e4f5cf7c46057192d409b378f63ce10ffa2011))
+## [0.2.7](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-03-04)
+## [0.2.6](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-03-03)
+
+### Maintenance
+
+* **deps:** update devdependency vue-tsc to ^2.0.3 ([#25](https://github.com/wpnuxt/wpnuxt/issues/25)) ([53ce5e3](https://github.com/wpnuxt/wpnuxt/commit/53ce5e34c9c85b7c3387dbd65d32a53db8e0c222))
+* **release:** v0.2.1 ([ac88b6c](https://github.com/wpnuxt/wpnuxt/commit/ac88b6cc8a18165b206cc06547680e366a726154))
+## [0.2.1](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-03-02)
+
+### Maintenance
+
+* **release:** v0.2.0 ([4d13885](https://github.com/wpnuxt/wpnuxt/commit/4d1388595dfb8510f56563c6c5fd17546e64e8ff))
+## [0.1.32](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-03-02)
+
+### Maintenance
+
+* **release:** v0.1.32 ([7db5899](https://github.com/wpnuxt/wpnuxt/commit/7db5899ddbd5aabad8bd6433a2c271f1f118c7a4))
+## [0.1.31](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-03-02)
+
+### Maintenance
+
+* **deps:** update devdependency playwright-core to ^1.42.1 ([677bc4f](https://github.com/wpnuxt/wpnuxt/commit/677bc4fa8324a4796d53c1c6a43c85325cd4aef5))
+* **deps:** update devdependency vue-tsc to v2 ([967bd91](https://github.com/wpnuxt/wpnuxt/commit/967bd91bf1d53b899dbdbb8446c291546a3ba0b5))
+* **deps:** update slack orb to v4.13.1 ([214ba46](https://github.com/wpnuxt/wpnuxt/commit/214ba46ec4ba8aa12295730da7ca682f1ac38c67))
+* **release:** v0.1.29 ([3e596d1](https://github.com/wpnuxt/wpnuxt/commit/3e596d13dde95bd70440a3a11174e734a9313c39))
+* **release:** v0.1.30 ([3ed91e7](https://github.com/wpnuxt/wpnuxt/commit/3ed91e7f8208530e50a25af8b77c9f40016bd45d))
+* **release:** v0.1.31 ([6057202](https://github.com/wpnuxt/wpnuxt/commit/60572026dd8562ebca2fb35614cbdefe90dcf6e8))
+## [0.1.29](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-03-01)
+
+### Maintenance
+
+* package updates ([a5cfe41](https://github.com/wpnuxt/wpnuxt/commit/a5cfe41b95830a9d9a04a9a9140f5079f194533d))
+* package updates ([89068ac](https://github.com/wpnuxt/wpnuxt/commit/89068ac1926dd569d69556e05b3eea6100a2d68c))
+* package updates ([5460777](https://github.com/wpnuxt/wpnuxt/commit/5460777e4ab4a3120d00db7a7bd1d7e906ef6c40))
+* package updates ([4ceb2d7](https://github.com/wpnuxt/wpnuxt/commit/4ceb2d7c5f76d6e939ef5f94aa5a8c40b210ed61))
+* **release:** v0.1.28 ([e7352c7](https://github.com/wpnuxt/wpnuxt/commit/e7352c79d9efb05be84631fac3257299d7d2521f))
+## [0.1.28](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-02-02)
+
+### Maintenance
+
+* package updates ([a9d94c8](https://github.com/wpnuxt/wpnuxt/commit/a9d94c8e7b42253fa1c90bbdf9933a5ec9492418))
+* package updates ([f74626f](https://github.com/wpnuxt/wpnuxt/commit/f74626fd43e489147fcfd85f20f8b9074ef3c824))
+* **release:** v0.1.27 ([bae9e12](https://github.com/wpnuxt/wpnuxt/commit/bae9e12c79b73c6232cdaeb54f2926e5cbd0dedf))
+## [0.1.27](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-20)
+
+### Maintenance
+
+* **release:** v0.1.26 ([f955f6e](https://github.com/wpnuxt/wpnuxt/commit/f955f6ec9952ab87cc1c69ea0fdd0cbf04df0bd9))
+## [0.1.26](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-19)
+
+### Maintenance
+
+* **release:** v0.1.25 ([e3adec8](https://github.com/wpnuxt/wpnuxt/commit/e3adec80db772c17db74465f4ce33ad5402e2390))
+## [0.1.25](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-19)
+
+### Maintenance
+
+* package updates ([b24b555](https://github.com/wpnuxt/wpnuxt/commit/b24b55542bc98a632ba4ae7b64c927eab839596c))
+* package updates ([c6bdcd9](https://github.com/wpnuxt/wpnuxt/commit/c6bdcd947f1cd471e5b4345b25a266e66998d812))
+* **release:** v0.1.24 ([41922d6](https://github.com/wpnuxt/wpnuxt/commit/41922d6d459ab15a8c602d8a075fc35f719e1551))
+## [0.1.24](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-18)
+
+### Maintenance
+
+* package updates ([745ecac](https://github.com/wpnuxt/wpnuxt/commit/745ecac86f7de3cd6b23bbc0db132a8d20764bb2))
+* **release:** v0.1.23 ([0b23343](https://github.com/wpnuxt/wpnuxt/commit/0b2334313ddee77bc4608e2ddb20d6ab2d6d15f6))
+## [0.1.23](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-18)
+
+### Maintenance
+
+* **deps:** update node.js to v21.6 ([d36c29d](https://github.com/wpnuxt/wpnuxt/commit/d36c29dd12576315f62e4027bde199d3869ac668))
+* **release:** v0.1.22 ([1bf368a](https://github.com/wpnuxt/wpnuxt/commit/1bf368a51d14b99c4baa43d2943e64e5783c9031))
+## [0.1.22](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-16)
+
+### Maintenance
+
+* **release:** v0.1.21 ([5443ff1](https://github.com/wpnuxt/wpnuxt/commit/5443ff11fb2867cb249c91dce5ce823840509a27))
+## [0.1.21](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-16)
+
+### Maintenance
+
+* **release:** v0.1.20 ([dba766e](https://github.com/wpnuxt/wpnuxt/commit/dba766e142c65e5eddb6d1ad22d7a501e5beffdc))
+## [0.1.20](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-15)
+
+### Maintenance
+
+* **release:** v0.1.19 ([d72e353](https://github.com/wpnuxt/wpnuxt/commit/d72e35366987c22df6fe4e69049cde96e217db16))
+## [0.1.19](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-15)
+
+### Maintenance
+
+* **release:** v0.1.18 ([1ca70c8](https://github.com/wpnuxt/wpnuxt/commit/1ca70c8261c3d31995f494603818e1c6e6ea0d4d))
+## [0.1.18](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-14)
+
+### Maintenance
+
+* **release:** v0.1.17 ([6f78c7b](https://github.com/wpnuxt/wpnuxt/commit/6f78c7ba1a936ef7df1515da737293c444a9fa5f))
+## [0.1.17](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-13)
+
+### Maintenance
+
+* **release:** v0.1.16 ([cba987a](https://github.com/wpnuxt/wpnuxt/commit/cba987afb45a17a25b98159d151fe6beeb20017b))
+## [0.1.16](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-13)
+
+### Maintenance
+
+* **release:** v0.1.15 ([141dbef](https://github.com/wpnuxt/wpnuxt/commit/141dbef4d1308b5f46d9ec9e77ac7be02d926a95))
+## [0.1.15](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-13)
+
+### Maintenance
+
+* package updates ([e5b07dc](https://github.com/wpnuxt/wpnuxt/commit/e5b07dc3f9d6b4970d38ae37354b256f37e2a48a))
+* **release:** v0.1.14 ([0982e5b](https://github.com/wpnuxt/wpnuxt/commit/0982e5b23437bfc8b4a180a7d1cc0bc58ecd3e2f))
+## [0.1.14](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-13)
+
+### Maintenance
+
+* package updates ([3791437](https://github.com/wpnuxt/wpnuxt/commit/3791437dabe6ecf466a546026ee3d6493553fe86))
+* **release:** v0.1.13 ([7c53dea](https://github.com/wpnuxt/wpnuxt/commit/7c53dea5b6f186debc9070ae1276095570d6e172))
+## [0.1.13](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-12)
+
+### Maintenance
+
+* package updates ([5ce5e11](https://github.com/wpnuxt/wpnuxt/commit/5ce5e116d0dfdd3348d33677bea1f07d5dfe5ccf))
+## [0.1.12](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-12)
+
+### Maintenance
+
+* **release:** v0.1.11 ([be0b623](https://github.com/wpnuxt/wpnuxt/commit/be0b623caa5985782f79925b798b062a0e1c4a08))
+* **release:** v0.1.12 ([c458527](https://github.com/wpnuxt/wpnuxt/commit/c45852760be546cd971cdecb8e642466b6b2eb30))
+## [0.1.11](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-11)
+
+### Maintenance
+
+* **release:** v0.1.10 ([8f72b80](https://github.com/wpnuxt/wpnuxt/commit/8f72b803f26e3e309dd419e6ecd02f5637a2c759))
+## [0.1.10](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-11)
+
+### Maintenance
+
+* **release:** v0.1.9 ([4a49d83](https://github.com/wpnuxt/wpnuxt/commit/4a49d83b9fb43d437fc482e8af70e85eaf88ccd6))
+## [0.1.9](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-08)
+
+### Maintenance
+
+* package updates ([97e7546](https://github.com/wpnuxt/wpnuxt/commit/97e7546a3a4800819c1dd22d9aab75c6c068c4cc))
+* **release:** v0.1.8 ([8730f92](https://github.com/wpnuxt/wpnuxt/commit/8730f928a43972ef6470514283c51170d0840eaa))
+## [0.1.8](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-06)
+
+### Maintenance
+
+* **deps:** update dependency nuxt-og-image to v3.0.0-rc.21 ([25673dd](https://github.com/wpnuxt/wpnuxt/commit/25673dd1f7466f9f43316ae15ddd667cbcf79368))
+* **deps:** update node.js to v21.5 ([c51201a](https://github.com/wpnuxt/wpnuxt/commit/c51201a5da210b98b474376fef40066fb42d5f0a))
+* package updates ([f526162](https://github.com/wpnuxt/wpnuxt/commit/f526162bcb877e9466686da62b17412d786ffcc7))
+* package updates ([99f2d86](https://github.com/wpnuxt/wpnuxt/commit/99f2d86076bd25b1485b95649c4c7df57b9c7c4a))
+* package updates ([4ba2eba](https://github.com/wpnuxt/wpnuxt/commit/4ba2eba68844a431cea868b73078bd8823d09428))
+* package updates ([5559098](https://github.com/wpnuxt/wpnuxt/commit/55590982f851de01ae874d5abeb0c9ee0919b800))
+* package updates ([d11a96a](https://github.com/wpnuxt/wpnuxt/commit/d11a96afaa651b782c4c9b25254194edd6c034c1))
+* **release:** v0.1.7 ([69ca6ba](https://github.com/wpnuxt/wpnuxt/commit/69ca6ba44d76af56240a36737cd7ae90b48ffb28))
+## [0.1.7](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2023-12-19)
+
+### Maintenance
+
+* package updates ([2be87fa](https://github.com/wpnuxt/wpnuxt/commit/2be87fa0b56a858fe5462889a60fe82d01be590a))
+* package updates ([029df6d](https://github.com/wpnuxt/wpnuxt/commit/029df6dece52ba699dfae31b61c61e01421a46b7))
+* package updates ([7ea8957](https://github.com/wpnuxt/wpnuxt/commit/7ea8957697257c4c4fcb54b65ec9d21d6111e773))
+* package updates ([4aa08f8](https://github.com/wpnuxt/wpnuxt/commit/4aa08f8b914f2ab31859fd0545e45ded464df185))
+* packages updates ([ef2e056](https://github.com/wpnuxt/wpnuxt/commit/ef2e056f0efefb77d0207866e8c4bb8dfe67e61d))
+* **release:** v0.1.6 ([ddceff1](https://github.com/wpnuxt/wpnuxt/commit/ddceff14f634d7350e7bae40bdd206405dcaa4df))
+## [0.1.6](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2023-11-26)
+
+### Maintenance
+
+* package updates ([c7bb5f4](https://github.com/wpnuxt/wpnuxt/commit/c7bb5f4c7f21f05f15bb99a8105666ce0969fbf8))
+* **release:** v0.1.5 ([12028e5](https://github.com/wpnuxt/wpnuxt/commit/12028e54e5849b4027a0848e4a1e8868ac902913))
+## [0.1.5](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2023-11-09)
+
+### Maintenance
+
+* **release:** v0.1.4 ([225ee38](https://github.com/wpnuxt/wpnuxt/commit/225ee38dcaef3e5ae1bd2cb947b9d33834842ead))
+## [0.1.4](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2023-11-09)
+
+### Maintenance
+
+* **release:** v0.1.3 ([f37fc9c](https://github.com/wpnuxt/wpnuxt/commit/f37fc9c7fa36c8e37cac07d5ec8df3399d25912d))
+## [0.1.3](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2023-11-09)
+
+### Maintenance
+
+* **release:** v0.1.2 ([f186b4f](https://github.com/wpnuxt/wpnuxt/commit/f186b4fd5c8456620c7019d5d64d97483b0db2cd))
+## [0.1.2](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2023-11-09)
+
+### Maintenance
+
+* **release:** v0.0.8 ([f878c3b](https://github.com/wpnuxt/wpnuxt/commit/f878c3b3648134a7efa69710556baa88bbe6926b))
+* **release:** v0.0.9 ([ac53a81](https://github.com/wpnuxt/wpnuxt/commit/ac53a81d4cda43f1470d58ed6c3871f650f6432b))
+* **release:** v0.0.9 ([7c908d7](https://github.com/wpnuxt/wpnuxt/commit/7c908d73e1554cd3185c842e429ed1c0c5d4c026))
+* **release:** v0.1.1 ([165815a](https://github.com/wpnuxt/wpnuxt/commit/165815af88efd918e7c7c140477df7fffcef995a))
+## [0.0.8](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2023-11-04)
+
+### Maintenance
+
+* **release:** v0.0.7 ([6503da0](https://github.com/wpnuxt/wpnuxt/commit/6503da01a9fc1eb0a70b7c95f7491061e4d7b782))
+## [0.0.7](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2023-11-02)
+
+### Maintenance
+
+* **release:** v0.0.6 ([19285a5](https://github.com/wpnuxt/wpnuxt/commit/19285a5ac75d0980ab9dae6f83e7e31dbbe4f7c2))
+## [0.0.6](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2023-11-02)
+
+### Maintenance
+
+* **release:** v0.0.5 ([233d202](https://github.com/wpnuxt/wpnuxt/commit/233d202f0adcb16eb1c68e3c0ec8e7de96141a63))
+## [0.0.5](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2023-11-02)
+
+### Maintenance
+
+* package updates ([0d64539](https://github.com/wpnuxt/wpnuxt/commit/0d64539f7cc0f5731bfeeb2314f5abd086f44d09))
+* **release:** v0.0.4 ([e88b4af](https://github.com/wpnuxt/wpnuxt/commit/e88b4af472e167242b6ca261b1a119252eac95fb))
+## [0.0.4](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2023-11-02)
+
+### Maintenance
+
+* package updates ([4fb51fe](https://github.com/wpnuxt/wpnuxt/commit/4fb51fe9ddd07792b1687c5f8cfd8ba6d094c4c6))
+* package updates ([96c2035](https://github.com/wpnuxt/wpnuxt/commit/96c2035c78fc561ddf322b06d7548bb95ba42563))
+* package updates ([bf23f9f](https://github.com/wpnuxt/wpnuxt/commit/bf23f9fb2b2e29091d2ddede7e9d2df225891697))
+* package updates ([46c8ff4](https://github.com/wpnuxt/wpnuxt/commit/46c8ff424b2a30dcd66edaed952f91c2577e67ea))
+* **release:** v0.0.2 ([da52837](https://github.com/wpnuxt/wpnuxt/commit/da528375e3ee859a729fec598282740d409564a3))
+* **release:** v0.0.3 ([0e3af66](https://github.com/wpnuxt/wpnuxt/commit/0e3af6676b0f094e8f3945fd7a7bd166b91a13a0))
+
 ## [2.0.0-alpha.10](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.9...v2.0.0-alpha.10) (2026-02-05)
 
 ### Features
