@@ -1,0 +1,4 @@
+# WPNuxt generated files
+.queries/
+.nuxt/
+.output/
