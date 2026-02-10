@@ -53,7 +53,7 @@
   },
   "dependencies": {
     "@nuxt/kit": "4.3.1",
-    "@radya/nuxt-dompurify": "^1.0.5",
+    "dompurify": "^3.1.7",
     "consola": "^3.4.0",
     "defu": "^6.1.4",
     "graphql": "^16.12.0",

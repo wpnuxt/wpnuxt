@@ -78,6 +78,7 @@ export default defineNuxtModule<WPNuxtConfig>({
     nuxt.options.runtimeConfig.public.buildHash = randHashGenerator()
     addPlugin(resolver.resolve('./runtime/plugins/graphqlConfig'))
     addPlugin(resolver.resolve('./runtime/plugins/graphqlErrors'))
+    addPlugin(resolver.resolve('./runtime/plugins/sanitizeHtml'))
 
     // Configure trailing slash handling to match WordPress URI format
     // This ensures both server-side and client-side URLs use trailing slashes
@@ -612,5 +613,4 @@ async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPN
       improvedQueryParamEncoding: true
     }
   })
-  await registerModule('@radya/nuxt-dompurify', 'dompurify', {})
 }

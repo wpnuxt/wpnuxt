@@ -63,9 +63,6 @@ export default defineNuxtModule<WPNuxtBlocksConfig>({
       domains: options.imageDomains
     })
 
-    // Install @radya/nuxt-dompurify for v-sanitize directive (used by block components)
-    await installModule('@radya/nuxt-dompurify')
-
     // Check for WPGraphQL Content Blocks plugin
     if (!options.skipPluginCheck) {
       const wpNuxtConfig = nuxt.options.runtimeConfig?.public?.wpNuxt as { wordpressUrl?: string, graphqlEndpoint?: string } | undefined
