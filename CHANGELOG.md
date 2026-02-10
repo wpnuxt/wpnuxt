@@ -2,6 +2,20 @@
 
 ## [2.0.0-alpha.15](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.14...v2.0.0-alpha.15) (2026-02-10)
 
+### Bug Fixes
+
+* **core:** replace @radya/nuxt-dompurify with built-in sanitize plugin ([#212](https://github.com/wpnuxt/wpnuxt/issues/212)) ([f78b5ee](https://github.com/wpnuxt/wpnuxt/commit/f78b5ee7f96c3e2256d495aad307891319f02b23)), closes [#211](https://github.com/wpnuxt/wpnuxt/issues/211)
+  - `@radya/nuxt-dompurify` depends on jsdom (~5.7 MB), which breaks SSR on serverless platforms (Vercel) when Rollup inlines it due to CJS/ESM interop failures.
+  - Replaced with a built-in `v-sanitize-html` directive plugin that passes HTML through on the server (trusted WordPress source) and lazy-loads DOMPurify with the native browser `window` on the client.
+  - Same directive API — no breaking change for consumers.
+  - Removed `@radya/nuxt-dompurify` dependency from both `@wpnuxt/core` and `@wpnuxt/blocks`.
+
+### Tests
+
+* **core:** add Vercel SSR e2e tests for jsdom bundling issue ([#212](https://github.com/wpnuxt/wpnuxt/issues/212)) ([f78b5ee](https://github.com/wpnuxt/wpnuxt/commit/f78b5ee7f96c3e2256d495aad307891319f02b23))
+  - Add test fixtures and e2e tests that build with the Vercel preset and verify the serverless function can import and serve SSR responses.
+  - Covers both default externalization and forced-inline scenarios.
+
 ## [2.0.0-alpha.14](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.13...v2.0.0-alpha.14) (2026-02-09)
 
 ### Features
