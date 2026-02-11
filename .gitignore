@@ -55,8 +55,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# WPNuxt
 .queries
-IMPROVEMENT_PLAN.md
-**/rebuildSSG.sh
-playgrounds/ssg/.vercel/
-packages/core/test/fixtures/vercel/.vercel/
+socials
+**/.vercel/
