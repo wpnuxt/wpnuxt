@@ -138,18 +138,22 @@ export default defineNuxtModule<WPNuxtConfig>({
     })
 
     // Configure Nitro route rules for caching GraphQL requests if enabled
+    // Only cache query routes (GET), not mutation routes (POST).
+    // Nitro's cachedEventHandler creates a request proxy with empty headers,
+    // which causes h3's readRawBody to skip body reading (missing content-length),
+    // breaking mutations that rely on readBody() for variables.
     if (wpNuxtConfig.cache?.enabled !== false) {
       const maxAge = wpNuxtConfig.cache?.maxAge ?? 300
       const nitroOptions = nuxt.options as unknown as NuxtOptionsWithNitro
       nitroOptions.nitro = nitroOptions.nitro || {}
       nitroOptions.nitro.routeRules = nitroOptions.nitro.routeRules || {}
-      nitroOptions.nitro.routeRules['/api/wpnuxt/**'] = {
+      nitroOptions.nitro.routeRules['/api/wpnuxt/query/**'] = {
         cache: {
           maxAge,
           swr: wpNuxtConfig.cache?.swr !== false
         }
       }
-      logger.debug(`Server-side caching enabled for GraphQL requests (maxAge: ${maxAge}s, SWR: ${wpNuxtConfig.cache?.swr !== false})`)
+      logger.debug(`Server-side caching enabled for GraphQL queries (maxAge: ${maxAge}s, SWR: ${wpNuxtConfig.cache?.swr !== false})`)
     }
 
     // Proxy /wp-content/uploads/ to WordPress for plain <img> tags and v-html content
