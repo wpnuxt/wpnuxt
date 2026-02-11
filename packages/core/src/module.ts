@@ -220,6 +220,13 @@ export default defineNuxtModule<WPNuxtConfig>({
     nuxt.options.alias['#wpnuxt/*'] = resolver.resolve(nuxt.options.buildDir, 'wpnuxt', '*')
     nuxt.options.alias['#wpnuxt/types'] = resolver.resolve('./types')
 
+    // Alias @wpnuxt/core subpath exports to source files during development.
+    // Without this, imports like '@wpnuxt/core/server-options' resolve to
+    // dist/ jiti stubs (created by dev:prepare), which pull in node:module
+    // and break Vite's client-side Rollup build.
+    nuxt.options.alias['@wpnuxt/core/server-options'] = resolver.resolve('./server-options')
+    nuxt.options.alias['@wpnuxt/core/client-options'] = resolver.resolve('./client-options')
+
     // Configure Nitro aliases and externals
     const nitroOpts = nuxt.options as unknown as NuxtOptionsWithNitro
     nitroOpts.nitro = nitroOpts.nitro || {}
