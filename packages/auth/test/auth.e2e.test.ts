@@ -2,23 +2,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, it, expect } from 'vitest'
 import { setup, $fetch } from '@nuxt/test-utils/e2e'
 
-/**
- * Auth E2E Tests
- *
- * NOTE: These tests are currently skipped due to a bundling issue with nuxt-graphql-middleware.
- * The auth module triggers a babel transformation in graphqlMiddleware that fails in the test
- * environment with "Cannot find module '../dist/babel.cjs'".
- *
- * This is likely due to how nitro bundles the graphqlMiddleware code for SSR.
- * The unit tests in schemaDetection.test.ts cover the core auth functionality.
- *
- * TODO: Investigate the bundling issue and re-enable E2E tests.
- * Possible solutions:
- * - Configure nitro externals to properly handle babel dependencies
- * - Use a different test setup that doesn't trigger the transformation
- * - Update nuxt-graphql-middleware configuration
- */
-describe.skip('auth e2e', async () => {
+describe('auth e2e', async () => {
   await setup({
     rootDir: fileURLToPath(new URL('./fixtures/auth', import.meta.url))
   })
