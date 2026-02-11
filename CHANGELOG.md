@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.0-beta.2](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2026-02-11)
+
+### Bug Fixes
+
+* **core:** defer @nuxt/image config to modules:done hook ([#217](https://github.com/wpnuxt/wpnuxt/issues/217)) ([cd7384e](https://github.com/wpnuxt/wpnuxt/commit/cd7384e2d4e77cd7ecf20abf02fee8a5cd2c7647))
+* **core:** scope cache route rule to queries only ([8ed9995](https://github.com/wpnuxt/wpnuxt/commit/8ed99956bfab4b070d5d4181b03b1a15c0285127)), closes [#218](https://github.com/wpnuxt/wpnuxt/issues/218)
+
+### Maintenance
+
+* update dependencies and package configurations ([4e92781](https://github.com/wpnuxt/wpnuxt/commit/4e9278163ff53a6c68bc602170f49172ec577e61))
+* update README and documentation to reflect WPNuxt v2 transition to beta ([1b077d1](https://github.com/wpnuxt/wpnuxt/commit/1b077d198b354e72835583c80495a7c5c3855ecd))
+
 ## [2.0.0-beta.1](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.16...v2.0.0-beta.1) (2026-02-11)
 
 ## [2.0.0-alpha.16](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.15...v2.0.0-alpha.16) (2026-02-11)
