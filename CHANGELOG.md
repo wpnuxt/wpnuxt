@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.0.0-alpha.16](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.15...v2.0.0-alpha.16) (2026-02-11)
+
+### Features
+
+* **core:** add development aliases for @wpnuxt/core exports ([9ac0901](https://github.com/wpnuxt/wpnuxt/commit/9ac0901b2a55fbb86b05bce4baf790fd276b8d4b))
+* **docs:** enhance getting started and CLI documentation ([222000f](https://github.com/wpnuxt/wpnuxt/commit/222000f65ab802e0f827b00944cfdaad463a1a70))
+* **tests:** enable auth E2E tests and add configuration files ([85037fd](https://github.com/wpnuxt/wpnuxt/commit/85037fdf5a8556bf806b563ddcf9db227c2a50c6))
+
+### Bug Fixes
+
+* **docs:** correct CLI reference to match actual command output ([24a9e37](https://github.com/wpnuxt/wpnuxt/commit/24a9e37225434ded47574a81cd61a8cdc25314b3))
+
+### Maintenance
+
+* enhance getting started documentation ([cad290a](https://github.com/wpnuxt/wpnuxt/commit/cad290a2ce39c5d4f31d34e3d6ac98f753450424))
+* fix changelog ([f0ddadf](https://github.com/wpnuxt/wpnuxt/commit/f0ddadfb886d06e1be80a44add026a3f41cc80c7))
+
 ## [2.0.0-alpha.15](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.14...v2.0.0-alpha.15) (2026-02-10)
 
 ### Bug Fixes
