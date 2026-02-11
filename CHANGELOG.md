@@ -1,5 +1,7 @@
 # Changelog
 
+## [2.0.0-beta.1](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.16...v2.0.0-beta.1) (2026-02-11)
+
 ## [2.0.0-alpha.16](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-alpha.15...v2.0.0-alpha.16) (2026-02-11)
 
 ### Features
