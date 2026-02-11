@@ -20,7 +20,7 @@
     "nuxt-easy-lightbox": "^1.1.0"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.2.89",
+    "@iconify-json/lucide": "^1.2.90",
     "vue-tsc": "^3.2.3"
   }
 }

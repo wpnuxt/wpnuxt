@@ -21,7 +21,7 @@
     "release": "release-it"
   },
   "devDependencies": {
-    "@nuxt/eslint-config": "^1.14.0",
+    "@nuxt/eslint-config": "^1.15.1",
     "@release-it/bumper": "^7.0.5",
     "@release-it/conventional-changelog": "^10.0.5",
     "eslint": "^10.0.0",
