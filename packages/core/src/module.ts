@@ -1,7 +1,6 @@
-import { consola } from 'consola'
 import { defu } from 'defu'
 import { existsSync } from 'node:fs'
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { version } from '../package.json'
 import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports } from '@nuxt/kit'
@@ -12,7 +11,7 @@ import type { Import } from 'unimport'
 import type { WPNuxtConfig } from './types/config'
 import type { WPNuxtContext } from './types/queries'
 import { generateWPNuxtComposables } from './generate'
-import { getLogger, initLogger, mergeQueries, randHashGenerator, createModuleError, validateWordPressUrl, atomicWriteFile } from './utils/index'
+import { getLogger, initLogger, mergeQueries, randHashGenerator, createModuleError } from './utils/index'
 import { validateWordPressEndpoint } from './utils/endpointValidation'
 import { runInstall } from './install'
 
@@ -294,36 +293,7 @@ async function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): Promise<W
       return null
     }
 
-    // In interactive dev mode, prompt the user for the WordPress URL
-    if (nuxt.options.dev && process.stdout.isTTY) {
-      const wordpressUrl = await consola.prompt(
-        'Enter your WordPress site URL (must have WPGraphQL installed):',
-        { type: 'text', placeholder: 'https://your-wordpress-site.com' }
-      )
-
-      if (wordpressUrl && typeof wordpressUrl === 'string' && wordpressUrl.trim()) {
-        const validation = validateWordPressUrl(wordpressUrl)
-        if (validation.valid && validation.normalizedUrl) {
-          config.wordpressUrl = validation.normalizedUrl
-          // Save to .env so user doesn't get prompted again
-          const envPath = join(nuxt.options.rootDir, '.env')
-          const envLine = `WPNUXT_WORDPRESS_URL=${validation.normalizedUrl}\n`
-          if (existsSync(envPath)) {
-            const existing = await readFile(envPath, 'utf-8')
-            await atomicWriteFile(envPath, existing.trimEnd() + '\n' + envLine)
-          } else {
-            await atomicWriteFile(envPath, envLine)
-          }
-          consola.success(`WordPress URL saved to .env: ${validation.normalizedUrl}`)
-        } else {
-          throw createModuleError('core', `Invalid WordPress URL: ${validation.error}`)
-        }
-      } else {
-        throw createModuleError('core', 'WordPress URL is required. Set it in nuxt.config.ts or via WPNUXT_WORDPRESS_URL environment variable.')
-      }
-    } else {
-      throw createModuleError('core', 'WordPress URL is required. Set it in nuxt.config.ts or via WPNUXT_WORDPRESS_URL environment variable.')
-    }
+    throw createModuleError('core', 'WordPress URL is required. Set it in nuxt.config.ts or via WPNUXT_WORDPRESS_URL environment variable.')
   }
   if (config.wordpressUrl.endsWith('/')) {
     throw createModuleError('core', `WordPress URL should not have a trailing slash: ${config.wordpressUrl}`)

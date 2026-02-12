@@ -15,7 +15,7 @@ import { consola } from 'consola'
 import type { ConsolaInstance } from 'consola'
 import { useLogger } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
-import { validateWordPressUrl, atomicWriteFile } from './utils/index'
+import { atomicWriteFile } from './utils/index'
 
 /**
  * Result from a setup function in the onInstall hook.
@@ -122,52 +122,37 @@ WPNUXT_WORDPRESS_URL=https://your-wordpress-site.com
 `
 
 /**
- * Checks if the current environment is interactive (supports prompts).
- * Returns false in CI, test, or other non-interactive environments.
- */
-function isInteractiveEnvironment(): boolean {
-  return !(
-    process.env.CI === 'true'
-    || process.env.CI === '1'
-    || process.env.VITEST === 'true'
-    || process.env.TEST === 'true'
-    || process.env.NODE_ENV === 'test'
-  )
-}
-
-/**
  * Checks if WordPress URL is already configured in any location.
  *
  * @param nuxt - Nuxt instance
  * @param envPath - Path to .env file
- * @returns Object with hasUrl flag, source location, and current env content
+ * @returns Object with hasUrl flag and source location
  */
 async function checkExistingEnvConfig(nuxt: Nuxt, envPath: string): Promise<{
   hasUrl: boolean
   source?: string
-  envContent: string
 }> {
   // Check 1: nuxt.config.ts (wpNuxt.wordpressUrl)
   const nuxtConfig = nuxt.options as { wpNuxt?: { wordpressUrl?: string } }
   if (nuxtConfig.wpNuxt?.wordpressUrl) {
-    return { hasUrl: true, source: 'nuxt.config.ts', envContent: '' }
+    return { hasUrl: true, source: 'nuxt.config.ts' }
   }
 
   // Check 2: Environment variable already set
   if (process.env.WPNUXT_WORDPRESS_URL) {
-    return { hasUrl: true, source: 'WPNUXT_WORDPRESS_URL env var', envContent: '' }
+    return { hasUrl: true, source: 'WPNUXT_WORDPRESS_URL env var' }
   }
 
   // Check 3: .env file
   if (existsSync(envPath)) {
     const envContent = await readFile(envPath, 'utf-8')
     if (/^WPNUXT_WORDPRESS_URL\s*=\s*.+/m.test(envContent)) {
-      return { hasUrl: true, source: '.env file', envContent }
+      return { hasUrl: true, source: '.env file' }
     }
-    return { hasUrl: false, envContent }
+    return { hasUrl: false }
   }
 
-  return { hasUrl: false, envContent: '' }
+  return { hasUrl: false }
 }
 
 /**
@@ -191,54 +176,10 @@ async function setupEnvFiles(nuxt: Nuxt, logger: ConsolaInstance): Promise<Setup
   try {
     // Check if WordPress URL is already configured anywhere
     const existingConfig = await checkExistingEnvConfig(nuxt, envPath)
-    let envContent = existingConfig.envContent
-    let urlConfigured = false
+    const urlConfigured = existingConfig.hasUrl
 
-    if (existingConfig.hasUrl) {
+    if (urlConfigured) {
       logger.debug(`WordPress URL already configured in ${existingConfig.source}`)
-      urlConfigured = true
-    } else if (isInteractiveEnvironment()) {
-      // Prompt for WordPress URL
-      consola.box({
-        title: 'WPNuxt Setup',
-        message: 'Configure your WordPress connection'
-      })
-
-      const wordpressUrl = await consola.prompt(
-        'What is your WordPress site URL?',
-        {
-          type: 'text',
-          placeholder: 'https://your-wordpress-site.com',
-          initial: ''
-        }
-      )
-
-      // User provided a URL (not cancelled or empty)
-      if (wordpressUrl && typeof wordpressUrl === 'string' && wordpressUrl.trim()) {
-        // Validate the URL
-        const validation = validateWordPressUrl(wordpressUrl)
-
-        if (!validation.valid) {
-          logger.warn(`Invalid URL: ${validation.error}`)
-          logger.info('Skipped WordPress URL configuration. Add WPNUXT_WORDPRESS_URL to your .env file later.')
-        } else {
-          const envLine = `WPNUXT_WORDPRESS_URL=${validation.normalizedUrl}\n`
-
-          if (envContent) {
-            envContent = envContent.trimEnd() + '\n\n' + envLine
-          } else {
-            envContent = envLine
-          }
-
-          await atomicWriteFile(envPath, envContent)
-          logger.success(`WordPress URL saved to .env: ${validation.normalizedUrl}`)
-          urlConfigured = true
-        }
-      } else {
-        logger.info('Skipped WordPress URL configuration. Add WPNUXT_WORDPRESS_URL to your .env file later.')
-      }
-    } else {
-      logger.debug('Non-interactive environment detected, skipping WordPress URL prompt')
     }
 
     // Always create/update .env.example as reference
