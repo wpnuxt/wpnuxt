@@ -7,9 +7,9 @@
     "build": "nuxi build",
     "generate": "nuxi generate",
     "preview": "nuxi preview",
+    "dev:prepare": "nuxi prepare",
     "nuxt:prepare": "nuxi prepare",
-    "typecheck": "vue-tsc --noEmit",
-    "clean": "rm -rf .nuxt .output node_modules"
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@nuxt/icon": "^2.2.1",

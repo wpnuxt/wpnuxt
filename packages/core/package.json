@@ -51,8 +51,7 @@
     "lint": "eslint src",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "typecheck": "vue-tsc --noEmit",
-    "clean": "rm -rf dist .nuxt node_modules"
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@nuxt/kit": "4.3.1",

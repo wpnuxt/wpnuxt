@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter './packages/**' dev:prepare && pnpm --filter './packages/**' build && pnpm --filter './playgrounds/**' build",
-    "dev:prepare": "pnpm --filter './packages/**' dev:prepare && pnpm --filter './playgrounds/**' nuxt:prepare",
+    "build": "pnpm run dev:prepare && pnpm -r --if-present build",
+    "dev:prepare": "pnpm -r --if-present dev:prepare",
     "dev:core": "pnpm --filter @wpnuxt/playground-core dev",
     "dev:blocks": "pnpm --filter @wpnuxt/playground-blocks dev",
     "dev:full": "pnpm --filter @wpnuxt/playground-full dev",
@@ -13,11 +13,9 @@
     "dev:docs": "pnpm --filter @wpnuxt/docs dev",
     "dev": "pnpm dev:full",
     "lint": "eslint .",
-    "test": "pnpm --filter './packages/**' test",
-    "typecheck": "pnpm --filter './**' typecheck",
-    "clean": "pnpm -r run clean && rm -rf node_modules",
-    "check": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build",
-    "check:full": "pnpm clean && pnpm install && pnpm run dev:prepare && pnpm run check",
+    "test": "pnpm -r --if-present test",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "check": "pnpm run dev:prepare && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build",
     "release": "release-it"
   },
   "devDependencies": {

@@ -6,9 +6,9 @@
     "dev": "nuxi dev",
     "build": "nuxi build",
     "generate": "nuxi generate",
+    "dev:prepare": "nuxi prepare",
     "nuxt:prepare": "nuxi prepare",
-    "typecheck": "vue-tsc --noEmit",
-    "clean": "rm -rf .nuxt .output node_modules"
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@wpnuxt/core": "workspace:*",
