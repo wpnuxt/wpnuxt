@@ -486,7 +486,9 @@ async function setupClientOptions(nuxt: Nuxt, _resolver: Resolver, logger: Retur
  * must be consistent between prerender time and runtime.
  */
 function configureTrailingSlash(nuxt: Nuxt, logger: ReturnType<typeof getLogger>) {
-  const handlerPath = join(nuxt.options.buildDir, 'wpnuxt', 'trailing-slash-handler.ts')
+  // Normalize to forward slashes for Windows compatibility - Nitro uses ESM import()
+  // which requires forward slashes or file:// URLs, not Windows backslash paths
+  const handlerPath = join(nuxt.options.buildDir, 'wpnuxt', 'trailing-slash-handler.ts').replace(/\\/g, '/')
 
   const handlerCode = `import { defineEventHandler, sendRedirect, getRequestURL } from 'h3'
 
