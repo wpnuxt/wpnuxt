@@ -170,29 +170,27 @@ export default defineNuxtModule<WPNuxtConfig>({
     // Templates should always use relative paths (/wp-content/uploads/...) via getRelativeImagePath()
     // - CDN providers (twicpics, cloudinary, etc.) append relative paths to their baseURL — works natively
     // - IPX needs full HTTP URLs to fetch remotely, so we add an alias + domain to handle that
-    // Deferred to modules:done so @nuxt/image installed by @wpnuxt/blocks is already registered
-    nuxt.hook('modules:done', () => {
-      if (hasNuxtModule('@nuxt/image')) {
-        const imageConfig = (nuxt.options as unknown as Record<string, unknown>).image as Record<string, unknown> || {}
-        const provider = process.env.NUXT_IMAGE_PROVIDER || (imageConfig.provider as string) || 'ipx'
+    // Set unconditionally so the config is ready when @nuxt/image installs (e.g. via @wpnuxt/blocks)
+    {
+      const imageConfig = (nuxt.options as unknown as Record<string, unknown>).image as Record<string, unknown> || {}
+      const provider = process.env.NUXT_IMAGE_PROVIDER || (imageConfig.provider as string) || 'ipx'
 
-        if (provider === 'ipx') {
-          const wpHost = new URL(wpNuxtConfig.wordpressUrl!).host
-          const domains = (imageConfig.domains as string[]) || []
-          if (!domains.includes(wpHost)) {
-            domains.push(wpHost)
-          }
-          imageConfig.domains = domains
-
-          const alias = (imageConfig.alias as Record<string, string>) || {}
-          alias['/wp-content'] = `${wpNuxtConfig.wordpressUrl}/wp-content`
-          imageConfig.alias = alias;
-
-          (nuxt.options as unknown as Record<string, unknown>).image = imageConfig
-          logger.debug(`Configured IPX for WordPress: alias /wp-content → ${wpNuxtConfig.wordpressUrl}/wp-content, domain '${wpHost}' added`)
+      if (provider === 'ipx') {
+        const wpHost = new URL(wpNuxtConfig.wordpressUrl!).host
+        const domains = (imageConfig.domains as string[]) || []
+        if (!domains.includes(wpHost)) {
+          domains.push(wpHost)
         }
+        imageConfig.domains = domains
+
+        const alias = (imageConfig.alias as Record<string, string>) || {}
+        alias['/wp-content'] = `${wpNuxtConfig.wordpressUrl}/wp-content`
+        imageConfig.alias = alias;
+
+        (nuxt.options as unknown as Record<string, unknown>).image = imageConfig
+        logger.debug(`Configured IPX for WordPress: alias /wp-content → ${wpNuxtConfig.wordpressUrl}/wp-content, domain '${wpHost}' added`)
       }
-    })
+    }
 
     // Configure Vercel-specific settings for proper SSR and ISR handling
     configureVercelSettings(nuxt, logger)
