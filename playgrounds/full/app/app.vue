@@ -11,10 +11,6 @@ const menu = computed(() => {
     to: item.uri
   })) ?? []
   return [
-    {
-      label: 'Home',
-      to: '/'
-    },
     ...wordPressPages,
     {
       label: 'Query Options',

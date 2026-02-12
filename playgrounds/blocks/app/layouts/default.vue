@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import type { MenuItemFragment } from '#graphql-operations'
-import type { NavigationMenuItem } from '@nuxt/ui'
 
 const { data: menu } = useMenu({ name: 'main' })
 
 const route = useRoute()
-const menuItems: ComputedRef<NavigationMenuItem[]> = computed(() => [
-  { label: 'Home', to: '/', exact: true },
-  { label: 'Blog', to: '/blog', active: route.path.startsWith('/blog') ?? false },
-  ...(menu.value?.map((item: MenuItemFragment) => ({ label: item.label, to: item.uri })) ?? [])
+const menuItems = computed(() => [
+  ...(menu.value?.map((item: MenuItemFragment) => ({ label: item.label, to: item.uri })) ?? []),
+  { label: 'Blog', to: '/blog', active: route.path.startsWith('/blog') ?? false }
 ])
 </script>
 
