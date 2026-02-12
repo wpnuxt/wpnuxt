@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.0-beta.3](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2026-02-12)
+
+### Bug Fixes
+
+* **core:** normalize file paths for Windows compatibility in trailing slash handler ([2ea36ac](https://github.com/wpnuxt/wpnuxt/commit/2ea36acf69ecf555bf3ecfea5519f0b824772749)), closes [#219](https://github.com/wpnuxt/wpnuxt/issues/219)
+* **core:** replace test fixture schema symlinks with copies for Windows ([cdd0655](https://github.com/wpnuxt/wpnuxt/commit/cdd065530cc4f1d095972ca5022a9ba3c196a780))
+
+### Maintenance
+
+* make workspace scripts cross-platform ([ad79893](https://github.com/wpnuxt/wpnuxt/commit/ad79893cc290a1d3b4293f69a97c40df9813e206))
+* update release-it configuration to simplify post-bump checks ([2be186b](https://github.com/wpnuxt/wpnuxt/commit/2be186b1cb997580c7f7eb2a08ea7770c723dce9))
+
 ## [2.0.0-beta.2](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2026-02-11)
 
 ### Bug Fixes
