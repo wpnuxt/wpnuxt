@@ -5,10 +5,12 @@ on:
     branches:
       - main
       - dev
+      - 49-automated-e2e-tests
   pull_request:
     branches:
       - main
       - dev
+  workflow_dispatch:
 
 env:
   WPNUXT_WORDPRESS_URL: ${{ secrets.WPNUXT_WORDPRESS_URL }}
