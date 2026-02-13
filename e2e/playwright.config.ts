@@ -7,7 +7,7 @@ const nuxtPort = {
   nuxt40: 3040,
   nuxt41: 3041,
   nuxt42: 3042,
-  nuxt43: 3043,
+  nuxt43: 3043
 }[nuxtFixture] || 3043
 
 const wpPort = process.env.WPNUXT_WORDPRESS_URL?.match(/:(\d+)/)?.[1] || 'local'
@@ -24,11 +24,11 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: [
     ['list'],
-    ['blob', { outputDir: blobSubDir }],
+    ['blob', { outputDir: blobSubDir }]
   ],
   use: {
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    screenshot: 'only-on-failure'
   },
 
   projects: [
@@ -37,57 +37,59 @@ export default defineConfig({
       testMatch: /wordpress\.spec\.ts/,
       use: {
         baseURL: process.env.WPNUXT_WORDPRESS_URL || 'http://localhost:8009',
-        ...devices['Desktop Chrome'],
-      },
+        ...devices['Desktop Chrome']
+      }
     },
     {
       name: 'nuxt-3',
       testMatch: /nuxt\.spec\.ts/,
       use: {
         baseURL: 'http://localhost:3003',
-        ...devices['Desktop Chrome'],
-      },
+        ...devices['Desktop Chrome']
+      }
     },
     {
       name: 'nuxt-40',
       testMatch: /nuxt\.spec\.ts/,
       use: {
         baseURL: 'http://localhost:3040',
-        ...devices['Desktop Chrome'],
-      },
+        ...devices['Desktop Chrome']
+      }
     },
     {
       name: 'nuxt-41',
       testMatch: /nuxt\.spec\.ts/,
       use: {
         baseURL: 'http://localhost:3041',
-        ...devices['Desktop Chrome'],
-      },
+        ...devices['Desktop Chrome']
+      }
     },
     {
       name: 'nuxt-42',
       testMatch: /nuxt\.spec\.ts/,
       use: {
         baseURL: 'http://localhost:3042',
-        ...devices['Desktop Chrome'],
-      },
+        ...devices['Desktop Chrome']
+      }
     },
     {
       name: 'nuxt-43',
       testMatch: /nuxt\.spec\.ts/,
       use: {
         baseURL: 'http://localhost:3043',
-        ...devices['Desktop Chrome'],
-      },
-    },
+        ...devices['Desktop Chrome']
+      }
+    }
   ],
 
-  ...(needsWebServer ? {
-    webServer: {
-      command: `cd fixtures/${nuxtFixture} && pnpm run build && pnpm run test:serve`,
-      url: `http://localhost:${nuxtPort}`,
-      reuseExistingServer: !process.env.CI,
-      timeout: 180 * 1000,
-    },
-  } : {}),
+  ...(needsWebServer
+    ? {
+        webServer: {
+          command: `cd fixtures/${nuxtFixture} && pnpm run build && pnpm run test:serve`,
+          url: `http://localhost:${nuxtPort}`,
+          reuseExistingServer: !process.env.CI,
+          timeout: 180 * 1000
+        }
+      }
+    : {})
 })
