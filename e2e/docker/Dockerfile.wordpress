@@ -1,0 +1,18 @@
+FROM wordpress:latest
+
+# Install WP-CLI
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+    && chmod +x wp-cli.phar \
+    && mv wp-cli.phar /usr/local/bin/wp
+
+# Install plugins via WP-CLI on first run (handled by setup.sh)
+# This keeps the image generic for different WP versions
+
+# Expose port
+EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost/ || exit 1
+
+CMD ["apache2-foreground"]

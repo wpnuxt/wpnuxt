@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.nuxt/
+.output/
+.env
+playwright-report/
+test-results/
+blob-report/
+blob-merged/

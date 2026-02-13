@@ -2,6 +2,7 @@ packages:
   - packages/*
   - playgrounds/*
   - docs
+  - e2e
 
 onlyBuiltDependencies:
   - '@parcel/watcher'
