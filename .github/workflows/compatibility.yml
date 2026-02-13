@@ -43,10 +43,10 @@ jobs:
       - name: Start WordPress ${{ matrix.wp_version }}
         working-directory: e2e/docker
         run: |
-          docker-compose -f docker-compose.wp-${{ matrix.wp_version }}.yml up -d mysql
+          docker compose -f docker compose.wp-${{ matrix.wp_version }}.yml up -d mysql
           # Wait for MySQL to be healthy
           for i in {1..30}; do
-            if docker-compose -f docker-compose.wp-${{ matrix.wp_version }}.yml exec -T mysql mysqladmin ping -h localhost --silent; then
+            if docker compose -f docker compose.wp-${{ matrix.wp_version }}.yml exec -T mysql mysqladmin ping -h localhost --silent; then
               echo "MySQL is ready"
               break
             fi
@@ -54,7 +54,7 @@ jobs:
             sleep 2
           done
           # Start WordPress
-          docker-compose -f docker-compose.wp-${{ matrix.wp_version }}.yml up -d wordpress
+          docker compose -f docker compose.wp-${{ matrix.wp_version }}.yml up -d wordpress
           # Wait for WordPress to be ready
           for i in {1..60}; do
             if curl -s http://localhost:8000/ > /dev/null 2>&1; then
@@ -68,12 +68,12 @@ jobs:
       - name: Setup WordPress
         working-directory: e2e/docker
         run: |
-          docker-compose -f docker-compose.wp-${{ matrix.wp_version }}.yml exec -T wordpress curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-          docker-compose -f docker-compose.wp-${{ matrix.wp_version }}.yml exec -T wordpress chmod +x wp-cli.phar
-          docker-compose -f docker-compose.wp-${{ matrix.wp_version }}.yml exec -T wordpress mv wp-cli.phar /usr/local/bin/wp
-          docker-compose -f docker-compose.wp-${{ matrix.wp_version }}.yml exec -T wordpress wp core install --url="http://localhost:8000" --title="WPNuxt Test" --admin_user=admin --admin_password=password --admin_email=test@example.com --skip-email --allow-root
-          docker-compose -f docker-compose.wp-${{ matrix.wp_version }}.yml exec -T wordpress wp plugin install wp-graphql --activate --allow-root || true
-          docker-compose -f docker-compose.wp-${{ matrix.wp_version }}.yml exec -T wordpress wp rewrite flush --allow-root || true
+          docker compose -f docker compose.wp-${{ matrix.wp_version }}.yml exec -T wordpress curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          docker compose -f docker compose.wp-${{ matrix.wp_version }}.yml exec -T wordpress chmod +x wp-cli.phar
+          docker compose -f docker compose.wp-${{ matrix.wp_version }}.yml exec -T wordpress mv wp-cli.phar /usr/local/bin/wp
+          docker compose -f docker compose.wp-${{ matrix.wp_version }}.yml exec -T wordpress wp core install --url="http://localhost:8000" --title="WPNuxt Test" --admin_user=admin --admin_password=password --admin_email=test@example.com --skip-email --allow-root
+          docker compose -f docker compose.wp-${{ matrix.wp_version }}.yml exec -T wordpress wp plugin install wp-graphql --activate --allow-root || true
+          docker compose -f docker compose.wp-${{ matrix.wp_version }}.yml exec -T wordpress wp rewrite flush --allow-root || true
 
       - name: Enable Corepack
         run: corepack enable
@@ -100,7 +100,7 @@ jobs:
       - name: Stop Docker
         if: always()
         working-directory: e2e/docker
-        run: docker-compose -f docker-compose.wp-${{ matrix.wp_version }}.yml down
+        run: docker compose -f docker compose.wp-${{ matrix.wp_version }}.yml down
 
   # Single combination - if manually specified
   single:
@@ -119,10 +119,10 @@ jobs:
       - name: Start WordPress ${{ github.inputs.wp_version }}
         working-directory: e2e/docker
         run: |
-          docker-compose -f docker-compose.wp-${{ github.inputs.wp_version }}.yml up -d mysql
+          docker compose -f docker compose.wp-${{ github.inputs.wp_version }}.yml up -d mysql
           # Wait for MySQL to be healthy
           for i in {1..30}; do
-            if docker-compose -f docker-compose.wp-${{ github.inputs.wp_version }}.yml exec -T mysql mysqladmin ping -h localhost --silent; then
+            if docker compose -f docker compose.wp-${{ github.inputs.wp_version }}.yml exec -T mysql mysqladmin ping -h localhost --silent; then
               echo "MySQL is ready"
               break
             fi
@@ -130,7 +130,7 @@ jobs:
             sleep 2
           done
           # Start WordPress
-          docker-compose -f docker-compose.wp-${{ github.inputs.wp_version }}.yml up -d wordpress
+          docker compose -f docker compose.wp-${{ github.inputs.wp_version }}.yml up -d wordpress
           # Wait for WordPress to be ready
           for i in {1..60}; do
             if curl -s http://localhost:8000/ > /dev/null 2>&1; then
@@ -144,12 +144,12 @@ jobs:
       - name: Setup WordPress
         working-directory: e2e/docker
         run: |
-          docker-compose -f docker-compose.wp-${{ github.inputs.wp_version }}.yml exec -T wordpress curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-          docker-compose -f docker-compose.wp-${{ github.inputs.wp_version }}.yml exec -T wordpress chmod +x wp-cli.phar
-          docker-compose -f docker-compose.wp-${{ github.inputs.wp_version }}.yml exec -T wordpress mv wp-cli.phar /usr/local/bin/wp
-          docker-compose -f docker-compose.wp-${{ github.inputs.wp_version }}.yml exec -T wordpress wp core install --url="http://localhost:8000" --title="WPNuxt Test" --admin_user=admin --admin_password=password --admin_email=test@example.com --skip-email --allow-root
-          docker-compose -f docker-compose.wp-${{ github.inputs.wp_version }}.yml exec -T wordpress wp plugin install wp-graphql --activate --allow-root || true
-          docker-compose -f docker-compose.wp-${{ github.inputs.wp_version }}.yml exec -T wordpress wp rewrite flush --allow-root || true
+          docker compose -f docker compose.wp-${{ github.inputs.wp_version }}.yml exec -T wordpress curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          docker compose -f docker compose.wp-${{ github.inputs.wp_version }}.yml exec -T wordpress chmod +x wp-cli.phar
+          docker compose -f docker compose.wp-${{ github.inputs.wp_version }}.yml exec -T wordpress mv wp-cli.phar /usr/local/bin/wp
+          docker compose -f docker compose.wp-${{ github.inputs.wp_version }}.yml exec -T wordpress wp core install --url="http://localhost:8000" --title="WPNuxt Test" --admin_user=admin --admin_password=password --admin_email=test@example.com --skip-email --allow-root
+          docker compose -f docker compose.wp-${{ github.inputs.wp_version }}.yml exec -T wordpress wp plugin install wp-graphql --activate --allow-root || true
+          docker compose -f docker compose.wp-${{ github.inputs.wp_version }}.yml exec -T wordpress wp rewrite flush --allow-root || true
 
       - name: Enable Corepack
         run: corepack enable
@@ -174,4 +174,4 @@ jobs:
       - name: Stop Docker
         if: always()
         working-directory: e2e/docker
-        run: docker-compose -f docker-compose.wp-${{ github.inputs.wp_version }}.yml down
+        run: docker compose -f docker compose.wp-${{ github.inputs.wp_version }}.yml down
