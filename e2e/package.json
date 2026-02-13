@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "playwright test",
+    "test:e2e": "playwright test",
     "test:ui": "playwright test --ui",
     "test:debug": "playwright test --debug",
     "test:all": "rm -rf test-results blob-report blob-merged && pnpm run test:wp:all && pnpm run test:nuxt:all && pnpm run test:merge",

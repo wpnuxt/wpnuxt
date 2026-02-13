@@ -182,7 +182,8 @@ jobs:
         run: pnpm run dev:prepare
 
       - name: Run E2E tests
-        run: pnpm run test
+        run: pnpm run test:e2e
+        working-directory: e2e
         env:
           WPNUXT_WORDPRESS_URL: http://localhost:8000
 
