@@ -26,11 +26,11 @@
           {{ cat.name }}
         </NuxtLink>
       </div>
-      <!-- eslint-disable-next-line vue/no-v-html -->
+      <!-- eslint-disable-next-line vue/no-v-sanitize-html -->
       <div
         v-if="node.content"
         class="node-body"
-        v-html="node.content"
+        v-sanitize-html="node.content"
       />
     </div>
   </div>

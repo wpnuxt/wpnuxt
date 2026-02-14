@@ -155,7 +155,7 @@ export default defineNuxtModule<WPNuxtConfig>({
       logger.debug(`Server-side caching enabled for GraphQL queries (maxAge: ${maxAge}s, SWR: ${wpNuxtConfig.cache?.swr !== false})`)
     }
 
-    // Proxy /wp-content/uploads/ to WordPress for plain <img> tags and v-html content
+    // Proxy /wp-content/uploads/ to WordPress for plain <img> tags and v-sanitize-html content
     {
       const nitroOptions = nuxt.options as unknown as NuxtOptionsWithNitro
       nitroOptions.nitro = nitroOptions.nitro || {}
