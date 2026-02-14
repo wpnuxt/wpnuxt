@@ -37,7 +37,7 @@ jobs:
 
     steps:
       - name: Setup WordPress and Run E2E Tests
-        uses: ./.github/workflows/setup-wp-e2e.yml
+        uses: ./.github/actions/setup-wp-e2e
         with:
           wp_version: ${{ matrix.wp_version }}
           nuxt_fixture: ${{ matrix.nuxt_version == '3' && 'nuxt3' || 'nuxt43' }}
@@ -51,7 +51,7 @@ jobs:
 
     steps:
       - name: Setup WordPress and Run E2E Tests
-        uses: ./.github/workflows/setup-wp-e2e.yml
+        uses: ./.github/actions/setup-wp-e2e
         with:
           wp_version: ${{ inputs.wp_version }}
           nuxt_fixture: ${{ inputs.nuxt_version == '3' && 'nuxt3' || 'nuxt43' }}

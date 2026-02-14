@@ -125,7 +125,7 @@ jobs:
     needs: [build]
     steps:
       - name: Setup WordPress and Run E2E Tests
-        uses: ./.github/workflows/setup-wp-e2e.yml
+        uses: ./.github/actions/setup-wp-e2e
         with:
           wp_version: '6.9'
           nuxt_fixture: nuxt43
