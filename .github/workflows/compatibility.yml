@@ -26,11 +26,13 @@ on:
         default: '4'
         type: choice
         options:
+          - '3.13'
           - '3'
           - '4.0'
           - '4.1'
           - '4.2'
           - '4.3'
+          - 'srcdir'
 
 jobs:
   # Full matrix - all combinations
@@ -42,7 +44,7 @@ jobs:
       fail-fast: false
       matrix:
         wp_version: ['6.4', '6.5', '6.6', '6.7', '6.8', '6.9']
-        nuxt_version: ['3', '4.0', '4.1', '4.2', '4.3']
+        nuxt_version: ['3.13', '3', '4.0', '4.1', '4.2', '4.3', 'srcdir']
 
     steps:
       - name: Checkout
@@ -52,7 +54,7 @@ jobs:
         uses: ./.github/actions/setup-wp-e2e
         with:
           wp_version: ${{ matrix.wp_version }}
-          nuxt_fixture: ${{ matrix.nuxt_version == '3' && 'nuxt3' || matrix.nuxt_version == '4.0' && 'nuxt40' || matrix.nuxt_version == '4.1' && 'nuxt41' || matrix.nuxt_version == '4.2' && 'nuxt42' || 'nuxt43' }}
+          nuxt_fixture: ${{ matrix.nuxt_version == '3.13' && 'nuxt313' || matrix.nuxt_version == '3' && 'nuxt3' || matrix.nuxt_version == '4.0' && 'nuxt40' || matrix.nuxt_version == '4.1' && 'nuxt41' || matrix.nuxt_version == '4.2' && 'nuxt42' || matrix.nuxt_version == 'srcdir' && 'nuxt-srcdir' || 'nuxt43' }}
 
   # Single combination - if manually specified
   single:
@@ -69,4 +71,4 @@ jobs:
         uses: ./.github/actions/setup-wp-e2e
         with:
           wp_version: ${{ inputs.wp_version }}
-          nuxt_fixture: ${{ inputs.nuxt_version == '3' && 'nuxt3' || inputs.nuxt_version == '4.0' && 'nuxt40' || inputs.nuxt_version == '4.1' && 'nuxt41' || inputs.nuxt_version == '4.2' && 'nuxt42' || 'nuxt43' }}
+          nuxt_fixture: ${{ inputs.nuxt_version == '3.13' && 'nuxt313' || inputs.nuxt_version == '3' && 'nuxt3' || inputs.nuxt_version == '4.0' && 'nuxt40' || inputs.nuxt_version == '4.1' && 'nuxt41' || inputs.nuxt_version == '4.2' && 'nuxt42' || inputs.nuxt_version == 'srcdir' && 'nuxt-srcdir' || 'nuxt43' }}
