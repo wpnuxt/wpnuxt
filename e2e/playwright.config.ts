@@ -10,6 +10,15 @@ const nuxtPort = {
   nuxt43: 3043
 }[nuxtFixture] || 3043
 
+// Map fixture to project name
+const nuxtProjectName = {
+  nuxt3: 'nuxt-3',
+  nuxt40: 'nuxt-40',
+  nuxt41: 'nuxt-41',
+  nuxt42: 'nuxt-42',
+  nuxt43: 'nuxt-43'
+}[nuxtFixture] || 'nuxt-43'
+
 const wpPort = process.env.WPNUXT_WORDPRESS_URL?.match(/:(\d+)/)?.[1] || 'local'
 const blobSubDir = `blob-report/${testProject}-${nuxtFixture}-wp${wpPort}`
 
@@ -81,6 +90,16 @@ export default defineConfig({
       }
     }
   ],
+
+  // Only run the project matching the fixture when NUXT_FIXTURE is set
+  ...(process.env.NUXT_FIXTURE
+    ? {
+        projects: [
+          { name: 'wordpress' },
+          { name: nuxtProjectName }
+        ]
+      }
+    : {}),
 
   ...(needsWebServer
     ? {
