@@ -69,6 +69,28 @@ fi
 # Create test content
 echo "Creating test content..."
 
+# Set permalink structure first (needed for correct URIs)
+wp option update permalink_structure '/%postname%/' --allow-root
+wp rewrite flush --allow-root
+
+# Create categories
+TECH_CAT_ID=$(wp term create category "Technology" --porcelain --allow-root 2>/dev/null || wp term list category --field=term_id --name=Technology --allow-root)
+NEWS_CAT_ID=$(wp term create category "News" --porcelain --allow-root 2>/dev/null || wp term list category --field=term_id --name=News --allow-root)
+echo "Categories created: Technology=$TECH_CAT_ID, News=$NEWS_CAT_ID"
+
+# Create a test image using PHP/GD
+php -r "
+\$img = imagecreatetruecolor(150, 150);
+\$color = imagecolorallocate(\$img, 100, 150, 200);
+imagefill(\$img, 0, 0, \$color);
+imagejpeg(\$img, '/tmp/test-image.jpg');
+imagedestroy(\$img);
+"
+
+# Import the image as a media attachment
+MEDIA_ID=$(wp media import /tmp/test-image.jpg --title="Test Featured Image" --porcelain --allow-root 2>/dev/null || echo "")
+echo "Media created: ID=$MEDIA_ID"
+
 # Create test page
 wp post create \
     --post_type=page \
@@ -77,16 +99,48 @@ wp post create \
     --post_status=publish \
     --allow-root 2>/dev/null || true
 
-# Create test post
-wp post create \
+# Create test posts with categories
+POST1_ID=$(wp post create \
     --post_type=post \
     --post_title="Test Post" \
     --post_content="<p>This is a test post content.</p>" \
     --post_status=publish \
-    --allow-root 2>/dev/null || true
+    --porcelain \
+    --allow-root 2>/dev/null || echo "")
 
-# Set permalink structure
-wp option update permalink_structure '/%postname%/' --allow-root
+if [ -n "$POST1_ID" ] && [ -n "$TECH_CAT_ID" ]; then
+    wp post term set "$POST1_ID" category "$TECH_CAT_ID" --allow-root 2>/dev/null || true
+fi
+
+POST2_ID=$(wp post create \
+    --post_type=post \
+    --post_title="Post With Featured Image" \
+    --post_content="<p>This post has a featured image and categories.</p>" \
+    --post_status=publish \
+    --porcelain \
+    --allow-root 2>/dev/null || echo "")
+
+if [ -n "$POST2_ID" ]; then
+    if [ -n "$MEDIA_ID" ]; then
+        wp post meta update "$POST2_ID" _thumbnail_id "$MEDIA_ID" --allow-root 2>/dev/null || true
+    fi
+    if [ -n "$TECH_CAT_ID" ]; then
+        wp post term set "$POST2_ID" category "$TECH_CAT_ID" --allow-root 2>/dev/null || true
+    fi
+fi
+
+POST3_ID=$(wp post create \
+    --post_type=post \
+    --post_title="News Article" \
+    --post_content="<p>This is a news article for category testing.</p>" \
+    --post_status=publish \
+    --porcelain \
+    --allow-root 2>/dev/null || echo "")
+
+if [ -n "$POST3_ID" ] && [ -n "$NEWS_CAT_ID" ]; then
+    wp post term set "$POST3_ID" category "$NEWS_CAT_ID" --allow-root 2>/dev/null || true
+fi
+
 wp rewrite flush --allow-root
 
 echo "Test content created!"
