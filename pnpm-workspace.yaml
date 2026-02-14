@@ -3,6 +3,7 @@ packages:
   - playgrounds/*
   - docs
   - e2e
+  - e2e/fixtures/*
 
 onlyBuiltDependencies:
   - '@parcel/watcher'

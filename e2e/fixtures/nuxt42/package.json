@@ -4,9 +4,6 @@
   "type": "module",
   "scripts": {
     "dev": "nuxi dev",
-    "build": "nuxi build",
-    "prepare": "nuxi prepare",
-    "typecheck": "vue-tsc --noEmit",
     "test:serve": "PORT=3042 nuxt preview"
   },
   "dependencies": {

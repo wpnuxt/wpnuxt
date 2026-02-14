@@ -54,7 +54,7 @@ export default defineConfig({
     ? {}
     : {
         webServer: {
-          command: `cd fixtures/${nuxtFixture} && pnpm run build && pnpm run test:serve`,
+          command: `cd fixtures/${nuxtFixture} && npx nuxi build && pnpm run test:serve`,
           url: `http://localhost:${nuxtPort}`,
           reuseExistingServer: !process.env.CI,
           timeout: 180 * 1000
