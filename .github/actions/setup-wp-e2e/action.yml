@@ -89,10 +89,7 @@ runs:
     - name: Run E2E tests
       shell: bash
       working-directory: e2e
-      run: pnpm run test:e2e
-      env:
-        WPNUXT_WORDPRESS_URL: http://localhost:${{ steps.wp-port.outputs.port }}
-        NUXT_FIXTURE: ${{ inputs.nuxt_fixture }}
+      run: node run-tests.mjs --no-docker --wp=${{ inputs.wp_version }} --nuxt=${{ inputs.nuxt_fixture }}
 
     - name: Stop Docker
       if: always()
