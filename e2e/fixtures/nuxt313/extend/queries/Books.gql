@@ -1,0 +1,7 @@
+query Books($limit: Int = 10) {
+  books(first: $limit) {
+    nodes {
+      ...Book
+    }
+  }
+}
