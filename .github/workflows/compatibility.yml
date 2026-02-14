@@ -3,6 +3,11 @@ name: Compatibility Tests
 on:
   workflow_dispatch:
     inputs:
+      run_all:
+        description: 'Run all combinations'
+        required: false
+        default: 'true'
+        type: boolean
       wp_version:
         description: 'WordPress version'
         required: false
@@ -29,6 +34,7 @@ jobs:
   matrix:
     runs-on: ubuntu-latest
     name: WP ${{ matrix.wp_version }} + Nuxt ${{ matrix.nuxt_version }}
+    if: inputs.run_all
     strategy:
       fail-fast: false
       matrix:
@@ -49,7 +55,7 @@ jobs:
   single:
     runs-on: ubuntu-latest
     name: WP ${{ inputs.wp_version }} + Nuxt ${{ inputs.nuxt_version }}
-    if: inputs.wp_version != ''
+    if: (!inputs.run_all) && inputs.wp_version != ''
     needs: []
 
     steps:
