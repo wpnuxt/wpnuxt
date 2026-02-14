@@ -158,13 +158,7 @@ jobs:
 
       - name: Setup WordPress
         working-directory: e2e/docker
-        run: |
-          docker compose -f docker-compose.wp-6.9.yml exec -T wordpress curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-          docker compose -f docker-compose.wp-6.9.yml exec -T wordpress chmod +x wp-cli.phar
-          docker compose -f docker-compose.wp-6.9.yml exec -T wordpress mv wp-cli.phar /usr/local/bin/wp
-          docker compose -f docker-compose.wp-6.9.yml exec -T wordpress wp core install --url="http://localhost:8009" --title="WPNuxt Test" --admin_user=admin --admin_password=password --admin_email=test@example.com --skip-email --allow-root
-          docker compose -f docker-compose.wp-6.9.yml exec -T wordpress wp plugin install wp-graphql --activate --allow-root || true
-          docker compose -f docker-compose.wp-6.9.yml exec -T wordpress wp rewrite flush --allow-root || true
+        run: docker compose -f docker-compose.wp-6.9.yml exec -T wordpress /setup.sh
 
       - name: Enable Corepack
         run: corepack enable
