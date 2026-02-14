@@ -1,0 +1,7 @@
+fragment Book on Book {
+  ...ContentNode
+  ...NodeWithContentEditor
+  ...NodeWithFeaturedImage
+  ...NodeWithExcerpt
+  title
+}

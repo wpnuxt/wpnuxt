@@ -97,6 +97,31 @@ test.describe('Nuxt Integration', () => {
     expect(count).toBeGreaterThan(0)
   })
 
+  test('lists custom post type (books)', async ({ page }) => {
+    await page.goto('/books')
+    await page.waitForLoadState('networkidle')
+
+    const booksList = page.locator('#books-list')
+    await expect(booksList).toBeVisible()
+
+    const bookLinks = page.locator('.book-link')
+    const count = await bookLinks.count()
+    expect(count).toBeGreaterThan(0)
+  })
+
+  test('navigates to a single book page', async ({ page }) => {
+    await page.goto('/books')
+    await page.waitForLoadState('networkidle')
+
+    const firstBookLink = page.locator('.book-link').first()
+    const bookTitle = await firstBookLink.textContent()
+    await firstBookLink.click()
+    await page.waitForLoadState('networkidle')
+
+    const nodeTitle = page.locator('.node-title')
+    await expect(nodeTitle).toContainText(bookTitle!.trim())
+  })
+
   test('shows not found for invalid URI', async ({ page }) => {
     await page.goto('/this-page-does-not-exist/')
     await page.waitForLoadState('networkidle')

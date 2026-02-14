@@ -66,6 +66,25 @@ else
     echo "WordPress already installed"
 fi
 
+# Register Book custom post type via mu-plugin
+echo "Registering Book custom post type..."
+mkdir -p /var/www/html/wp-content/mu-plugins
+cat > /var/www/html/wp-content/mu-plugins/register-book-cpt.php << 'PHEOF'
+<?php
+add_action('init', function () {
+    register_post_type('book', [
+        'label'               => 'Books',
+        'public'              => true,
+        'show_in_graphql'     => true,
+        'graphql_single_name' => 'book',
+        'graphql_plural_name' => 'books',
+        'supports'            => ['title', 'editor', 'thumbnail', 'excerpt'],
+        'has_archive'         => true,
+        'rewrite'             => ['slug' => 'book'],
+    ]);
+});
+PHEOF
+
 # Create test content
 echo "Creating test content..."
 
@@ -142,6 +161,32 @@ if [ -n "$POST3_ID" ] && [ -n "$NEWS_CAT_ID" ]; then
 fi
 
 wp rewrite flush --allow-root
+
+# Create book posts (custom post type)
+echo "Creating book test content..."
+BOOK1_ID=$(wp post create \
+    --post_type=book \
+    --post_title="The Great Gatsby" \
+    --post_content="<p>A novel by F. Scott Fitzgerald.</p>" \
+    --post_excerpt="A story of the Jazz Age" \
+    --post_status=publish \
+    --porcelain \
+    --allow-root 2>/dev/null || echo "")
+
+if [ -n "$BOOK1_ID" ] && [ -n "$MEDIA_ID" ]; then
+    wp post meta update "$BOOK1_ID" _thumbnail_id "$MEDIA_ID" --allow-root 2>/dev/null || true
+fi
+
+wp post create \
+    --post_type=book \
+    --post_title="1984" \
+    --post_content="<p>A novel by George Orwell.</p>" \
+    --post_excerpt="A dystopian classic" \
+    --post_status=publish \
+    --allow-root 2>/dev/null || true
+
+wp rewrite flush --allow-root
+echo "Book test content created!"
 
 echo "Test content created!"
 
