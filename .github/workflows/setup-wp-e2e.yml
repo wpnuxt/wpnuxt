@@ -1,0 +1,98 @@
+name: Setup WordPress and Run E2E Tests
+
+description: Starts WordPress via Docker, installs plugins, and runs Playwright E2E tests
+
+inputs:
+  wp_version:
+    description: 'WordPress version'
+    required: true
+    type: string
+  nuxt_fixture:
+    description: 'Nuxt fixture (nuxt3, nuxt43, etc.)'
+    required: true
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Determine WordPress port
+      id: wp-port
+      shell: bash
+      run: |
+        MINOR=$(echo "${{ inputs.wp_version }}" | cut -d. -f2)
+        PORT=$((8000 + MINOR))
+        echo "port=$PORT" >> "$GITHUB_OUTPUT"
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Start WordPress ${{ inputs.wp_version }}
+      working-directory: e2e/docker
+      shell: bash
+      run: |
+        docker compose -f docker-compose.wp-${{ inputs.wp_version }}.yml up -d mysql
+        # Wait for MySQL to be healthy
+        for i in {1..30}; do
+          if docker compose -f docker-compose.wp-${{ inputs.wp_version }}.yml exec -T mysql mysqladmin ping -h localhost --silent; then
+            echo "MySQL is ready"
+            break
+          fi
+          echo "Waiting for MySQL..."
+          sleep 2
+        done
+        # Start WordPress
+        docker compose -f docker-compose.wp-${{ inputs.wp_version }}.yml up -d wordpress
+        # Wait for WordPress to be ready
+        for i in {1..60}; do
+          if curl -s http://localhost:${{ steps.wp-port.outputs.port }}/ > /dev/null 2>&1; then
+            echo "WordPress is ready"
+            break
+          fi
+          echo "Waiting for WordPress..."
+          sleep 3
+        done
+
+    - name: Setup WordPress
+      working-directory: e2e/docker
+      shell: bash
+      run: docker compose -f docker-compose.wp-${{ inputs.wp_version }}.yml exec -T wordpress /setup.sh
+
+    - name: Enable Corepack
+      shell: bash
+      run: corepack enable
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'pnpm'
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile
+
+    - name: Install Playwright browsers
+      working-directory: e2e
+      shell: bash
+      run: pnpm exec playwright install --with-deps
+
+    - name: Prepare module
+      shell: bash
+      run: pnpm run dev:prepare
+
+    - name: Run E2E tests
+      shell: bash
+      working-directory: e2e
+      run: pnpm run test:e2e
+      env:
+        WPNUXT_WORDPRESS_URL: http://localhost:${{ steps.wp-port.outputs.port }}
+        NUXT_FIXTURE: ${{ inputs.nuxt_fixture }}
+
+    - name: Stop Docker
+      if: always()
+      working-directory: e2e/docker
+      shell: bash
+      run: docker compose -f docker-compose.wp-${{ inputs.wp_version }}.yml down
