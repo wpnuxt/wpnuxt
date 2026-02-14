@@ -14,6 +14,7 @@
     "dev": "pnpm dev:full",
     "lint": "eslint .",
     "test": "pnpm -r --if-present test",
+    "test:e2e": "cd e2e && node run-tests.mjs",
     "typecheck": "pnpm -r --if-present typecheck",
     "check": "pnpm run dev:prepare && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build",
     "release": "release-it"
