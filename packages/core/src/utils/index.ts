@@ -1,4 +1,4 @@
-import { existsSync, cpSync, promises as fsp, readdirSync, statSync } from 'node:fs'
+import { existsSync, cpSync, mkdirSync, promises as fsp, readdirSync, statSync } from 'node:fs'
 import { rename, writeFile } from 'node:fs/promises'
 import { relative, join } from 'node:path'
 import { createResolver, useLogger } from '@nuxt/kit'
@@ -103,10 +103,10 @@ export async function mergeQueries(nuxt: Nuxt, wpNuxtConfig: WPNuxtConfig, resol
     }
   }
 
-  // Extend with user queries if they exist
+  // Extend with user queries if they exist (only copy .gql/.graphql files)
   if (existsSync(userQueryPath)) {
     logger.debug('Extending queries:', userQueryPath)
-    cpSync(userQueryPath, queryOutputPath, { recursive: true })
+    copyGraphqlFiles(userQueryPath, queryOutputPath)
   }
 
   logger.debug('Merged queries folder:', queryOutputPath)
@@ -135,4 +135,24 @@ export function findConflicts(userQueryPath: string, outputPath: string): string
     walk(userQueryPath)
   }
   return conflicts
+}
+
+/**
+ * Recursively copies only `.gql` and `.graphql` files from source to destination.
+ * This prevents non-GraphQL files (like README.md) from reaching the merged
+ * queries folder where they would cause parsing errors.
+ */
+function copyGraphqlFiles(src: string, dest: string): void {
+  const entries = readdirSync(src)
+  for (const entry of entries) {
+    const srcPath = join(src, entry)
+    const destPath = join(dest, entry)
+    const stat = statSync(srcPath)
+    if (stat.isDirectory()) {
+      mkdirSync(destPath, { recursive: true })
+      copyGraphqlFiles(srcPath, destPath)
+    } else if (entry.endsWith('.gql') || entry.endsWith('.graphql')) {
+      cpSync(srcPath, destPath)
+    }
+  }
 }

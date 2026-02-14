@@ -10,7 +10,7 @@
 
 import { existsSync } from 'node:fs'
 import { mkdir, readFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { join, relative } from 'node:path'
 import { consola } from 'consola'
 import type { ConsolaInstance } from 'consola'
 import { useLogger } from '@nuxt/kit'
@@ -342,88 +342,37 @@ async function setupGitignore(nuxt: Nuxt, logger: ConsolaInstance): Promise<Setu
 // Queries Folder Setup
 // =============================================================================
 
-/** README content for the extend/queries/ folder. */
-const QUERIES_README = `# Custom GraphQL Queries
-
-Place your custom \`.gql\` or \`.graphql\` files here to extend or override the default WPNuxt queries.
-
-## How it works
-
-1. Files here are merged with WPNuxt's default queries during build
-2. If a file has the same name as a default query, yours will override it
-3. New files will generate new composables automatically
-
-## Example
-
-Create a file \`CustomPosts.gql\`:
-
-\`\`\`graphql
-query CustomPosts($first: Int = 10) {
-  posts(first: $first) {
-    nodes {
-      id
-      title
-      date
-      # Add your custom fields here
-    }
-  }
-}
-\`\`\`
-
-This generates \`useCustomPosts()\` and \`useAsyncCustomPosts()\` composables.
-
-## Available Fragments
-
-You can use these fragments from WPNuxt's defaults:
-- \`...Post\` - Standard post fields
-- \`...Page\` - Standard page fields
-- \`...ContentNode\` - Common content fields
-- \`...FeaturedImage\` - Featured image with sizes
-
-## Documentation
-
-See https://wpnuxt.com/guide/custom-queries for more details.
-`
-
 /**
- * Creates `extend/queries/` folder with a README explaining how to use it.
- * This folder is for user-created custom GraphQL queries that extend or
- * override the default WPNuxt queries. Unlike `.queries/` (which is generated
- * and gitignored), `extend/queries/` should be committed to version control.
+ * Creates `extend/queries/` folder for user-created custom GraphQL queries.
+ * This folder is resolved relative to `srcDir` (matching `mergeQueries()`),
+ * so it works correctly with Nuxt 4's `app/` directory layout.
  *
- * **File artifacts:**
- * - `extend/queries/` directory
- * - `extend/queries/README.md` with usage instructions
+ * **File artifact:** `extend/queries/` directory under `srcDir`
  *
  * @param nuxt - Nuxt instance
  * @param logger - Consola logger instance
  * @returns SetupResult indicating success/failure/skip status
  */
 async function setupQueriesFolder(nuxt: Nuxt, logger: ConsolaInstance): Promise<SetupResult> {
-  const queriesPath = join(nuxt.options.rootDir, 'extend', 'queries')
-  const readmePath = join(queriesPath, 'README.md')
+  const queriesPath = join(nuxt.options.srcDir || nuxt.options.rootDir, 'extend', 'queries')
+  const displayPath = relative(nuxt.options.rootDir, queriesPath) || 'extend/queries'
 
   try {
-    // Check if README already exists (indicates setup was done)
-    if (existsSync(readmePath)) {
-      logger.debug('extend/queries/ folder already exists')
+    if (existsSync(queriesPath)) {
+      logger.debug(`${displayPath}/ folder already exists`)
       return { name: 'Queries folder', success: true, skipped: true }
     }
 
-    // Create the folder
     await mkdir(queriesPath, { recursive: true })
-
-    // Add README
-    await atomicWriteFile(readmePath, QUERIES_README)
 
     return {
       name: 'Queries folder',
       success: true,
-      message: 'Created extend/queries/ for custom GraphQL queries'
+      message: `Created ${displayPath}/ for custom GraphQL queries`
     }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
-    logger.warn(`Failed to setup extend/queries/ folder: ${message}`)
+    logger.warn(`Failed to setup ${displayPath}/ folder: ${message}`)
     return { name: 'Queries folder', success: false, message }
   }
 }
