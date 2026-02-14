@@ -10,20 +10,57 @@ const nuxtPort = {
   nuxt43: 3043
 }[nuxtFixture] || 3043
 
-// Map fixture to project name
-const nuxtProjectName = {
-  nuxt3: 'nuxt-3',
-  nuxt40: 'nuxt-40',
-  nuxt41: 'nuxt-41',
-  nuxt42: 'nuxt-42',
-  nuxt43: 'nuxt-43'
-}[nuxtFixture] || 'nuxt-43'
-
 const wpPort = process.env.WPNUXT_WORDPRESS_URL?.match(/:(\d+)/)?.[1] || 'local'
 const blobSubDir = `blob-report/${testProject}-${nuxtFixture}-wp${wpPort}`
 
 // Only start the Nuxt webServer when running nuxt tests
 const needsWebServer = testProject !== 'wordpress'
+
+// Base project configurations
+const wordpressProject = {
+  name: 'wordpress' as const,
+  testMatch: /wordpress\.spec\.ts/,
+  use: {
+    baseURL: process.env.WPNUXT_WORDPRESS_URL || 'http://localhost:8009',
+    ...devices['Desktop Chrome']
+  }
+}
+
+const nuxtProjects = [
+  {
+    name: 'nuxt-3' as const,
+    testMatch: /nuxt\.spec\.ts/,
+    use: { baseURL: 'http://localhost:3003', ...devices['Desktop Chrome'] }
+  },
+  {
+    name: 'nuxt-40' as const,
+    testMatch: /nuxt\.spec\.ts/,
+    use: { baseURL: 'http://localhost:3040', ...devices['Desktop Chrome'] }
+  },
+  {
+    name: 'nuxt-41' as const,
+    testMatch: /nuxt\.spec\.ts/,
+    use: { baseURL: 'http://localhost:3041', ...devices['Desktop Chrome'] }
+  },
+  {
+    name: 'nuxt-42' as const,
+    testMatch: /nuxt\.spec\.ts/,
+    use: { baseURL: 'http://localhost:3042', ...devices['Desktop Chrome'] }
+  },
+  {
+    name: 'nuxt-43' as const,
+    testMatch: /nuxt\.spec\.ts/,
+    use: { baseURL: 'http://localhost:3043', ...devices['Desktop Chrome'] }
+  }
+]
+
+// Build projects based on environment
+const projects = process.env.NUXT_FIXTURE
+  ? [
+      wordpressProject,
+      nuxtProjects.find(p => p.name === `nuxt-${nuxtFixture.replace('nuxt', '')}`) || nuxtProjects[4]
+    ]
+  : [wordpressProject, ...nuxtProjects]
 
 export default defineConfig({
   testDir: './tests',
@@ -40,66 +77,7 @@ export default defineConfig({
     screenshot: 'only-on-failure'
   },
 
-  projects: [
-    {
-      name: 'wordpress',
-      testMatch: /wordpress\.spec\.ts/,
-      use: {
-        baseURL: process.env.WPNUXT_WORDPRESS_URL || 'http://localhost:8009',
-        ...devices['Desktop Chrome']
-      }
-    },
-    {
-      name: 'nuxt-3',
-      testMatch: /nuxt\.spec\.ts/,
-      use: {
-        baseURL: 'http://localhost:3003',
-        ...devices['Desktop Chrome']
-      }
-    },
-    {
-      name: 'nuxt-40',
-      testMatch: /nuxt\.spec\.ts/,
-      use: {
-        baseURL: 'http://localhost:3040',
-        ...devices['Desktop Chrome']
-      }
-    },
-    {
-      name: 'nuxt-41',
-      testMatch: /nuxt\.spec\.ts/,
-      use: {
-        baseURL: 'http://localhost:3041',
-        ...devices['Desktop Chrome']
-      }
-    },
-    {
-      name: 'nuxt-42',
-      testMatch: /nuxt\.spec\.ts/,
-      use: {
-        baseURL: 'http://localhost:3042',
-        ...devices['Desktop Chrome']
-      }
-    },
-    {
-      name: 'nuxt-43',
-      testMatch: /nuxt\.spec\.ts/,
-      use: {
-        baseURL: 'http://localhost:3043',
-        ...devices['Desktop Chrome']
-      }
-    }
-  ],
-
-  // Only run the project matching the fixture when NUXT_FIXTURE is set
-  ...(process.env.NUXT_FIXTURE
-    ? {
-        projects: [
-          { name: 'wordpress' },
-          { name: nuxtProjectName }
-        ]
-      }
-    : {}),
+  projects,
 
   ...(needsWebServer
     ? {
