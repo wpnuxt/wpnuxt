@@ -12,6 +12,7 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@nuxt/fonts": "^0.10.3",
     "@nuxt/icon": "^2.2.1",
     "@nuxt/ui": "4.4.0",
     "@tailwindcss/typography": "^0.5.19",

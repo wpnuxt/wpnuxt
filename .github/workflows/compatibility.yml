@@ -1,0 +1,63 @@
+name: Compatibility Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      wp_version:
+        description: 'WordPress version'
+        required: false
+        default: '6.9'
+        type: choice
+        options:
+          - '6.4'
+          - '6.5'
+          - '6.6'
+          - '6.7'
+          - '6.8'
+          - '6.9'
+      nuxt_version:
+        description: 'Nuxt version'
+        required: false
+        default: '4'
+        type: choice
+        options:
+          - '3'
+          - '4'
+
+jobs:
+  # Full matrix - all combinations
+  matrix:
+    runs-on: ubuntu-latest
+    name: WP ${{ matrix.wp_version }} + Nuxt ${{ matrix.nuxt_version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        wp_version: ['6.4', '6.5', '6.6', '6.7', '6.8', '6.9']
+        nuxt_version: ['3', '4']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup WordPress and Run E2E Tests
+        uses: ./.github/actions/setup-wp-e2e
+        with:
+          wp_version: ${{ matrix.wp_version }}
+          nuxt_fixture: ${{ matrix.nuxt_version == '3' && 'nuxt3' || 'nuxt43' }}
+
+  # Single combination - if manually specified
+  single:
+    runs-on: ubuntu-latest
+    name: WP ${{ inputs.wp_version }} + Nuxt ${{ inputs.nuxt_version }}
+    if: inputs.wp_version != ''
+    needs: []
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup WordPress and Run E2E Tests
+        uses: ./.github/actions/setup-wp-e2e
+        with:
+          wp_version: ${{ inputs.wp_version }}
+          nuxt_fixture: ${{ inputs.nuxt_version == '3' && 'nuxt3' || 'nuxt43' }}

@@ -1,0 +1,53 @@
+{
+  "name": "@wpnuxt/e2e",
+  "version": "2.0.0-beta.3",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:all": "rm -rf test-results blob-report blob-merged && pnpm run test:wp:all && pnpm run test:nuxt:all && pnpm run test:merge",
+    "test:merge": "rm -rf blob-merged && mkdir -p blob-merged && for dir in blob-report/*/; do name=$(basename \"$dir\"); for f in \"$dir\"*.zip; do cp \"$f\" \"blob-merged/${name}-$(basename \"$f\")\"; done; done && playwright merge-reports blob-merged --reporter=line,html && echo 'Report available at playwright-report/index.html'",
+
+    "test:wp:all": "pnpm run test:wp67 && pnpm run test:wp68 && pnpm run test:wp69",
+    "test:wp67": "WPNUXT_WORDPRESS_URL=http://localhost:8007 TEST_PROJECT=wordpress playwright test --project=wordpress",
+    "test:wp68": "WPNUXT_WORDPRESS_URL=http://localhost:8008 TEST_PROJECT=wordpress playwright test --project=wordpress",
+    "test:wp69": "WPNUXT_WORDPRESS_URL=http://localhost:8009 TEST_PROJECT=wordpress playwright test --project=wordpress",
+
+    "test:nuxt:all": "pnpm run test:nuxt:wp67 && pnpm run test:nuxt:wp68 && pnpm run test:nuxt:wp69",
+    "test:nuxt:wp67": "pnpm run test:nuxt3:wp67 && pnpm run test:nuxt40:wp67 && pnpm run test:nuxt41:wp67 && pnpm run test:nuxt42:wp67 && pnpm run test:nuxt43:wp67",
+    "test:nuxt:wp68": "pnpm run test:nuxt3:wp68 && pnpm run test:nuxt40:wp68 && pnpm run test:nuxt41:wp68 && pnpm run test:nuxt42:wp68 && pnpm run test:nuxt43:wp68",
+    "test:nuxt:wp69": "pnpm run test:nuxt3:wp69 && pnpm run test:nuxt40:wp69 && pnpm run test:nuxt41:wp69 && pnpm run test:nuxt42:wp69 && pnpm run test:nuxt43:wp69",
+
+    "test:nuxt3:wp67": "WPNUXT_WORDPRESS_URL=http://localhost:8007 NUXT_FIXTURE=nuxt3 TEST_PROJECT=nuxt3 playwright test --project=nuxt-3",
+    "test:nuxt3:wp68": "WPNUXT_WORDPRESS_URL=http://localhost:8008 NUXT_FIXTURE=nuxt3 TEST_PROJECT=nuxt3 playwright test --project=nuxt-3",
+    "test:nuxt3:wp69": "WPNUXT_WORDPRESS_URL=http://localhost:8009 NUXT_FIXTURE=nuxt3 TEST_PROJECT=nuxt3 playwright test --project=nuxt-3",
+    "test:nuxt40:wp67": "WPNUXT_WORDPRESS_URL=http://localhost:8007 NUXT_FIXTURE=nuxt40 TEST_PROJECT=nuxt40 playwright test --project=nuxt-40",
+    "test:nuxt40:wp68": "WPNUXT_WORDPRESS_URL=http://localhost:8008 NUXT_FIXTURE=nuxt40 TEST_PROJECT=nuxt40 playwright test --project=nuxt-40",
+    "test:nuxt40:wp69": "WPNUXT_WORDPRESS_URL=http://localhost:8009 NUXT_FIXTURE=nuxt40 TEST_PROJECT=nuxt40 playwright test --project=nuxt-40",
+    "test:nuxt41:wp67": "WPNUXT_WORDPRESS_URL=http://localhost:8007 NUXT_FIXTURE=nuxt41 TEST_PROJECT=nuxt41 playwright test --project=nuxt-41",
+    "test:nuxt41:wp68": "WPNUXT_WORDPRESS_URL=http://localhost:8008 NUXT_FIXTURE=nuxt41 TEST_PROJECT=nuxt41 playwright test --project=nuxt-41",
+    "test:nuxt41:wp69": "WPNUXT_WORDPRESS_URL=http://localhost:8009 NUXT_FIXTURE=nuxt41 TEST_PROJECT=nuxt41 playwright test --project=nuxt-41",
+    "test:nuxt42:wp67": "WPNUXT_WORDPRESS_URL=http://localhost:8007 NUXT_FIXTURE=nuxt42 TEST_PROJECT=nuxt42 playwright test --project=nuxt-42",
+    "test:nuxt42:wp68": "WPNUXT_WORDPRESS_URL=http://localhost:8008 NUXT_FIXTURE=nuxt42 TEST_PROJECT=nuxt42 playwright test --project=nuxt-42",
+    "test:nuxt42:wp69": "WPNUXT_WORDPRESS_URL=http://localhost:8009 NUXT_FIXTURE=nuxt42 TEST_PROJECT=nuxt42 playwright test --project=nuxt-42",
+    "test:nuxt43:wp67": "WPNUXT_WORDPRESS_URL=http://localhost:8007 NUXT_FIXTURE=nuxt43 TEST_PROJECT=nuxt43 playwright test --project=nuxt-43",
+    "test:nuxt43:wp68": "WPNUXT_WORDPRESS_URL=http://localhost:8008 NUXT_FIXTURE=nuxt43 TEST_PROJECT=nuxt43 playwright test --project=nuxt-43",
+    "test:nuxt43:wp69": "WPNUXT_WORDPRESS_URL=http://localhost:8009 NUXT_FIXTURE=nuxt43 TEST_PROJECT=nuxt43 playwright test --project=nuxt-43",
+
+    "docker:up": "docker-compose -f docker/docker-compose.wp-6.9.yml up -d",
+    "docker:up:all": "docker-compose -f docker/docker-compose.wp-6.7.yml up -d && docker-compose -f docker/docker-compose.wp-6.8.yml up -d && docker-compose -f docker/docker-compose.wp-6.9.yml up -d",
+    "docker:down": "docker-compose -f docker/docker-compose.wp-6.9.yml down",
+    "docker:down:all": "docker-compose -f docker/docker-compose.wp-6.7.yml down && docker-compose -f docker/docker-compose.wp-6.8.yml down && docker-compose -f docker/docker-compose.wp-6.9.yml down",
+    "docker:setup": "docker-compose -f docker/docker-compose.wp-6.9.yml exec -T wordpress /setup.sh",
+    "docker:setup:all": "docker-compose -f docker/docker-compose.wp-6.7.yml exec -T wordpress /setup.sh && docker-compose -f docker/docker-compose.wp-6.8.yml exec -T wordpress /setup.sh && docker-compose -f docker/docker-compose.wp-6.9.yml exec -T wordpress /setup.sh"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.50.1",
+    "@wpnuxt/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

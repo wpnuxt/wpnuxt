@@ -1,0 +1,19 @@
+{
+  "name": "@wpnuxt/e2e-fixture-nuxt42",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "prepare": "nuxi prepare",
+    "typecheck": "vue-tsc --noEmit",
+    "test:serve": "PORT=3042 nuxt preview"
+  },
+  "dependencies": {
+    "@wpnuxt/core": "workspace:*",
+    "nuxt": "4.2.0"
+  },
+  "devDependencies": {
+    "vue-tsc": "^3.2.3"
+  }
+}
