@@ -124,6 +124,9 @@ jobs:
     name: E2E (WP 6.9 + Nuxt 4)
     needs: [build]
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Setup WordPress and Run E2E Tests
         uses: ./.github/actions/setup-wp-e2e
         with:
