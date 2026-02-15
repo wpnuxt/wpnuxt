@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>WPNuxt E2E Test - Nuxt {{ nuxtVersion }}</h1>
+    <h1>WPNuxt E2E Test - Nuxt srcdir</h1>
     <div v-if="pending">
       Loading...
     </div>
@@ -58,8 +58,6 @@
 </template>
 
 <script setup lang="ts">
-const nuxtVersion = '4'
-
 const { data: posts, pending, error } = await usePosts()
 const { data: pages } = await usePages()
 const { data: settings } = await useGeneralSettings()

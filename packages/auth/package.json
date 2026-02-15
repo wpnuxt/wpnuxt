@@ -55,6 +55,6 @@
   },
   "peerDependencies": {
     "@wpnuxt/core": "workspace:*",
-    "nuxt": "^4.0.0"
+    "nuxt": ">=3.17.0"
   }
 }

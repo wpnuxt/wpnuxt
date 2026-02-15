@@ -7,7 +7,7 @@
 
 > **Note:** WPNuxt v2 is currently in beta. The API is stable but may still have minor changes before the final release.
 
-A Nuxt 4 module that seamlessly integrates WordPress with Nuxt via GraphQL (WPGraphQL), providing type-safe composables and utilities for fetching WordPress content.
+A Nuxt module that seamlessly integrates WordPress with Nuxt via GraphQL (WPGraphQL), providing type-safe composables and utilities for fetching WordPress content.
 
 - [Release Notes](/CHANGELOG.md)
 - [Migration Guide](/MIGRATION.md) (for users upgrading from 1.x)
@@ -177,7 +177,7 @@ components/
 
 ## Requirements
 
-- **Nuxt 4.x** (for Nuxt 3, use WPNuxt 1.x)
+- **Nuxt 3.17+** (for older Nuxt 3, use WPNuxt 1.x)
 - **WordPress** with [WPGraphQL](https://www.wpgraphql.com/) plugin installed
 - **Node.js 20+**
 
@@ -214,7 +214,7 @@ pnpm run lint
 See the [Migration Guide](/MIGRATION.md) for detailed instructions on upgrading from WPNuxt 1.x.
 
 Key changes:
-- Nuxt 4 required (was Nuxt 3)
+- Nuxt 3.17+ required (was Nuxt 3)
 - Composables renamed: `useWPPosts` → `usePosts`
 - Async variants: `useAsyncPosts` → `usePosts(undefined, { lazy: true })`
 - Directive changed: `v-sanitize` → `v-sanitize-html`

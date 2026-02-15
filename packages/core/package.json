@@ -73,6 +73,6 @@
     "vue-tsc": "^3.2.3"
   },
   "peerDependencies": {
-    "nuxt": "^4.0.0"
+    "nuxt": ">=3.17.0"
   }
 }

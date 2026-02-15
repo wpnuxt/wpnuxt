@@ -33,7 +33,7 @@ export default defineNuxtModule<WPNuxtBlocksConfig>({
     name: '@wpnuxt/blocks',
     configKey: 'wpNuxtBlocks',
     compatibility: {
-      nuxt: '>=3.0.0'
+      nuxt: '>=3.17.0'
     }
   },
   defaults: {

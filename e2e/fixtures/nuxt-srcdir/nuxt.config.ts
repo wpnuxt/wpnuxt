@@ -3,10 +3,6 @@ export default defineNuxtConfig({
 
   srcDir: 'src/',
 
-  future: {
-    compatibilityVersion: 4
-  },
-
   compatibilityDate: '2026-01-18',
 
   wpNuxt: {
