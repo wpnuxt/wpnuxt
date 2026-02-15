@@ -17,7 +17,8 @@
     "test:e2e": "cd e2e && node run-tests.mjs",
     "typecheck": "pnpm -r --if-present typecheck",
     "check": "pnpm run dev:prepare && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build",
-    "release": "release-it"
+    "release": "release-it",
+    "update": "pnpm update --interactive --latest --recursive --filter=!@wpnuxt/e2e-fixture-*"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^1.15.1",
