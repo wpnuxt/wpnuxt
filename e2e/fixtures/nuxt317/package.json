@@ -1,14 +1,14 @@
 {
-  "name": "@wpnuxt/e2e-fixture-nuxt313",
+  "name": "@wpnuxt/e2e-fixture-nuxt317",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "nuxi dev",
-    "test:serve": "PORT=3013 nuxt preview"
+    "test:serve": "PORT=3017 nuxt preview"
   },
   "dependencies": {
     "@wpnuxt/core": "workspace:*",
-    "nuxt": "~3.13.0"
+    "nuxt": "~3.17.0"
   },
   "devDependencies": {
     "vue-tsc": "^3.2.3"

@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "nuxi dev",
-    "test:serve": "PORT=3040 nuxt preview"
+    "test:serve": "PORT=3040 node .output/server/index.mjs"
   },
   "dependencies": {
     "@wpnuxt/core": "workspace:*",

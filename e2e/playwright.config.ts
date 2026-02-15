@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test'
 
 const nuxtFixture = process.env.NUXT_FIXTURE || 'nuxt43'
 const nuxtPorts: Record<string, number> = {
-  'nuxt313': 3013,
+  'nuxt317': 3017,
   'nuxt3': 3003,
   'nuxt40': 3040,
   'nuxt41': 3041,
