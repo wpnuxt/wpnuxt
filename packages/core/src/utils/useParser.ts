@@ -19,8 +19,16 @@ const _parseDoc = async (doc: string): Promise<WPNuxtQuery[]> => {
           throw createModuleError('core', 'GraphQL operation is missing a name. All queries and mutations must have a name.')
         }
 
+        const name = operationDefinition.name.value.trim()
+
+        // Validate operation name produces a valid JavaScript identifier
+        // to prevent issues in the generated .mjs composable files
+        if (!/^[a-z_$][\w$]*$/i.test(name)) {
+          throw createModuleError('core', `Invalid GraphQL operation name "${name}". Operation names must be valid JavaScript identifiers (start with a letter, underscore, or $ and contain only letters, numbers, underscores, or $).`)
+        }
+
         const query: WPNuxtQuery = {
-          name: operationDefinition.name.value.trim(),
+          name,
           nodes: [],
           fragments: [],
           params: {},
