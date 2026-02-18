@@ -1,5 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { execSync } from 'node:child_process'
+import { parse, visit, print } from 'graphql'
+import type { InterfaceTypeDefinitionNode, ObjectTypeDefinitionNode } from 'graphql'
 
 /**
  * Validate that the WordPress GraphQL endpoint is reachable.
@@ -163,54 +165,55 @@ Check your wpNuxt.wordpressUrl configuration in nuxt.config.ts`
 }
 
 /**
- * Patch the WPGraphQL schema to fix interface implementation issues.
+ * Interfaces whose `implements` clauses should be removed from the schema.
  *
  * WPGraphQL uses interfaces like Connection and Edge with generic return types (Node),
  * but implementing types use more specific types (ContentNode, TermNode, etc.).
  * This is technically valid according to GraphQL spec (covariant return types),
- * but graphql-js validates strictly. This function patches the schema to remove
- * the problematic interface implementations.
+ * but graphql-js validates strictly.
+ */
+const PROBLEMATIC_INTERFACES = new Set([
+  'Connection',
+  'Edge',
+  'OneToOneConnection',
+  'NodeWithEditorBlocks'
+])
+
+/**
+ * Remove problematic interface implementations from a GraphQL schema string.
+ *
+ * Uses the GraphQL AST to safely filter out interfaces that cause graphql-js
+ * validation errors due to covariant return types in WPGraphQL.
+ *
+ * @param schemaText - Raw GraphQL schema string
+ * @returns Patched schema string with problematic interfaces removed
+ */
+export function patchSchemaText(schemaText: string): string {
+  const ast = parse(schemaText)
+
+  function filterInterfaces(node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode) {
+    if (!node.interfaces?.length) return undefined
+    const filtered = node.interfaces.filter(
+      iface => !PROBLEMATIC_INTERFACES.has(iface.name.value)
+    )
+    if (filtered.length === node.interfaces.length) return undefined
+    return { ...node, interfaces: filtered }
+  }
+
+  const patched = visit(ast, {
+    ObjectTypeDefinition: filterInterfaces,
+    InterfaceTypeDefinition: filterInterfaces
+  })
+
+  return print(patched)
+}
+
+/**
+ * Patch the WPGraphQL schema file to fix interface implementation issues.
  *
  * @param schemaPath - Path to the schema.graphql file
  */
 function patchWPGraphQLSchema(schemaPath: string): void {
-  let schema = readFileSync(schemaPath, 'utf-8')
-
-  // List of problematic interface implementations to remove
-  // These are interfaces that define generic return types that implementing types narrow
-  const problematicInterfaces = [
-    'Connection',
-    'Edge',
-    'OneToOneConnection'
-  ]
-
-  // Also remove NodeWithEditorBlocks which has editorBlocks return type mismatch
-  problematicInterfaces.push('NodeWithEditorBlocks')
-
-  // Remove these interface implementations from type declarations
-  // Match patterns like: "implements Foo & Connection & Bar" -> "implements Foo & Bar"
-  // or "implements Connection & Bar" -> "implements Bar"
-  // or "implements Foo & Connection" -> "implements Foo"
-  // or "implements Connection" -> ""
-  for (const iface of problematicInterfaces) {
-    // Remove interface when it's the only one: "implements Interface {"
-    schema = schema.replace(
-      new RegExp(`implements\\s+${iface}\\s*\\{`, 'g'),
-      '{'
-    )
-
-    // Remove interface at the start: "implements Interface & Other" -> "implements Other"
-    schema = schema.replace(
-      new RegExp(`implements\\s+${iface}\\s+&\\s+`, 'g'),
-      'implements '
-    )
-
-    // Remove interface in the middle or end: "& Interface &" -> "&" or "& Interface {" -> "{"
-    schema = schema.replace(
-      new RegExp(`\\s*&\\s*${iface}(?=\\s*[&{])`, 'g'),
-      ''
-    )
-  }
-
-  writeFileSync(schemaPath, schema)
+  const schema = readFileSync(schemaPath, 'utf-8')
+  writeFileSync(schemaPath, patchSchemaText(schema))
 }
