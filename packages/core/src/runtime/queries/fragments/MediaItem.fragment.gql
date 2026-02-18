@@ -29,7 +29,21 @@ fragment MediaItem on MediaItem {
   isTermNode
   # lastEditedBy
   link
-  # mediaDetails
+  mediaDetails {
+    file
+    filePath
+    height
+    width
+    sizes {
+      file
+      fileSize
+      height
+      mimeType
+      name
+      sourceUrl
+      width
+    }
+  }
   mediaItemId
   mediaItemUrl
   mediaType
