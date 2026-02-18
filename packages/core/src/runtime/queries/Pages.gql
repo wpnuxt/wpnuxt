@@ -10,8 +10,8 @@ query PageByUri($uri: ID!) {
     ...Page
   }
 }
-query PageById($id: ID!) {
-  page(id: $id, idType: DATABASE_ID, asPreview: true) {
+query PageById($id: ID!, $asPreview: Boolean = false) {
+  page(id: $id, idType: DATABASE_ID, asPreview: $asPreview) {
     ...Page
   }
 }
