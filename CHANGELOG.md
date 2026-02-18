@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.0-beta.5](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2026-02-18)
+
+### Bug Fixes
+
+* **core:** update output type for unselected union/interface members to Record<string, unknown> for better type safety ([ad07cd7](https://github.com/wpnuxt/wpnuxt/commit/ad07cd7134e15424b28d41109dca1b2576375dda))
+
 ## [2.0.0-beta.4](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2026-02-18)
 
 ### Features
