@@ -1,5 +1,54 @@
 # Changelog
 
+## [2.0.0-beta.4](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2026-02-18)
+
+### Features
+
+* **core:** add mediaDetails with sub-selections to MediaItem fragment for image optimization ([339a14f](https://github.com/wpnuxt/wpnuxt/commit/339a14fc532b02713bbaf4da3e91171c3f232581))
+* **e2e:** add automated end-to-end testing with Playwright ([#226](https://github.com/wpnuxt/wpnuxt/issues/226)) ([9517732](https://github.com/wpnuxt/wpnuxt/commit/95177325faa94a24c1a8e3ba6b8ea46ea58f6d76))
+* **e2e:** add custom post type (Book) tests ([#228](https://github.com/wpnuxt/wpnuxt/issues/228)) ([1e4a0d2](https://github.com/wpnuxt/wpnuxt/commit/1e4a0d2134a64f3c14639fa6cc1e5afcb26343e7)), closes [#229](https://github.com/wpnuxt/wpnuxt/issues/229)
+* **e2e:** add custom srcDir fixture to verify non-default srcDir resolution ([#230](https://github.com/wpnuxt/wpnuxt/issues/230)) ([9071836](https://github.com/wpnuxt/wpnuxt/commit/90718363d9cb6949e446898f2370cc4378a44ad1))
+* **e2e:** add Nuxt 3.13 fixture for srcDir == rootDir coverage (fixes [#230](https://github.com/wpnuxt/wpnuxt/issues/230)) ([2e8406b](https://github.com/wpnuxt/wpnuxt/commit/2e8406b18a8340bf76371eb2cd9649f4c16ea733))
+* **e2e:** extend Nuxt integration tests with navigation, images, categories, and 404 ([#223](https://github.com/wpnuxt/wpnuxt/issues/223)) ([495ec17](https://github.com/wpnuxt/wpnuxt/commit/495ec17e9d01d9e2a29d3a2480cd22efc7e1de20))
+* support Nuxt >=3.17.0 as minimum version (fixes [#231](https://github.com/wpnuxt/wpnuxt/issues/231)) ([a05b7f0](https://github.com/wpnuxt/wpnuxt/commit/a05b7f09fe162c5ae7eb436025309f4b9a3d7fc2))
+* **workflow:** add 'run_all' input to compatibility tests for flexible execution ([1bbbbb0](https://github.com/wpnuxt/wpnuxt/commit/1bbbbb0f98ccd0758383e4d1df7af092ab2c26d1))
+* **workflow:** update compatibility tests to support additional Nuxt versions and enhance test execution ([1c7140d](https://github.com/wpnuxt/wpnuxt/commit/1c7140dbc2118cff6faeaba31554883619c9117c))
+
+### Bug Fixes
+
+* **core:** align generated WPContentOptions declaration with runtime definition ([ba547e6](https://github.com/wpnuxt/wpnuxt/commit/ba547e625680f0e719026e01ed806f9fdb0b60a4))
+* **core:** make PageById preview behavior match PostById with $asPreview variable (fixes [#236](https://github.com/wpnuxt/wpnuxt/issues/236)) ([21470b0](https://github.com/wpnuxt/wpnuxt/commit/21470b095f5680683e5501942bda9ace607fa329))
+* **core:** make usePrevNextPost limit configurable, increase default to 1000 (fixes [#235](https://github.com/wpnuxt/wpnuxt/issues/235)) ([38b76a7](https://github.com/wpnuxt/wpnuxt/commit/38b76a7e030f43e7e0800be6821a273a3db93839))
+* **core:** prevent unsanitized HTML rendering in v-sanitize-html directive (fixes [#234](https://github.com/wpnuxt/wpnuxt/issues/234)) ([e164f37](https://github.com/wpnuxt/wpnuxt/commit/e164f374fe9c43c1f98eda86b192b3e0f8ed3e12))
+* **core:** remove dead useAsyncWPContent auto-import (fixes [#237](https://github.com/wpnuxt/wpnuxt/issues/237)) ([fc1e289](https://github.com/wpnuxt/wpnuxt/commit/fc1e289efb6b08ca1380ee25f408307271dba589))
+* **core:** remove interactive URL prompts that garble in Nuxt dev server ([652b8f7](https://github.com/wpnuxt/wpnuxt/commit/652b8f7e116c8e718af579d48ac365d7457e0481))
+* **core:** resolve extend/queries path relative to srcDir and filter non-GraphQL files (fixes [#229](https://github.com/wpnuxt/wpnuxt/issues/229)) ([f8952b8](https://github.com/wpnuxt/wpnuxt/commit/f8952b86867e87d5696690252d7e4e1a940d91d6))
+* **core:** set IPX image config before @nuxt/image installs ([#217](https://github.com/wpnuxt/wpnuxt/issues/217)) ([601cabc](https://github.com/wpnuxt/wpnuxt/commit/601cabce00fa913d5f8fb93c9cd3650b800bcb26))
+* **core:** validate GraphQL operation names are valid JavaScript identifiers ([a931b12](https://github.com/wpnuxt/wpnuxt/commit/a931b125158324a66b76173a9dc38f815e158d2f))
+* **e2e:** rename nuxt313 to nuxt317, fix nuxt3 and nuxt40 fixtures ([88b9271](https://github.com/wpnuxt/wpnuxt/commit/88b927126fe0ff65443037d449746700ca33cb60)), closes [#231](https://github.com/wpnuxt/wpnuxt/issues/231)
+* **e2e:** standardize class attribute formatting in [...slug].vue fixtures ([684a87b](https://github.com/wpnuxt/wpnuxt/commit/684a87becc499f1ce42ded1ccb63e73594f0b3c5))
+* filter pnpm install on Vercel to exclude e2e fixtures ([86aae9d](https://github.com/wpnuxt/wpnuxt/commit/86aae9d78075ba3b2fff2d87b64f523854a22717))
+* **ssg:** add 1536 to Vercel image sizes to match @nuxt/image breakpoint ([0b52ef7](https://github.com/wpnuxt/wpnuxt/commit/0b52ef790227b03e9fb3e669d396e93085bdb7f8))
+* **ssg:** add required sizes to vercel.json images config ([68c90e1](https://github.com/wpnuxt/wpnuxt/commit/68c90e19054d2386e228b3170da8c870f77f544d))
+* **ssg:** allow Vercel Image Optimization to fetch WordPress images ([46f64d0](https://github.com/wpnuxt/wpnuxt/commit/46f64d02f7713f7ecaa9466cfd8de2deb3b551e3))
+* update ESLint dirs.src to target actual monorepo directories (fixes [#238](https://github.com/wpnuxt/wpnuxt/issues/238)) ([b8b3897](https://github.com/wpnuxt/wpnuxt/commit/b8b38977556fe23aaac1febb9f0997a97bb3c058))
+
+### Refactoring
+
+* **core:** replace inline template strings with actual TypeScript source files ([5f69ee5](https://github.com/wpnuxt/wpnuxt/commit/5f69ee54bc103a89c99215306725755493c4ad91))
+* **core:** replace regex-based schema patching with GraphQL AST approach ([5535f75](https://github.com/wpnuxt/wpnuxt/commit/5535f75b003d8eb65bf4583968aa85b1d78d6c5d))
+* **core:** replace Vue ref with plain module-level variable for logger ([efea59f](https://github.com/wpnuxt/wpnuxt/commit/efea59f18260bb13ed2b4da15cefbe8d66598506))
+* **core:** use validateWordPressUrl in loadConfig for consistent URL validation ([24c6b8c](https://github.com/wpnuxt/wpnuxt/commit/24c6b8c3c7e547b8ca876f5d80d9edc2c8b4a73e))
+* **e2e:** add fixtures to workspace for per-fixture Nuxt version resolution ([30057ef](https://github.com/wpnuxt/wpnuxt/commit/30057ef0442794348201b925021f3b87128e5db8))
+* **e2e:** simplify test runner with centralized version management ([#227](https://github.com/wpnuxt/wpnuxt/issues/227)) ([314584a](https://github.com/wpnuxt/wpnuxt/commit/314584aaf9043d09904802ada81d2ad5f5632d63))
+* **e2e:** update v-html to v-sanitize-html in fixture pages for security compliance ([ffca6cb](https://github.com/wpnuxt/wpnuxt/commit/ffca6cb48ec15b51ecf0383da0d77bd174d1d35a))
+* **layouts:** streamline menu item definitions in default and app components ([8bf02fa](https://github.com/wpnuxt/wpnuxt/commit/8bf02fa67b69662ae2d40c99e60b3a42fc9847f5))
+
+### Maintenance
+
+* add interactive update script to package.json ([03b430f](https://github.com/wpnuxt/wpnuxt/commit/03b430f8651605471d04869ce20ff0bb6a3cbfdf))
+* **npm:** update .npmrc hoisting patterns for improved package management ([8b2aec8](https://github.com/wpnuxt/wpnuxt/commit/8b2aec894e14217e42b7c84bafa4c79707f33d9b))
+
 ## [2.0.0-beta.3](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2026-02-12)
 
 ### Bug Fixes
