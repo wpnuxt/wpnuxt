@@ -14,8 +14,13 @@ export default createConfigForNuxt({
   },
   dirs: {
     src: [
-      './playground',
-      './src'
+      './packages/core/src',
+      './packages/blocks/src',
+      './packages/auth/src',
+      './playgrounds/core',
+      './playgrounds/blocks',
+      './playgrounds/full',
+      './playgrounds/ssg'
     ]
   }
 },
