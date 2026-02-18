@@ -29,8 +29,8 @@
       <!-- eslint-disable-next-line vue/no-v-sanitize-html -->
       <div
         v-if="node.content"
-        class="node-body"
         v-sanitize-html="node.content"
+        class="node-body"
       />
     </div>
   </div>
