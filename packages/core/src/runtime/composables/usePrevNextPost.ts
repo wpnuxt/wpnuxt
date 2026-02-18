@@ -20,6 +20,7 @@ interface PrevNextResult {
  * - "next" = newer post (lower index)
  *
  * @param currentSlug - The current post's slug (without slashes)
+ * @param limit - Maximum number of posts to fetch for navigation. Default: 1000.
  * @returns Object with `prev` and `next` post objects containing slug, uri, and title
  *
  * @example
@@ -31,10 +32,10 @@ interface PrevNextResult {
  * <NuxtLink v-if="next" :to="next.uri">{{ next.title }}</NuxtLink>
  * ```
  */
-export async function usePrevNextPost(currentSlug: string): Promise<PrevNextResult> {
+export async function usePrevNextPost(currentSlug: string, limit: number = 1000): Promise<PrevNextResult> {
   // Fetch all posts using WPNuxt's content composable (cached automatically)
   // The Posts query returns posts sorted by date DESC by default
-  const { data, execute } = useWPContent<{ limit: number }>('Posts', ['posts', 'nodes'], false, { limit: 100 })
+  const { data, execute } = useWPContent<{ limit: number }>('Posts', ['posts', 'nodes'], false, { limit })
 
   // Ensure data is fetched (execute returns a promise)
   await execute()
