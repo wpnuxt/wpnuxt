@@ -3,7 +3,6 @@ import { rename, writeFile } from 'node:fs/promises'
 import { relative, join } from 'node:path'
 import { createResolver, useLogger } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
-import { ref } from 'vue'
 import type { ConsolaInstance } from 'consola'
 import type { Nuxt } from 'nuxt/schema'
 import type { WPNuxtConfig } from '../types/config'
@@ -68,14 +67,14 @@ export function randHashGenerator(length = 12) {
     .padEnd(length, '0')
 }
 
-const loggerRef = ref()
+let loggerInstance: ConsolaInstance | undefined
 
 export const initLogger = (debug: boolean) => {
-  loggerRef.value = useLogger('wpnuxt', { level: debug ? 4 : 3 })
-  return loggerRef.value
+  loggerInstance = useLogger('wpnuxt', { level: debug ? 4 : 3 })
+  return loggerInstance
 }
 export function getLogger(): ConsolaInstance {
-  return loggerRef.value
+  return loggerInstance!
 }
 
 export async function mergeQueries(nuxt: Nuxt, wpNuxtConfig: WPNuxtConfig, resolver: Resolver) {
