@@ -515,6 +515,12 @@ async function registerModules(nuxt: Nuxt, resolver: Resolver, wpNuxtConfig: WPN
         DateTime: 'string',
         ID: 'string'
       },
+      // Use Record<string, unknown> instead of the default 'object' for unselected
+      // union/interface members. This makes inline fragment types (e.g. ACF relationship
+      // fields) usable without manual type assertions. See: #245
+      output: {
+        emptyObject: 'Record<string, unknown>'
+      },
       // Pass auth headers for schema download when token is configured
       ...(wpNuxtConfig.schemaAuthToken && {
         urlSchemaOptions: {
