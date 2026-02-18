@@ -1,5 +1,5 @@
 import { defu } from 'defu'
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { version } from '../package.json'
@@ -323,54 +323,7 @@ async function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): Promise<W
 // GraphQL Middleware Options
 // =============================================================================
 
-const SERVER_OPTIONS_TEMPLATE = `import { defineGraphqlServerOptions } from '@wpnuxt/core/server-options'
-import { getHeader, getCookie } from 'h3'
-import { useRuntimeConfig } from '#imports'
-
-/**
- * WPNuxt default server options for nuxt-graphql-middleware.
- *
- * This enables:
- * - Cookie forwarding for WordPress preview mode
- * - Authorization header forwarding for authenticated requests
- * - Auth token from cookie for @wpnuxt/auth
- * - Consistent error logging
- *
- * Users can customize by creating their own server/graphqlMiddleware.serverOptions.ts
- */
-export default defineGraphqlServerOptions({
-  async serverFetchOptions(event, _operation, _operationName, _context) {
-    // Get auth token from Authorization header or from cookie
-    let authorization = getHeader(event, 'authorization') || ''
-
-    // If no Authorization header, check for auth token in cookie (@wpnuxt/auth)
-    if (!authorization) {
-      const config = useRuntimeConfig().public.wpNuxtAuth as { cookieName?: string } | undefined
-      const cookieName = config?.cookieName || 'wpnuxt-auth-token'
-      const authToken = getCookie(event, cookieName)
-      if (authToken) {
-        authorization = \`Bearer \${authToken}\`
-      }
-    }
-
-    return {
-      headers: {
-        // Forward WordPress auth cookies for previews
-        Cookie: getHeader(event, 'cookie') || '',
-        // Forward authorization header or token from cookie
-        Authorization: authorization
-      }
-    }
-  },
-
-  async onServerError(event, error, _operation, operationName) {
-    const url = event.node.req.url || 'unknown'
-    console.error(\`[WPNuxt] GraphQL error in \${operationName} (\${url}):\`, error.message)
-  }
-})
-`
-
-async function setupServerOptions(nuxt: Nuxt, _resolver: Resolver, logger: ReturnType<typeof getLogger>) {
+async function setupServerOptions(nuxt: Nuxt, resolver: Resolver, logger: ReturnType<typeof getLogger>) {
   const serverDir = nuxt.options.serverDir
   const targetPath = join(serverDir, 'graphqlMiddleware.serverOptions.ts')
 
@@ -385,42 +338,15 @@ async function setupServerOptions(nuxt: Nuxt, _resolver: Resolver, logger: Retur
     await mkdir(serverDir, { recursive: true })
   }
 
-  // Write WPNuxt's default server options
-  await writeFile(targetPath, SERVER_OPTIONS_TEMPLATE)
+  // Read template from actual .ts file (provides IDE support and type checking)
+  const template = readFileSync(
+    resolver.resolve('./runtime/server/graphqlMiddleware.serverOptions.ts'), 'utf-8'
+  )
+  await writeFile(targetPath, template)
   logger.debug('Created graphqlMiddleware.serverOptions.ts with WPNuxt defaults (cookie/auth forwarding)')
 }
 
-const CLIENT_OPTIONS_TEMPLATE = `import { defineGraphqlClientOptions } from '@wpnuxt/core/client-options'
-import { useRoute } from '#imports'
-
-/**
- * WPNuxt default client options for nuxt-graphql-middleware.
- *
- * This enables passing client context to the server for:
- * - Preview mode (passes preview flag and token from URL query params)
- *
- * The context is available in serverFetchOptions via context.client
- * All values must be strings (nuxt-graphql-middleware requirement)
- *
- * Users can customize by creating their own app/graphqlMiddleware.clientOptions.ts
- */
-export default defineGraphqlClientOptions<{
-  preview?: string
-  previewToken?: string
-}>({
-  buildClientContext() {
-    const route = useRoute()
-
-    return {
-      // Context values must be strings - use 'true'/'false' instead of boolean
-      preview: route.query.preview === 'true' ? 'true' : undefined,
-      previewToken: route.query.token as string | undefined
-    }
-  }
-})
-`
-
-async function setupClientOptions(nuxt: Nuxt, _resolver: Resolver, logger: ReturnType<typeof getLogger>) {
+async function setupClientOptions(nuxt: Nuxt, resolver: Resolver, logger: ReturnType<typeof getLogger>) {
   // Client options go in the app directory (Nuxt 4 structure)
   // In Nuxt 4, nuxt.options.dir.app is an absolute path
   const appDir = nuxt.options.dir.app
@@ -437,8 +363,11 @@ async function setupClientOptions(nuxt: Nuxt, _resolver: Resolver, logger: Retur
     await mkdir(appDir, { recursive: true })
   }
 
-  // Write WPNuxt's default client options
-  await writeFile(targetPath, CLIENT_OPTIONS_TEMPLATE)
+  // Read template from actual .ts file (provides IDE support and type checking)
+  const template = readFileSync(
+    resolver.resolve('./runtime/app/graphqlMiddleware.clientOptions.ts'), 'utf-8'
+  )
+  await writeFile(targetPath, template)
   logger.debug('Created graphqlMiddleware.clientOptions.ts with WPNuxt defaults (preview mode support)')
 }
 

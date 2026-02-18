@@ -1,4 +1,4 @@
-import { defineGraphqlClientOptions } from 'nuxt-graphql-middleware/client-options'
+import { defineGraphqlClientOptions } from '@wpnuxt/core/client-options'
 import { useRoute } from '#imports'
 
 /**
