@@ -197,7 +197,6 @@ export default defineNuxtModule<WPNuxtConfig>({
 
     addImports([
       { name: 'useWPContent', as: 'useWPContent', from: resolver.resolve('./runtime/composables/useWPContent') },
-      { name: 'useAsyncWPContent', as: 'useAsyncWPContent', from: resolver.resolve('./runtime/composables/useWPContent') },
       { name: 'getRelativeImagePath', as: 'getRelativeImagePath', from: resolver.resolve('./runtime/util/images') },
       { name: 'isInternalLink', as: 'isInternalLink', from: resolver.resolve('./runtime/util/links') },
       { name: 'toRelativePath', as: 'toRelativePath', from: resolver.resolve('./runtime/util/links') },
