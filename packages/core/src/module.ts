@@ -11,7 +11,7 @@ import type { Import } from 'unimport'
 import type { WPNuxtConfig } from './types/config'
 import type { WPNuxtContext } from './types/queries'
 import { generateWPNuxtComposables } from './generate'
-import { getLogger, initLogger, mergeQueries, randHashGenerator, createModuleError } from './utils/index'
+import { getLogger, initLogger, mergeQueries, randHashGenerator, createModuleError, validateWordPressUrl } from './utils/index'
 import { validateWordPressEndpoint } from './utils/endpointValidation'
 import { runInstall } from './install'
 
@@ -293,9 +293,13 @@ async function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): Promise<W
 
     throw createModuleError('core', 'WordPress URL is required. Set it in nuxt.config.ts or via WPNUXT_WORDPRESS_URL environment variable.')
   }
-  if (config.wordpressUrl.endsWith('/')) {
-    throw createModuleError('core', `WordPress URL should not have a trailing slash: ${config.wordpressUrl}`)
+
+  // Use validateWordPressUrl for full validation and normalization
+  const validation = validateWordPressUrl(config.wordpressUrl)
+  if (!validation.valid) {
+    throw createModuleError('core', `Invalid WordPress URL: ${validation.error}`)
   }
+  config.wordpressUrl = validation.normalizedUrl!
 
   // Set runtimeConfig after validation (wordpressUrl is guaranteed to be set)
   nuxt.options.runtimeConfig.public.wordpressUrl = config.wordpressUrl
