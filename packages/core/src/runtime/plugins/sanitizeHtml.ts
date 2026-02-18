@@ -1,35 +1,45 @@
 import { defineNuxtPlugin } from '#imports'
 
 export default defineNuxtPlugin((nuxtApp) => {
-  let sanitize: (html: string) => string
-
   if (import.meta.server) {
     // Server: pass through HTML as-is (content from trusted WordPress backend)
-    sanitize = (html: string) => html
-  } else {
-    // Client: lazy-init DOMPurify with native browser window
-    let purify: { sanitize: (html: string) => string } | null = null
-    sanitize = (html: string) => {
-      if (purify) {
-        return purify.sanitize(html)
+    nuxtApp.vueApp.directive('sanitize-html', {
+      getSSRProps(binding: { value: string }) {
+        return { innerHTML: binding.value }
       }
-      return html
-    }
-    // Initialize DOMPurify asynchronously, make available for synchronous use
-    import('dompurify').then((DOMPurify) => {
-      purify = DOMPurify.default(window)
     })
+    return
+  }
+
+  // Client: load DOMPurify and sanitize HTML before setting innerHTML.
+  // Until DOMPurify is ready, the SSR-rendered HTML stays in the DOM
+  // untouched — we do NOT replace it with unsanitized content.
+  let purify: { sanitize: (html: string) => string } | null = null
+
+  const purifyReady = import('dompurify').then((DOMPurify) => {
+    purify = DOMPurify.default(window)
+  })
+
+  function setSanitizedHtml(el: Element, html: string) {
+    if (purify) {
+      el.innerHTML = purify.sanitize(html)
+    } else {
+      // DOMPurify not loaded yet — keep SSR HTML intact, sanitize once ready
+      purifyReady.then(() => {
+        el.innerHTML = purify!.sanitize(html)
+      })
+    }
   }
 
   nuxtApp.vueApp.directive('sanitize-html', {
     created(el: Element, binding: { value: string }) {
-      el.innerHTML = sanitize(binding.value)
+      setSanitizedHtml(el, binding.value)
     },
     updated(el: Element, binding: { value: string }) {
-      el.innerHTML = sanitize(binding.value)
+      setSanitizedHtml(el, binding.value)
     },
     getSSRProps(binding: { value: string }) {
-      return { innerHTML: sanitize(binding.value) }
+      return { innerHTML: binding.value }
     }
   })
 })
