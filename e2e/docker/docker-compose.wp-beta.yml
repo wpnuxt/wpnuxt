@@ -13,6 +13,9 @@ services:
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_TABLE_PREFIX: wp_
       WP_PORT: 8010
+      WPGRAPHQL_VERSION: ${WPGRAPHQL_VERSION:-latest}
+      WPGRAPHQL_CONTENT_BLOCKS_VERSION: ${WPGRAPHQL_CONTENT_BLOCKS_VERSION:-latest}
+      WPGRAPHQL_HEADLESS_LOGIN_VERSION: ${WPGRAPHQL_HEADLESS_LOGIN_VERSION:-latest}
     depends_on:
       mysql:
         condition: service_healthy

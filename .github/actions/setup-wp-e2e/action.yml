@@ -11,6 +11,21 @@ inputs:
     description: 'Nuxt fixture (nuxt3, nuxt43, etc.)'
     required: true
     type: string
+  wpgraphql_version:
+    description: 'WPGraphQL version (default: latest)'
+    required: false
+    default: 'latest'
+    type: string
+  wpgraphql_content_blocks_version:
+    description: 'WPGraphQL Content Blocks version (default: latest)'
+    required: false
+    default: 'latest'
+    type: string
+  wpgraphql_headless_login_version:
+    description: 'WPGraphQL Headless Login version (default: latest)'
+    required: false
+    default: 'latest'
+    type: string
 
 runs:
   using: composite
@@ -33,6 +48,10 @@ runs:
     - name: Start WordPress ${{ inputs.wp_version }}
       working-directory: e2e/docker
       shell: bash
+      env:
+        WPGRAPHQL_VERSION: ${{ inputs.wpgraphql_version }}
+        WPGRAPHQL_CONTENT_BLOCKS_VERSION: ${{ inputs.wpgraphql_content_blocks_version }}
+        WPGRAPHQL_HEADLESS_LOGIN_VERSION: ${{ inputs.wpgraphql_headless_login_version }}
       run: |
         docker compose -f docker-compose.wp-${{ inputs.wp_version }}.yml up -d mysql
         # Wait for MySQL to be healthy

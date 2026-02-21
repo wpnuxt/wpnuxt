@@ -34,6 +34,21 @@ on:
           - '4.2'
           - '4.3'
           - 'srcdir'
+      wpgraphql_version:
+        description: 'WPGraphQL version (default: latest)'
+        required: false
+        default: 'latest'
+        type: string
+      wpgraphql_content_blocks_version:
+        description: 'WPGraphQL Content Blocks version (default: latest)'
+        required: false
+        default: 'latest'
+        type: string
+      wpgraphql_headless_login_version:
+        description: 'WPGraphQL Headless Login version (default: latest)'
+        required: false
+        default: 'latest'
+        type: string
 
 jobs:
   # Full matrix - all combinations
@@ -56,6 +71,9 @@ jobs:
         with:
           wp_version: ${{ matrix.wp_version }}
           nuxt_fixture: ${{ matrix.nuxt_version == '3.17' && 'nuxt317' || matrix.nuxt_version == '3' && 'nuxt3' || matrix.nuxt_version == '4.0' && 'nuxt40' || matrix.nuxt_version == '4.1' && 'nuxt41' || matrix.nuxt_version == '4.2' && 'nuxt42' || matrix.nuxt_version == 'srcdir' && 'nuxt-srcdir' || 'nuxt43' }}
+          wpgraphql_version: ${{ inputs.wpgraphql_version }}
+          wpgraphql_content_blocks_version: ${{ inputs.wpgraphql_content_blocks_version }}
+          wpgraphql_headless_login_version: ${{ inputs.wpgraphql_headless_login_version }}
 
   # Single combination - if manually specified
   single:
@@ -73,3 +91,6 @@ jobs:
         with:
           wp_version: ${{ inputs.wp_version }}
           nuxt_fixture: ${{ inputs.nuxt_version == '3.17' && 'nuxt317' || inputs.nuxt_version == '3' && 'nuxt3' || inputs.nuxt_version == '4.0' && 'nuxt40' || inputs.nuxt_version == '4.1' && 'nuxt41' || inputs.nuxt_version == '4.2' && 'nuxt42' || inputs.nuxt_version == 'srcdir' && 'nuxt-srcdir' || 'nuxt43' }}
+          wpgraphql_version: ${{ inputs.wpgraphql_version }}
+          wpgraphql_content_blocks_version: ${{ inputs.wpgraphql_content_blocks_version }}
+          wpgraphql_headless_login_version: ${{ inputs.wpgraphql_headless_login_version }}
