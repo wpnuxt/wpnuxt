@@ -12,11 +12,11 @@
     "test:debug": "playwright test --debug",
     "test:merge": "rm -rf blob-merged && mkdir -p blob-merged && for dir in blob-report/*/; do name=$(basename \"$dir\"); for f in \"$dir\"*.zip; do cp \"$f\" \"blob-merged/${name}-$(basename \"$f\")\"; done; done && playwright merge-reports blob-merged --reporter=line,html && echo 'Report available at playwright-report/index.html'",
     "docker:up": "docker-compose -f docker/docker-compose.wp-6.9.yml up -d",
-    "docker:up:all": "docker-compose -f docker/docker-compose.wp-6.7.yml up -d && docker-compose -f docker/docker-compose.wp-6.8.yml up -d && docker-compose -f docker/docker-compose.wp-6.9.yml up -d",
+    "docker:up:all": "docker-compose -f docker/docker-compose.wp-6.7.yml up -d && docker-compose -f docker/docker-compose.wp-6.8.yml up -d && docker-compose -f docker/docker-compose.wp-6.9.yml up -d && docker-compose -f docker/docker-compose.wp-beta.yml up -d",
     "docker:down": "docker-compose -f docker/docker-compose.wp-6.9.yml down",
-    "docker:down:all": "docker-compose -f docker/docker-compose.wp-6.7.yml down && docker-compose -f docker/docker-compose.wp-6.8.yml down && docker-compose -f docker/docker-compose.wp-6.9.yml down",
+    "docker:down:all": "docker-compose -f docker/docker-compose.wp-6.7.yml down && docker-compose -f docker/docker-compose.wp-6.8.yml down && docker-compose -f docker/docker-compose.wp-6.9.yml down && docker-compose -f docker/docker-compose.wp-beta.yml down",
     "docker:setup": "docker-compose -f docker/docker-compose.wp-6.9.yml exec -T wordpress /setup.sh",
-    "docker:setup:all": "docker-compose -f docker/docker-compose.wp-6.7.yml exec -T wordpress /setup.sh && docker-compose -f docker/docker-compose.wp-6.8.yml exec -T wordpress /setup.sh && docker-compose -f docker/docker-compose.wp-6.9.yml exec -T wordpress /setup.sh"
+    "docker:setup:all": "docker-compose -f docker/docker-compose.wp-6.7.yml exec -T wordpress /setup.sh && docker-compose -f docker/docker-compose.wp-6.8.yml exec -T wordpress /setup.sh && docker-compose -f docker/docker-compose.wp-6.9.yml exec -T wordpress /setup.sh && docker-compose -f docker/docker-compose.wp-beta.yml exec -T wordpress /setup.sh"
   },
   "dependencies": {
     "@playwright/test": "^1.50.1",

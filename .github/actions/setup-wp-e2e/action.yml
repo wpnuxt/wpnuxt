@@ -19,8 +19,12 @@ runs:
       id: wp-port
       shell: bash
       run: |
-        MINOR=$(echo "${{ inputs.wp_version }}" | cut -d. -f2)
-        PORT=$((8000 + MINOR))
+        if [ "${{ inputs.wp_version }}" = "beta" ]; then
+          PORT=8010
+        else
+          MINOR=$(echo "${{ inputs.wp_version }}" | cut -d. -f2)
+          PORT=$((8000 + MINOR))
+        fi
         echo "port=$PORT" >> "$GITHUB_OUTPUT"
 
     - name: Set up Docker Buildx

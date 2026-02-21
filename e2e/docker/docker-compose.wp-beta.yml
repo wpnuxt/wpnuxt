@@ -1,18 +1,18 @@
 
-name: wp-6.9
+name: wp-beta
 
 services:
   wordpress:
-    image: wordpress:6.9-php8.5
+    image: wordpress:beta-php8.5
     ports:
-      - "8009:80"
+      - "8010:80"
     environment:
       WORDPRESS_DB_HOST: mysql
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_TABLE_PREFIX: wp_
-      WP_PORT: 8009
+      WP_PORT: 8010
     depends_on:
       mysql:
         condition: service_healthy
@@ -28,7 +28,7 @@ services:
   mysql:
     image: mysql:8.0
     ports:
-      - "3313:3306"
+      - "3314:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: wordpress
