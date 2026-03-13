@@ -190,6 +190,6 @@ The `useWPContent` composables can transform WordPress image URLs to relative pa
 - Never commit or push to git without explicit user confirmation - always show staged changes and ask before committing      
 
 ### After Every Code Change
-- Run `pnpm run lint` to check for linting errors
-- Run `pnpm run typecheck` to verify TypeScript types
+- Run `pnpm run check` to verify everything (runs dev:prepare → lint → typecheck → test → build)
+- IMPORTANT: Never run `pnpm run typecheck` without `pnpm run dev:prepare` first — playground types are generated and will be stale otherwise, causing typecheck to pass locally but fail in CI
 - Report results to the user before continuing
