@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.0.0](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-beta.7...v2.0.0) (2026-03-13)
+
+### Features
+
+* require Nuxt 4.0+ and drop Nuxt 3.x support ([7eb37ba](https://github.com/wpnuxt/wpnuxt/commit/7eb37ba84b62c8bb7aeee1872fb4f48a6435dee3))
+
+### Bug Fixes
+
+* **blocks:** remove textAlign from CoreButton and CoreHeading fragments ([538181e](https://github.com/wpnuxt/wpnuxt/commit/538181e0b33c30f2d80c1c144cd2d1d25fa0d851))
+
+### Documentation
+
+* remove beta warnings and update status for 2.0.0 stable release ([72dc99b](https://github.com/wpnuxt/wpnuxt/commit/72dc99b4f1d7970ecf16752484f6454d1243c8af))
+
 ## [2.0.0-beta.7](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2026-03-13)
 
 ### Features
