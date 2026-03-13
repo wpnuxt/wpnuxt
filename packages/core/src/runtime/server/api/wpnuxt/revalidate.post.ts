@@ -23,17 +23,18 @@ export default defineEventHandler(async (event) => {
   await Promise.all(wpnuxtKeys.map(key => storage.removeItem(key)))
 
   // Purge Vercel CDN cache if running on Vercel
+  // Uses the cache tag invalidation API — responses are tagged with 'wpnuxt' via Vercel-Cache-Tag header
   // VERCEL and VERCEL_PROJECT_ID are auto-set by Vercel; VERCEL_TOKEN must be added manually
   let vercelPurged = false
   if (process.env.VERCEL && process.env.VERCEL_TOKEN && process.env.VERCEL_PROJECT_ID) {
     try {
-      const response = await fetch(`https://api.vercel.com/v6/projects/${process.env.VERCEL_PROJECT_ID}/purge-cache`, {
+      const response = await fetch(`https://api.vercel.com/v1/edge-cache/invalidate-by-tags?projectIdOrName=${process.env.VERCEL_PROJECT_ID}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({})
+        body: JSON.stringify({ tags: ['wpnuxt'] })
       })
       vercelPurged = response.ok
       if (!response.ok) {

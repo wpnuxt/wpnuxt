@@ -150,6 +150,9 @@ export default defineNuxtModule<WPNuxtConfig>({
         cache: {
           maxAge,
           swr: wpNuxtConfig.cache?.swr !== false
+        },
+        headers: {
+          'Vercel-Cache-Tag': 'wpnuxt'
         }
       }
       logger.debug(`Server-side caching enabled for GraphQL queries (maxAge: ${maxAge}s, SWR: ${wpNuxtConfig.cache?.swr !== false})`)
