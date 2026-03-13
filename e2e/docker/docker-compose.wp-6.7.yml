@@ -3,7 +3,7 @@ name: wp-6.7
 
 services:
   wordpress:
-    image: wordpress:6.7-php8.3
+    image: wordpress:6.7
     ports:
       - "8007:80"
     environment:

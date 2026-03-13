@@ -3,7 +3,7 @@ name: wp-beta
 
 services:
   wordpress:
-    image: wordpress:beta-php8.5
+    image: wordpress:beta
     ports:
       - "8010:80"
     environment:

@@ -3,7 +3,7 @@ name: wp-6.9
 
 services:
   wordpress:
-    image: wordpress:6.9-php8.5
+    image: wordpress:6.9
     ports:
       - "8009:80"
     environment:

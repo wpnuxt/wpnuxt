@@ -59,7 +59,7 @@ function composeFile(wp) {
 
 function dockerUp(wp) {
   console.log(`\n▶ Starting WordPress ${wp}...`)
-  execSync(`docker-compose -f ${composeFile(wp)} up -d`, { stdio: 'inherit' })
+  execSync(`docker-compose -f ${composeFile(wp)} up -d --pull always`, { stdio: 'inherit' })
 }
 
 function dockerSetup(wp) {

@@ -3,7 +3,7 @@ name: wp-6.4
 
 services:
   wordpress:
-    image: wordpress:6.4-php8.2
+    image: wordpress:6.4
     ports:
       - "8004:80"
     environment:

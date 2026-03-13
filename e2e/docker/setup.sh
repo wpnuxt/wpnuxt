@@ -35,10 +35,44 @@ fi
 echo "Waiting for database..."
 sleep 5
 
+# --- Plugin install/update helper ---
+install_or_update_plugins() {
+    echo "Installing/updating plugins..."
+
+    # WPGraphQL (available on wordpress.org)
+    if [ "$WPGRAPHQL_VERSION" = "latest" ]; then
+        wp plugin install wp-graphql --activate --force --allow-root
+    else
+        echo "Installing WPGraphQL v${WPGRAPHQL_VERSION}..."
+        wp plugin install wp-graphql --version="$WPGRAPHQL_VERSION" --activate --force --allow-root
+    fi
+
+    # WPGraphQL Content Blocks (GitHub releases)
+    if [ "$WPGRAPHQL_CONTENT_BLOCKS_VERSION" = "latest" ]; then
+        wp plugin install https://github.com/wpengine/wp-graphql-content-blocks/releases/latest/download/wp-graphql-content-blocks.zip --activate --force --allow-root || \
+        wp plugin install wp-graphql-content-blocks --activate --force --allow-root || \
+        echo "Warning: Could not install WPGraphQL Content Blocks"
+    else
+        echo "Installing WPGraphQL Content Blocks v${WPGRAPHQL_CONTENT_BLOCKS_VERSION}..."
+        wp plugin install "https://github.com/wpengine/wp-graphql-content-blocks/releases/download/v${WPGRAPHQL_CONTENT_BLOCKS_VERSION}/wp-graphql-content-blocks.zip" --activate --force --allow-root || \
+        echo "Warning: Could not install WPGraphQL Content Blocks v${WPGRAPHQL_CONTENT_BLOCKS_VERSION}"
+    fi
+
+    # WPGraphQL Headless Login (GitHub releases)
+    if [ "$WPGRAPHQL_HEADLESS_LOGIN_VERSION" = "latest" ]; then
+        wp plugin install https://github.com/AxeWP/wp-graphql-headless-login/releases/latest/download/wp-graphql-headless-login.zip --activate --force --allow-root || \
+        echo "Warning: Could not install WPGraphQL Headless Login"
+    else
+        echo "Installing WPGraphQL Headless Login v${WPGRAPHQL_HEADLESS_LOGIN_VERSION}..."
+        wp plugin install "https://github.com/AxeWP/wp-graphql-headless-login/releases/download/v${WPGRAPHQL_HEADLESS_LOGIN_VERSION}/wp-graphql-headless-login.zip" --activate --force --allow-root || \
+        echo "Warning: Could not install WPGraphQL Headless Login v${WPGRAPHQL_HEADLESS_LOGIN_VERSION}"
+    fi
+}
+
 # Configure WordPress if not already configured
 if ! wp core is-installed --allow-root 2>/dev/null; then
     echo "Installing WordPress..."
-    
+
     wp core install \
         --url="$WP_URL" \
         --title="WPNuxt Test" \
@@ -48,44 +82,15 @@ if ! wp core is-installed --allow-root 2>/dev/null; then
         --skip-email \
         --allow-root
 
-    # Install required plugins
-    echo "Installing plugins..."
-
-    # WPGraphQL (available on wordpress.org)
-    if [ "$WPGRAPHQL_VERSION" = "latest" ]; then
-        wp plugin install wp-graphql --activate --allow-root
-    else
-        echo "Installing WPGraphQL v${WPGRAPHQL_VERSION}..."
-        wp plugin install wp-graphql --version="$WPGRAPHQL_VERSION" --activate --allow-root
-    fi
-
-    # WPGraphQL Content Blocks (GitHub releases)
-    if [ "$WPGRAPHQL_CONTENT_BLOCKS_VERSION" = "latest" ]; then
-        wp plugin install https://github.com/wpengine/wp-graphql-content-blocks/releases/latest/download/wp-graphql-content-blocks.zip --activate --allow-root || \
-        wp plugin install wp-graphql-content-blocks --activate --allow-root || \
-        echo "Warning: Could not install WPGraphQL Content Blocks"
-    else
-        echo "Installing WPGraphQL Content Blocks v${WPGRAPHQL_CONTENT_BLOCKS_VERSION}..."
-        wp plugin install "https://github.com/wpengine/wp-graphql-content-blocks/releases/download/v${WPGRAPHQL_CONTENT_BLOCKS_VERSION}/wp-graphql-content-blocks.zip" --activate --allow-root || \
-        echo "Warning: Could not install WPGraphQL Content Blocks v${WPGRAPHQL_CONTENT_BLOCKS_VERSION}"
-    fi
-
-    # WPGraphQL Headless Login (GitHub releases)
-    if [ "$WPGRAPHQL_HEADLESS_LOGIN_VERSION" = "latest" ]; then
-        wp plugin install https://github.com/AxeWP/wp-graphql-headless-login/releases/latest/download/wp-graphql-headless-login.zip --activate --allow-root || \
-        echo "Warning: Could not install WPGraphQL Headless Login"
-    else
-        echo "Installing WPGraphQL Headless Login v${WPGRAPHQL_HEADLESS_LOGIN_VERSION}..."
-        wp plugin install "https://github.com/AxeWP/wp-graphql-headless-login/releases/download/v${WPGRAPHQL_HEADLESS_LOGIN_VERSION}/wp-graphql-headless-login.zip" --activate --allow-root || \
-        echo "Warning: Could not install WPGraphQL Headless Login v${WPGRAPHQL_HEADLESS_LOGIN_VERSION}"
-    fi
+    install_or_update_plugins
 
     # Flush permalinks
     wp rewrite flush --allow-root
 
     echo "WordPress installed successfully!"
 else
-    echo "WordPress already installed"
+    echo "WordPress already installed, updating plugins..."
+    install_or_update_plugins
 fi
 
 # Register Book custom post type via mu-plugin

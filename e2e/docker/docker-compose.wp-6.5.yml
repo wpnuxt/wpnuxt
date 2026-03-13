@@ -3,7 +3,7 @@ name: wp-6.5
 
 services:
   wordpress:
-    image: wordpress:6.5-php8.2
+    image: wordpress:6.5
     ports:
       - "8005:80"
     environment:
