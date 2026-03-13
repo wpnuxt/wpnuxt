@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0-beta.7](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2026-03-13)
+
+### Features
+
+* **core:** auto-add custom post type fragments to NodeByUri query ([522d414](https://github.com/wpnuxt/wpnuxt/commit/522d4146908308f2a96f11ce221ae1ef3f427826)), closes [#253](https://github.com/wpnuxt/wpnuxt/issues/253)
+
+### Bug Fixes
+
+* **core:** make useWPContent return awaitable to block until data is fetched ([2ed5073](https://github.com/wpnuxt/wpnuxt/commit/2ed507315afe9b58abe232bf94c5582992f7c364)), closes [#252](https://github.com/wpnuxt/wpnuxt/issues/252)
+* **core:** resolve typecheck errors for thenable cast and regex match types ([e078864](https://github.com/wpnuxt/wpnuxt/commit/e07886494137ed03abb29659b1f016c5f1c070c4))
+
 ## [2.0.0-beta.6](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2026-03-13)
 
 ### Features
