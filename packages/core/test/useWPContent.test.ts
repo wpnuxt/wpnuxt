@@ -45,15 +45,23 @@ describe('useWPContent', () => {
 
     mockWatch = vi.fn()
 
-    mockUseAsyncGraphqlQuery = vi.fn(() => ({
-      data: ref({ data: { posts: { nodes: [{ id: 1 }] } } }),
-      pending: ref(false),
-      refresh: vi.fn().mockResolvedValue(undefined),
-      execute: vi.fn().mockResolvedValue(undefined),
-      clear: vi.fn(),
-      error: ref(null),
-      status: ref('success')
-    }))
+    mockUseAsyncGraphqlQuery = vi.fn(() => {
+      const result = {
+        data: ref({ data: { posts: { nodes: [{ id: 1 }] } } }),
+        pending: ref(false),
+        refresh: vi.fn().mockResolvedValue(undefined),
+        execute: vi.fn().mockResolvedValue(undefined),
+        clear: vi.fn(),
+        error: ref(null),
+        status: ref('success'),
+        // useAsyncData returns a thenable (promise + refs)
+        then: (fn?: (v: unknown) => unknown) => {
+          const val = fn ? fn(result) : result
+          return Promise.resolve(val)
+        }
+      }
+      return result
+    })
 
     vi.doMock('#imports', () => ({
       computed: vi.fn((fn) => {

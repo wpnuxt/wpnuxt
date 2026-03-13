@@ -190,11 +190,13 @@ export const useWPContent = <T>(
 
   // Use useAsyncGraphqlQuery with our custom getCachedData for SSG support
   // Our getCachedData takes precedence over the built-in one
-  const { data, pending, refresh, execute, clear, error, status } = useAsyncGraphqlQuery(
+  // Keep the full result (which is a thenable) so we can preserve await behavior
+  const asyncResult = useAsyncGraphqlQuery(
     String(queryName) as keyof Query,
     normalizedParams ?? {},
     asyncDataOptions
   )
+  const { data, pending, refresh, execute, clear, error, status } = asyncResult
 
   // Transformation error state
   const transformError: Ref<Error | null> = ref(null)
@@ -286,7 +288,7 @@ export const useWPContent = <T>(
     }
   })
 
-  return {
+  const returnValue = {
     data: transformedData,
     pending,
     refresh,
@@ -301,4 +303,11 @@ export const useWPContent = <T>(
     /** Whether a retry is currently in progress */
     isRetrying
   }
+
+  // Preserve the promise from useAsyncGraphqlQuery so `await useWPContent(...)` blocks
+  // until data is fetched, matching useAsyncData behavior
+  return Object.assign(
+    asyncResult.then(() => returnValue),
+    returnValue
+  )
 }
