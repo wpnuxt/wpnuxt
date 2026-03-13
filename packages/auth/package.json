@@ -42,16 +42,16 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "4.3.1"
+    "@nuxt/kit": "4.4.2"
   },
   "devDependencies": {
     "@nuxt/module-builder": "^1.0.2",
-    "@nuxt/schema": "4.3.1",
+    "@nuxt/schema": "4.4.2",
     "@nuxt/test-utils": "^4.0.0",
-    "@types/node": "^25.2.3",
-    "nuxt": "4.3.1",
-    "vitest": "^4.0.18",
-    "vue-tsc": "^3.2.3"
+    "@types/node": "^25.5.0",
+    "nuxt": "^4.4.2",
+    "vitest": "^4.1.0",
+    "vue-tsc": "^3.2.5"
   },
   "peerDependencies": {
     "@wpnuxt/core": "workspace:*",
