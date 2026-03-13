@@ -14,10 +14,21 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-function wpnuxt_revalidate_cache() {
+function wpnuxt_revalidate_cache($post_id) {
     if (!defined('WPNUXT_FRONTEND_URL') || !defined('WPNUXT_REVALIDATE_SECRET')) {
         return;
     }
+
+    // Skip revisions and autosaves — only revalidate for actual content changes
+    if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) {
+        return;
+    }
+
+    // Debounce: only fire once per request cycle
+    if (did_action('wpnuxt_revalidation_sent')) {
+        return;
+    }
+    do_action('wpnuxt_revalidation_sent');
 
     $url = rtrim(WPNUXT_FRONTEND_URL, '/') . '/api/_wpnuxt/revalidate';
 
