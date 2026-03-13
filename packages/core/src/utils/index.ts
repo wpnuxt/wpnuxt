@@ -140,9 +140,10 @@ export async function addCustomFragmentsToNodeQuery(queryOutputPath: string, use
     const match = content.match(FRAGMENT_DEF_PATTERN)
     if (!match) continue
 
-    const [, name, type] = match
+    const name = match[1]
+    const type = match[2]
     // Content type fragments have name === type (e.g., fragment Event on Event)
-    if (name === type) {
+    if (name && type && name === type) {
       customFragments.push({ name, type })
     }
   }

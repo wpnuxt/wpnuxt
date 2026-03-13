@@ -305,9 +305,11 @@ export const useWPContent = <T>(
   }
 
   // Preserve the promise from useAsyncGraphqlQuery so `await useWPContent(...)` blocks
-  // until data is fetched, matching useAsyncData behavior
+  // until data is fetched, matching useAsyncData behavior.
+  // useAsyncGraphqlQuery returns a thenable (like useAsyncData) but the type doesn't expose .then
+  const thenable = asyncResult as typeof asyncResult & PromiseLike<typeof asyncResult>
   return Object.assign(
-    asyncResult.then(() => returnValue),
+    thenable.then(() => returnValue),
     returnValue
   )
 }
