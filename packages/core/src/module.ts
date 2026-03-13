@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { version } from '../package.json'
-import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports, addServerHandler } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
 import type { NitroConfig } from 'nitropack'
@@ -155,6 +155,18 @@ export default defineNuxtModule<WPNuxtConfig>({
       logger.debug(`Server-side caching enabled for GraphQL queries (maxAge: ${maxAge}s, SWR: ${wpNuxtConfig.cache?.swr !== false})`)
     }
 
+    // Register cache revalidation webhook endpoint
+    // Uses _wpnuxt prefix to avoid conflict with nuxt-graphql-middleware's /api/wpnuxt/** routes
+    if (wpNuxtConfig.cache?.revalidateSecret) {
+      const revalidateHandler = resolver.resolve('./runtime/server/api/wpnuxt/revalidate.post')
+      addServerHandler({
+        route: '/api/_wpnuxt/revalidate',
+        method: 'post',
+        handler: revalidateHandler
+      })
+      logger.info('Cache revalidation endpoint registered at POST /api/_wpnuxt/revalidate')
+    }
+
     // Proxy /wp-content/uploads/ to WordPress for plain <img> tags and v-sanitize-html content
     {
       const nitroOptions = nuxt.options as unknown as NuxtOptionsWithNitro
@@ -275,7 +287,10 @@ async function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): Promise<W
     downloadSchema: process.env.WPNUXT_DOWNLOAD_SCHEMA !== undefined
       ? process.env.WPNUXT_DOWNLOAD_SCHEMA === 'true'
       : undefined,
-    debug: process.env.WPNUXT_DEBUG ? process.env.WPNUXT_DEBUG === 'true' : undefined
+    debug: process.env.WPNUXT_DEBUG ? process.env.WPNUXT_DEBUG === 'true' : undefined,
+    cache: process.env.WPNUXT_REVALIDATE_SECRET
+      ? { revalidateSecret: process.env.WPNUXT_REVALIDATE_SECRET }
+      : undefined
   }, options) as WPNuxtConfig
 
   // Ensure downloadSchema defaults to true if not explicitly set
@@ -313,6 +328,11 @@ async function loadConfig(options: Partial<WPNuxtConfig>, nuxt: Nuxt): Promise<W
       maxAge: config.cache?.maxAge ?? 300,
       swr: config.cache?.swr ?? true
     }
+  }
+
+  // Set private runtimeConfig for cache revalidation secret (server-side only)
+  if (config.cache?.revalidateSecret) {
+    nuxt.options.runtimeConfig.wpNuxtRevalidateSecret = config.cache.revalidateSecret
   }
 
   return config

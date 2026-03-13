@@ -122,5 +122,17 @@ export interface WPNuxtConfig {
      * @default true
      */
     swr?: boolean
+
+    /**
+     * Secret token for the cache revalidation webhook endpoint.
+     *
+     * When set, WPNuxt registers a POST endpoint at `/api/wpnuxt/revalidate`
+     * that WordPress can call to purge all cached GraphQL responses immediately.
+     *
+     * Can also be set via `WPNUXT_REVALIDATE_SECRET` environment variable.
+     *
+     * @see https://wpnuxt.com/guide/caching#webhook-revalidation
+     */
+    revalidateSecret?: string
   }
 }

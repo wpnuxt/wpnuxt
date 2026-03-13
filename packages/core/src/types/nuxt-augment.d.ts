@@ -9,6 +9,10 @@ declare module 'nuxt/schema' {
     wpNuxt?: Partial<WPNuxtConfig>
   }
 
+  interface RuntimeConfig {
+    wpNuxtRevalidateSecret?: string
+  }
+
   interface PublicRuntimeConfig {
     wordpressUrl?: string
     buildHash?: string
