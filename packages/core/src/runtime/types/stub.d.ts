@@ -10,6 +10,7 @@ import type { NuxtApp } from 'nuxt/app'
 // Stub for #imports - Vue reactivity & lifecycle
 export function computed<T>(getter: () => T): ComputedRef<T>
 export function ref<T>(value: T): Ref<T>
+export function toValue<T>(source: Ref<T> | ComputedRef<T> | (() => T) | T): T
 export function resolveComponent(name: string): Component | string
 export function onMounted(callback: () => void): void
 export function onBeforeUnmount(callback: () => void): void
@@ -29,7 +30,7 @@ export function navigateTo(to: string): Promise<void>
 // Stub for #imports - nuxt-graphql-middleware
 export function useAsyncGraphqlQuery<T = unknown>(
   name: string,
-  params?: Record<string, unknown>,
+  params?: Record<string, unknown> | Ref<Record<string, unknown>> | ComputedRef<Record<string, unknown>>,
   options?: Record<string, unknown>
 ): {
   data: Ref<T | null>

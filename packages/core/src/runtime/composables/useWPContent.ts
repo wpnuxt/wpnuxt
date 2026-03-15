@@ -1,8 +1,8 @@
 import { transformData, normalizeUriParam } from '../util/content'
 import type { Query } from '#nuxt-graphql-middleware/operation-types'
-import type { WatchSource, Ref } from 'vue'
+import type { MaybeRefOrGetter, WatchSource, Ref } from 'vue'
 import type { NuxtApp } from 'nuxt/app'
-import { computed, ref, watch as vueWatch, useAsyncGraphqlQuery, useRuntimeConfig } from '#imports'
+import { computed, ref, toValue, watch as vueWatch, useAsyncGraphqlQuery, useRuntimeConfig } from '#imports'
 
 /** Extended NuxtApp with nuxt-graphql-middleware internals */
 interface NuxtAppWithGraphqlCache extends NuxtApp {
@@ -123,7 +123,7 @@ export const useWPContent = <T>(
   queryName: keyof Query,
   nodes: string[],
   fixImagePaths: boolean,
-  params?: T,
+  params?: MaybeRefOrGetter<T>,
   options?: WPContentOptions
 ) => {
   // Read imageRelativePaths from runtimeConfig (overrides the fixImagePaths parameter)
@@ -142,7 +142,12 @@ export const useWPContent = <T>(
 
   // Normalize URI parameter to ensure consistent cache keys between SSG prerender and runtime
   // WordPress returns URIs with trailing slashes, but route.path may not have one
-  const normalizedParams = normalizeUriParam(params)
+  // When params is reactive (ref/computed/getter), wrap in a computed to preserve reactivity
+  // so that useAsyncGraphqlQuery can watch the ref and auto-refetch on changes
+  const isReactiveParams = typeof params === 'function' || (params !== null && typeof params === 'object' && '__v_isRef' in params)
+  const resolvedParams: Record<string, unknown> | Ref<Record<string, unknown>> = isReactiveParams
+    ? computed(() => normalizeUriParam(toValue(params)) ?? {})
+    : (normalizeUriParam(params) ?? {}) as Record<string, unknown>
 
   // Retry configuration
   const maxRetries = retryOption === false ? 0 : (retryOption ?? 0)
@@ -193,7 +198,7 @@ export const useWPContent = <T>(
   // Keep the full result (which is a thenable) so we can preserve await behavior
   const asyncResult = useAsyncGraphqlQuery(
     String(queryName) as keyof Query,
-    normalizedParams ?? {},
+    resolvedParams,
     asyncDataOptions
   )
   const { data, pending, refresh, execute, clear, error, status } = asyncResult

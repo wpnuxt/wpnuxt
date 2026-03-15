@@ -127,7 +127,7 @@ export async function prepareContext(ctx: WPNuxtContext) {
     if (!typed) {
       return `export const ${functionName} = (params, options) => useWPContent('${q.name}', [${formatNodes(q.nodes)}], false, params, options)`
     }
-    return `  export const ${functionName}: (params?: ${q.name}QueryVariables, options?: WPContentOptions) => WPContentResult<${getFragmentType(q)}>`
+    return `  export const ${functionName}: (params?: MaybeRefOrGetter<${q.name}QueryVariables>, options?: WPContentOptions) => WPContentResult<${getFragmentType(q)}>`
   }
 
   // Mutation composable expression
@@ -190,7 +190,7 @@ export async function prepareContext(ctx: WPNuxtContext) {
   ctx.generateDeclarations = () => {
     const declarations = [
       `import type { ${[...typeSet].join(', ')} } from '#build/graphql-operations'`,
-      'import type { ComputedRef, Ref } from \'vue\'',
+      'import type { ComputedRef, MaybeRefOrGetter, Ref } from \'vue\'',
       'import type { AsyncDataRequestStatus } from \'#app\'',
       'import type { GraphqlResponse } from \'nuxt-graphql-middleware/types\'',
       '',
