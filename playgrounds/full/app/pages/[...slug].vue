@@ -11,7 +11,7 @@ const { data: allPosts } = await usePosts({ limit: 100 })
 
 // Compute prev/next reactively based on current post
 const previousPost = computed(() => {
-  if (post.value?.contentTypeName !== 'post' || !post.value?.slug || !allPosts.value?.length) {
+  if (!isPost(post.value) || !post.value?.slug || !allPosts.value?.length) {
     return null
   }
   const currentIndex = allPosts.value.findIndex(p => p.slug === post.value?.slug)
@@ -22,7 +22,7 @@ const previousPost = computed(() => {
 })
 
 const nextPost = computed(() => {
-  if (post.value?.contentTypeName !== 'post' || !post.value?.slug || !allPosts.value?.length) {
+  if (!isPost(post.value) || !post.value?.slug || !allPosts.value?.length) {
     return null
   }
   const currentIndex = allPosts.value.findIndex(p => p.slug === post.value?.slug)
