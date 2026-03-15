@@ -233,7 +233,9 @@ export default defineNuxtModule<WPNuxtConfig>({
       { name: 'usePrevNextPost', as: 'usePrevNextPost', from: resolver.resolve('./runtime/composables/usePrevNextPost') },
       { name: 'isPage', as: 'isPage', from: resolver.resolve('./runtime/util/content-type') },
       { name: 'isPost', as: 'isPost', from: resolver.resolve('./runtime/util/content-type') },
-      { name: 'isContentType', as: 'isContentType', from: resolver.resolve('./runtime/util/content-type') }
+      { name: 'isContentType', as: 'isContentType', from: resolver.resolve('./runtime/util/content-type') },
+      { name: 'unwrapScalar', as: 'unwrapScalar', from: resolver.resolve('./runtime/util/acf') },
+      { name: 'unwrapConnection', as: 'unwrapConnection', from: resolver.resolve('./runtime/util/acf') }
       // Note: useGraphqlMutation is auto-imported via nuxt-graphql-middleware with includeComposables: true
     ])
     addComponentsDir({
