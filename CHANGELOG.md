@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.1.0](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0...v2.1.0) (2026-03-15)
+
+### Features
+
+* add type guard helpers for content type narrowing ([7784ec9](https://github.com/wpnuxt/wpnuxt/commit/7784ec954d07701b1f878c90b69cd37de451b48f)), closes [#241](https://github.com/wpnuxt/wpnuxt/issues/241)
+* add unwrapScalar and unwrapConnection helpers for ACF fields ([cb51252](https://github.com/wpnuxt/wpnuxt/commit/cb512529b687bf7081faed2c66cdb64a4787c84d)), closes [#249](https://github.com/wpnuxt/wpnuxt/issues/249) [#248](https://github.com/wpnuxt/wpnuxt/issues/248)
+* support reactive params in generated composables ([bca8503](https://github.com/wpnuxt/wpnuxt/commit/bca850346657ad7d12d0f4813c58d0af4b83d626)), closes [#251](https://github.com/wpnuxt/wpnuxt/issues/251)
+
+### Documentation
+
+* document reactive params, type guards, and ACF helpers ([5f0ba2a](https://github.com/wpnuxt/wpnuxt/commit/5f0ba2a70cefa264ca9cafe15adbcde144295675))
+
+### Maintenance
+
+* update @wpnuxt/core version to 2.0.0 in .nuxtrc files across fixtures ([d534aaa](https://github.com/wpnuxt/wpnuxt/commit/d534aaa6db4a6f4ce54b97858140f3bec6146ec5))
+
+### Tests
+
+* add unit tests for content type guards and ACF helpers ([4e7772d](https://github.com/wpnuxt/wpnuxt/commit/4e7772dfd3f936f9cae3a78398b89ee585c8352c))
+
 ## [2.0.0](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0-beta.7...v2.0.0) (2026-03-13)
 
 ### Features
