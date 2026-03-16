@@ -187,6 +187,60 @@ describe('useParser', () => {
       await expect(parseDoc(doc)).rejects.toThrow('Invalid GraphQL document')
     })
 
+    it('should detect connection pattern (pageInfo + nodes as siblings)', async () => {
+      const doc = `
+        query PaginatedPosts($first: Int, $after: String) {
+          posts(first: $first, after: $after) {
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+            nodes {
+              ...PostFragment
+            }
+          }
+        }
+      `
+      const result = await parseDoc(doc)
+      expect(result).toHaveLength(1)
+      expect(result[0]?.hasPageInfo).toBe(true)
+      expect(result[0]?.nodes).toEqual(['posts'])
+      expect(result[0]?.fragments).toContain('PostFragment')
+    })
+
+    it('should not set hasPageInfo when pageInfo is absent', async () => {
+      const doc = `
+        query Posts {
+          posts {
+            nodes {
+              ...PostFragment
+            }
+          }
+        }
+      `
+      const result = await parseDoc(doc)
+      expect(result[0]?.hasPageInfo).toBeFalsy()
+    })
+
+    it('should not set hasPageInfo when nodes is absent', async () => {
+      const doc = `
+        query PostsEdges {
+          posts {
+            pageInfo {
+              hasNextPage
+            }
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+      `
+      const result = await parseDoc(doc)
+      expect(result[0]?.hasPageInfo).toBeFalsy()
+    })
+
     it('should throw specific error for fragment-only document', async () => {
       const doc = `
         fragment PostFields on Post {

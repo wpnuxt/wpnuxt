@@ -66,6 +66,12 @@ function processSelections(selections: readonly SelectionNode[], level: number, 
     query.hasInlineFields = true
   }
 
+  // Detect WPGraphQL connection pattern: pageInfo + nodes as sibling fields
+  const fieldNames = selections.filter(s => s.kind === 'Field').map(s => s.name.value)
+  if (fieldNames.includes('pageInfo') && fieldNames.includes('nodes')) {
+    query.hasPageInfo = true
+  }
+
   selections.forEach((s) => {
     if (s.kind === 'FragmentSpread') {
       query.fragments?.push(s.name.value.trim())

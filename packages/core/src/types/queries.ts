@@ -27,6 +27,7 @@ export type WPNuxtQuery = {
   nodes?: string[]
   fragments: string[]
   hasInlineFields?: boolean
+  hasPageInfo?: boolean
   params: Record<string, string>
   operation: OperationTypeNode
 }

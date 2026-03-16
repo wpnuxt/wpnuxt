@@ -178,8 +178,16 @@ export const useWPContent = <T>(
     ?? (clientCache === false ? noCacheGetCachedData : defaultGetCachedData)
 
   // Build options for useAsyncGraphqlQuery
+  // When params are reactive, automatically watch them so useAsyncData re-fetches on changes
+  const watchSources = restOptions.watch as (object | (() => unknown))[] | undefined
+  const autoWatch = isReactiveParams
+    ? [...(watchSources ?? []), resolvedParams]
+    : watchSources
+
   const asyncDataOptions: AsyncGraphqlQueryOptions = {
     ...restOptions,
+    // Watch reactive params to auto-refetch
+    ...(autoWatch?.length && { watch: autoWatch }),
     // Our getCachedData that properly checks static.data for SSG
     getCachedData: getCachedDataFn,
     // Enable graphql caching so the LRU cache is populated for subsequent navigations

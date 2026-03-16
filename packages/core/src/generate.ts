@@ -99,6 +99,24 @@ export async function prepareContext(ctx: WPNuxtContext) {
    * - Queries without fragments: use the query's root type with path accessors
    */
   const getFragmentType = (q: WPNuxtQuery) => {
+    // Connection queries: return singular type (WPConnectionResult adds the array)
+    if (q.hasPageInfo) {
+      if (q.hasInlineFields || !q.fragments?.length) {
+        if (q.nodes?.length) {
+          let typePath = `${q.name}RootQuery`
+          for (const node of q.nodes) {
+            typePath = `NonNullable<${typePath}>['${node}']`
+          }
+          // Drill into nodes[number] to get the item type
+          typePath = `NonNullable<${typePath}>['nodes'][number]`
+          return typePath
+        }
+        return `${q.name}RootQuery`
+      }
+      // Fragments only — singular type (no [])
+      return q.fragments.map(f => `WithImagePath<${f}Fragment>`).join(' | ')
+    }
+
     // If query has both fragments AND inline fields, use the full query type
     // to preserve the intersection of fragment types + custom fields
     if (q.hasInlineFields || !q.fragments?.length) {
@@ -124,6 +142,14 @@ export async function prepareContext(ctx: WPNuxtContext) {
   const queryFnExp = (q: WPNuxtQuery, typed = false) => {
     const functionName = fnName(q.name)
 
+    if (q.hasPageInfo) {
+      // Connection query — use useWPConnection
+      if (!typed) {
+        return `export const ${functionName} = (params, options) => useWPConnection('${q.name}', [${formatNodes(q.nodes)}], false, params, options)`
+      }
+      return `  export const ${functionName}: (params?: MaybeRefOrGetter<${q.name}QueryVariables>, options?: WPContentOptions) => WPConnectionResult<${getFragmentType(q)}>`
+    }
+
     if (!typed) {
       return `export const ${functionName} = (params, options) => useWPContent('${q.name}', [${formatNodes(q.nodes)}], false, params, options)`
     }
@@ -146,8 +172,13 @@ export async function prepareContext(ctx: WPNuxtContext) {
     // Add explicit imports to ensure normalization code is included in the bundle
     // This is critical for SSG where auto-imports might not resolve correctly
     const imports: string[] = []
-    if (queries.length > 0) {
+    const hasConnectionQueries = queries.some(q => q.hasPageInfo)
+    const hasContentQueries = queries.some(q => !q.hasPageInfo)
+    if (hasContentQueries) {
       imports.push('useWPContent')
+    }
+    if (hasConnectionQueries) {
+      imports.push('useWPConnection')
     }
     if (mutations.length > 0) {
       imports.push('useGraphqlMutation')
@@ -234,6 +265,24 @@ export async function prepareContext(ctx: WPNuxtContext) {
       '  clear: () => void',
       '  error: Ref<Error | undefined>',
       '  status: Ref<AsyncDataRequestStatus>',
+      '}',
+      '',
+      'interface WPConnectionResult<T> {',
+      '  data: ComputedRef<T[] | undefined>',
+      '  pageInfo: ComputedRef<WPPageInfo | undefined>',
+      '  pending: Ref<boolean>',
+      '  refresh: () => Promise<void>',
+      '  execute: () => Promise<void>',
+      '  clear: () => void',
+      '  error: Ref<Error | undefined>',
+      '  status: Ref<AsyncDataRequestStatus>',
+      '}',
+      '',
+      'interface WPPageInfo {',
+      '  hasNextPage: boolean',
+      '  hasPreviousPage: boolean',
+      '  startCursor?: string | null',
+      '  endCursor?: string | null',
       '}',
       '',
       'type WPMutationResult<T> = GraphqlResponse<T>',
