@@ -191,7 +191,9 @@ describe('useWPConnection', () => {
 
     const calls = mockUseAsyncGraphqlQuery.mock.calls
     expect(calls[0]![0]).toBe('PaginatedPosts')
-    expect(calls[0]![1]).toEqual({ first: 5, after: 'cursor-abc' })
+    // Params are wrapped in a computed ref (mergedParams) by useWPConnection
+    const passedParams = calls[0]![1] as { value: Record<string, unknown> }
+    expect(passedParams.value).toEqual({ first: 5, after: 'cursor-abc' })
   })
 
   it('should be thenable for await support', async () => {

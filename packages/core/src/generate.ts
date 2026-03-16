@@ -270,6 +270,7 @@ export async function prepareContext(ctx: WPNuxtContext) {
       'interface WPConnectionResult<T> {',
       '  data: ComputedRef<T[] | undefined>',
       '  pageInfo: ComputedRef<WPPageInfo | undefined>',
+      '  loadMore: () => Promise<void>',
       '  pending: Ref<boolean>',
       '  refresh: () => Promise<void>',
       '  execute: () => Promise<void>',
