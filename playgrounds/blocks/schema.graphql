@@ -3,6 +3,18 @@ schema {
   mutation: RootMutation
 }
 
+"""A Field Group managed by ACF"""
+interface AcfFieldGroup {
+  """The name of the field group"""
+  fieldGroupName: String @deprecated(reason: "Use __typename instead")
+}
+
+"""Fields associated with an ACF Field Group"""
+interface AcfFieldGroupFields {
+  """The name of the field group"""
+  fieldGroupName: String @deprecated(reason: "Use __typename instead")
+}
+
 """The Headless Login authentication data."""
 type AuthenticationData {
   """A new authentication token to use in future requests."""
@@ -2097,6 +2109,9 @@ enum ContentTypeEnum {
   ATTACHMENT
 
   """The Type of Content object"""
+  EVENT
+
+  """The Type of Content object"""
   PAGE
 
   """The Type of Content object"""
@@ -2265,6 +2280,12 @@ enum ContentTypesOfCategoryEnum {
   POST
 }
 
+"""Allowed Content Types of the EventCategory taxonomy."""
+enum ContentTypesOfEventCategoryEnum {
+  """The Type of Content object"""
+  EVENT
+}
+
 """Allowed Content Types of the PostFormat taxonomy."""
 enum ContentTypesOfPostFormatEnum {
   """The Type of Content object"""
@@ -2278,7 +2299,7 @@ enum ContentTypesOfTagEnum {
 }
 
 """A block used for editing the site"""
-type CoreAccordion implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreAccordion implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -2413,7 +2434,7 @@ type CoreAccordionAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreAccordionHeading implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreAccordionHeading implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -2533,7 +2554,7 @@ type CoreAccordionHeadingAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreAccordionItem implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreAccordionItem implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -2632,7 +2653,7 @@ type CoreAccordionItemAttributes {
 }
 
 """A block used for editing the site"""
-type CoreAccordionPanel implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreAccordionPanel implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -2736,7 +2757,7 @@ type CoreAccordionPanelAttributes {
 }
 
 """A block used for editing the site"""
-type CoreArchives implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreArchives implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -2850,7 +2871,7 @@ type CoreArchivesAttributes {
 }
 
 """A block used for editing the site"""
-type CoreAudio implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreAudio implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -2955,7 +2976,7 @@ type CoreAudioAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreAvatar implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreAvatar implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -3044,7 +3065,7 @@ type CoreAvatarAttributes {
 }
 
 """A block used for editing the site"""
-type CoreBlock implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreBlock implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -3103,7 +3124,7 @@ type CoreBlockAttributes {
 }
 
 """A block used for editing the site"""
-type CoreButton implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreButton implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -3258,7 +3279,7 @@ type CoreButtonAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreButtons implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreButtons implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -3363,7 +3384,7 @@ type CoreButtonsAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreCalendar implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCalendar implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -3457,7 +3478,7 @@ type CoreCalendarAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCategories implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCategories implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -3591,7 +3612,7 @@ type CoreCategoriesAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCode implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCode implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -3701,7 +3722,7 @@ type CoreCodeAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreColumn implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreColumn implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -3816,7 +3837,7 @@ type CoreColumnAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreColumns implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreColumns implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -3936,7 +3957,7 @@ type CoreColumnsAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreCommentAuthorName implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentAuthorName implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4040,7 +4061,7 @@ type CoreCommentAuthorNameAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentContent implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentContent implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4134,7 +4155,7 @@ type CoreCommentContentAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentDate implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentDate implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4233,7 +4254,7 @@ type CoreCommentDateAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentEditLink implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentEditLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4327,7 +4348,7 @@ type CoreCommentEditLinkAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentReplyLink implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentReplyLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4416,7 +4437,7 @@ type CoreCommentReplyLinkAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentTemplate implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentTemplate implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4495,7 +4516,7 @@ type CoreCommentTemplateAttributes {
 }
 
 """A block used for editing the site"""
-type CoreComments implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreComments implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4599,7 +4620,7 @@ type CoreCommentsAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentsPagination implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentsPagination implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4698,7 +4719,7 @@ type CoreCommentsPaginationAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentsPaginationNext implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentsPaginationNext implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4782,7 +4803,7 @@ type CoreCommentsPaginationNextAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentsPaginationNumbers implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentsPaginationNumbers implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4861,7 +4882,7 @@ type CoreCommentsPaginationNumbersAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentsPaginationPrevious implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentsPaginationPrevious implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4945,7 +4966,7 @@ type CoreCommentsPaginationPreviousAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentsTitle implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentsTitle implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -5064,7 +5085,7 @@ type CoreCommentsTitleAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCover implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCover implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -5264,7 +5285,7 @@ type CoreCoverAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreDetails implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreDetails implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -5389,7 +5410,7 @@ type CoreDetailsAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreEmbed implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreEmbed implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -5488,7 +5509,7 @@ type CoreEmbedAttributes {
 }
 
 """A block used for editing the site"""
-type CoreFile implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreFile implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -5628,7 +5649,7 @@ type CoreFileAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreFootnotes implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreFootnotes implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -5712,7 +5733,7 @@ type CoreFootnotesAttributes {
 }
 
 """A block used for editing the site"""
-type CoreFreeform implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreFreeform implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -5766,7 +5787,7 @@ type CoreFreeformAttributes {
 }
 
 """A block used for editing the site"""
-type CoreGallery implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreGallery implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -5956,7 +5977,7 @@ type CoreGalleryAttributesImages {
 }
 
 """A block used for editing the site"""
-type CoreGroup implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreGroup implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -6076,7 +6097,7 @@ type CoreGroupAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreHeading implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreHeading implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -6206,7 +6227,7 @@ type CoreHeadingAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreHomeLink implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreHomeLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -6280,7 +6301,7 @@ type CoreHomeLinkAttributes {
 }
 
 """A block used for editing the site"""
-type CoreHtml implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreHtml implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -6334,7 +6355,7 @@ type CoreHtmlAttributes {
 }
 
 """A block used for editing the site"""
-type CoreImage implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreImage implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -6507,7 +6528,7 @@ type CoreImageAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreLatestComments implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreLatestComments implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -6616,7 +6637,7 @@ type CoreLatestCommentsAttributes {
 }
 
 """A block used for editing the site"""
-type CoreLatestPosts implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreLatestPosts implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -6800,7 +6821,7 @@ type CoreLatestPostsAttributes {
 }
 
 """A block used for editing the site"""
-type CoreLegacyWidget implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreLegacyWidget implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -6864,7 +6885,7 @@ type CoreLegacyWidgetAttributes {
 }
 
 """A block used for editing the site"""
-type CoreList implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreList implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -6994,7 +7015,7 @@ type CoreListAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreListItem implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreListItem implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -7099,7 +7120,7 @@ type CoreListItemAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreLoginout implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreLoginout implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -7193,7 +7214,7 @@ type CoreLoginoutAttributes {
 }
 
 """A block used for editing the site"""
-type CoreMath implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreMath implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -7257,7 +7278,7 @@ type CoreMathAttributes {
 }
 
 """A block used for editing the site"""
-type CoreMediaText implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreMediaText implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -7447,7 +7468,7 @@ type CoreMediaTextAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreMissing implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreMissing implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -7511,7 +7532,7 @@ type CoreMissingAttributes {
 }
 
 """A block used for editing the site"""
-type CoreMore implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreMore implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -7570,7 +7591,7 @@ type CoreMoreAttributes {
 }
 
 """A block used for editing the site"""
-type CoreNavigation implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreNavigation implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -7744,7 +7765,7 @@ type CoreNavigationAttributes {
 }
 
 """A block used for editing the site"""
-type CoreNavigationLink implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreNavigationLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -7863,7 +7884,7 @@ type CoreNavigationLinkAttributes {
 }
 
 """A block used for editing the site"""
-type CoreNavigationSubmenu implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreNavigationSubmenu implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -7982,7 +8003,7 @@ type CoreNavigationSubmenuAttributes {
 }
 
 """A block used for editing the site"""
-type CoreNextpage implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreNextpage implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8031,7 +8052,7 @@ type CoreNextpageAttributes {
 }
 
 """A block used for editing the site"""
-type CorePageList implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePageList implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8130,7 +8151,7 @@ type CorePageListAttributes {
 }
 
 """A block used for editing the site"""
-type CorePageListItem implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePageListItem implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8209,7 +8230,7 @@ type CorePageListItemAttributes {
 }
 
 """A block used for editing the site"""
-type CoreParagraph implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreParagraph implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -8334,7 +8355,7 @@ type CoreParagraphAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CorePattern implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePattern implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8393,7 +8414,7 @@ type CorePatternAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostAuthor implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostAuthor implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8517,7 +8538,7 @@ type CorePostAuthorAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostAuthorBiography implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostAuthorBiography implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8611,7 +8632,7 @@ type CorePostAuthorBiographyAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostAuthorName implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostAuthorName implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8715,7 +8736,7 @@ type CorePostAuthorNameAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostComments implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostComments implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8804,7 +8825,7 @@ type CorePostCommentsAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostCommentsCount implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostCommentsCount implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8898,7 +8919,7 @@ type CorePostCommentsCountAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostCommentsForm implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostCommentsForm implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8987,7 +9008,7 @@ type CorePostCommentsFormAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostCommentsLink implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostCommentsLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9071,7 +9092,7 @@ type CorePostCommentsLinkAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostContent implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostContent implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9175,7 +9196,7 @@ type CorePostContentAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostDate implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostDate implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9284,7 +9305,7 @@ type CorePostDateAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostExcerpt implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostExcerpt implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9393,7 +9414,7 @@ type CorePostExcerptAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostFeaturedImage implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostFeaturedImage implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9532,7 +9553,7 @@ type CorePostFeaturedImageAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostNavigationLink implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostNavigationLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9646,7 +9667,7 @@ type CorePostNavigationLinkAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostTemplate implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostTemplate implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9745,7 +9766,7 @@ type CorePostTemplateAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostTerms implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostTerms implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9939,7 +9960,7 @@ type CorePostTermsToTermNodeConnectionPageInfo implements PageInfo & TermNodeCon
 }
 
 """A block used for editing the site"""
-type CorePostTimeToRead implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostTimeToRead implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10048,7 +10069,7 @@ type CorePostTimeToReadAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostTitle implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostTitle implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10172,7 +10193,7 @@ type CorePostTitleAttributes {
 }
 
 """A block used for editing the site"""
-type CorePreformatted implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePreformatted implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -10272,7 +10293,7 @@ type CorePreformattedAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CorePullquote implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePullquote implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -10387,7 +10408,7 @@ type CorePullquoteAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreQuery implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQuery implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10476,7 +10497,7 @@ type CoreQueryAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQueryNoResults implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQueryNoResults implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10565,7 +10586,7 @@ type CoreQueryNoResultsAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQueryPagination implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQueryPagination implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10669,7 +10690,7 @@ type CoreQueryPaginationAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQueryPaginationNext implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQueryPaginationNext implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10753,7 +10774,7 @@ type CoreQueryPaginationNextAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQueryPaginationNumbers implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQueryPaginationNumbers implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10837,7 +10858,7 @@ type CoreQueryPaginationNumbersAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQueryPaginationPrevious implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQueryPaginationPrevious implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10921,7 +10942,7 @@ type CoreQueryPaginationPreviousAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQueryTitle implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQueryTitle implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -11045,7 +11066,7 @@ type CoreQueryTitleAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQueryTotal implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQueryTotal implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -11144,7 +11165,7 @@ type CoreQueryTotalAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQuote implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQuote implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -11269,7 +11290,7 @@ type CoreQuoteAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreReadMore implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreReadMore implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -11368,7 +11389,7 @@ type CoreReadMoreAttributes {
 }
 
 """A block used for editing the site"""
-type CoreRss implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreRss implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -11502,7 +11523,7 @@ type CoreRssAttributes {
 }
 
 """A block used for editing the site"""
-type CoreSearch implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSearch implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -11646,7 +11667,7 @@ type CoreSearchAttributes {
 }
 
 """A block used for editing the site"""
-type CoreSeparator implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSeparator implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -11741,7 +11762,7 @@ type CoreSeparatorAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreShortcode implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreShortcode implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -11795,7 +11816,7 @@ type CoreShortcodeAttributes {
 }
 
 """A block used for editing the site"""
-type CoreSiteLogo implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSiteLogo implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -11879,7 +11900,7 @@ type CoreSiteLogoAttributes {
 }
 
 """A block used for editing the site"""
-type CoreSiteTagline implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSiteTagline implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -11988,7 +12009,7 @@ type CoreSiteTaglineAttributes {
 }
 
 """A block used for editing the site"""
-type CoreSiteTitle implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSiteTitle implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -12107,7 +12128,7 @@ type CoreSiteTitleAttributes {
 }
 
 """A block used for editing the site"""
-type CoreSocialLink implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSocialLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -12181,7 +12202,7 @@ type CoreSocialLinkAttributes {
 }
 
 """A block used for editing the site"""
-type CoreSocialLinks implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSocialLinks implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -12316,7 +12337,7 @@ type CoreSocialLinksAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreSpacer implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSpacer implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -12391,7 +12412,7 @@ type CoreSpacerAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreTable implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTable implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -12651,7 +12672,7 @@ type CoreTableAttributesHeadCells {
 }
 
 """A block used for editing the site"""
-type CoreTagCloud implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTagCloud implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -12750,7 +12771,7 @@ type CoreTagCloudAttributes {
 }
 
 """A block used for editing the site"""
-type CoreTemplatePart implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTemplatePart implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -12829,7 +12850,7 @@ type CoreTemplatePartAttributes {
 }
 
 """A block used for editing the site"""
-type CoreTermCount implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTermCount implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -12923,7 +12944,7 @@ type CoreTermCountAttributes {
 }
 
 """A block used for editing the site"""
-type CoreTermDescription implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTermDescription implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -13017,7 +13038,7 @@ type CoreTermDescriptionAttributes {
 }
 
 """A block used for editing the site"""
-type CoreTermName implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTermName implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -13126,7 +13147,7 @@ type CoreTermNameAttributes {
 }
 
 """A block used for editing the site"""
-type CoreTermTemplate implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTermTemplate implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -13225,7 +13246,7 @@ type CoreTermTemplateAttributes {
 }
 
 """A block used for editing the site"""
-type CoreTermsQuery implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTermsQuery implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -13299,7 +13320,7 @@ type CoreTermsQueryAttributes {
 }
 
 """A block used for editing the site"""
-type CoreTextColumns implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTextColumns implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -13378,7 +13399,7 @@ type CoreTextColumnsAttributesContent {
 }
 
 """A block used for editing the site"""
-type CoreVerse implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreVerse implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -13483,7 +13504,7 @@ type CoreVerseAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreVideo implements BlockWithSupportsAnchor & EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreVideo implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -13613,7 +13634,7 @@ type CoreVideoAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreWidgetGroup implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreWidgetGroup implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -13765,6 +13786,99 @@ type CreateCommentPayload {
   Whether the mutation succeeded. If the comment is not approved, the server will not return the comment to a non authenticated user, but a success message can be returned if the create succeeded, and the client can optimistically add the comment to the client cache
   """
   success: Boolean
+}
+
+"""Input for the createEventCategory mutation."""
+input CreateEventCategoryInput {
+  """The slug that the event_category will be an alias of"""
+  aliasOf: String
+
+  """
+  This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The description of the event_category object"""
+  description: String
+
+  """The name of the event_category object to mutate"""
+  name: String!
+
+  """
+  The database ID of the event_category that should be set as the parent. This field cannot be used in conjunction with parentId
+  """
+  parentDatabaseId: Int
+
+  """
+  The ID of the event_category that should be set as the parent. This field cannot be used in conjunction with parentDatabaseId
+  """
+  parentId: ID
+
+  """
+  If this argument exists then the slug will be checked to see if it is not an existing valid term. If that check succeeds (it is not a valid term), then it is added and the term id is given. If it fails, then a check is made to whether the taxonomy is hierarchical and the parent argument is not empty. If the second check succeeds, the term will be inserted and the term id will be given. If the slug argument is empty, then it will be calculated from the term name.
+  """
+  slug: String
+}
+
+"""The payload for the createEventCategory mutation."""
+type CreateEventCategoryPayload {
+  """
+  If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The created event_category"""
+  eventCategory: EventCategory
+}
+
+"""Input for the createEvent mutation."""
+input CreateEventInput {
+  """
+  This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The content of the object"""
+  content: String
+
+  """
+  The date of the object. Preferable to enter as year/month/day (e.g. 01/31/2017) as it will rearrange date as fit if it is not specified. Incomplete dates may have unintended results for example, "2017" as the input will use current date with timestamp 20:17 
+  """
+  date: String
+
+  """Set connections between the Event and EventCategories"""
+  eventCategories: EventEventCategoriesInput
+
+  """The excerpt of the object"""
+  excerpt: String
+
+  """
+  A field used for ordering posts. This is typically used with nav menu items or for special ordering of hierarchical content types.
+  """
+  menuOrder: Int
+
+  """The password used to protect the content of the object"""
+  password: String
+
+  """The slug of the object"""
+  slug: String
+
+  """The status of the object"""
+  status: PostStatusEnum
+
+  """The title of the object"""
+  title: String
+}
+
+"""The payload for the createEvent mutation."""
+type CreateEventPayload {
+  """
+  If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The Post object mutation type."""
+  event: Event
 }
 
 """Input for the createMediaItem mutation."""
@@ -14215,6 +14329,64 @@ type DeleteCommentPayload {
 
   """The deleted comment ID"""
   deletedId: ID
+}
+
+"""Input for the deleteEventCategory mutation."""
+input DeleteEventCategoryInput {
+  """
+  This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The ID of the EventCategory to delete"""
+  id: ID!
+}
+
+"""The payload for the deleteEventCategory mutation."""
+type DeleteEventCategoryPayload {
+  """
+  If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The ID of the deleted object"""
+  deletedId: ID
+
+  """The deleted term object"""
+  eventCategory: EventCategory
+}
+
+"""Input for the deleteEvent mutation."""
+input DeleteEventInput {
+  """
+  This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """
+  Whether the object should be force deleted instead of being moved to the trash
+  """
+  forceDelete: Boolean
+
+  """The ID of the Event to delete"""
+  id: ID!
+
+  """Override the edit lock when another user is editing the post"""
+  ignoreEditLock: Boolean
+}
+
+"""The payload for the deleteEvent mutation."""
+type DeleteEventPayload {
+  """
+  If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The ID of the deleted object"""
+  deletedId: ID
+
+  """The object before it was deleted"""
+  event: Event
 }
 
 """Input for the deleteMediaItem mutation."""
@@ -14691,6 +14863,1604 @@ interface EnqueuedStylesheetConnectionPageInfo implements PageInfo & WPPageInfo 
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
+}
+
+"""The Event type"""
+type Event implements ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithContentEditor & NodeWithEditorBlocks & NodeWithEventEditorBlocks & NodeWithExcerpt & NodeWithFeaturedImage & NodeWithRevisions & NodeWithTemplate & NodeWithTitle & Previewable & UniformResourceIdentifiable & WithAcfEventDetails {
+  """The ancestors of the content node."""
+  ancestors(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+  ): EventToEventConnection @deprecated(reason: "This content type is not hierarchical and typically will not have ancestors")
+
+  """"""
+  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
+
+  """The content of the post."""
+  content(
+    """Format of the field output"""
+    format: PostObjectFieldFormatEnum
+  ): String
+
+  """Connection between the ContentNode type and the ContentType type"""
+  contentType: ContentNodeToContentTypeConnectionEdge
+
+  """The name of the Content Type the node belongs to"""
+  contentTypeName: String!
+
+  """The unique identifier stored in the database"""
+  databaseId: Int!
+
+  """Post publishing date."""
+  date: String
+
+  """The publishing date set in GMT."""
+  dateGmt: String
+
+  """The desired slug of the post"""
+  desiredSlug: String
+
+  """
+  If a user has edited the node within the past 15 seconds, this will return the user that last edited. Null if the edit lock doesn&#039;t exist or is greater than 15 seconds
+  """
+  editingLockedBy: ContentNodeToEditLockConnectionEdge
+
+  """List of Event editor blocks"""
+  editorBlocks(
+    """Returns the list of blocks as a flat list if true"""
+    flat: Boolean
+  ): [EventEditorBlock]
+
+  """The RSS enclosure for the object"""
+  enclosure: String
+
+  """Connection between the ContentNode type and the EnqueuedScript type"""
+  enqueuedScripts(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+  ): ContentNodeToEnqueuedScriptConnection
+
+  """
+  Connection between the ContentNode type and the EnqueuedStylesheet type
+  """
+  enqueuedStylesheets(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+  ): ContentNodeToEnqueuedStylesheetConnection
+
+  """Connection between the Event type and the EventCategory type"""
+  eventCategories(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+
+    """Arguments for filtering the connection"""
+    where: EventToEventCategoryConnectionWhereArgs
+  ): EventToEventCategoryConnection
+
+  """Fields of the EventDetails ACF Field Group"""
+  eventDetails: EventDetails
+
+  """The id field matches the WP_Post-&gt;ID field."""
+  eventId: Int! @deprecated(reason: "Deprecated in favor of the databaseId field")
+
+  """The excerpt of the post."""
+  excerpt(
+    """Format of the field output"""
+    format: PostObjectFieldFormatEnum
+  ): String
+
+  """
+  Connection between the NodeWithFeaturedImage type and the MediaItem type
+  """
+  featuredImage: NodeWithFeaturedImageToMediaItemConnectionEdge
+
+  """
+  The database identifier for the featured image node assigned to the content node
+  """
+  featuredImageDatabaseId: Int
+
+  """Globally unique ID of the featured image assigned to the node"""
+  featuredImageId: ID
+
+  """
+  The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table.
+  """
+  guid: String
+
+  """Whether the event object is password protected."""
+  hasPassword: Boolean
+
+  """The globally unique identifier of the event object."""
+  id: ID!
+
+  """Whether the node is a Comment"""
+  isComment: Boolean!
+
+  """Whether the node is a Content Node"""
+  isContentNode: Boolean!
+
+  """Whether the node represents the front page."""
+  isFrontPage: Boolean!
+
+  """Whether  the node represents the blog page."""
+  isPostsPage: Boolean!
+
+  """Whether the object is a node in the preview state"""
+  isPreview: Boolean
+
+  """Whether the object is restricted from the current viewer"""
+  isRestricted: Boolean
+
+  """True if the node is a revision of another node"""
+  isRevision: Boolean
+
+  """Whether the node is a Term"""
+  isTermNode: Boolean!
+
+  """The user that most recently edited the node"""
+  lastEditedBy: ContentNodeToEditLastConnectionEdge
+
+  """The permalink of the post"""
+  link: String
+
+  """
+  The local modified time for a post. If a post was recently updated the modified field will change to match the corresponding time.
+  """
+  modified: String
+
+  """
+  The GMT modified time for a post. If a post was recently updated the modified field will change to match the corresponding time in GMT.
+  """
+  modifiedGmt: String
+
+  """The parent of the content node."""
+  parent: EventToParentConnectionEdge @deprecated(reason: "This content type is not hierarchical and typically will not have a parent")
+
+  """The password for the event object."""
+  password: String
+
+  """Connection between the Event type and the Event type"""
+  preview: EventToPreviewConnectionEdge
+
+  """The database id of the preview node"""
+  previewRevisionDatabaseId: Int
+
+  """Whether the object is a node in the preview state"""
+  previewRevisionId: ID
+
+  """
+  If the current node is a revision, this field exposes the node this is a revision of. Returns null if the node is not a revision of another node.
+  """
+  revisionOf: NodeWithRevisionsToContentNodeConnectionEdge
+
+  """Connection between the Event type and the Event type"""
+  revisions(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+
+    """Arguments for filtering the connection"""
+    where: EventToRevisionConnectionWhereArgs
+  ): EventToRevisionConnection
+
+  """The Yoast SEO data of the ContentNode"""
+  seo: PostTypeSEO
+
+  """
+  The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table.
+  """
+  slug: String
+
+  """The current status of the object"""
+  status: String
+
+  """The template assigned to the node"""
+  template: ContentTemplate
+
+  """"""
+  templates: [String]
+
+  """Connection between the Event type and the TermNode type"""
+  terms(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+
+    """Arguments for filtering the connection"""
+    where: EventToTermNodeConnectionWhereArgs
+  ): EventToTermNodeConnection
+
+  """
+  The title of the post. This is currently just the raw title. An amendment to support rendered title needs to be made.
+  """
+  title(
+    """Format of the field output"""
+    format: PostObjectFieldFormatEnum
+  ): String
+
+  """The unique resource identifier path"""
+  uri: String
+}
+
+"""The EventCategory type"""
+type EventCategory implements DatabaseIdentifier & HierarchicalNode & HierarchicalTermNode & MenuItemLinkable & Node & TermNode & UniformResourceIdentifiable {
+  """
+  The ancestors of the node. Default ordered as lowest (closest to the child) to highest (closest to the root).
+  """
+  ancestors(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+  ): EventCategoryToAncestorsEventCategoryConnection
+
+  """
+  Connection between the EventCategory type and its children EventCategories.
+  """
+  children(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+
+    """Arguments for filtering the connection"""
+    where: EventCategoryToEventCategoryConnectionWhereArgs
+  ): EventCategoryToEventCategoryConnection
+
+  """"""
+  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
+
+  """Connection between the EventCategory type and the ContentNode type"""
+  contentNodes(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+
+    """Arguments for filtering the connection"""
+    where: EventCategoryToContentNodeConnectionWhereArgs
+  ): EventCategoryToContentNodeConnection
+
+  """The number of objects connected to the object"""
+  count: Int
+
+  """The unique identifier stored in the database"""
+  databaseId: Int!
+
+  """The description of the object"""
+  description: String
+
+  """Connection between the TermNode type and the EnqueuedScript type"""
+  enqueuedScripts(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+  ): TermNodeToEnqueuedScriptConnection
+
+  """Connection between the TermNode type and the EnqueuedStylesheet type"""
+  enqueuedStylesheets(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+  ): TermNodeToEnqueuedStylesheetConnection
+
+  """The id field matches the WP_Post-&gt;ID field."""
+  eventCategoryId: Int @deprecated(reason: "Deprecated in favor of databaseId")
+
+  """Connection between the EventCategory type and the Event type"""
+  events(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+
+    """Arguments for filtering the connection"""
+    where: EventCategoryToEventConnectionWhereArgs
+  ): EventCategoryToEventConnection
+
+  """The globally unique ID for the object"""
+  id: ID!
+
+  """Whether the node is a Comment"""
+  isComment: Boolean!
+
+  """Whether the node is a Content Node"""
+  isContentNode: Boolean!
+
+  """Whether the node represents the front page."""
+  isFrontPage: Boolean!
+
+  """Whether  the node represents the blog page."""
+  isPostsPage: Boolean!
+
+  """Whether the object is restricted from the current viewer"""
+  isRestricted: Boolean
+
+  """Whether the node is a Term"""
+  isTermNode: Boolean!
+
+  """The link to the term"""
+  link: String
+
+  """The human friendly name of the object."""
+  name: String
+
+  """
+  Connection between the EventCategory type and its parent EventCategory.
+  """
+  parent: EventCategoryToParentEventCategoryConnectionEdge
+
+  """Database id of the parent node"""
+  parentDatabaseId: Int
+
+  """The globally unique identifier of the parent node."""
+  parentId: ID
+
+  """The Yoast SEO data of the Event Categories taxonomy."""
+  seo: TaxonomySEO
+
+  """An alphanumeric identifier for the object unique to its type."""
+  slug: String
+
+  """Connection between the EventCategory type and the Taxonomy type"""
+  taxonomy: EventCategoryToTaxonomyConnectionEdge
+
+  """The name of the taxonomy that the object is associated with"""
+  taxonomyName: String
+
+  """"""
+  templates: [String]
+
+  """The ID of the term group that this term object belongs to"""
+  termGroupId: Int
+
+  """The taxonomy ID that the object is associated with"""
+  termTaxonomyId: Int
+
+  """The unique resource identifier path"""
+  uri: String
+}
+
+"""
+A paginated collection of EventCategory Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of EventCategory Nodes
+"""
+interface EventCategoryConnection implements Connection {
+  """
+  A list of edges (relational context) between RootQuery and connected EventCategory Nodes
+  """
+  edges: [EventCategoryConnectionEdge!]!
+
+  """A list of connected EventCategory Nodes"""
+  nodes: [EventCategory!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: EventCategoryConnectionPageInfo!
+}
+
+"""
+Represents a connection to a EventCategory. Contains both the EventCategory Node and metadata about the relationship.
+"""
+interface EventCategoryConnectionEdge implements Edge {
+  """
+  Opaque reference to the nodes position in the connection. Value can be used with pagination args.
+  """
+  cursor: String
+
+  """The connected EventCategory Node"""
+  node: EventCategory!
+}
+
+"""
+Pagination metadata specific to &quot;EventCategoryConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;EventCategoryConnectionEdge&quot; Nodes.
+"""
+interface EventCategoryConnectionPageInfo implements PageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""
+Identifier types for retrieving a specific EventCategory. Determines which unique property (global ID, database ID, slug, etc.) is used to locate the EventCategory.
+"""
+enum EventCategoryIdType {
+  """The Database ID for the node"""
+  DATABASE_ID
+
+  """The hashed Global ID"""
+  ID
+
+  """The name of the node"""
+  NAME
+
+  """Url friendly name of the node"""
+  SLUG
+
+  """The URI for the node"""
+  URI
+}
+
+"""Connection between the EventCategory type and the EventCategory type"""
+type EventCategoryToAncestorsEventCategoryConnection implements Connection & EventCategoryConnection {
+  """
+  Edges for the EventCategoryToAncestorsEventCategoryConnection connection
+  """
+  edges: [EventCategoryToAncestorsEventCategoryConnectionEdge!]!
+
+  """The nodes of the connection, without the edges"""
+  nodes: [EventCategory!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: EventCategoryToAncestorsEventCategoryConnectionPageInfo!
+}
+
+"""An edge in a connection"""
+type EventCategoryToAncestorsEventCategoryConnectionEdge implements Edge & EventCategoryConnectionEdge {
+  """A cursor for use in pagination"""
+  cursor: String
+
+  """The item at the end of the edge"""
+  node: EventCategory!
+}
+
+"""
+Pagination metadata specific to &quot;EventCategoryToAncestorsEventCategoryConnection&quot; collections. Provides cursors and flags for navigating through sets of EventCategoryToAncestorsEventCategoryConnection Nodes.
+"""
+type EventCategoryToAncestorsEventCategoryConnectionPageInfo implements EventCategoryConnectionPageInfo & PageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""Connection between the EventCategory type and the ContentNode type"""
+type EventCategoryToContentNodeConnection implements Connection & ContentNodeConnection {
+  """Edges for the EventCategoryToContentNodeConnection connection"""
+  edges: [EventCategoryToContentNodeConnectionEdge!]!
+
+  """The nodes of the connection, without the edges"""
+  nodes: [ContentNode!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: EventCategoryToContentNodeConnectionPageInfo!
+}
+
+"""An edge in a connection"""
+type EventCategoryToContentNodeConnectionEdge implements ContentNodeConnectionEdge & Edge {
+  """A cursor for use in pagination"""
+  cursor: String
+
+  """The item at the end of the edge"""
+  node: ContentNode!
+}
+
+"""
+Pagination metadata specific to &quot;EventCategoryToContentNodeConnection&quot; collections. Provides cursors and flags for navigating through sets of EventCategoryToContentNodeConnection Nodes.
+"""
+type EventCategoryToContentNodeConnectionPageInfo implements ContentNodeConnectionPageInfo & PageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""
+Arguments for filtering the EventCategoryToContentNodeConnection connection
+"""
+input EventCategoryToContentNodeConnectionWhereArgs {
+  """The Types of content to filter"""
+  contentTypes: [ContentTypesOfEventCategoryEnum]
+
+  """Filter the connection based on dates"""
+  dateQuery: DateQueryInput
+
+  """
+  True for objects with passwords; False for objects without passwords; null for all objects with or without passwords
+  """
+  hasPassword: Boolean
+
+  """Specific database ID of the object"""
+  id: Int
+
+  """Array of IDs for the objects to retrieve"""
+  in: [ID]
+
+  """Get objects with a specific mimeType property"""
+  mimeType: MimeTypeEnum
+
+  """Slug / post_name of the object"""
+  name: String
+
+  """Specify objects to retrieve. Use slugs"""
+  nameIn: [String]
+
+  """
+  Specify IDs NOT to retrieve. If this is used in the same query as "in", it will be ignored
+  """
+  notIn: [ID]
+
+  """What parameter to use to order the objects by."""
+  orderby: [PostObjectsConnectionOrderbyInput]
+
+  """Use ID to return only children. Use 0 to return only top-level items"""
+  parent: ID
+
+  """Specify objects whose parent is in an array"""
+  parentIn: [ID]
+
+  """Specify posts whose parent is not in an array"""
+  parentNotIn: [ID]
+
+  """Show posts with a specific password."""
+  password: String
+
+  """Show Posts based on a keyword search"""
+  search: String
+
+  """Retrieve posts where post status is in an array."""
+  stati: [PostStatusEnum]
+
+  """Show posts with a specific status."""
+  status: PostStatusEnum
+
+  """Title of the object"""
+  title: String
+}
+
+"""Connection between the EventCategory type and the EventCategory type"""
+type EventCategoryToEventCategoryConnection implements Connection & EventCategoryConnection {
+  """Edges for the EventCategoryToEventCategoryConnection connection"""
+  edges: [EventCategoryToEventCategoryConnectionEdge!]!
+
+  """The nodes of the connection, without the edges"""
+  nodes: [EventCategory!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: EventCategoryToEventCategoryConnectionPageInfo!
+}
+
+"""An edge in a connection"""
+type EventCategoryToEventCategoryConnectionEdge implements Edge & EventCategoryConnectionEdge {
+  """A cursor for use in pagination"""
+  cursor: String
+
+  """The item at the end of the edge"""
+  node: EventCategory!
+}
+
+"""
+Pagination metadata specific to &quot;EventCategoryToEventCategoryConnection&quot; collections. Provides cursors and flags for navigating through sets of EventCategoryToEventCategoryConnection Nodes.
+"""
+type EventCategoryToEventCategoryConnectionPageInfo implements EventCategoryConnectionPageInfo & PageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""
+Arguments for filtering the EventCategoryToEventCategoryConnection connection
+"""
+input EventCategoryToEventCategoryConnectionWhereArgs {
+  """
+  Unique cache key to be produced when this query is stored in an object cache. Default is 'core'.
+  """
+  cacheDomain: String
+
+  """
+  Term ID to retrieve child terms of. If multiple taxonomies are passed, $child_of is ignored. Default 0.
+  """
+  childOf: Int
+
+  """
+  True to limit results to terms that have no children. This parameter has no effect on non-hierarchical taxonomies. Default false.
+  """
+  childless: Boolean
+
+  """
+  Retrieve terms where the description is LIKE the input value. Default empty.
+  """
+  descriptionLike: String
+
+  """
+  Array of term ids to exclude. If $include is non-empty, $exclude is ignored. Default empty array.
+  """
+  exclude: [ID]
+
+  """
+  Array of term ids to exclude along with all of their descendant terms. If $include is non-empty, $exclude_tree is ignored. Default empty array.
+  """
+  excludeTree: [ID]
+
+  """
+  Whether to hide terms not assigned to any posts. Accepts true or false. Default false
+  """
+  hideEmpty: Boolean
+
+  """
+  Whether to include terms that have non-empty descendants (even if $hide_empty is set to true). Default true.
+  """
+  hierarchical: Boolean
+
+  """Array of term ids to include. Default empty array."""
+  include: [ID]
+
+  """Array of names to return term(s) for. Default empty."""
+  name: [String]
+
+  """Retrieve terms where the name is LIKE the input value. Default empty."""
+  nameLike: String
+
+  """
+  Array of object IDs. Results will be limited to terms associated with these objects.
+  """
+  objectIds: [ID]
+
+  """Direction the connection should be ordered in"""
+  order: OrderEnum
+
+  """Field(s) to order terms by. Defaults to 'name'."""
+  orderby: TermObjectsConnectionOrderbyEnum
+
+  """
+  Whether to pad the quantity of a term's children in the quantity of each term's "count" object variable. Default false.
+  """
+  padCounts: Boolean
+
+  """Parent term ID to retrieve direct-child terms of. Default empty."""
+  parent: Int
+
+  """
+  Search criteria to match terms. Will be SQL-formatted with wildcards before and after. Default empty.
+  """
+  search: String
+
+  """Array of slugs to return term(s) for. Default empty."""
+  slug: [String]
+
+  """Array of term taxonomy IDs, to match when querying terms."""
+  termTaxonomyId: [ID]
+
+  """Whether to prime meta caches for matched terms. Default true."""
+  updateTermMetaCache: Boolean
+}
+
+"""Connection between the EventCategory type and the Event type"""
+type EventCategoryToEventConnection implements Connection & EventConnection {
+  """Edges for the EventCategoryToEventConnection connection"""
+  edges: [EventCategoryToEventConnectionEdge!]!
+
+  """The nodes of the connection, without the edges"""
+  nodes: [Event!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: EventCategoryToEventConnectionPageInfo!
+}
+
+"""An edge in a connection"""
+type EventCategoryToEventConnectionEdge implements Edge & EventConnectionEdge {
+  """A cursor for use in pagination"""
+  cursor: String
+
+  """The item at the end of the edge"""
+  node: Event!
+}
+
+"""
+Pagination metadata specific to &quot;EventCategoryToEventConnection&quot; collections. Provides cursors and flags for navigating through sets of EventCategoryToEventConnection Nodes.
+"""
+type EventCategoryToEventConnectionPageInfo implements EventConnectionPageInfo & PageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""Arguments for filtering the EventCategoryToEventConnection connection"""
+input EventCategoryToEventConnectionWhereArgs {
+  """Filter the connection based on dates"""
+  dateQuery: DateQueryInput
+
+  """
+  True for objects with passwords; False for objects without passwords; null for all objects with or without passwords
+  """
+  hasPassword: Boolean
+
+  """Specific database ID of the object"""
+  id: Int
+
+  """Array of IDs for the objects to retrieve"""
+  in: [ID]
+
+  """Get objects with a specific mimeType property"""
+  mimeType: MimeTypeEnum
+
+  """Slug / post_name of the object"""
+  name: String
+
+  """Specify objects to retrieve. Use slugs"""
+  nameIn: [String]
+
+  """
+  Specify IDs NOT to retrieve. If this is used in the same query as "in", it will be ignored
+  """
+  notIn: [ID]
+
+  """What parameter to use to order the objects by."""
+  orderby: [PostObjectsConnectionOrderbyInput]
+
+  """Use ID to return only children. Use 0 to return only top-level items"""
+  parent: ID
+
+  """Specify objects whose parent is in an array"""
+  parentIn: [ID]
+
+  """Specify posts whose parent is not in an array"""
+  parentNotIn: [ID]
+
+  """Show posts with a specific password."""
+  password: String
+
+  """Show Posts based on a keyword search"""
+  search: String
+
+  """Retrieve posts where post status is in an array."""
+  stati: [PostStatusEnum]
+
+  """Show posts with a specific status."""
+  status: PostStatusEnum
+
+  """Title of the object"""
+  title: String
+}
+
+"""Connection between the EventCategory type and the EventCategory type"""
+type EventCategoryToParentEventCategoryConnectionEdge implements Edge & EventCategoryConnectionEdge & OneToOneConnection {
+  """
+  Opaque reference to the nodes position in the connection. Value can be used with pagination args.
+  """
+  cursor: String
+
+  """The node of the connection, without the edges"""
+  node: EventCategory!
+}
+
+"""Connection between the EventCategory type and the Taxonomy type"""
+type EventCategoryToTaxonomyConnectionEdge implements Edge & OneToOneConnection & TaxonomyConnectionEdge {
+  """
+  Opaque reference to the nodes position in the connection. Value can be used with pagination args.
+  """
+  cursor: String
+
+  """The node of the connection, without the edges"""
+  node: Taxonomy!
+}
+
+"""
+A paginated collection of Event Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of Event Nodes
+"""
+interface EventConnection implements Connection {
+  """
+  A list of edges (relational context) between RootQuery and connected Event Nodes
+  """
+  edges: [EventConnectionEdge!]!
+
+  """A list of connected Event Nodes"""
+  nodes: [Event!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: EventConnectionPageInfo!
+}
+
+"""
+Represents a connection to a Event. Contains both the Event Node and metadata about the relationship.
+"""
+interface EventConnectionEdge implements Edge {
+  """
+  Opaque reference to the nodes position in the connection. Value can be used with pagination args.
+  """
+  cursor: String
+
+  """The connected Event Node"""
+  node: Event!
+}
+
+"""
+Pagination metadata specific to &quot;EventConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;EventConnectionEdge&quot; Nodes.
+"""
+interface EventConnectionPageInfo implements PageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""
+The &quot;EventDetails&quot; Field Group. Added to the Schema by &quot;WPGraphQL for ACF&quot;.
+"""
+type EventDetails implements AcfFieldGroup & AcfFieldGroupFields & EventDetails_Fields {
+  """
+  Field of the &quot;date_time_picker&quot; Field Type added to the schema as part of the &quot;EventDetails&quot; Field Group (ACF Fields of the &quot;date_time_picker&quot; type return a date string according to the RFC3339 spec: https://datatracker.ietf.org/doc/html/rfc3339.)
+  """
+  eventEndDatetime: String
+
+  """
+  Field of the &quot;true_false&quot; Field Type added to the schema as part of the &quot;EventDetails&quot; Field Group
+  """
+  eventIsFree: Boolean
+
+  """
+  Field of the &quot;text&quot; Field Type added to the schema as part of the &quot;EventDetails&quot; Field Group
+  """
+  eventLocation: String
+
+  """
+  Field of the &quot;date_time_picker&quot; Field Type added to the schema as part of the &quot;EventDetails&quot; Field Group (ACF Fields of the &quot;date_time_picker&quot; type return a date string according to the RFC3339 spec: https://datatracker.ietf.org/doc/html/rfc3339.)
+  """
+  eventStartDatetime: String
+
+  """
+  Field of the &quot;select&quot; Field Type added to the schema as part of the &quot;EventDetails&quot; Field Group
+  """
+  eventStatus: [String]
+
+  """
+  Field of the &quot;text&quot; Field Type added to the schema as part of the &quot;EventDetails&quot; Field Group
+  """
+  eventTicketPrice: String
+
+  """The name of the field group"""
+  fieldGroupName: String @deprecated(reason: "Use __typename instead")
+}
+
+"""
+Interface representing fields of the ACF &quot;EventDetails&quot; Field Group
+"""
+interface EventDetails_Fields implements AcfFieldGroup & AcfFieldGroupFields {
+  """
+  Field of the &quot;date_time_picker&quot; Field Type added to the schema as part of the &quot;EventDetails&quot; Field Group (ACF Fields of the &quot;date_time_picker&quot; type return a date string according to the RFC3339 spec: https://datatracker.ietf.org/doc/html/rfc3339.)
+  """
+  eventEndDatetime: String
+
+  """
+  Field of the &quot;true_false&quot; Field Type added to the schema as part of the &quot;EventDetails&quot; Field Group
+  """
+  eventIsFree: Boolean
+
+  """
+  Field of the &quot;text&quot; Field Type added to the schema as part of the &quot;EventDetails&quot; Field Group
+  """
+  eventLocation: String
+
+  """
+  Field of the &quot;date_time_picker&quot; Field Type added to the schema as part of the &quot;EventDetails&quot; Field Group (ACF Fields of the &quot;date_time_picker&quot; type return a date string according to the RFC3339 spec: https://datatracker.ietf.org/doc/html/rfc3339.)
+  """
+  eventStartDatetime: String
+
+  """
+  Field of the &quot;select&quot; Field Type added to the schema as part of the &quot;EventDetails&quot; Field Group
+  """
+  eventStatus: [String]
+
+  """
+  Field of the &quot;text&quot; Field Type added to the schema as part of the &quot;EventDetails&quot; Field Group
+  """
+  eventTicketPrice: String
+
+  """The name of the field group"""
+  fieldGroupName: String @deprecated(reason: "Use __typename instead")
+}
+
+"""EditorBlock Interface for Event Block Type"""
+interface EventEditorBlock implements EditorBlock {
+  """The API version of the Gutenberg Block"""
+  apiVersion: Int
+
+  """The name of the category the Block belongs to"""
+  blockEditorCategoryName: String
+
+  """The id of the Block"""
+  clientId: String
+
+  """CSS Classnames to apply to the block"""
+  cssClassNames: [String]
+
+  """The inner blocks of the Block"""
+  innerBlocks: [EditorBlock]
+
+  """Whether the block is Dynamic (server rendered)"""
+  isDynamic: Boolean!
+
+  """The name of the Block"""
+  name: String
+
+  """The parent id of the Block"""
+  parentClientId: String
+
+  """The rendered HTML for the block"""
+  renderedHtml: String
+
+  """The (GraphQL) type of the block"""
+  type: String
+}
+
+"""Set relationships between the Event to EventCategories"""
+input EventEventCategoriesInput {
+  """
+  If true, this will append the EventCategory to existing related EventCategories. If false, this will replace existing relationships. Default true.
+  """
+  append: Boolean
+
+  """The input list of items to set."""
+  nodes: [EventEventCategoriesNodeInput]
+}
+
+"""
+List of EventCategories to connect the Event to. If an ID is set, it will be used to create the connection. If not, it will look for a slug. If neither are valid existing terms, and the site is configured to allow terms to be created during post mutations, a term will be created using the Name if it exists in the input, then fallback to the slug if it exists.
+"""
+input EventEventCategoriesNodeInput {
+  """
+  The description of the EventCategory. This field is used to set a description of the EventCategory if a new one is created during the mutation.
+  """
+  description: String
+
+  """
+  The ID of the EventCategory. If present, this will be used to connect to the Event. If no existing EventCategory exists with this ID, no connection will be made.
+  """
+  id: ID
+
+  """
+  The name of the EventCategory. This field is used to create a new term, if term creation is enabled in nested mutations, and if one does not already exist with the provided slug or ID or if a slug or ID is not provided. If no name is included and a term is created, the creation will fallback to the slug field.
+  """
+  name: String
+
+  """
+  The slug of the EventCategory. If no ID is present, this field will be used to make a connection. If no existing term exists with this slug, this field will be used as a fallback to the Name field when creating a new term to connect to, if term creation is enabled as a nested mutation.
+  """
+  slug: String
+}
+
+"""
+Identifier types for retrieving a specific Event. Specifies which unique attribute is used to find an exact Event.
+"""
+enum EventIdType {
+  """Identify a resource by the Database ID."""
+  DATABASE_ID
+
+  """Identify a resource by the (hashed) Global ID."""
+  ID
+
+  """
+  Identify a resource by the slug. Available to non-hierarchcial Types where the slug is a unique identifier.
+  """
+  SLUG
+
+  """Identify a resource by the URI."""
+  URI
+}
+
+"""Connection between the Event type and the EventCategory type"""
+type EventToEventCategoryConnection implements Connection & EventCategoryConnection {
+  """Edges for the EventToEventCategoryConnection connection"""
+  edges: [EventToEventCategoryConnectionEdge!]!
+
+  """The nodes of the connection, without the edges"""
+  nodes: [EventCategory!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: EventToEventCategoryConnectionPageInfo!
+}
+
+"""An edge in a connection"""
+type EventToEventCategoryConnectionEdge implements Edge & EventCategoryConnectionEdge {
+  """A cursor for use in pagination"""
+  cursor: String
+
+  """The Yoast SEO Primary event_category"""
+  isPrimary: Boolean
+
+  """The item at the end of the edge"""
+  node: EventCategory!
+}
+
+"""
+Pagination metadata specific to &quot;EventToEventCategoryConnection&quot; collections. Provides cursors and flags for navigating through sets of EventToEventCategoryConnection Nodes.
+"""
+type EventToEventCategoryConnectionPageInfo implements EventCategoryConnectionPageInfo & PageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""Arguments for filtering the EventToEventCategoryConnection connection"""
+input EventToEventCategoryConnectionWhereArgs {
+  """
+  Unique cache key to be produced when this query is stored in an object cache. Default is 'core'.
+  """
+  cacheDomain: String
+
+  """
+  Term ID to retrieve child terms of. If multiple taxonomies are passed, $child_of is ignored. Default 0.
+  """
+  childOf: Int
+
+  """
+  True to limit results to terms that have no children. This parameter has no effect on non-hierarchical taxonomies. Default false.
+  """
+  childless: Boolean
+
+  """
+  Retrieve terms where the description is LIKE the input value. Default empty.
+  """
+  descriptionLike: String
+
+  """
+  Array of term ids to exclude. If $include is non-empty, $exclude is ignored. Default empty array.
+  """
+  exclude: [ID]
+
+  """
+  Array of term ids to exclude along with all of their descendant terms. If $include is non-empty, $exclude_tree is ignored. Default empty array.
+  """
+  excludeTree: [ID]
+
+  """
+  Whether to hide terms not assigned to any posts. Accepts true or false. Default false
+  """
+  hideEmpty: Boolean
+
+  """
+  Whether to include terms that have non-empty descendants (even if $hide_empty is set to true). Default true.
+  """
+  hierarchical: Boolean
+
+  """Array of term ids to include. Default empty array."""
+  include: [ID]
+
+  """Array of names to return term(s) for. Default empty."""
+  name: [String]
+
+  """Retrieve terms where the name is LIKE the input value. Default empty."""
+  nameLike: String
+
+  """
+  Array of object IDs. Results will be limited to terms associated with these objects.
+  """
+  objectIds: [ID]
+
+  """Direction the connection should be ordered in"""
+  order: OrderEnum
+
+  """Field(s) to order terms by. Defaults to 'name'."""
+  orderby: TermObjectsConnectionOrderbyEnum
+
+  """
+  Whether to pad the quantity of a term's children in the quantity of each term's "count" object variable. Default false.
+  """
+  padCounts: Boolean
+
+  """Parent term ID to retrieve direct-child terms of. Default empty."""
+  parent: Int
+
+  """
+  Search criteria to match terms. Will be SQL-formatted with wildcards before and after. Default empty.
+  """
+  search: String
+
+  """Array of slugs to return term(s) for. Default empty."""
+  slug: [String]
+
+  """Array of term taxonomy IDs, to match when querying terms."""
+  termTaxonomyId: [ID]
+
+  """Whether to prime meta caches for matched terms. Default true."""
+  updateTermMetaCache: Boolean
+}
+
+"""Connection between the Event type and the Event type"""
+type EventToEventConnection implements Connection & EventConnection {
+  """Edges for the EventToEventConnection connection"""
+  edges: [EventToEventConnectionEdge!]!
+
+  """The nodes of the connection, without the edges"""
+  nodes: [Event!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: EventToEventConnectionPageInfo!
+}
+
+"""An edge in a connection"""
+type EventToEventConnectionEdge implements Edge & EventConnectionEdge {
+  """A cursor for use in pagination"""
+  cursor: String @deprecated(reason: "This content type is not hierarchical and typically will not have ancestors")
+
+  """The item at the end of the edge"""
+  node: Event! @deprecated(reason: "This content type is not hierarchical and typically will not have ancestors")
+}
+
+"""
+Pagination metadata specific to &quot;EventToEventConnection&quot; collections. Provides cursors and flags for navigating through sets of EventToEventConnection Nodes.
+"""
+type EventToEventConnectionPageInfo implements EventConnectionPageInfo & PageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""Connection between the Event type and the Event type"""
+type EventToParentConnectionEdge implements Edge & EventConnectionEdge & OneToOneConnection {
+  """
+  Opaque reference to the nodes position in the connection. Value can be used with pagination args.
+  """
+  cursor: String
+
+  """The node of the connection, without the edges"""
+  node: Event! @deprecated(reason: "This content type is not hierarchical and typically will not have a parent")
+}
+
+"""Connection between the Event type and the Event type"""
+type EventToPreviewConnectionEdge implements Edge & EventConnectionEdge & OneToOneConnection {
+  """
+  Opaque reference to the nodes position in the connection. Value can be used with pagination args.
+  """
+  cursor: String
+
+  """The node of the connection, without the edges"""
+  node: Event!
+}
+
+"""Connection between the Event type and the Event type"""
+type EventToRevisionConnection implements Connection & EventConnection {
+  """Edges for the EventToRevisionConnection connection"""
+  edges: [EventToRevisionConnectionEdge!]!
+
+  """The nodes of the connection, without the edges"""
+  nodes: [Event!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: EventToRevisionConnectionPageInfo!
+}
+
+"""An edge in a connection"""
+type EventToRevisionConnectionEdge implements Edge & EventConnectionEdge {
+  """A cursor for use in pagination"""
+  cursor: String
+
+  """The item at the end of the edge"""
+  node: Event!
+}
+
+"""
+Pagination metadata specific to &quot;EventToRevisionConnection&quot; collections. Provides cursors and flags for navigating through sets of EventToRevisionConnection Nodes.
+"""
+type EventToRevisionConnectionPageInfo implements EventConnectionPageInfo & PageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""Arguments for filtering the EventToRevisionConnection connection"""
+input EventToRevisionConnectionWhereArgs {
+  """Filter the connection based on dates"""
+  dateQuery: DateQueryInput
+
+  """
+  True for objects with passwords; False for objects without passwords; null for all objects with or without passwords
+  """
+  hasPassword: Boolean
+
+  """Specific database ID of the object"""
+  id: Int
+
+  """Array of IDs for the objects to retrieve"""
+  in: [ID]
+
+  """Get objects with a specific mimeType property"""
+  mimeType: MimeTypeEnum
+
+  """Slug / post_name of the object"""
+  name: String
+
+  """Specify objects to retrieve. Use slugs"""
+  nameIn: [String]
+
+  """
+  Specify IDs NOT to retrieve. If this is used in the same query as "in", it will be ignored
+  """
+  notIn: [ID]
+
+  """What parameter to use to order the objects by."""
+  orderby: [PostObjectsConnectionOrderbyInput]
+
+  """Use ID to return only children. Use 0 to return only top-level items"""
+  parent: ID
+
+  """Specify objects whose parent is in an array"""
+  parentIn: [ID]
+
+  """Specify posts whose parent is not in an array"""
+  parentNotIn: [ID]
+
+  """Show posts with a specific password."""
+  password: String
+
+  """Show Posts based on a keyword search"""
+  search: String
+
+  """Retrieve posts where post status is in an array."""
+  stati: [PostStatusEnum]
+
+  """Show posts with a specific status."""
+  status: PostStatusEnum
+
+  """Title of the object"""
+  title: String
+}
+
+"""Connection between the Event type and the TermNode type"""
+type EventToTermNodeConnection implements Connection & TermNodeConnection {
+  """Edges for the EventToTermNodeConnection connection"""
+  edges: [EventToTermNodeConnectionEdge!]!
+
+  """The nodes of the connection, without the edges"""
+  nodes: [TermNode!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: EventToTermNodeConnectionPageInfo!
+}
+
+"""An edge in a connection"""
+type EventToTermNodeConnectionEdge implements Edge & TermNodeConnectionEdge {
+  """A cursor for use in pagination"""
+  cursor: String
+
+  """The item at the end of the edge"""
+  node: TermNode!
+}
+
+"""
+Pagination metadata specific to &quot;EventToTermNodeConnection&quot; collections. Provides cursors and flags for navigating through sets of EventToTermNodeConnection Nodes.
+"""
+type EventToTermNodeConnectionPageInfo implements PageInfo & TermNodeConnectionPageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""Arguments for filtering the EventToTermNodeConnection connection"""
+input EventToTermNodeConnectionWhereArgs {
+  """
+  Unique cache key to be produced when this query is stored in an object cache. Default is 'core'.
+  """
+  cacheDomain: String
+
+  """
+  Term ID to retrieve child terms of. If multiple taxonomies are passed, $child_of is ignored. Default 0.
+  """
+  childOf: Int
+
+  """
+  True to limit results to terms that have no children. This parameter has no effect on non-hierarchical taxonomies. Default false.
+  """
+  childless: Boolean
+
+  """
+  Retrieve terms where the description is LIKE the input value. Default empty.
+  """
+  descriptionLike: String
+
+  """
+  Array of term ids to exclude. If $include is non-empty, $exclude is ignored. Default empty array.
+  """
+  exclude: [ID]
+
+  """
+  Array of term ids to exclude along with all of their descendant terms. If $include is non-empty, $exclude_tree is ignored. Default empty array.
+  """
+  excludeTree: [ID]
+
+  """
+  Whether to hide terms not assigned to any posts. Accepts true or false. Default false
+  """
+  hideEmpty: Boolean
+
+  """
+  Whether to include terms that have non-empty descendants (even if $hide_empty is set to true). Default true.
+  """
+  hierarchical: Boolean
+
+  """Array of term ids to include. Default empty array."""
+  include: [ID]
+
+  """Array of names to return term(s) for. Default empty."""
+  name: [String]
+
+  """Retrieve terms where the name is LIKE the input value. Default empty."""
+  nameLike: String
+
+  """
+  Array of object IDs. Results will be limited to terms associated with these objects.
+  """
+  objectIds: [ID]
+
+  """Direction the connection should be ordered in"""
+  order: OrderEnum
+
+  """Field(s) to order terms by. Defaults to 'name'."""
+  orderby: TermObjectsConnectionOrderbyEnum
+
+  """
+  Whether to pad the quantity of a term's children in the quantity of each term's "count" object variable. Default false.
+  """
+  padCounts: Boolean
+
+  """Parent term ID to retrieve direct-child terms of. Default empty."""
+  parent: Int
+
+  """
+  Search criteria to match terms. Will be SQL-formatted with wildcards before and after. Default empty.
+  """
+  search: String
+
+  """Array of slugs to return term(s) for. Default empty."""
+  slug: [String]
+
+  """The Taxonomy to filter terms by"""
+  taxonomies: [TaxonomyEnum]
+
+  """Array of term taxonomy IDs, to match when querying terms."""
+  termTaxonomyId: [ID]
+
+  """Whether to prime meta caches for matched terms. Default true."""
+  updateTermMetaCache: Boolean
 }
 
 """The Login client options for the facebook provider."""
@@ -16658,7 +18428,7 @@ enum MenuItemNodeIdTypeEnum {
 }
 
 """Deprecated in favor of MenuItemLinkable Interface"""
-union MenuItemObjectUnion = Category | Page | Post | PostFormat | Tag
+union MenuItemObjectUnion = Category | Event | EventCategory | Page | Post | PostFormat | Tag
 
 """Connection between the MenuItem type and the Menu type"""
 type MenuItemToMenuConnectionEdge implements Edge & MenuConnectionEdge & OneToOneConnection {
@@ -17200,6 +18970,15 @@ interface NodeWithEditorBlocks {
     """Returns the list of blocks as a flat list if true"""
     flat: Boolean
   ): [EditorBlock]
+}
+
+"""Node that has Event content blocks associated with it"""
+interface NodeWithEventEditorBlocks implements NodeWithEditorBlocks {
+  """List of Event editor blocks"""
+  editorBlocks(
+    """Returns the list of blocks as a flat list if true"""
+    flat: Boolean
+  ): [EventEditorBlock]
 }
 
 """
@@ -19394,6 +21173,9 @@ input PostPostFormatsNodeInput {
 Publishing status that controls the visibility and editorial state of content. Determines whether content is published, pending review, in draft state, or private.
 """
 enum PostStatusEnum {
+  """Objects with the acf-disabled status"""
+  ACF_DISABLED
+
   """Automatically saved content that has not been manually saved"""
   AUTO_DRAFT
 
@@ -20758,6 +22540,18 @@ type RootMutation {
     input: CreateCommentInput!
   ): CreateCommentPayload
 
+  """The createEvent mutation"""
+  createEvent(
+    """Input for the createEvent mutation"""
+    input: CreateEventInput!
+  ): CreateEventPayload
+
+  """The createEventCategory mutation"""
+  createEventCategory(
+    """Input for the createEventCategory mutation"""
+    input: CreateEventCategoryInput!
+  ): CreateEventCategoryPayload
+
   """The createMediaItem mutation"""
   createMediaItem(
     """Input for the createMediaItem mutation"""
@@ -20805,6 +22599,18 @@ type RootMutation {
     """Input for the deleteComment mutation"""
     input: DeleteCommentInput!
   ): DeleteCommentPayload
+
+  """The deleteEvent mutation"""
+  deleteEvent(
+    """Input for the deleteEvent mutation"""
+    input: DeleteEventInput!
+  ): DeleteEventPayload
+
+  """The deleteEventCategory mutation"""
+  deleteEventCategory(
+    """Input for the deleteEventCategory mutation"""
+    input: DeleteEventCategoryInput!
+  ): DeleteEventCategoryPayload
 
   """The deleteMediaItem mutation"""
   deleteMediaItem(
@@ -20921,6 +22727,18 @@ type RootMutation {
     """Input for the updateComment mutation"""
     input: UpdateCommentInput!
   ): UpdateCommentPayload
+
+  """The updateEvent mutation"""
+  updateEvent(
+    """Input for the updateEvent mutation"""
+    input: UpdateEventInput!
+  ): UpdateEventPayload
+
+  """The updateEventCategory mutation"""
+  updateEventCategory(
+    """Input for the updateEventCategory mutation"""
+    input: UpdateEventCategoryInput!
+  ): UpdateEventCategoryPayload
 
   """The updateMediaItem mutation"""
   updateMediaItem(
@@ -21107,6 +22925,88 @@ type RootQuery {
 
   """Fields of the &#039;DiscussionSettings&#039; settings group"""
   discussionSettings: DiscussionSettings
+
+  """An object of the Event Type. """
+  event(
+    """
+    Whether to return the Preview Node instead of the Published Node. When the ID of a Node is provided along with asPreview being set to true, the preview node with un-published changes will be returned instead of the published node. If no preview node exists or the requester doesn't have proper capabilities to preview, no node will be returned. If the ID provided is a URI and has a preview query arg, it will be used as a fallback if the "asPreview" argument is not explicitly provided as an argument.
+    """
+    asPreview: Boolean
+
+    """The globally unique identifier of the object."""
+    id: ID!
+
+    """Type of unique identifier to fetch by. Default is Global ID"""
+    idType: EventIdType
+  ): Event
+
+  """A Event object"""
+  eventBy(
+    """Get the Event by its database ID"""
+    eventId: Int
+
+    """Get the Event object by its global ID"""
+    id: ID
+
+    """Get the Event by its slug (only available for non-hierarchical types)"""
+    slug: String
+
+    """Get the Event by its uri"""
+    uri: String
+  ): Event @deprecated(reason: "Deprecated in favor of using the single entry point for this type with ID and IDType fields. For example, instead of postBy( id: &quot;&quot; ), use post(id: &quot;&quot; idType: &quot;&quot;)")
+
+  """Connection between the RootQuery type and the EventCategory type"""
+  eventCategories(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+
+    """Arguments for filtering the connection"""
+    where: RootQueryToEventCategoryConnectionWhereArgs
+  ): RootQueryToEventCategoryConnection
+
+  """A 0bject"""
+  eventCategory(
+    """The globally unique identifier of the object."""
+    id: ID!
+
+    """Type of unique identifier to fetch by. Default is Global ID"""
+    idType: EventCategoryIdType
+  ): EventCategory
+
+  """Connection between the RootQuery type and the Event type"""
+  events(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+
+    """Arguments for filtering the connection"""
+    where: RootQueryToEventConnectionWhereArgs
+  ): RootQueryToEventConnection
 
   """Fields of the &#039;GeneralSettings&#039; settings group"""
   generalSettings: GeneralSettings
@@ -22158,6 +24058,236 @@ type RootQueryToEnqueuedStylesheetConnectionPageInfo implements EnqueuedStyleshe
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
+}
+
+"""Connection between the RootQuery type and the EventCategory type"""
+type RootQueryToEventCategoryConnection implements Connection & EventCategoryConnection {
+  """Edges for the RootQueryToEventCategoryConnection connection"""
+  edges: [RootQueryToEventCategoryConnectionEdge!]!
+
+  """The nodes of the connection, without the edges"""
+  nodes: [EventCategory!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: RootQueryToEventCategoryConnectionPageInfo!
+}
+
+"""An edge in a connection"""
+type RootQueryToEventCategoryConnectionEdge implements Edge & EventCategoryConnectionEdge {
+  """A cursor for use in pagination"""
+  cursor: String
+
+  """The item at the end of the edge"""
+  node: EventCategory!
+}
+
+"""
+Pagination metadata specific to &quot;RootQueryToEventCategoryConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToEventCategoryConnection Nodes.
+"""
+type RootQueryToEventCategoryConnectionPageInfo implements EventCategoryConnectionPageInfo & PageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""
+Arguments for filtering the RootQueryToEventCategoryConnection connection
+"""
+input RootQueryToEventCategoryConnectionWhereArgs {
+  """
+  Unique cache key to be produced when this query is stored in an object cache. Default is 'core'.
+  """
+  cacheDomain: String
+
+  """
+  Term ID to retrieve child terms of. If multiple taxonomies are passed, $child_of is ignored. Default 0.
+  """
+  childOf: Int
+
+  """
+  True to limit results to terms that have no children. This parameter has no effect on non-hierarchical taxonomies. Default false.
+  """
+  childless: Boolean
+
+  """
+  Retrieve terms where the description is LIKE the input value. Default empty.
+  """
+  descriptionLike: String
+
+  """
+  Array of term ids to exclude. If $include is non-empty, $exclude is ignored. Default empty array.
+  """
+  exclude: [ID]
+
+  """
+  Array of term ids to exclude along with all of their descendant terms. If $include is non-empty, $exclude_tree is ignored. Default empty array.
+  """
+  excludeTree: [ID]
+
+  """
+  Whether to hide terms not assigned to any posts. Accepts true or false. Default false
+  """
+  hideEmpty: Boolean
+
+  """
+  Whether to include terms that have non-empty descendants (even if $hide_empty is set to true). Default true.
+  """
+  hierarchical: Boolean
+
+  """Array of term ids to include. Default empty array."""
+  include: [ID]
+
+  """Array of names to return term(s) for. Default empty."""
+  name: [String]
+
+  """Retrieve terms where the name is LIKE the input value. Default empty."""
+  nameLike: String
+
+  """
+  Array of object IDs. Results will be limited to terms associated with these objects.
+  """
+  objectIds: [ID]
+
+  """Direction the connection should be ordered in"""
+  order: OrderEnum
+
+  """Field(s) to order terms by. Defaults to 'name'."""
+  orderby: TermObjectsConnectionOrderbyEnum
+
+  """
+  Whether to pad the quantity of a term's children in the quantity of each term's "count" object variable. Default false.
+  """
+  padCounts: Boolean
+
+  """Parent term ID to retrieve direct-child terms of. Default empty."""
+  parent: Int
+
+  """
+  Search criteria to match terms. Will be SQL-formatted with wildcards before and after. Default empty.
+  """
+  search: String
+
+  """Array of slugs to return term(s) for. Default empty."""
+  slug: [String]
+
+  """Array of term taxonomy IDs, to match when querying terms."""
+  termTaxonomyId: [ID]
+
+  """Whether to prime meta caches for matched terms. Default true."""
+  updateTermMetaCache: Boolean
+}
+
+"""Connection between the RootQuery type and the Event type"""
+type RootQueryToEventConnection implements Connection & EventConnection {
+  """Edges for the RootQueryToEventConnection connection"""
+  edges: [RootQueryToEventConnectionEdge!]!
+
+  """The nodes of the connection, without the edges"""
+  nodes: [Event!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: RootQueryToEventConnectionPageInfo!
+}
+
+"""An edge in a connection"""
+type RootQueryToEventConnectionEdge implements Edge & EventConnectionEdge {
+  """A cursor for use in pagination"""
+  cursor: String
+
+  """The item at the end of the edge"""
+  node: Event!
+}
+
+"""
+Pagination metadata specific to &quot;RootQueryToEventConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToEventConnection Nodes.
+"""
+type RootQueryToEventConnectionPageInfo implements EventConnectionPageInfo & PageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""Arguments for filtering the RootQueryToEventConnection connection"""
+input RootQueryToEventConnectionWhereArgs {
+  """Filter the connection based on dates"""
+  dateQuery: DateQueryInput
+
+  """Filter events by event category slug"""
+  eventCategorySlug: String
+
+  """
+  True for objects with passwords; False for objects without passwords; null for all objects with or without passwords
+  """
+  hasPassword: Boolean
+
+  """Specific database ID of the object"""
+  id: Int
+
+  """Array of IDs for the objects to retrieve"""
+  in: [ID]
+
+  """Get objects with a specific mimeType property"""
+  mimeType: MimeTypeEnum
+
+  """Slug / post_name of the object"""
+  name: String
+
+  """Specify objects to retrieve. Use slugs"""
+  nameIn: [String]
+
+  """
+  Specify IDs NOT to retrieve. If this is used in the same query as "in", it will be ignored
+  """
+  notIn: [ID]
+
+  """What parameter to use to order the objects by."""
+  orderby: [PostObjectsConnectionOrderbyInput]
+
+  """Use ID to return only children. Use 0 to return only top-level items"""
+  parent: ID
+
+  """Specify objects whose parent is in an array"""
+  parentIn: [ID]
+
+  """Specify posts whose parent is not in an array"""
+  parentNotIn: [ID]
+
+  """Show posts with a specific password."""
+  password: String
+
+  """Show Posts based on a keyword search"""
+  search: String
+
+  """Retrieve posts where post status is in an array."""
+  stati: [PostStatusEnum]
+
+  """Show posts with a specific status."""
+  status: PostStatusEnum
+
+  """Title of the object"""
+  title: String
 }
 
 """Connection between the RootQuery type and the mediaItem type"""
@@ -23539,6 +25669,9 @@ type SEOContentTypeArchive {
 """The Yoast SEO search appearance content types"""
 type SEOContentTypes {
   """"""
+  event: SEOContentType
+
+  """"""
   mediaItem: SEOContentType
 
   """"""
@@ -24686,6 +26819,9 @@ enum TaxonomyEnum {
   """Taxonomy enum category"""
   CATEGORY
 
+  """Taxonomy enum event_category"""
+  EVENTCATEGORY
+
   """Taxonomy enum post_format"""
   POSTFORMAT
 
@@ -25372,6 +27508,108 @@ type UpdateCommentPayload {
   Whether the mutation succeeded. If the comment is not approved, the server will not return the comment to a non authenticated user, but a success message can be returned if the create succeeded, and the client can optimistically add the comment to the client cache
   """
   success: Boolean
+}
+
+"""Input for the updateEventCategory mutation."""
+input UpdateEventCategoryInput {
+  """The slug that the event_category will be an alias of"""
+  aliasOf: String
+
+  """
+  This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The description of the event_category object"""
+  description: String
+
+  """The ID of the EventCategory object to update"""
+  id: ID!
+
+  """The name of the event_category object to mutate"""
+  name: String
+
+  """
+  The database ID of the event_category that should be set as the parent. This field cannot be used in conjunction with parentId
+  """
+  parentDatabaseId: Int
+
+  """
+  The ID of the event_category that should be set as the parent. This field cannot be used in conjunction with parentDatabaseId
+  """
+  parentId: ID
+
+  """
+  If this argument exists then the slug will be checked to see if it is not an existing valid term. If that check succeeds (it is not a valid term), then it is added and the term id is given. If it fails, then a check is made to whether the taxonomy is hierarchical and the parent argument is not empty. If the second check succeeds, the term will be inserted and the term id will be given. If the slug argument is empty, then it will be calculated from the term name.
+  """
+  slug: String
+}
+
+"""The payload for the updateEventCategory mutation."""
+type UpdateEventCategoryPayload {
+  """
+  If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The created event_category"""
+  eventCategory: EventCategory
+}
+
+"""Input for the updateEvent mutation."""
+input UpdateEventInput {
+  """
+  This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The content of the object"""
+  content: String
+
+  """
+  The date of the object. Preferable to enter as year/month/day (e.g. 01/31/2017) as it will rearrange date as fit if it is not specified. Incomplete dates may have unintended results for example, "2017" as the input will use current date with timestamp 20:17 
+  """
+  date: String
+
+  """Set connections between the Event and EventCategories"""
+  eventCategories: EventEventCategoriesInput
+
+  """The excerpt of the object"""
+  excerpt: String
+
+  """The ID of the Event object"""
+  id: ID!
+
+  """Override the edit lock when another user is editing the post"""
+  ignoreEditLock: Boolean
+
+  """
+  A field used for ordering posts. This is typically used with nav menu items or for special ordering of hierarchical content types.
+  """
+  menuOrder: Int
+
+  """The password used to protect the content of the object"""
+  password: String
+
+  """The slug of the object"""
+  slug: String
+
+  """The status of the object"""
+  status: PostStatusEnum
+
+  """The title of the object"""
+  title: String
+}
+
+"""The payload for the updateEvent mutation."""
+type UpdateEventPayload {
+  """
+  If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The Post object mutation type."""
+  event: Event
 }
 
 """Input for the updateMediaItem mutation."""
@@ -27102,6 +29340,14 @@ interface WPPageInfo implements PageInfo {
   startCursor: String
 }
 
+"""
+Provides access to fields of the &quot;EventDetails&quot; ACF Field Group via the &quot;eventDetails&quot; field
+"""
+interface WithAcfEventDetails {
+  """Fields of the EventDetails ACF Field Group"""
+  eventDetails: EventDetails
+}
+
 """The writing setting type"""
 type WritingSettings {
   """Default post category."""
@@ -27115,7 +29361,7 @@ type WritingSettings {
 }
 
 """A block used for editing the site"""
-type YoastFaqBlock implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type YoastFaqBlock implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -27179,7 +29425,7 @@ type YoastFaqBlockAttributes {
 }
 
 """A block used for editing the site"""
-type YoastHowToBlock implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type YoastHowToBlock implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -27288,7 +29534,7 @@ type YoastHowToBlockAttributes {
 }
 
 """A block used for editing the site"""
-type YoastSeoBreadcrumbs implements EditorBlock & PageEditorBlock & PostEditorBlock {
+type YoastSeoBreadcrumbs implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 

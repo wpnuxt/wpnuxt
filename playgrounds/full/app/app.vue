@@ -13,10 +13,6 @@ const menu = computed(() => {
   return [
     ...wordPressPages,
     {
-      label: 'Pagination',
-      to: '/pagination'
-    },
-    {
       label: 'Query Options',
       to: '/query-options'
     },

@@ -49,7 +49,7 @@ const nextPost = computed(() => {
         <UPageCard description="Rendered Content from WordPress">
           <template v-if="!pending && post">
             <WPContent
-              :node="post"
+              :node="post as { content?: string | null }"
               class="prose prose-lg dark:prose-invert max-w-none"
             />
           </template>

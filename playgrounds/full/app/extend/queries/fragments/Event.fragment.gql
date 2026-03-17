@@ -1,0 +1,24 @@
+fragment Event on Event {
+  databaseId
+  title
+  slug
+  uri
+  date
+  excerpt
+  contentTypeName
+  content
+  eventCategories {
+    nodes {
+      name
+      slug
+    }
+  }
+  eventDetails {
+    eventStartDatetime
+    eventEndDatetime
+    eventTicketPrice
+    eventIsFree
+    eventStatus
+    eventLocation
+  }
+}

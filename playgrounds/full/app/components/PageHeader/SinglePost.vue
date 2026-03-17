@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PostFragment, PageFragment } from '#graphql-operations'
+import type { PostFragment, PageFragment, EventFragment } from '#graphql-operations'
 
 interface AdjacentPost {
   uri?: string | null
@@ -7,7 +7,7 @@ interface AdjacentPost {
 }
 
 const props = defineProps<{
-  post: PostFragment | PageFragment | undefined
+  post: PostFragment | PageFragment | EventFragment | undefined
   pending: boolean
   refreshContent: () => void
   composableName: string

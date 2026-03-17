@@ -1,0 +1,19 @@
+query Events($first: Int = 10, $after: String, $where: RootQueryToEventConnectionWhereArgs) {
+  events(first: $first, after: $after, where: $where) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      endCursor
+      startCursor
+    }
+    nodes {
+      ...Event
+    }
+  }
+}
+
+query EventBySlug($slug: ID!) {
+  event(id: $slug, idType: SLUG) {
+    ...Event
+  }
+}

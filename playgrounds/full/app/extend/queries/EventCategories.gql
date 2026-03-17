@@ -1,0 +1,10 @@
+query EventCategories($first: Int = 20) {
+  eventCategories(first: $first) {
+    nodes {
+      databaseId
+      name
+      slug
+      count
+    }
+  }
+}

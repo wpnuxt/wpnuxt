@@ -11,7 +11,7 @@
 const IS_DEV = process.env.NODE_ENV === 'development'
 const IS_CI = process.env.CI === 'true'
 
-const WORDPRESS_URL = 'https://wordpress.wpnuxt.com'
+const WORDPRESS_URL = process.env.WPNUXT_WORDPRESS_URL || 'https://wordpress.wpnuxt.com'
 
 export default defineNuxtConfig({
   modules: [

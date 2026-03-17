@@ -1,0 +1,62 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "meta": {
+    "title": "WPNuxt Full Playground",
+    "description": "WordPress configured for the WPNuxt full playground: posts, pages, menus, events CPT, WPGraphQL, ACF, and Gutenberg blocks.",
+    "author": "WPNuxt"
+  },
+  "landingPage": "/wp-admin/",
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "login": true,
+  "plugins": ["wp-graphql", "advanced-custom-fields", "wpgraphql-acf"],
+  "siteOptions": {
+    "blogname": "WPNuxt Playground",
+    "blogdescription": "Full-featured WPNuxt demo with posts, pages, events, and Gutenberg blocks",
+    "permalink_structure": "/%postname%/"
+  },
+  "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "url",
+        "url": "https://github.com/wpengine/wp-graphql-content-blocks/releases/latest/download/wp-graphql-content-blocks.zip"
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "url",
+        "url": "https://github.com/AxeWP/wp-graphql-headless-login/releases/latest/download/wp-graphql-headless-login.zip"
+      }
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "wpnuxt-demo/wpnuxt-demo.php"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/rewrite.php",
+      "data": "<?php add_action('after_setup_theme', function() { global $wp_rewrite; $wp_rewrite->set_permalink_structure('/%postname%/'); $wp_rewrite->flush_rules(); });"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/graphql-headless-login-config.php",
+      "data": "<?php if (!defined('GRAPHQL_LOGIN_JWT_SECRET_KEY')) { define('GRAPHQL_LOGIN_JWT_SECRET_KEY', 'wpnuxt-playground-jwt-secret-key-for-local-dev'); } if (!defined('GRAPHQL_DEBUG')) { define('GRAPHQL_DEBUG', true); }"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/graphql-no-redirect.php",
+      "data": "<?php /* Skip Playground auto-login redirect for GraphQL API requests */ add_action('muplugins_loaded', function() { if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/graphql') !== false) { $_COOKIE['playground_auto_login_already_happened'] = '1'; } }, 0);"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require '/wordpress/blueprint/setup-content.php';"
+    }
+  ]
+}

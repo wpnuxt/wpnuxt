@@ -1,0 +1,90 @@
+{
+  "key": "group_wpnuxt_demo_event_details",
+  "title": "Event Details",
+  "fields": [
+    {
+      "key": "field_event_start_datetime",
+      "label": "Start Date & Time",
+      "name": "event_start_datetime",
+      "type": "date_time_picker",
+      "required": 1,
+      "display_format": "d/m/Y g:i a",
+      "return_format": "Y-m-d H:i:s",
+      "first_day": 1,
+      "show_in_graphql": 1
+    },
+    {
+      "key": "field_event_end_datetime",
+      "label": "End Date & Time",
+      "name": "event_end_datetime",
+      "type": "date_time_picker",
+      "required": 0,
+      "display_format": "d/m/Y g:i a",
+      "return_format": "Y-m-d H:i:s",
+      "first_day": 1,
+      "show_in_graphql": 1
+    },
+    {
+      "key": "field_event_ticket_price",
+      "label": "Ticket Price",
+      "name": "event_ticket_price",
+      "type": "text",
+      "required": 0,
+      "placeholder": "e.g. €15 or Free",
+      "show_in_graphql": 1
+    },
+    {
+      "key": "field_event_is_free",
+      "label": "Free Event",
+      "name": "event_is_free",
+      "type": "true_false",
+      "required": 0,
+      "default_value": 0,
+      "ui": 1,
+      "show_in_graphql": 1
+    },
+    {
+      "key": "field_event_status",
+      "label": "Status",
+      "name": "event_status",
+      "type": "select",
+      "required": 0,
+      "choices": {
+        "upcoming": "Upcoming",
+        "cancelled": "Cancelled",
+        "postponed": "Postponed",
+        "soldout": "Sold Out"
+      },
+      "default_value": "upcoming",
+      "return_format": "value",
+      "show_in_graphql": 1
+    },
+    {
+      "key": "field_event_location",
+      "label": "Location",
+      "name": "event_location",
+      "type": "text",
+      "required": 0,
+      "show_in_graphql": 1
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "post_type",
+        "operator": "==",
+        "value": "event"
+      }
+    ]
+  ],
+  "menu_order": 0,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "active": true,
+  "show_in_rest": 1,
+  "show_in_graphql": 1,
+  "graphql_field_name": "eventDetails",
+  "map_graphql_types_from_location_rules": 0
+}
