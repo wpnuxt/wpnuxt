@@ -22,8 +22,12 @@ This monorepo contains the following packages:
 
 ## Features
 
-- **Auto-generated Composables** - Automatically generates type-safe composables from your GraphQL queries
+- **Auto-generated Composables** - Generates type-safe composables from your GraphQL queries
+- **Reactive Params** - Pass `ref`, `computed`, or getter functions as query variables with automatic re-fetching
+- **Connection Queries** - Cursor-based pagination with `pageInfo`, `loadMore()` for infinite scroll, and page-based navigation
 - **Type Safety** - Full TypeScript support with generated types from your WordPress GraphQL schema
+- **Type Guards** - `isPage()`, `isPost()`, `isContentType()` for narrowing union types from `useNodeByUri()`
+- **ACF Helpers** - `unwrapScalar()` and `unwrapConnection()` for normalizing ACF field return types
 - **Query Merging** - Extend or override default queries with your custom GraphQL queries
 - **Block Rendering** - Render Gutenberg blocks as Vue components with `@wpnuxt/blocks`
 - **Image Optimization** - NuxtImg integration for optimized WordPress images
@@ -32,15 +36,21 @@ This monorepo contains the following packages:
 
 ## Quick Setup
 
-### 1. Install the package
+### Option A: Create a new project
 
 ```bash
-npm install @wpnuxt/core
-# or
+pnpm create wpnuxt@latest
+```
+
+### Option B: Add to an existing Nuxt project
+
+Install the package:
+
+```bash
 pnpm add @wpnuxt/core
 ```
 
-### 2. Add to your Nuxt config
+Add to your Nuxt config:
 
 ```ts
 // nuxt.config.ts
@@ -73,6 +83,32 @@ const { data: pages, pending, refresh } = usePages(undefined, { lazy: true })
     <div v-sanitize-html="post.content" />
   </article>
 </template>
+```
+
+### Reactive Params
+
+Pass reactive variables to composables — they auto-refetch when values change:
+
+```ts
+const category = ref<string>()
+const params = computed(() => ({
+  first: 20,
+  where: { categoryName: category.value }
+}))
+
+const { data: posts } = usePosts(params)
+// Changes to category trigger automatic re-fetch
+```
+
+### Connection Queries (Pagination)
+
+Queries with `pageInfo` automatically get pagination support:
+
+```ts
+const { data, pageInfo, loadMore } = await useEvents({ first: 10 })
+// data.value is EventFragment[]
+
+await loadMore() // Fetches next page, appends to data
 ```
 
 ## Configuration
@@ -132,14 +168,28 @@ query CustomPosts($categoryId: Int!) {
 }
 ```
 
-This generates a `useCustomPosts()` composable. Use `{ lazy: true }` option for non-blocking behavior.
+This generates a `useCustomPosts()` composable.
+
+Add `pageInfo` to get pagination support automatically:
+
+```graphql
+# extend/queries/PaginatedEvents.gql
+query PaginatedEvents($first: Int = 10, $after: String) {
+  events(first: $first, after: $after) {
+    pageInfo { hasNextPage endCursor }
+    nodes { ...Event }
+  }
+}
+```
+
+This generates `usePaginatedEvents()` with `data`, `pageInfo`, and `loadMore()`.
 
 ## Using @wpnuxt/blocks
 
 For rendering WordPress Gutenberg blocks as Vue components:
 
 ```bash
-npm install @wpnuxt/blocks
+pnpm add @wpnuxt/blocks
 ```
 
 ```ts
@@ -212,9 +262,9 @@ pnpm run lint
 See the [Migration Guide](/MIGRATION.md) for detailed instructions on upgrading from WPNuxt 1.x.
 
 Key changes:
-- Nuxt 3.17+ required (was Nuxt 3)
+- Nuxt 4.0+ required (was Nuxt 3)
 - Composables renamed: `useWPPosts` → `usePosts`
-- Async variants: `useAsyncPosts` → `usePosts(undefined, { lazy: true })`
+- Single composable pattern: `usePosts(undefined, { lazy: true })` for non-blocking
 - Directive changed: `v-sanitize` → `v-sanitize-html`
 
 ## License
