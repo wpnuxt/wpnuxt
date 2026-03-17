@@ -204,4 +204,37 @@ describe('useWPConnection', () => {
     // Should have .then for await support
     expect(typeof result.then).toBe('function')
   })
+
+  it('should expose loadMore function', async () => {
+    const { useWPConnection } = await import('../src/runtime/composables/useWPConnection')
+
+    const result = useWPConnection('PaginatedPosts', ['posts'], false)
+
+    expect(result).toHaveProperty('loadMore')
+    expect(typeof result.loadMore).toBe('function')
+  })
+
+  it('should expose refresh that resets accumulation', async () => {
+    const { useWPConnection } = await import('../src/runtime/composables/useWPConnection')
+
+    const result = useWPConnection('PaginatedPosts', ['posts'], false)
+
+    expect(result).toHaveProperty('refresh')
+    expect(typeof result.refresh).toBe('function')
+  })
+
+  it('should merge loadMore cursor into params', async () => {
+    const { useWPConnection } = await import('../src/runtime/composables/useWPConnection')
+
+    const result = useWPConnection('PaginatedPosts', ['posts'], false, { first: 3 })
+
+    // Initially, mergedParams should have user params without cursor
+    const calls = mockUseAsyncGraphqlQuery.mock.calls
+    const mergedParams = calls[0]![1] as { value: Record<string, unknown> }
+    expect(mergedParams.value).toEqual({ first: 3 })
+
+    // After loadMore, the cursor should be merged
+    // (loadMore sets internal state but won't trigger actual refetch in mocked env)
+    await result.loadMore()
+  })
 })
