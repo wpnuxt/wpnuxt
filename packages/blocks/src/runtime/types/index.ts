@@ -88,6 +88,15 @@ export interface CoreSpacer extends EditorBlock {
   } | null
 }
 
+export interface CoreDetails extends EditorBlock {
+  __typename?: 'CoreDetails'
+  attributes?: {
+    summary?: string | null
+    showContent?: boolean | null
+    className?: string | null
+  } | null
+}
+
 export interface NodeWithEditorBlocksFragment {
   editorBlocks?: (EditorBlock | null)[] | null
 }

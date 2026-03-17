@@ -1,3 +1,9 @@
+/**
+ * Type stubs for the blocks package.
+ * These provide types during module development when .nuxt doesn't exist.
+ * Keep in sync with src/runtime/types/index.ts (canonical source).
+ */
+
 declare module '#wpnuxt/blocks' {
   export interface EditorBlock {
     __typename?: string
@@ -84,6 +90,19 @@ declare module '#wpnuxt/blocks' {
       className?: string | null
     } | null
   }
+
+  export interface CoreDetails extends EditorBlock {
+    __typename?: 'CoreDetails'
+    attributes?: {
+      summary?: string | null
+      showContent?: boolean | null
+      className?: string | null
+    } | null
+  }
+
+  export interface NodeWithEditorBlocksFragment {
+    editorBlocks?: (EditorBlock | null)[] | null
+  }
 }
 
 declare module '#build/graphql-operations' {
@@ -103,6 +122,8 @@ declare module '#build/graphql-operations' {
       width?: number | null
       height?: number | null
       scale?: string | null
+      caption?: string | null
+      className?: string | null
     } | null
   }
 }

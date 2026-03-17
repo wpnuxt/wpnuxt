@@ -5,6 +5,12 @@ fragment NodeWithEditorBlocks on NodeWithEditorBlocks {
     ...EditorBlock
     innerBlocks {
       ...EditorBlock
+      innerBlocks {
+        ...EditorBlock
+        innerBlocks {
+          ...EditorBlock
+        }
+      }
     }
   }
 }
