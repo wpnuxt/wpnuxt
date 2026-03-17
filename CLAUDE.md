@@ -16,8 +16,9 @@ pnpm run dev:prepare           # Build module stub, prepare playgrounds, generat
 
 ### Development
 ```bash
-pnpm run dev                   # Run main playground (with @nuxt/ui)
+pnpm run dev                   # Run full playground (with @nuxt/ui)
 pnpm run dev:core              # Run core playground (minimal setup)
+pnpm run dev:blocks            # Run blocks playground
 pnpm run dev:build             # Build main playground
 pnpm run dev:core:build        # Build core playground
 ```
@@ -49,23 +50,28 @@ pnpm run release               # Lint, test, build, create changelog, publish, a
 
 **Composable Generation (`src/generate.ts`)**
 - Scans merged `.gql`/`.graphql` files and parses them using `src/utils/useParser.ts`
-- For each GraphQL query, generates two auto-imported composables:
-  - `use{QueryName}()` - synchronous version using `useWPContent()`
-  - `useAsync{QueryName}()` - async version using `useAsyncWPContent()`
+- For each GraphQL query, generates an auto-imported composable: `use{QueryName}()`
+- Regular queries use `useWPContent()`, connection queries (with `pageInfo`) use `useWPConnection()`
+- Composable params accept `MaybeRefOrGetter<T>` — plain objects, refs, computed, or getter functions
 - Generates TypeScript declarations with proper return types based on fragments
 - Output written to `.nuxt/wpnuxt/index.mjs` and `.nuxt/wpnuxt/index.d.ts`
 
-**Runtime Composables (`src/runtime/composables/useWPContent.ts`)**
-- `useWPContent()` - wraps `useGraphqlQuery()` from nuxt-graphql-middleware
-- `useAsyncWPContent()` - wraps `useAsyncGraphqlQuery()`
-- Both extract nested data using the `nodes` path and optionally fix image paths
+**Runtime Composables**
+- `useWPContent()` (`src/runtime/composables/useWPContent.ts`) — wraps `useAsyncGraphqlQuery()` from nuxt-graphql-middleware, extracts nested data using the `nodes` path, supports reactive params with auto-watch, retry, timeout, and SSG caching
+- `useWPConnection()` (`src/runtime/composables/useWPConnection.ts`) — wraps `useWPContent()` for connection queries, splits result into `data` (nodes array) and `pageInfo`, provides `loadMore()` for infinite scroll accumulation
 
 **Runtime Components (`src/runtime/components/WPContent.vue`)**
 - `<WPContent>` - renders WordPress content with automatic internal link interception
 - Uses `BlockRenderer` when `@wpnuxt/blocks` is installed, falls back to `v-sanitize-html`
 - Intercepts clicks on internal `<a>` tags and uses `navigateTo()` for client-side navigation
 - Props: `node` (content object), `replaceLinks` (per-instance override of global config)
-- Auto-imported utilities: `isInternalLink()` and `toRelativePath()` from `src/runtime/util/links.ts`
+
+**Auto-imported Utilities**
+- `isInternalLink()`, `toRelativePath()` — link detection and conversion (`src/runtime/util/links.ts`)
+- `getRelativeImagePath()` — WordPress image URL to relative path (`src/runtime/util/images.ts`)
+- `isPage()`, `isPost()`, `isContentType()` — type guards for narrowing `NodeByUri` union types (`src/runtime/util/content-type.ts`)
+- `unwrapScalar()`, `unwrapConnection()` — ACF field normalization helpers (`src/runtime/util/acf.ts`)
+- `usePrevNextPost()` — previous/next post navigation (`src/runtime/composables/usePrevNextPost.ts`)
 
 ### Query System
 
@@ -80,6 +86,9 @@ Provides base queries for:
 1. Copies default queries from `src/runtime/queries/` to `.queries/` folder
 2. If `extend/queries/` exists in the project, copies/overwrites queries from there
 3. This merged folder is then scanned to generate composables
+
+**Connection Pattern Detection**
+The parser (`src/utils/useParser.ts`) detects the WPGraphQL connection pattern when `pageInfo` and `nodes` appear as sibling fields. When detected, `hasPageInfo` is set on the query, and the generator produces a `useWPConnection()` call instead of `useWPContent()`.
 
 **Extending Queries**
 Create `.gql` files in your project's `extend/queries/` folder (configurable via `queries.extendFolder`). These will override default queries or add new ones. Example:
@@ -96,7 +105,7 @@ query CustomPosts($limit: Int = 5) {
 }
 ```
 
-This generates `useCustomPosts()` and `useAsyncCustomPosts()` composables.
+This generates a `useCustomPosts()` composable.
 
 ### Configuration
 
@@ -132,10 +141,11 @@ The module relies on `nuxt-graphql-middleware` for GraphQL type generation:
 
 ### Playgrounds
 
-**Full Playground (`playgrounds/full/`)** - `pnpm dev:full`
+**Full Playground (`playgrounds/full/`)** - `pnpm dev` or `pnpm dev:full`
 - Full-featured example using **@nuxt/ui v4**
 - Renders WordPress HTML content using Tailwind Typography (`prose` classes) with `v-sanitize-html` directive
 - Uses `<BlockRenderer>` for structured Gutenberg blocks, falls back to prose-styled HTML
+- Includes `extend/queries/` with custom paginated query demonstrating connection pattern
 - Best for: Simple content sites where you want great styling out of the box
 
 **Blocks Playground (`playgrounds/blocks/`)** - `pnpm dev:blocks`
@@ -179,15 +189,23 @@ The module is built using `@nuxt/module-builder`:
 ### Working with Generated Composables
 Generated composables return data extracted from the query response based on the `nodes` parameter passed during generation. For example, `usePosts()` extracts `data.posts.nodes` automatically.
 
+Connection queries (those with `pageInfo` alongside `nodes`) generate composables that return `data` (the nodes array), `pageInfo`, and `loadMore()` for infinite scroll.
+
 ### Image Path Handling
 The `useWPContent` composables can transform WordPress image URLs to relative paths using `getRelativeImagePath()` from `src/runtime/util/images.ts`.
+
+### Adding New Auto-imported Utilities
+1. Add the utility to the appropriate file in `src/runtime/util/`
+2. Register the auto-import in `src/module.ts` via `addImports()`
+3. If used by the blocks package, add to `packages/blocks/shim.d.ts`
 
 ## Development Rules for Claude Code
 
 ### Forbidden Without Permission
-- Never start the dev server (`pnpm run dev`, `pnpm run dev:*`) - always ask the user to start it manually
-- Never run background shell processes for long-running servers                                                            
-- Never commit or push to git without explicit user confirmation - always show staged changes and ask before committing      
+- Never start the dev server (`pnpm run dev`, `pnpm run dev:*`) — always ask the user to start it manually
+- Never run background shell processes for long-running servers
+- Never commit or push to git without explicit user approval — present the changes and wait for consent
+- Never post GitHub comments, close/reopen issues, or change issue state — always draft text for the user to post
 
 ### After Every Code Change
 - Run `pnpm run check` to verify everything (runs dev:prepare → lint → typecheck → test → build)
