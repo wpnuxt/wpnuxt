@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.2.0](https://github.com/wpnuxt/wpnuxt/compare/v2.1.0...v2.2.0) (2026-03-17)
+
+### Features
+
+* add connection/pagination support with useWPConnection ([78bdff1](https://github.com/wpnuxt/wpnuxt/commit/78bdff16aff07e82b954eca444b1c89cd4064693)), closes [#233](https://github.com/wpnuxt/wpnuxt/issues/233)
+* add Event CPT to full playground with blueprint and seed data ([a1d6875](https://github.com/wpnuxt/wpnuxt/commit/a1d687530d3decac8278a25ef109adafd8698efe)), closes [#243](https://github.com/wpnuxt/wpnuxt/issues/243)
+* add loadMore() to useWPConnection for infinite scroll ([db7972e](https://github.com/wpnuxt/wpnuxt/commit/db7972e10f13bb35a25f80e2ae6647f0b11b3bc3)), closes [#250](https://github.com/wpnuxt/wpnuxt/issues/250)
+
+### Bug Fixes
+
+* **blocks:** consolidate block types and support deeper innerBlocks ([5606e26](https://github.com/wpnuxt/wpnuxt/commit/5606e26db47b894ce1b6a8ca21e88607b06f3a7e)), closes [#244](https://github.com/wpnuxt/wpnuxt/issues/244) [#239](https://github.com/wpnuxt/wpnuxt/issues/239)
+
+### Documentation
+
+* add pagination guide and document connection queries ([3972de7](https://github.com/wpnuxt/wpnuxt/commit/3972de791f23182afe1b18e7111d1726dc4958e1))
+* update CLAUDE.md with reactive params, connection queries, and dev rules ([fff6537](https://github.com/wpnuxt/wpnuxt/commit/fff6537160777226930505bedb076c0dd6121c9e))
+
+### Maintenance
+
+* update @release-it/conventional-changelog and [@iconify-json](https://github.com/iconify-json) dependencies to latest versions ([f5539aa](https://github.com/wpnuxt/wpnuxt/commit/f5539aa470803e7c23d4dc38662d8a88b4270511))
+
+### Tests
+
+* expand test coverage for composables and utilities ([ffe9f33](https://github.com/wpnuxt/wpnuxt/commit/ffe9f33bf01c6fca5c51c30e8672d0595489c3aa)), closes [#242](https://github.com/wpnuxt/wpnuxt/issues/242)
+
 ## [2.1.0](https://github.com/wpnuxt/wpnuxt/compare/v2.0.0...v2.1.0) (2026-03-15)
 
 ### Features
