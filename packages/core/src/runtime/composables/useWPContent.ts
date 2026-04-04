@@ -65,8 +65,9 @@ const defaultGetCachedData = (key: string, app: NuxtApp, ctx: AsyncDataRequestCo
   if (app.isHydrating) {
     return app.payload.data[key]
   }
-  // For refresh actions, don't use cache (same as nuxt-graphql-middleware behavior)
-  if (ctx.cause === 'refresh:manual' || ctx.cause === 'refresh:hook') {
+  // For refresh or watch-triggered re-fetches, don't use cache
+  // Watch means reactive params changed, so we need fresh data with the new variables
+  if (ctx.cause === 'refresh:manual' || ctx.cause === 'refresh:hook' || ctx.cause === 'watch') {
     return undefined
   }
   // For SSG client navigation, check static.data (prerendered payloads)
