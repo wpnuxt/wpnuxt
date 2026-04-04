@@ -1,5 +1,5 @@
-query Posts($limit: Int = 10) {
-  posts(first: $limit) {
+query Posts($limit: Int = 10, $order: OrderEnum = DESC, $orderField: PostObjectsConnectionOrderbyEnum = DATE) {
+  posts(first: $limit, where: { orderby: { field: $orderField, order: $order } }) {
     nodes {
       ...Post
     }
@@ -16,15 +16,15 @@ query PostById($id: ID!, $asPreview: Boolean = false) {
   }
 }
 
-query PostsByCategoryName($categoryName: String!, $limit: Int = 10) {
-  posts(first: $limit, where: {categoryName: $categoryName}) {
+query PostsByCategoryName($categoryName: String!, $limit: Int = 10, $order: OrderEnum = DESC, $orderField: PostObjectsConnectionOrderbyEnum = DATE) {
+  posts(first: $limit, where: {categoryName: $categoryName, orderby: { field: $orderField, order: $order }}) {
     nodes {
       ...Post
     }
   }
 }
-query PostsByCategoryId($categoryId: Int!, $limit: Int = 10) {
-  posts(first: $limit, where: {categoryId: $categoryId}) {
+query PostsByCategoryId($categoryId: Int!, $limit: Int = 10, $order: OrderEnum = DESC, $orderField: PostObjectsConnectionOrderbyEnum = DATE) {
+  posts(first: $limit, where: {categoryId: $categoryId, orderby: { field: $orderField, order: $order }}) {
     nodes {
       ...Post
     }
