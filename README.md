@@ -73,6 +73,9 @@ const { data: posts } = await usePosts()
 // Fetch a single post by URI
 const { data: post } = await usePostByUri({ uri: '/my-post' })
 
+// Custom ordering (defaults: DATE / DESC)
+const { data: sorted } = await usePosts({ orderField: 'TITLE', order: 'ASC' })
+
 // Lazy loading (non-blocking) with reactive state
 const { data: pages, pending, refresh } = usePages(undefined, { lazy: true })
 </script>
