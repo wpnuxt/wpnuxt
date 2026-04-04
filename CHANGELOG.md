@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.2.1](https://github.com/wpnuxt/wpnuxt/compare/v2.2.0...v2.2.1) (2026-04-04)
+
+### Features
+
+* add orderby variables to default post queries ([675f5ba](https://github.com/wpnuxt/wpnuxt/commit/675f5ba92e8d5ba770841a83f0f1416148e06f38)), closes [#256](https://github.com/wpnuxt/wpnuxt/issues/256)
+
+### Bug Fixes
+
+* skip cache for watch-triggered re-fetches in useWPContent ([e2215dd](https://github.com/wpnuxt/wpnuxt/commit/e2215ddf5ae0144e76f6467e5572eb1e00fd2cce))
+
+### Documentation
+
+* update README with reactive params, pagination, and type guards ([e160717](https://github.com/wpnuxt/wpnuxt/commit/e16071703fb552c18d3ff4d93eb77e2d578e1f14))
+
 ## [2.2.0](https://github.com/wpnuxt/wpnuxt/compare/v2.1.0...v2.2.0) (2026-03-17)
 
 ### Features
