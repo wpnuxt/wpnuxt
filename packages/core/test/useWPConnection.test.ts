@@ -80,7 +80,7 @@ describe('useWPConnection', () => {
   it('should extract nodes array as data', async () => {
     const { useWPConnection } = await import('../src/runtime/composables/useWPConnection')
 
-    const result = useWPConnection('Events', ['posts'], false, { first: 3 })
+    const result = useWPConnection('Posts', ['posts'], false, { first: 3 })
 
     expect(result.data.value).toEqual([
       { id: 1, title: 'Post 1' },
@@ -92,7 +92,7 @@ describe('useWPConnection', () => {
   it('should extract pageInfo separately', async () => {
     const { useWPConnection } = await import('../src/runtime/composables/useWPConnection')
 
-    const result = useWPConnection('Events', ['posts'], false, { first: 3 })
+    const result = useWPConnection('Posts', ['posts'], false, { first: 3 })
 
     expect(result.pageInfo.value).toEqual({
       hasNextPage: true,
@@ -131,7 +131,7 @@ describe('useWPConnection', () => {
 
     const { useWPConnection } = await import('../src/runtime/composables/useWPConnection')
 
-    const result = useWPConnection('Events', ['posts'], false)
+    const result = useWPConnection('Posts', ['posts'], false)
 
     expect(result.data.value).toBeUndefined()
     expect(result.pageInfo.value).toBeUndefined()
@@ -166,7 +166,7 @@ describe('useWPConnection', () => {
 
     const { useWPConnection } = await import('../src/runtime/composables/useWPConnection')
 
-    const result = useWPConnection('Events', ['posts'], false)
+    const result = useWPConnection('Posts', ['posts'], false)
 
     expect(result.data.value).toBeUndefined()
   })
@@ -174,7 +174,7 @@ describe('useWPConnection', () => {
   it('should expose pending, refresh, execute, clear, error, status', async () => {
     const { useWPConnection } = await import('../src/runtime/composables/useWPConnection')
 
-    const result = useWPConnection('Events', ['posts'], false)
+    const result = useWPConnection('Posts', ['posts'], false)
 
     expect(result).toHaveProperty('pending')
     expect(result).toHaveProperty('refresh')
@@ -187,10 +187,10 @@ describe('useWPConnection', () => {
   it('should pass params through to useWPContent', async () => {
     const { useWPConnection } = await import('../src/runtime/composables/useWPConnection')
 
-    useWPConnection('Events', ['posts'], false, { first: 5, after: 'cursor-abc' })
+    useWPConnection('Posts', ['posts'], false, { first: 5, after: 'cursor-abc' })
 
     const calls = mockUseAsyncGraphqlQuery.mock.calls
-    expect(calls[0]![0]).toBe('Events')
+    expect(calls[0]![0]).toBe('Posts')
     // Params are wrapped in a computed ref (mergedParams) by useWPConnection
     const passedParams = calls[0]![1] as { value: Record<string, unknown> }
     expect(passedParams.value).toEqual({ first: 5, after: 'cursor-abc' })
@@ -199,7 +199,7 @@ describe('useWPConnection', () => {
   it('should be thenable for await support', async () => {
     const { useWPConnection } = await import('../src/runtime/composables/useWPConnection')
 
-    const result = useWPConnection('Events', ['posts'], false)
+    const result = useWPConnection('Posts', ['posts'], false)
 
     // Should have .then for await support
     expect(typeof result.then).toBe('function')
@@ -208,7 +208,7 @@ describe('useWPConnection', () => {
   it('should expose loadMore function', async () => {
     const { useWPConnection } = await import('../src/runtime/composables/useWPConnection')
 
-    const result = useWPConnection('Events', ['posts'], false)
+    const result = useWPConnection('Posts', ['posts'], false)
 
     expect(result).toHaveProperty('loadMore')
     expect(typeof result.loadMore).toBe('function')
@@ -217,7 +217,7 @@ describe('useWPConnection', () => {
   it('should expose refresh that resets accumulation', async () => {
     const { useWPConnection } = await import('../src/runtime/composables/useWPConnection')
 
-    const result = useWPConnection('Events', ['posts'], false)
+    const result = useWPConnection('Posts', ['posts'], false)
 
     expect(result).toHaveProperty('refresh')
     expect(typeof result.refresh).toBe('function')
@@ -226,7 +226,7 @@ describe('useWPConnection', () => {
   it('should merge loadMore cursor into params', async () => {
     const { useWPConnection } = await import('../src/runtime/composables/useWPConnection')
 
-    const result = useWPConnection('Events', ['posts'], false, { first: 3 })
+    const result = useWPConnection('Posts', ['posts'], false, { first: 3 })
 
     // Initially, mergedParams should have user params without cursor
     const calls = mockUseAsyncGraphqlQuery.mock.calls
