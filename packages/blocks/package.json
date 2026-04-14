@@ -1,6 +1,6 @@
 {
   "name": "@wpnuxt/blocks",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Vue components for rendering WordPress Gutenberg blocks in Nuxt",
   "keywords": [
     "nuxt",

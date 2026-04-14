@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.2.2](https://github.com/wpnuxt/wpnuxt/compare/v2.2.1...v2.2.2) (2026-04-14)
+
+### Features
+
+* add OrderOptions component for customizable post ordering ([6236bd6](https://github.com/wpnuxt/wpnuxt/commit/6236bd65d8be2c560f56bf555c8cfbf99002df08))
+* upgrade nuxt-graphql-middleware to 5.4.0 and use layer auto-discovery ([#259](https://github.com/wpnuxt/wpnuxt/issues/259)) ([3aa87e6](https://github.com/wpnuxt/wpnuxt/commit/3aa87e608c6b74fd1c89bce49112a6c92d270eb2)), closes [#258](https://github.com/wpnuxt/wpnuxt/issues/258)
+
+### Documentation
+
+* document orderby variables and update composable reference ([055882d](https://github.com/wpnuxt/wpnuxt/commit/055882dc6413431d9e6c427d0414ca53c3b29203))
+* remove Nuxt documentation proxy details from tools documentation ([e554e22](https://github.com/wpnuxt/wpnuxt/commit/e554e22f709762c092d8298dd853bdc4f97fcaa7))
+
+### Maintenance
+
+* update dependencies and package versions across the project ([33951e6](https://github.com/wpnuxt/wpnuxt/commit/33951e666479407000e3ad82ad36ab09d6c7b8da))
+* update Node.js version in CI configuration from 20 to 22 ([5c1db4e](https://github.com/wpnuxt/wpnuxt/commit/5c1db4efba530a685924fc5f35b3df7c9b6f1b4c))
+
 ## [2.2.1](https://github.com/wpnuxt/wpnuxt/compare/v2.2.0...v2.2.1) (2026-04-04)
 
 ### Features
