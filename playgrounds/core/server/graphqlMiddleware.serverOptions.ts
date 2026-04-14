@@ -9,9 +9,13 @@ import { getHeader } from 'h3'
  * first match wins). Users can use this pattern to customize request forwarding,
  * add custom headers, etc.
  *
- * This playground example reproduces the default cookie/authorization forwarding
- * and adds an X-Playground header so you can verify the override is active by
- * inspecting outbound requests to WordPress.
+ * This playground example demonstrates how to override — it forwards cookies and
+ * the Authorization header, then adds an X-Playground header so you can verify
+ * the override is active by inspecting outbound requests to WordPress. Note that
+ * this does NOT reproduce the full WPNuxt default behavior: the WPNuxt default
+ * also reads the @wpnuxt/auth cookie and promotes it to a Bearer token when no
+ * Authorization header is present. Replicate that logic in your own override if
+ * you rely on it.
  */
 export default defineGraphqlServerOptions({
   async serverFetchOptions(event) {
