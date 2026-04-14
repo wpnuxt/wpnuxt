@@ -222,20 +222,19 @@ Your existing `.gql` files in `extend/queries/` should work without changes.
 
 ## GraphQL Middleware Options
 
-WPNuxt 2.x now auto-generates default server and client options files:
+WPNuxt provides default server and client options for `nuxt-graphql-middleware` via its Nuxt layer — no files are generated in your project.
 
-### Server Options
-
-A `server/graphqlMiddleware.serverOptions.ts` file is created automatically with:
+### Server Options (provided by WPNuxt)
 - Cookie forwarding for WordPress previews
 - Authorization header forwarding
+- Auth token forwarding from the `@wpnuxt/auth` cookie
 
-If you have custom server options, keep your file and it won't be overwritten.
-
-### Client Options
-
-A `app/graphqlMiddleware.clientOptions.ts` file is created automatically with:
+### Client Options (provided by WPNuxt)
 - Preview mode support (passes `preview` and `token` query params)
+
+### Customizing
+
+To override either, create your own `server/graphqlMiddleware.serverOptions.ts` or `app/graphqlMiddleware.clientOptions.ts` in your project. Nuxt's layer priority means your file wins over the WPNuxt default. Import helpers from `@wpnuxt/core/server-options` and `@wpnuxt/core/client-options`.
 
 ## @wpnuxt/blocks Migration
 
