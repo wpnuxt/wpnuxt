@@ -1,9 +1,6 @@
 <script setup lang="ts">
 const orderField = ref('DATE')
-const order = ref('DESC')
-
-const orderFieldOptions = ['DATE', 'TITLE', 'MODIFIED', 'AUTHOR', 'COMMENT_COUNT']
-const orderOptions = ['DESC', 'ASC']
+const order = ref<'ASC' | 'DESC'>('DESC')
 
 const { data: posts, pending, refresh, clear } = await usePosts(() => ({
   orderField: orderField.value,
@@ -22,14 +19,7 @@ const { data: posts, pending, refresh, clear } = await usePosts(() => ({
         composable-script="const { data: posts, pending, refresh, clear } = await usePosts(() => ({ orderField: orderField.value, order: order.value }))"
       />
       <UPageBody>
-        <div class="flex justify-end gap-4 mb-6">
-          <UFormField label="Order by">
-            <USelect v-model="orderField" :items="orderFieldOptions" />
-          </UFormField>
-          <UFormField label="Direction">
-            <USelect v-model="order" :items="orderOptions" />
-          </UFormField>
-        </div>
+        <OrderOptions v-model:order-field="orderField" v-model:order="order" />
         <UBlogPosts>
           <UBlogPost
             v-for="post in posts"
