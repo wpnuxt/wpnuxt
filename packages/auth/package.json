@@ -47,11 +47,11 @@
   "devDependencies": {
     "@nuxt/module-builder": "^1.0.2",
     "@nuxt/schema": "4.4.2",
-    "@nuxt/test-utils": "^4.0.0",
-    "@types/node": "^25.5.0",
+    "@nuxt/test-utils": "^4.0.2",
+    "@types/node": "^25.6.0",
     "nuxt": "^4.4.2",
-    "vitest": "^4.1.0",
-    "vue-tsc": "^3.2.5"
+    "vitest": "^4.1.4",
+    "vue-tsc": "^3.2.6"
   },
   "peerDependencies": {
     "@wpnuxt/core": "workspace:*",
