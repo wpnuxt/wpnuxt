@@ -161,7 +161,7 @@ export async function prepareContext(ctx: WPNuxtContext) {
     const functionName = mutationFnName(m.name)
 
     if (!typed) {
-      return `export const ${functionName} = (variables, options) => useGraphqlMutation('${m.name}', variables, options)`
+      return `export const ${functionName} = (variables, options) => wpMutation('${m.name}', variables, options)`
     }
     return `  export const ${functionName}: (variables: ${m.name}MutationVariables, options?: WPMutationOptions) => Promise<WPMutationResult<${m.name}Mutation>>`
   }
@@ -180,11 +180,15 @@ export async function prepareContext(ctx: WPNuxtContext) {
     if (hasConnectionQueries) {
       imports.push('useWPConnection')
     }
-    if (mutations.length > 0) {
-      imports.push('useGraphqlMutation')
-    }
     if (imports.length > 0) {
       lines.push(`import { ${imports.join(', ')} } from '#imports'`)
+    }
+    // Mutations route through the internal client wrapper so future changes to
+    // nuxt-graphql-middleware are absorbed in one file rather than every call site.
+    if (mutations.length > 0) {
+      lines.push(`import { wpMutation } from '#wpnuxt-internal'`)
+    }
+    if (lines.length > 0) {
       lines.push('')
     }
 

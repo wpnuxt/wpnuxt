@@ -57,7 +57,8 @@ describe('generate', () => {
       const imports = ctx.generateImports!()
 
       expect(imports).toContain('useMutationLogin')
-      expect(imports).toContain('useGraphqlMutation(\'Login\'')
+      expect(imports).toContain('wpMutation(\'Login\'')
+      expect(imports).toContain(`import { wpMutation } from '#wpnuxt-internal'`)
     })
 
     it('should generate type declarations', async () => {
