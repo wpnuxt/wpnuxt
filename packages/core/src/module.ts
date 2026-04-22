@@ -271,6 +271,7 @@ export default defineNuxtModule<WPNuxtConfig>({
     nuxt.options.alias['#wpnuxt'] = resolver.resolve(nuxt.options.buildDir, 'wpnuxt')
     nuxt.options.alias['#wpnuxt/*'] = resolver.resolve(nuxt.options.buildDir, 'wpnuxt', '*')
     nuxt.options.alias['#wpnuxt/types'] = resolver.resolve('./types')
+    nuxt.options.alias['#wpnuxt-internal'] = resolver.resolve('./runtime/internal/graphql-client')
 
     // Alias @wpnuxt/core subpath exports to source files during development.
     // Without this, imports like '@wpnuxt/core/server-options' resolve to
@@ -284,6 +285,7 @@ export default defineNuxtModule<WPNuxtConfig>({
     nitroOpts.nitro = nitroOpts.nitro || {}
     nitroOpts.nitro.alias = nitroOpts.nitro.alias || {}
     nitroOpts.nitro.alias['#wpnuxt/types'] = resolver.resolve('./types')
+    nitroOpts.nitro.alias['#wpnuxt-internal'] = resolver.resolve('./runtime/internal/graphql-client')
 
     nitroOpts.nitro.externals = nitroOpts.nitro.externals || {}
     nitroOpts.nitro.externals.inline = nitroOpts.nitro.externals.inline || []

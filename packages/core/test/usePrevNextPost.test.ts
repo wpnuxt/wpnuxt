@@ -7,6 +7,7 @@ vi.mock('#imports', () => ({
   toValue: vi.fn(val => val),
   watch: vi.fn(),
   useAsyncGraphqlQuery: vi.fn(),
+  useGraphqlMutation: vi.fn(),
   useRuntimeConfig: vi.fn(() => ({ public: { wpNuxt: {} } }))
 }))
 
@@ -56,6 +57,7 @@ describe('usePrevNextPost', () => {
       toValue: vi.fn(val => val),
       watch: vi.fn(),
       useAsyncGraphqlQuery: mockUseAsyncGraphqlQuery,
+      useGraphqlMutation: vi.fn(),
       useRuntimeConfig: vi.fn(() => ({ public: { wpNuxt: {} } }))
     }))
   })
@@ -124,6 +126,7 @@ describe('usePrevNextPost', () => {
       toValue: vi.fn(val => val),
       watch: vi.fn(),
       useAsyncGraphqlQuery: mockUseAsyncGraphqlQuery,
+      useGraphqlMutation: vi.fn(),
       useRuntimeConfig: vi.fn(() => ({ public: { wpNuxt: {} } }))
     }))
 

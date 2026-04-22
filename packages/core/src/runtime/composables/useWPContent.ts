@@ -2,7 +2,8 @@ import { transformData, normalizeUriParam } from '../util/content'
 import type { Query } from '#nuxt-graphql-middleware/operation-types'
 import type { MaybeRefOrGetter, WatchSource, Ref } from 'vue'
 import type { NuxtApp } from 'nuxt/app'
-import { computed, ref, toValue, watch as vueWatch, useAsyncGraphqlQuery, useRuntimeConfig } from '#imports'
+import { computed, ref, toValue, watch as vueWatch, useRuntimeConfig } from '#imports'
+import { wpQuery } from '../internal/graphql-client'
 
 /** Extended NuxtApp with nuxt-graphql-middleware internals */
 interface NuxtAppWithGraphqlCache extends NuxtApp {
@@ -202,10 +203,11 @@ export const useWPContent = <T>(
     })
   }
 
-  // Use useAsyncGraphqlQuery with our custom getCachedData for SSG support
-  // Our getCachedData takes precedence over the built-in one
-  // Keep the full result (which is a thenable) so we can preserve await behavior
-  const asyncResult = useAsyncGraphqlQuery(
+  // Use wpQuery (internal wrapper around useAsyncGraphqlQuery) with our custom
+  // getCachedData for SSG support. Our getCachedData takes precedence over the
+  // built-in one. Keep the full result (which is a thenable) so we can preserve
+  // await behavior.
+  const asyncResult = wpQuery(
     String(queryName) as keyof Query,
     resolvedParams,
     asyncDataOptions

@@ -42,6 +42,11 @@ export function useAsyncGraphqlQuery<T = unknown>(
   status: Ref<string>
 }
 export function useGraphqlState(): Record<string, unknown>
+export function useGraphqlMutation<T = unknown>(
+  name: string,
+  variables?: Record<string, unknown>,
+  options?: Record<string, unknown>
+): Promise<{ data: T | null, errors?: Array<{ message: string }> | null }>
 
 // Stub for #nuxt-graphql-middleware/operation-types
 export type Query = Record<string, unknown>
