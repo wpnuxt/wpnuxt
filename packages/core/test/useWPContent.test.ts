@@ -16,8 +16,10 @@ vi.mock('#imports', () => ({
   computed: vi.fn(fn => ({ value: fn() })),
   ref: vi.fn(val => ({ value: val })),
   watch: vi.fn(),
+  toValue: vi.fn(val => val),
   useAsyncGraphqlQuery: vi.fn(),
   useGraphqlMutation: vi.fn(),
+  useNuxtApp: vi.fn(() => ({ callHook: vi.fn() })),
   useRuntimeConfig: vi.fn(() => ({ public: { wpNuxt: {} } }))
 }))
 
@@ -74,8 +76,10 @@ describe('useWPContent', () => {
       }),
       ref: mockRef,
       watch: mockWatch,
+      toValue: vi.fn(val => val),
       useAsyncGraphqlQuery: mockUseAsyncGraphqlQuery,
       useGraphqlMutation: vi.fn(),
+      useNuxtApp: vi.fn(() => ({ callHook: vi.fn() })),
       useRuntimeConfig: vi.fn(() => ({ public: { wpNuxt: {} } }))
     }))
   })
@@ -126,9 +130,11 @@ describe('useWPContent', () => {
 
       useWPContent('Posts', ['posts', 'nodes'], false, {}, { retry: false })
 
-      // Verify maxRetries is 0 when retry is false
-      // This is tested implicitly by checking that no retry-related watch is set up
-      expect(mockWatch).toHaveBeenCalledTimes(0)
+      // wpQuery always registers a telemetry watch on `pending` with
+      // { immediate: true }; filter that out and assert no retry-specific
+      // watch (on the error ref) was registered.
+      const retryWatchCalls = mockWatch.mock.calls.filter(call => !(call[2] as { immediate?: boolean } | undefined)?.immediate)
+      expect(retryWatchCalls).toHaveLength(0)
     })
 
     it('should use custom retryDelay when provided', async () => {

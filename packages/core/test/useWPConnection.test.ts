@@ -9,6 +9,7 @@ vi.mock('#imports', () => ({
   watch: vi.fn(),
   useAsyncGraphqlQuery: vi.fn(),
   useGraphqlMutation: vi.fn(),
+  useNuxtApp: vi.fn(() => ({ callHook: vi.fn() })),
   useRuntimeConfig: vi.fn(() => ({ public: { wpNuxt: {} } }))
 }))
 
@@ -71,6 +72,7 @@ describe('useWPConnection', () => {
       watch: vi.fn(),
       useAsyncGraphqlQuery: mockUseAsyncGraphqlQuery,
       useGraphqlMutation: vi.fn(),
+      useNuxtApp: vi.fn(() => ({ callHook: vi.fn() })),
       useRuntimeConfig: vi.fn(() => ({ public: { wpNuxt: {} } }))
     }))
   })
@@ -129,6 +131,7 @@ describe('useWPConnection', () => {
       watch: vi.fn(),
       useAsyncGraphqlQuery: mockUseAsyncGraphqlQuery,
       useGraphqlMutation: vi.fn(),
+      useNuxtApp: vi.fn(() => ({ callHook: vi.fn() })),
       useRuntimeConfig: vi.fn(() => ({ public: { wpNuxt: {} } }))
     }))
 
@@ -165,6 +168,7 @@ describe('useWPConnection', () => {
       watch: vi.fn(),
       useAsyncGraphqlQuery: mockUseAsyncGraphqlQuery,
       useGraphqlMutation: vi.fn(),
+      useNuxtApp: vi.fn(() => ({ callHook: vi.fn() })),
       useRuntimeConfig: vi.fn(() => ({ public: { wpNuxt: {} } }))
     }))
 
