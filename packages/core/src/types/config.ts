@@ -139,4 +139,43 @@ export interface WPNuxtConfig {
      */
     revalidateSecret?: string
   }
+
+  /**
+   * Auto-generation of fragments + queries for Custom Post Types.
+   *
+   * WPNuxt parses the downloaded `schema.graphql` at build time, finds every
+   * object type implementing `ContentNode`, and emits a base fragment plus
+   * `Listing`, `ByUri`, and `BySlug` queries for each discovered CPT. Built-in
+   * types (Post, Page, MediaItem, Revision, Comment) are excluded because
+   * they already have default queries.
+   *
+   * Generated files land in `.queries/` and can be fully overridden by
+   * dropping a file with the same name in `extend/queries/fragments/`
+   * (for fragments) or `extend/queries/` (for queries).
+   */
+  cpt?: {
+    /**
+     * Enable CPT auto-generation.
+     *
+     * @default true
+     */
+    enabled?: boolean
+
+    /**
+     * Type names to skip in addition to the built-in exclusions.
+     *
+     * @example ['DraftPost', 'InternalNote']
+     */
+    exclude?: string[]
+
+    /**
+     * If set, only these type names will be auto-generated.
+     *
+     * Useful when you want fine-grained control over which CPTs get
+     * auto-generated output. Built-in exclusions still apply.
+     *
+     * @example ['Event', 'Artist']
+     */
+    include?: string[]
+  }
 }

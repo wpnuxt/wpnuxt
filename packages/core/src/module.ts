@@ -57,6 +57,11 @@ export default defineNuxtModule<WPNuxtConfig>({
       enabled: true,
       maxAge: 60 * 5, // 5 minutes
       swr: true
+    },
+    cpt: {
+      enabled: true,
+      exclude: [],
+      include: []
     }
   },
   async setup(options, nuxt) {
@@ -83,8 +88,6 @@ export default defineNuxtModule<WPNuxtConfig>({
     // This ensures both server-side and client-side URLs use trailing slashes
     configureTrailingSlash(nuxt, logger)
 
-    const mergedQueriesFolder = await mergeQueries(nuxt, wpNuxtConfig, resolver)
-
     // Register WPNuxt as a layer so nuxt-graphql-middleware 5.4+ auto-discovers
     // the default server/client options from the package directory.
     // Appended to _layers = lower priority than main app, so user files win.
@@ -102,7 +105,8 @@ export default defineNuxtModule<WPNuxtConfig>({
     })
     logger.debug('Registered WPNuxt layer for graphqlMiddleware options auto-discovery')
 
-    // Validate WordPress endpoint and download schema if needed
+    // Validate WordPress endpoint and download schema if needed.
+    // Runs before mergeQueries so CPT auto-generation has schema.graphql to parse.
     const schemaPath = join(nuxt.options.rootDir, 'schema.graphql')
     const schemaExists = existsSync(schemaPath)
 
@@ -135,6 +139,8 @@ export default defineNuxtModule<WPNuxtConfig>({
         })
       }
     }
+
+    const mergedQueriesFolder = await mergeQueries(nuxt, wpNuxtConfig, resolver, schemaPath)
 
     await registerModules(nuxt, resolver, wpNuxtConfig, mergedQueriesFolder)
 
