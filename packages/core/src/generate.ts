@@ -3,9 +3,11 @@ import { resolveFiles } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
 import { upperFirst } from 'scule'
 import type { Import } from 'unimport'
+import type ts from 'typescript'
 import type { WPNuxtContext, WPNuxtQuery } from './types/queries'
 import { getLogger } from './utils/index'
 import { parseDoc } from './utils/useParser'
+import { arrayOf, indexedAccess, nonNullable, numberIndexedAccess, printType, typeRef, unionOrSingle, withImagePath } from './utils/typegen'
 
 // Cache regex for performance
 const SCHEMA_PATTERN = /schema\.(?:gql|graphql)$/i
@@ -94,49 +96,54 @@ export async function prepareContext(ctx: WPNuxtContext) {
   const formatNodes = (nodes?: string[]) => nodes?.map(n => `'${n}'`).join(',') ?? ''
 
   /**
-   * Get the return type for a query.
-   * - Queries with fragments: use fragment types (e.g., PostFragment[])
-   * - Queries without fragments: use the query's root type with path accessors
+   * Build the TypeScript return type for a query as an AST node. Printed to a
+   * string immediately below; the intermediate AST keeps the shape machine-
+   * checkable so malformed output is a TypeScript error here rather than a
+   * cryptic error downstream in user code.
+   *
+   * - Queries with fragments only: fragment types (e.g. `PostFragment[]`)
+   * - Queries with inline fields or no fragments: root query type with path
+   *   accessors (e.g. `NonNullable<PostsRootQuery>['posts']['nodes'][number]`)
    */
-  const getFragmentType = (q: WPNuxtQuery) => {
-    // Connection queries: return singular type (WPConnectionResult adds the array)
+  const buildFragmentTypeNode = (q: WPNuxtQuery): ts.TypeNode => {
     if (q.hasPageInfo) {
       if (q.hasInlineFields || !q.fragments?.length) {
         if (q.nodes?.length) {
-          let typePath = `${q.name}RootQuery`
-          for (const node of q.nodes) {
-            typePath = `NonNullable<${typePath}>['${node}']`
+          let node: ts.TypeNode = typeRef(`${q.name}RootQuery`)
+          for (const segment of q.nodes) {
+            node = indexedAccess(nonNullable(node), segment)
           }
-          // Drill into nodes[number] to get the item type
-          typePath = `NonNullable<${typePath}>['nodes'][number]`
-          return typePath
+          // Drill into `.nodes[number]` to get the item type
+          return numberIndexedAccess(indexedAccess(nonNullable(node), 'nodes'))
         }
-        return `${q.name}RootQuery`
+        return typeRef(`${q.name}RootQuery`)
       }
-      // Fragments only — singular type (no [])
-      return q.fragments.map(f => `WithImagePath<${f}Fragment>`).join(' | ')
+      // Fragments only — singular type (WPConnectionResult<T> adds the array)
+      return unionOrSingle(q.fragments.map(f => withImagePath(typeRef(`${f}Fragment`))))
     }
 
-    // If query has both fragments AND inline fields, use the full query type
-    // to preserve the intersection of fragment types + custom fields
     if (q.hasInlineFields || !q.fragments?.length) {
       if (q.nodes?.length) {
-        let typePath = `${q.name}RootQuery`
-        for (const node of q.nodes) {
-          typePath = `NonNullable<${typePath}>['${node}']`
+        let node: ts.TypeNode = typeRef(`${q.name}RootQuery`)
+        for (const segment of q.nodes) {
+          node = indexedAccess(nonNullable(node), segment)
         }
         if (q.nodes.includes('nodes')) {
-          typePath = `${typePath}[number]`
+          node = numberIndexedAccess(node)
         }
-        return typePath
+        return node
       }
-      return `${q.name}RootQuery`
+      return typeRef(`${q.name}RootQuery`)
     }
 
-    // Fragments only — use fragment union types
-    const fragmentSuffix = q.nodes?.includes('nodes') ? '[]' : ''
-    return q.fragments.map(f => `WithImagePath<${f}Fragment>${fragmentSuffix}`).join(' | ')
+    const fragmentTypes = q.fragments.map(f => withImagePath(typeRef(`${f}Fragment`)))
+    if (q.nodes?.includes('nodes')) {
+      return unionOrSingle(fragmentTypes.map(arrayOf))
+    }
+    return unionOrSingle(fragmentTypes)
   }
+
+  const getFragmentType = (q: WPNuxtQuery) => printType(buildFragmentTypeNode(q))
 
   // Query composable expression
   const queryFnExp = (q: WPNuxtQuery, typed = false) => {
@@ -221,6 +228,10 @@ export async function prepareContext(ctx: WPNuxtContext) {
     typeSet.add(`${m.name}MutationVariables`)
     typeSet.add(`${m.name}Mutation`)
   })
+
+  // Expose for post-generation schema-drift validation
+  // (see utils/validateGenerated.ts, wired in module.ts)
+  ctx.referencedTypes = [...typeSet]
 
   ctx.generateDeclarations = () => {
     const declarations = [
