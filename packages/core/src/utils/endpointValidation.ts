@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync } from 'node:fs'
 import { execSync } from 'node:child_process'
 import { parse, visit, print } from 'graphql'
 import type { InterfaceTypeDefinitionNode, ObjectTypeDefinitionNode } from 'graphql'
@@ -90,8 +90,11 @@ Make sure WPGraphQL plugin is installed and activated on your WordPress site.`
     // If it's missing, the WPGraphQL version is too old for WPNuxt v2
     await checkWPGraphQLVersion(fullUrl, headers)
 
-    // If schemaPath is provided and schema doesn't exist, download it using get-graphql-schema
-    if (options.schemaPath && !existsSync(options.schemaPath)) {
+    // If schemaPath is provided, (re)download it using get-graphql-schema.
+    // Re-downloading each time keeps the file fresh so CPT discovery and
+    // codegen see newly-registered WordPress types; callers that want a
+    // cached schema should skip passing schemaPath.
+    if (options.schemaPath) {
       try {
         const authFlag = options.authToken ? ` -h "Authorization=Bearer ${options.authToken}"` : ''
         execSync(`npx get-graphql-schema "${fullUrl}"${authFlag} > "${options.schemaPath}"`, {

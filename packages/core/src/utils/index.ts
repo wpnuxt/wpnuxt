@@ -159,6 +159,9 @@ export interface ContentTypeFragment {
  * A fragment is considered a content type fragment when its name matches its
  * type condition (e.g., `fragment Event on Event`).
  *
+ * @param queryOutputPath Merged queries folder where Node.gql lives.
+ * @param userQueryPath User extend/queries folder scanned for content-type fragments.
+ * @param logger Module logger.
  * @param preDiscovered Spreads already known from auto-generated CPT fragments.
  *   Merged with anything scanned from the user folder and deduplicated by type.
  */
