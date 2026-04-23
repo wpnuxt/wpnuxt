@@ -78,6 +78,25 @@ describe('content utilities', () => {
       expect(result.featuredImage.node.relativePath).toBe('/wp-content/uploads/2024/image.jpg')
     })
 
+    it('should add relativePath to each node in a connection object (path stops at connection)', () => {
+      // Mirrors the shape `useWPConnection` receives: the extraction path
+      // stops at `['sponsors']`, so transformData sees the connection
+      // wrapper object with a `nodes` array. Each node still needs its
+      // relativePath populated.
+      const data = {
+        sponsors: {
+          nodes: [
+            { id: '1', featuredImage: { node: { sourceUrl: 'https://example.com/wp-content/uploads/a.png' } } },
+            { id: '2', featuredImage: { node: { sourceUrl: 'https://example.com/wp-content/uploads/b.png' } } }
+          ],
+          pageInfo: { hasNextPage: false }
+        }
+      }
+      const result = transformData<{ nodes: Array<{ featuredImage: { node: { relativePath?: string } } }> }>(data, ['sponsors'], true)
+      expect(result.nodes[0]!.featuredImage.node.relativePath).toBe('/wp-content/uploads/a.png')
+      expect(result.nodes[1]!.featuredImage.node.relativePath).toBe('/wp-content/uploads/b.png')
+    })
+
     it('should preserve original sourceUrl when adding relativePath', () => {
       const data = {
         post: {

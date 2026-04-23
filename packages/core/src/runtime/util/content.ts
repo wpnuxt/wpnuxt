@@ -46,7 +46,17 @@ export const transformData = <T>(data: unknown, nodes: string[], fixImagePaths: 
   if (fixImagePaths && transformedData) {
     if (Array.isArray(transformedData)) {
       transformedData.forEach(addRelativePath)
-    } else {
+    } else if (typeof transformedData === 'object') {
+      // When the extraction path stops at a WPGraphQL connection object
+      // (shape `{ nodes: [...], pageInfo: {...} }`) — common with
+      // auto-generated connection queries — iterate the inner `nodes`
+      // array so each item still receives a `relativePath`. Also apply
+      // to the object itself in case it is a single-fetch result with a
+      // `featuredImage` at this level.
+      const maybeNodes = (transformedData as { nodes?: unknown }).nodes
+      if (Array.isArray(maybeNodes)) {
+        maybeNodes.forEach(addRelativePath)
+      }
       addRelativePath(transformedData)
     }
   }
