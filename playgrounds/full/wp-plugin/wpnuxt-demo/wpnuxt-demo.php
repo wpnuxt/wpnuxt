@@ -17,6 +17,7 @@ if (! defined('ABSPATH')) {
 define('WPNUXT_DEMO_PATH', plugin_dir_path(__FILE__));
 
 require_once WPNUXT_DEMO_PATH . 'includes/class-cpt-event.php';
+require_once WPNUXT_DEMO_PATH . 'includes/class-cpt-sponsor.php';
 require_once WPNUXT_DEMO_PATH . 'includes/class-taxonomy-event-category.php';
 
 // Register nav menu locations
@@ -24,9 +25,10 @@ add_action('after_setup_theme', function () {
     register_nav_menus([ 'primary' => 'Primary Menu' ]);
 });
 
-// Initialize CPT and taxonomy
+// Initialize CPTs and taxonomy
 add_action('init', function () {
     WPNuxt_Demo\CPT_Event::register();
+    WPNuxt_Demo\CPT_Sponsor::register();
     WPNuxt_Demo\Taxonomy_Event_Category::register();
 });
 

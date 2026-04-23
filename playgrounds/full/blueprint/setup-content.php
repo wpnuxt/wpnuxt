@@ -237,6 +237,13 @@ if ( ! is_wp_error( $menu_id ) ) {
     ]);
 
     wp_update_nav_menu_item( $menu_id, 0, [
+        'menu-item-title'  => 'Sponsors',
+        'menu-item-url'    => home_url( '/sponsors/' ),
+        'menu-item-status' => 'publish',
+        'menu-item-type'   => 'custom',
+    ]);
+
+    wp_update_nav_menu_item( $menu_id, 0, [
         'menu-item-title'  => 'About',
         'menu-item-url'    => home_url( '/about/' ),
         'menu-item-status' => 'publish',
@@ -380,4 +387,53 @@ foreach ( $events as $event_data ) {
     }
 }
 
-echo "Setup complete: created " . count($posts) . " posts, " . count($pages) . " pages, " . count($events) . " events, and navigation menu.\n";
+// ---------------------------------------------------------------------------
+// Create sponsors (simple CPT — demonstrates WPNuxt auto-generation)
+// ---------------------------------------------------------------------------
+$sponsors = [
+    [
+        'title'   => 'Acme Corp',
+        'slug'    => 'acme-corp',
+        'excerpt' => 'Longtime supporter of the Brussels dev community.',
+        'content' => '<!-- wp:paragraph -->
+<p>Acme Corp has proudly sponsored our meetups for three years running. Their commitment to open source goes beyond funding — they regularly host workshops and contribute engineering time to community projects.</p>
+<!-- /wp:paragraph -->',
+    ],
+    [
+        'title'   => 'Contoso Labs',
+        'slug'    => 'contoso-labs',
+        'excerpt' => 'Research-driven engineering studio focused on headless CMS.',
+        'content' => '<!-- wp:paragraph -->
+<p>Contoso Labs builds tooling and platforms for headless WordPress deployments. They are active in the WPGraphQL community and have contributed performance patches back to the upstream plugin.</p>
+<!-- /wp:paragraph -->',
+    ],
+    [
+        'title'   => 'Globex',
+        'slug'    => 'globex',
+        'excerpt' => 'Europe-wide consultancy specialising in Nuxt + WordPress stacks.',
+        'content' => '<!-- wp:paragraph -->
+<p>Globex has helped dozens of teams migrate from monolithic WordPress to a headless WPNuxt stack. Their playbooks on ISR, cache invalidation, and preview mode are widely referenced.</p>
+<!-- /wp:paragraph -->',
+    ],
+    [
+        'title'   => 'Initech',
+        'slug'    => 'initech',
+        'excerpt' => 'Boutique product studio backing open source.',
+        'content' => '<!-- wp:paragraph -->
+<p>Initech sponsors this project and several other small open-source tools. They use WPNuxt to power their own marketing site and contribute patches upstream.</p>
+<!-- /wp:paragraph -->',
+    ],
+];
+
+foreach ( $sponsors as $sponsor_data ) {
+    wp_insert_post([
+        'post_title'   => $sponsor_data['title'],
+        'post_name'    => $sponsor_data['slug'],
+        'post_content' => $sponsor_data['content'],
+        'post_excerpt' => $sponsor_data['excerpt'],
+        'post_status'  => 'publish',
+        'post_type'    => 'sponsor',
+    ]);
+}
+
+echo "Setup complete: created " . count($posts) . " posts, " . count($pages) . " pages, " . count($events) . " events, " . count($sponsors) . " sponsors, and navigation menu.\n";
