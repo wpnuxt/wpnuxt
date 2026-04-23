@@ -40,4 +40,10 @@ export interface WPNuxtContext {
   generateImports?: () => string
   generateDeclarations?: () => string
   docs?: string[]
+  /**
+   * Top-level type identifiers referenced by the generated `.d.ts` that
+   * must resolve against `graphql-operations.d.ts`. Populated by
+   * `prepareContext()`; consumed by `validateGeneratedPaths()`.
+   */
+  referencedTypes?: string[]
 }

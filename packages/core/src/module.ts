@@ -13,6 +13,7 @@ import type { WPNuxtContext } from './types/queries'
 import { generateWPNuxtComposables } from './generate'
 import { getLogger, initLogger, mergeQueries, randHashGenerator, createModuleError, validateWordPressUrl } from './utils/index'
 import { validateWordPressEndpoint } from './utils/endpointValidation'
+import { validateGeneratedPaths } from './utils/validateGenerated'
 import { runInstall } from './install'
 
 /**
@@ -304,6 +305,22 @@ export default defineNuxtModule<WPNuxtConfig>({
       autoimports.push(...(ctx.fnImports || []))
     })
     logger.trace('Finished generating composables')
+
+    // Validate that generated type references exist in nuxt-graphql-middleware's
+    // operations declaration file. On cold builds the file may not exist yet;
+    // skip silently in that case — subsequent builds catch any drift.
+    nuxt.hook('build:before', () => {
+      if (!ctx.referencedTypes?.length) return
+      const operationsDtsPath = join(nuxt.options.buildDir, 'graphql-operations.d.ts')
+      const result = validateGeneratedPaths(ctx.referencedTypes, operationsDtsPath)
+      if (result.skipped || result.dangling.length === 0) return
+      logger.warn(
+        `WPNuxt generated composables reference ${result.dangling.length} type(s) not declared in graphql-operations.d.ts. `
+        + 'This usually means your WordPress GraphQL schema has drifted from your queries; '
+        + 'delete schema.graphql to force a fresh download, then re-run pnpm dev:prepare.'
+      )
+      for (const t of result.dangling) logger.warn(`  - ${t}`)
+    })
 
     logger.info(`WPNuxt module loaded in ${new Date().getTime() - startTime}ms`)
   },
