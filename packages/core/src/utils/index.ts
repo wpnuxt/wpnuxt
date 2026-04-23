@@ -6,6 +6,8 @@ import type { Resolver } from '@nuxt/kit'
 import type { ConsolaInstance } from 'consola'
 import type { Nuxt } from 'nuxt/schema'
 import type { WPNuxtConfig } from '../types/config'
+import { discoverCpts } from './cptDiscovery'
+import { writeCptArtifacts } from './generateCpt'
 
 // Re-export error utilities
 export { createModuleError, formatErrorMessage, type WPNuxtModule } from './errors'
@@ -77,7 +79,12 @@ export function getLogger(): ConsolaInstance {
   return loggerInstance!
 }
 
-export async function mergeQueries(nuxt: Nuxt, wpNuxtConfig: WPNuxtConfig, resolver: Resolver) {
+export async function mergeQueries(
+  nuxt: Nuxt,
+  wpNuxtConfig: WPNuxtConfig,
+  resolver: Resolver,
+  schemaPath?: string
+) {
   const logger = getLogger()
 
   // Cache base directory
@@ -92,6 +99,24 @@ export async function mergeQueries(nuxt: Nuxt, wpNuxtConfig: WPNuxtConfig, resol
 
   // Copy default queries
   cpSync(defaultQueriesPath, queryOutputPath, { recursive: true })
+
+  // Auto-generate fragments + queries for Custom Post Types discovered in
+  // the downloaded schema. Runs BEFORE the user override copy so users can
+  // still override any generated file by dropping one in extend/queries/.
+  const cptSpreads: ContentTypeFragment[] = []
+  if (schemaPath && wpNuxtConfig.cpt?.enabled !== false) {
+    const cpts = discoverCpts(schemaPath, {
+      exclude: wpNuxtConfig.cpt?.exclude,
+      include: wpNuxtConfig.cpt?.include
+    })
+    for (const cpt of cpts) {
+      await writeCptArtifacts(cpt, queryOutputPath)
+      cptSpreads.push({ name: cpt.typeName, type: cpt.typeName })
+    }
+    if (cpts.length) {
+      logger.debug(`Auto-generated fragments + queries for CPTs: ${cpts.map(c => c.typeName).join(', ')}`)
+    }
+  }
 
   // Detect conflicts between default and user queries
   const conflicts = findConflicts(userQueryPath, queryOutputPath)
@@ -108,8 +133,10 @@ export async function mergeQueries(nuxt: Nuxt, wpNuxtConfig: WPNuxtConfig, resol
     copyGraphqlFiles(userQueryPath, queryOutputPath)
   }
 
-  // Auto-add custom content type fragments to NodeByUri query
-  await addCustomFragmentsToNodeQuery(queryOutputPath, userQueryPath, logger)
+  // Auto-add custom content type fragments to NodeByUri query. The CPT
+  // spreads are merged with any content-type fragments the user may have
+  // added manually in extend/queries/fragments/.
+  await addCustomFragmentsToNodeQuery(queryOutputPath, userQueryPath, logger, cptSpreads)
 
   logger.debug('Merged queries folder:', queryOutputPath)
   return queryOutputPath
@@ -117,6 +144,11 @@ export async function mergeQueries(nuxt: Nuxt, wpNuxtConfig: WPNuxtConfig, resol
 
 /** Regex to extract fragment name and type condition from a .gql file */
 const FRAGMENT_DEF_PATTERN = /fragment\s+(\w+)\s+on\s+(\w+)/
+
+export interface ContentTypeFragment {
+  name: string
+  type: string
+}
 
 /**
  * Scans the user's extend/queries/fragments/ directory for custom content type
@@ -126,28 +158,41 @@ const FRAGMENT_DEF_PATTERN = /fragment\s+(\w+)\s+on\s+(\w+)/
  *
  * A fragment is considered a content type fragment when its name matches its
  * type condition (e.g., `fragment Event on Event`).
+ *
+ * @param queryOutputPath Merged queries folder where Node.gql lives.
+ * @param userQueryPath User extend/queries folder scanned for content-type fragments.
+ * @param logger Module logger.
+ * @param preDiscovered Spreads already known from auto-generated CPT fragments.
+ *   Merged with anything scanned from the user folder and deduplicated by type.
  */
-export async function addCustomFragmentsToNodeQuery(queryOutputPath: string, userQueryPath: string, logger: ConsolaInstance): Promise<void> {
+export async function addCustomFragmentsToNodeQuery(
+  queryOutputPath: string,
+  userQueryPath: string,
+  logger: ConsolaInstance,
+  preDiscovered: ContentTypeFragment[] = []
+): Promise<void> {
+  const byType = new Map<string, ContentTypeFragment>()
+  for (const f of preDiscovered) byType.set(f.type, f)
+
   const userFragmentsDir = join(userQueryPath, 'fragments')
-  if (!existsSync(userFragmentsDir)) return
+  if (existsSync(userFragmentsDir)) {
+    for (const file of readdirSync(userFragmentsDir)) {
+      if (!file.endsWith('.gql') && !file.endsWith('.graphql')) continue
 
-  const customFragments: { name: string, type: string }[] = []
+      const content = await fsp.readFile(join(userFragmentsDir, file), 'utf-8')
+      const match = content.match(FRAGMENT_DEF_PATTERN)
+      if (!match) continue
 
-  for (const file of readdirSync(userFragmentsDir)) {
-    if (!file.endsWith('.gql') && !file.endsWith('.graphql')) continue
-
-    const content = await fsp.readFile(join(userFragmentsDir, file), 'utf-8')
-    const match = content.match(FRAGMENT_DEF_PATTERN)
-    if (!match) continue
-
-    const name = match[1]
-    const type = match[2]
-    // Content type fragments have name === type (e.g., fragment Event on Event)
-    if (name && type && name === type) {
-      customFragments.push({ name, type })
+      const name = match[1]
+      const type = match[2]
+      // Content type fragments have name === type (e.g., fragment Event on Event)
+      if (name && type && name === type) {
+        byType.set(type, { name, type })
+      }
     }
   }
 
+  const customFragments = [...byType.values()]
   if (customFragments.length === 0) return
 
   // Add custom fragment spreads to Node.gql

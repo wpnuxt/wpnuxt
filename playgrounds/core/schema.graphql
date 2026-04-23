@@ -2116,6 +2116,9 @@ enum ContentTypeEnum {
 
   """The Type of Content object"""
   POST
+
+  """The Type of Content object"""
+  SPONSOR
 }
 
 """
@@ -2299,7 +2302,7 @@ enum ContentTypesOfTagEnum {
 }
 
 """A block used for editing the site"""
-type CoreAccordion implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreAccordion implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -2434,7 +2437,7 @@ type CoreAccordionAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreAccordionHeading implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreAccordionHeading implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -2554,7 +2557,7 @@ type CoreAccordionHeadingAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreAccordionItem implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreAccordionItem implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -2653,7 +2656,7 @@ type CoreAccordionItemAttributes {
 }
 
 """A block used for editing the site"""
-type CoreAccordionPanel implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreAccordionPanel implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -2757,7 +2760,7 @@ type CoreAccordionPanelAttributes {
 }
 
 """A block used for editing the site"""
-type CoreArchives implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreArchives implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -2871,7 +2874,7 @@ type CoreArchivesAttributes {
 }
 
 """A block used for editing the site"""
-type CoreAudio implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreAudio implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -2976,7 +2979,7 @@ type CoreAudioAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreAvatar implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreAvatar implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -3065,7 +3068,7 @@ type CoreAvatarAttributes {
 }
 
 """A block used for editing the site"""
-type CoreBlock implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreBlock implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -3124,7 +3127,7 @@ type CoreBlockAttributes {
 }
 
 """A block used for editing the site"""
-type CoreButton implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreButton implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -3279,7 +3282,7 @@ type CoreButtonAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreButtons implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreButtons implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -3384,7 +3387,7 @@ type CoreButtonsAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreCalendar implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCalendar implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -3478,7 +3481,7 @@ type CoreCalendarAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCategories implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCategories implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -3612,7 +3615,7 @@ type CoreCategoriesAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCode implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCode implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -3722,7 +3725,7 @@ type CoreCodeAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreColumn implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreColumn implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -3837,7 +3840,7 @@ type CoreColumnAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreColumns implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreColumns implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -3957,7 +3960,7 @@ type CoreColumnsAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreCommentAuthorName implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentAuthorName implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4061,7 +4064,7 @@ type CoreCommentAuthorNameAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentContent implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentContent implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4155,7 +4158,7 @@ type CoreCommentContentAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentDate implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentDate implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4254,7 +4257,7 @@ type CoreCommentDateAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentEditLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentEditLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4348,7 +4351,7 @@ type CoreCommentEditLinkAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentReplyLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentReplyLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4437,7 +4440,7 @@ type CoreCommentReplyLinkAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentTemplate implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentTemplate implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4516,7 +4519,7 @@ type CoreCommentTemplateAttributes {
 }
 
 """A block used for editing the site"""
-type CoreComments implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreComments implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4620,7 +4623,7 @@ type CoreCommentsAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentsPagination implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentsPagination implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4719,7 +4722,7 @@ type CoreCommentsPaginationAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentsPaginationNext implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentsPaginationNext implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4803,7 +4806,7 @@ type CoreCommentsPaginationNextAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentsPaginationNumbers implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentsPaginationNumbers implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4882,7 +4885,7 @@ type CoreCommentsPaginationNumbersAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentsPaginationPrevious implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentsPaginationPrevious implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -4966,7 +4969,7 @@ type CoreCommentsPaginationPreviousAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCommentsTitle implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCommentsTitle implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -5085,7 +5088,7 @@ type CoreCommentsTitleAttributes {
 }
 
 """A block used for editing the site"""
-type CoreCover implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreCover implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -5285,7 +5288,7 @@ type CoreCoverAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreDetails implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreDetails implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -5410,7 +5413,7 @@ type CoreDetailsAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreEmbed implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreEmbed implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -5509,7 +5512,7 @@ type CoreEmbedAttributes {
 }
 
 """A block used for editing the site"""
-type CoreFile implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreFile implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -5649,7 +5652,7 @@ type CoreFileAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreFootnotes implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreFootnotes implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -5733,7 +5736,7 @@ type CoreFootnotesAttributes {
 }
 
 """A block used for editing the site"""
-type CoreFreeform implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreFreeform implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -5787,7 +5790,7 @@ type CoreFreeformAttributes {
 }
 
 """A block used for editing the site"""
-type CoreGallery implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreGallery implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -5977,7 +5980,7 @@ type CoreGalleryAttributesImages {
 }
 
 """A block used for editing the site"""
-type CoreGroup implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreGroup implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -6097,7 +6100,7 @@ type CoreGroupAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreHeading implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreHeading implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -6227,7 +6230,7 @@ type CoreHeadingAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreHomeLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreHomeLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -6301,7 +6304,7 @@ type CoreHomeLinkAttributes {
 }
 
 """A block used for editing the site"""
-type CoreHtml implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreHtml implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -6355,7 +6358,7 @@ type CoreHtmlAttributes {
 }
 
 """A block used for editing the site"""
-type CoreImage implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreImage implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -6528,7 +6531,7 @@ type CoreImageAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreLatestComments implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreLatestComments implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -6637,7 +6640,7 @@ type CoreLatestCommentsAttributes {
 }
 
 """A block used for editing the site"""
-type CoreLatestPosts implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreLatestPosts implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -6821,7 +6824,7 @@ type CoreLatestPostsAttributes {
 }
 
 """A block used for editing the site"""
-type CoreLegacyWidget implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreLegacyWidget implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -6885,7 +6888,7 @@ type CoreLegacyWidgetAttributes {
 }
 
 """A block used for editing the site"""
-type CoreList implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreList implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -7015,7 +7018,7 @@ type CoreListAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreListItem implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreListItem implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -7120,7 +7123,7 @@ type CoreListItemAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreLoginout implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreLoginout implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -7214,7 +7217,7 @@ type CoreLoginoutAttributes {
 }
 
 """A block used for editing the site"""
-type CoreMath implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreMath implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -7278,7 +7281,7 @@ type CoreMathAttributes {
 }
 
 """A block used for editing the site"""
-type CoreMediaText implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreMediaText implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -7468,7 +7471,7 @@ type CoreMediaTextAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreMissing implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreMissing implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -7532,7 +7535,7 @@ type CoreMissingAttributes {
 }
 
 """A block used for editing the site"""
-type CoreMore implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreMore implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -7591,7 +7594,7 @@ type CoreMoreAttributes {
 }
 
 """A block used for editing the site"""
-type CoreNavigation implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreNavigation implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -7765,7 +7768,7 @@ type CoreNavigationAttributes {
 }
 
 """A block used for editing the site"""
-type CoreNavigationLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreNavigationLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -7884,7 +7887,7 @@ type CoreNavigationLinkAttributes {
 }
 
 """A block used for editing the site"""
-type CoreNavigationSubmenu implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreNavigationSubmenu implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8003,7 +8006,7 @@ type CoreNavigationSubmenuAttributes {
 }
 
 """A block used for editing the site"""
-type CoreNextpage implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreNextpage implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8052,7 +8055,7 @@ type CoreNextpageAttributes {
 }
 
 """A block used for editing the site"""
-type CorePageList implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePageList implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8151,7 +8154,7 @@ type CorePageListAttributes {
 }
 
 """A block used for editing the site"""
-type CorePageListItem implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePageListItem implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8230,7 +8233,7 @@ type CorePageListItemAttributes {
 }
 
 """A block used for editing the site"""
-type CoreParagraph implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreParagraph implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -8355,7 +8358,7 @@ type CoreParagraphAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CorePattern implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePattern implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8414,7 +8417,7 @@ type CorePatternAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostAuthor implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostAuthor implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8538,7 +8541,7 @@ type CorePostAuthorAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostAuthorBiography implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostAuthorBiography implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8632,7 +8635,7 @@ type CorePostAuthorBiographyAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostAuthorName implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostAuthorName implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8736,7 +8739,7 @@ type CorePostAuthorNameAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostComments implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostComments implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8825,7 +8828,7 @@ type CorePostCommentsAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostCommentsCount implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostCommentsCount implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -8919,7 +8922,7 @@ type CorePostCommentsCountAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostCommentsForm implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostCommentsForm implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9008,7 +9011,7 @@ type CorePostCommentsFormAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostCommentsLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostCommentsLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9092,7 +9095,7 @@ type CorePostCommentsLinkAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostContent implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostContent implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9196,7 +9199,7 @@ type CorePostContentAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostDate implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostDate implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9305,7 +9308,7 @@ type CorePostDateAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostExcerpt implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostExcerpt implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9414,7 +9417,7 @@ type CorePostExcerptAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostFeaturedImage implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostFeaturedImage implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9553,7 +9556,7 @@ type CorePostFeaturedImageAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostNavigationLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostNavigationLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9667,7 +9670,7 @@ type CorePostNavigationLinkAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostTemplate implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostTemplate implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9766,7 +9769,7 @@ type CorePostTemplateAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostTerms implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostTerms implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -9960,7 +9963,7 @@ type CorePostTermsToTermNodeConnectionPageInfo implements PageInfo & TermNodeCon
 }
 
 """A block used for editing the site"""
-type CorePostTimeToRead implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostTimeToRead implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10069,7 +10072,7 @@ type CorePostTimeToReadAttributes {
 }
 
 """A block used for editing the site"""
-type CorePostTitle implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePostTitle implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10193,7 +10196,7 @@ type CorePostTitleAttributes {
 }
 
 """A block used for editing the site"""
-type CorePreformatted implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePreformatted implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -10293,7 +10296,7 @@ type CorePreformattedAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CorePullquote implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CorePullquote implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -10408,7 +10411,7 @@ type CorePullquoteAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreQuery implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQuery implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10497,7 +10500,7 @@ type CoreQueryAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQueryNoResults implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQueryNoResults implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10586,7 +10589,7 @@ type CoreQueryNoResultsAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQueryPagination implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQueryPagination implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10690,7 +10693,7 @@ type CoreQueryPaginationAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQueryPaginationNext implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQueryPaginationNext implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10774,7 +10777,7 @@ type CoreQueryPaginationNextAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQueryPaginationNumbers implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQueryPaginationNumbers implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10858,7 +10861,7 @@ type CoreQueryPaginationNumbersAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQueryPaginationPrevious implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQueryPaginationPrevious implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -10942,7 +10945,7 @@ type CoreQueryPaginationPreviousAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQueryTitle implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQueryTitle implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -11066,7 +11069,7 @@ type CoreQueryTitleAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQueryTotal implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQueryTotal implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -11165,7 +11168,7 @@ type CoreQueryTotalAttributes {
 }
 
 """A block used for editing the site"""
-type CoreQuote implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreQuote implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -11290,7 +11293,7 @@ type CoreQuoteAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreReadMore implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreReadMore implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -11389,7 +11392,7 @@ type CoreReadMoreAttributes {
 }
 
 """A block used for editing the site"""
-type CoreRss implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreRss implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -11523,7 +11526,7 @@ type CoreRssAttributes {
 }
 
 """A block used for editing the site"""
-type CoreSearch implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSearch implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -11667,7 +11670,7 @@ type CoreSearchAttributes {
 }
 
 """A block used for editing the site"""
-type CoreSeparator implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSeparator implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -11762,7 +11765,7 @@ type CoreSeparatorAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreShortcode implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreShortcode implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -11816,7 +11819,7 @@ type CoreShortcodeAttributes {
 }
 
 """A block used for editing the site"""
-type CoreSiteLogo implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSiteLogo implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -11900,7 +11903,7 @@ type CoreSiteLogoAttributes {
 }
 
 """A block used for editing the site"""
-type CoreSiteTagline implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSiteTagline implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -12009,7 +12012,7 @@ type CoreSiteTaglineAttributes {
 }
 
 """A block used for editing the site"""
-type CoreSiteTitle implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSiteTitle implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -12128,7 +12131,7 @@ type CoreSiteTitleAttributes {
 }
 
 """A block used for editing the site"""
-type CoreSocialLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSocialLink implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -12202,7 +12205,7 @@ type CoreSocialLinkAttributes {
 }
 
 """A block used for editing the site"""
-type CoreSocialLinks implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSocialLinks implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -12337,7 +12340,7 @@ type CoreSocialLinksAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreSpacer implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreSpacer implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -12412,7 +12415,7 @@ type CoreSpacerAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreTable implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTable implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -12672,7 +12675,7 @@ type CoreTableAttributesHeadCells {
 }
 
 """A block used for editing the site"""
-type CoreTagCloud implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTagCloud implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -12771,7 +12774,7 @@ type CoreTagCloudAttributes {
 }
 
 """A block used for editing the site"""
-type CoreTemplatePart implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTemplatePart implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -12850,7 +12853,7 @@ type CoreTemplatePartAttributes {
 }
 
 """A block used for editing the site"""
-type CoreTermCount implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTermCount implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -12944,7 +12947,7 @@ type CoreTermCountAttributes {
 }
 
 """A block used for editing the site"""
-type CoreTermDescription implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTermDescription implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -13038,7 +13041,7 @@ type CoreTermDescriptionAttributes {
 }
 
 """A block used for editing the site"""
-type CoreTermName implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTermName implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -13147,7 +13150,7 @@ type CoreTermNameAttributes {
 }
 
 """A block used for editing the site"""
-type CoreTermTemplate implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTermTemplate implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -13246,7 +13249,7 @@ type CoreTermTemplateAttributes {
 }
 
 """A block used for editing the site"""
-type CoreTermsQuery implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTermsQuery implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -13320,7 +13323,7 @@ type CoreTermsQueryAttributes {
 }
 
 """A block used for editing the site"""
-type CoreTextColumns implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreTextColumns implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -13399,7 +13402,7 @@ type CoreTextColumnsAttributesContent {
 }
 
 """A block used for editing the site"""
-type CoreVerse implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreVerse implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -13504,7 +13507,7 @@ type CoreVerseAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreVideo implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreVideo implements BlockWithSupportsAnchor & EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The anchor field for the block."""
   anchor: String
 
@@ -13634,7 +13637,7 @@ type CoreVideoAttributes implements BlockWithSupportsAnchor {
 }
 
 """A block used for editing the site"""
-type CoreWidgetGroup implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type CoreWidgetGroup implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -14099,6 +14102,53 @@ type CreatePostPayload {
   post: Post
 }
 
+"""Input for the createSponsor mutation."""
+input CreateSponsorInput {
+  """
+  This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The content of the object"""
+  content: String
+
+  """
+  The date of the object. Preferable to enter as year/month/day (e.g. 01/31/2017) as it will rearrange date as fit if it is not specified. Incomplete dates may have unintended results for example, "2017" as the input will use current date with timestamp 20:17 
+  """
+  date: String
+
+  """The excerpt of the object"""
+  excerpt: String
+
+  """
+  A field used for ordering posts. This is typically used with nav menu items or for special ordering of hierarchical content types.
+  """
+  menuOrder: Int
+
+  """The password used to protect the content of the object"""
+  password: String
+
+  """The slug of the object"""
+  slug: String
+
+  """The status of the object"""
+  status: PostStatusEnum
+
+  """The title of the object"""
+  title: String
+}
+
+"""The payload for the createSponsor mutation."""
+type CreateSponsorPayload {
+  """
+  If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The Post object mutation type."""
+  sponsor: Sponsor
+}
+
 """Input for the createTag mutation."""
 input CreateTagInput {
   """The slug that the post_tag will be an alias of"""
@@ -14508,6 +14558,39 @@ type DeletePostPayload {
 
   """The object before it was deleted"""
   post: Post
+}
+
+"""Input for the deleteSponsor mutation."""
+input DeleteSponsorInput {
+  """
+  This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """
+  Whether the object should be force deleted instead of being moved to the trash
+  """
+  forceDelete: Boolean
+
+  """The ID of the Sponsor to delete"""
+  id: ID!
+
+  """Override the edit lock when another user is editing the post"""
+  ignoreEditLock: Boolean
+}
+
+"""The payload for the deleteSponsor mutation."""
+type DeleteSponsorPayload {
+  """
+  If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The ID of the deleted object"""
+  deletedId: ID
+
+  """The object before it was deleted"""
+  sponsor: Sponsor
 }
 
 """Input for the deleteTag mutation."""
@@ -18428,7 +18511,7 @@ enum MenuItemNodeIdTypeEnum {
 }
 
 """Deprecated in favor of MenuItemLinkable Interface"""
-union MenuItemObjectUnion = Category | Event | EventCategory | Page | Post | PostFormat | Tag
+union MenuItemObjectUnion = Category | Event | EventCategory | Page | Post | PostFormat | Sponsor | Tag
 
 """Connection between the MenuItem type and the Menu type"""
 type MenuItemToMenuConnectionEdge implements Edge & MenuConnectionEdge & OneToOneConnection {
@@ -19085,6 +19168,15 @@ type NodeWithRevisionsToContentNodeConnectionEdge implements ContentNodeConnecti
 
   """The node of the connection, without the edges"""
   node: ContentNode!
+}
+
+"""Node that has Sponsor content blocks associated with it"""
+interface NodeWithSponsorEditorBlocks implements NodeWithEditorBlocks {
+  """List of Sponsor editor blocks"""
+  editorBlocks(
+    """Returns the list of blocks as a flat list if true"""
+    flat: Boolean
+  ): [SponsorEditorBlock]
 }
 
 """
@@ -22576,6 +22668,12 @@ type RootMutation {
     input: CreatePostFormatInput!
   ): CreatePostFormatPayload
 
+  """The createSponsor mutation"""
+  createSponsor(
+    """Input for the createSponsor mutation"""
+    input: CreateSponsorInput!
+  ): CreateSponsorPayload
+
   """The createTag mutation"""
   createTag(
     """Input for the createTag mutation"""
@@ -22635,6 +22733,12 @@ type RootMutation {
     """Input for the deletePostFormat mutation"""
     input: DeletePostFormatInput!
   ): DeletePostFormatPayload
+
+  """The deleteSponsor mutation"""
+  deleteSponsor(
+    """Input for the deleteSponsor mutation"""
+    input: DeleteSponsorInput!
+  ): DeleteSponsorPayload
 
   """The deleteTag mutation"""
   deleteTag(
@@ -22769,6 +22873,12 @@ type RootMutation {
     """Input for the updateSettings mutation"""
     input: UpdateSettingsInput!
   ): UpdateSettingsPayload
+
+  """The updateSponsor mutation"""
+  updateSponsor(
+    """Input for the updateSponsor mutation"""
+    input: UpdateSponsorInput!
+  ): UpdateSponsorPayload
 
   """The updateTag mutation"""
   updateTag(
@@ -23382,6 +23492,59 @@ type RootQuery {
 
   """Returns seo site data"""
   seo: SEOConfig
+
+  """An object of the Sponsor Type. """
+  sponsor(
+    """
+    Whether to return the Preview Node instead of the Published Node. When the ID of a Node is provided along with asPreview being set to true, the preview node with un-published changes will be returned instead of the published node. If no preview node exists or the requester doesn't have proper capabilities to preview, no node will be returned. If the ID provided is a URI and has a preview query arg, it will be used as a fallback if the "asPreview" argument is not explicitly provided as an argument.
+    """
+    asPreview: Boolean
+
+    """The globally unique identifier of the object."""
+    id: ID!
+
+    """Type of unique identifier to fetch by. Default is Global ID"""
+    idType: SponsorIdType
+  ): Sponsor
+
+  """A Sponsor object"""
+  sponsorBy(
+    """Get the Sponsor object by its global ID"""
+    id: ID
+
+    """
+    Get the Sponsor by its slug (only available for non-hierarchical types)
+    """
+    slug: String
+
+    """Get the Sponsor by its database ID"""
+    sponsorId: Int
+
+    """Get the Sponsor by its uri"""
+    uri: String
+  ): Sponsor @deprecated(reason: "Deprecated in favor of using the single entry point for this type with ID and IDType fields. For example, instead of postBy( id: &quot;&quot; ), use post(id: &quot;&quot; idType: &quot;&quot;)")
+
+  """Connection between the RootQuery type and the Sponsor type"""
+  sponsors(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+
+    """Arguments for filtering the connection"""
+    where: RootQueryToSponsorConnectionWhereArgs
+  ): RootQueryToSponsorConnection
 
   """A 0bject"""
   tag(
@@ -25059,6 +25222,105 @@ input RootQueryToRevisionsConnectionWhereArgs {
   title: String
 }
 
+"""Connection between the RootQuery type and the Sponsor type"""
+type RootQueryToSponsorConnection implements Connection & SponsorConnection {
+  """Edges for the RootQueryToSponsorConnection connection"""
+  edges: [RootQueryToSponsorConnectionEdge!]!
+
+  """The nodes of the connection, without the edges"""
+  nodes: [Sponsor!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: RootQueryToSponsorConnectionPageInfo!
+}
+
+"""An edge in a connection"""
+type RootQueryToSponsorConnectionEdge implements Edge & SponsorConnectionEdge {
+  """A cursor for use in pagination"""
+  cursor: String
+
+  """The item at the end of the edge"""
+  node: Sponsor!
+}
+
+"""
+Pagination metadata specific to &quot;RootQueryToSponsorConnection&quot; collections. Provides cursors and flags for navigating through sets of RootQueryToSponsorConnection Nodes.
+"""
+type RootQueryToSponsorConnectionPageInfo implements PageInfo & SponsorConnectionPageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""Arguments for filtering the RootQueryToSponsorConnection connection"""
+input RootQueryToSponsorConnectionWhereArgs {
+  """Filter the connection based on dates"""
+  dateQuery: DateQueryInput
+
+  """
+  True for objects with passwords; False for objects without passwords; null for all objects with or without passwords
+  """
+  hasPassword: Boolean
+
+  """Specific database ID of the object"""
+  id: Int
+
+  """Array of IDs for the objects to retrieve"""
+  in: [ID]
+
+  """Get objects with a specific mimeType property"""
+  mimeType: MimeTypeEnum
+
+  """Slug / post_name of the object"""
+  name: String
+
+  """Specify objects to retrieve. Use slugs"""
+  nameIn: [String]
+
+  """
+  Specify IDs NOT to retrieve. If this is used in the same query as "in", it will be ignored
+  """
+  notIn: [ID]
+
+  """What parameter to use to order the objects by."""
+  orderby: [PostObjectsConnectionOrderbyInput]
+
+  """Use ID to return only children. Use 0 to return only top-level items"""
+  parent: ID
+
+  """Specify objects whose parent is in an array"""
+  parentIn: [ID]
+
+  """Specify posts whose parent is not in an array"""
+  parentNotIn: [ID]
+
+  """Show posts with a specific password."""
+  password: String
+
+  """Show Posts based on a keyword search"""
+  search: String
+
+  """Retrieve posts where post status is in an array."""
+  stati: [PostStatusEnum]
+
+  """Show posts with a specific status."""
+  status: PostStatusEnum
+
+  """Title of the object"""
+  title: String
+}
+
 """Connection between the RootQuery type and the tag type"""
 type RootQueryToTagConnection implements Connection & TagConnection {
   """Edges for the RootQueryToTagConnection connection"""
@@ -25679,6 +25941,9 @@ type SEOContentTypes {
 
   """"""
   post: SEOContentType
+
+  """"""
+  sponsor: SEOContentType
 }
 
 """The Yoast SEO meta data"""
@@ -26165,6 +26430,515 @@ type SiteTokenClientOptions implements LoginClientOptions {
 type SiteTokenLoginOptions implements LoginOptions {
   """Whether to set a WordPress authentication cookie on successful login."""
   useAuthenticationCookie: Boolean
+}
+
+"""The Sponsor type"""
+type Sponsor implements ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithContentEditor & NodeWithEditorBlocks & NodeWithExcerpt & NodeWithFeaturedImage & NodeWithRevisions & NodeWithSponsorEditorBlocks & NodeWithTemplate & NodeWithTitle & Previewable & UniformResourceIdentifiable {
+  """The ancestors of the content node."""
+  ancestors(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+  ): SponsorToSponsorConnection @deprecated(reason: "This content type is not hierarchical and typically will not have ancestors")
+
+  """"""
+  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
+
+  """The content of the post."""
+  content(
+    """Format of the field output"""
+    format: PostObjectFieldFormatEnum
+  ): String
+
+  """Connection between the ContentNode type and the ContentType type"""
+  contentType: ContentNodeToContentTypeConnectionEdge
+
+  """The name of the Content Type the node belongs to"""
+  contentTypeName: String!
+
+  """The unique identifier stored in the database"""
+  databaseId: Int!
+
+  """Post publishing date."""
+  date: String
+
+  """The publishing date set in GMT."""
+  dateGmt: String
+
+  """The desired slug of the post"""
+  desiredSlug: String
+
+  """
+  If a user has edited the node within the past 15 seconds, this will return the user that last edited. Null if the edit lock doesn&#039;t exist or is greater than 15 seconds
+  """
+  editingLockedBy: ContentNodeToEditLockConnectionEdge
+
+  """List of Sponsor editor blocks"""
+  editorBlocks(
+    """Returns the list of blocks as a flat list if true"""
+    flat: Boolean
+  ): [SponsorEditorBlock]
+
+  """The RSS enclosure for the object"""
+  enclosure: String
+
+  """Connection between the ContentNode type and the EnqueuedScript type"""
+  enqueuedScripts(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+  ): ContentNodeToEnqueuedScriptConnection
+
+  """
+  Connection between the ContentNode type and the EnqueuedStylesheet type
+  """
+  enqueuedStylesheets(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+  ): ContentNodeToEnqueuedStylesheetConnection
+
+  """The excerpt of the post."""
+  excerpt(
+    """Format of the field output"""
+    format: PostObjectFieldFormatEnum
+  ): String
+
+  """
+  Connection between the NodeWithFeaturedImage type and the MediaItem type
+  """
+  featuredImage: NodeWithFeaturedImageToMediaItemConnectionEdge
+
+  """
+  The database identifier for the featured image node assigned to the content node
+  """
+  featuredImageDatabaseId: Int
+
+  """Globally unique ID of the featured image assigned to the node"""
+  featuredImageId: ID
+
+  """
+  The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table.
+  """
+  guid: String
+
+  """Whether the sponsor object is password protected."""
+  hasPassword: Boolean
+
+  """The globally unique identifier of the sponsor object."""
+  id: ID!
+
+  """Whether the node is a Comment"""
+  isComment: Boolean!
+
+  """Whether the node is a Content Node"""
+  isContentNode: Boolean!
+
+  """Whether the node represents the front page."""
+  isFrontPage: Boolean!
+
+  """Whether  the node represents the blog page."""
+  isPostsPage: Boolean!
+
+  """Whether the object is a node in the preview state"""
+  isPreview: Boolean
+
+  """Whether the object is restricted from the current viewer"""
+  isRestricted: Boolean
+
+  """True if the node is a revision of another node"""
+  isRevision: Boolean
+
+  """Whether the node is a Term"""
+  isTermNode: Boolean!
+
+  """The user that most recently edited the node"""
+  lastEditedBy: ContentNodeToEditLastConnectionEdge
+
+  """The permalink of the post"""
+  link: String
+
+  """
+  The local modified time for a post. If a post was recently updated the modified field will change to match the corresponding time.
+  """
+  modified: String
+
+  """
+  The GMT modified time for a post. If a post was recently updated the modified field will change to match the corresponding time in GMT.
+  """
+  modifiedGmt: String
+
+  """The parent of the content node."""
+  parent: SponsorToParentConnectionEdge @deprecated(reason: "This content type is not hierarchical and typically will not have a parent")
+
+  """The password for the sponsor object."""
+  password: String
+
+  """Connection between the Sponsor type and the Sponsor type"""
+  preview: SponsorToPreviewConnectionEdge
+
+  """The database id of the preview node"""
+  previewRevisionDatabaseId: Int
+
+  """Whether the object is a node in the preview state"""
+  previewRevisionId: ID
+
+  """
+  If the current node is a revision, this field exposes the node this is a revision of. Returns null if the node is not a revision of another node.
+  """
+  revisionOf: NodeWithRevisionsToContentNodeConnectionEdge
+
+  """Connection between the Sponsor type and the Sponsor type"""
+  revisions(
+    """
+    Cursor used along with the "first" argument to reference where in the dataset to get data
+    """
+    after: String
+
+    """
+    Cursor used along with the "last" argument to reference where in the dataset to get data
+    """
+    before: String
+
+    """The number of items to return after the referenced "after" cursor"""
+    first: Int
+
+    """The number of items to return before the referenced "before" cursor"""
+    last: Int
+
+    """Arguments for filtering the connection"""
+    where: SponsorToRevisionConnectionWhereArgs
+  ): SponsorToRevisionConnection
+
+  """The Yoast SEO data of the ContentNode"""
+  seo: PostTypeSEO
+
+  """
+  The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table.
+  """
+  slug: String
+
+  """The id field matches the WP_Post-&gt;ID field."""
+  sponsorId: Int! @deprecated(reason: "Deprecated in favor of the databaseId field")
+
+  """The current status of the object"""
+  status: String
+
+  """The template assigned to the node"""
+  template: ContentTemplate
+
+  """"""
+  templates: [String]
+
+  """
+  The title of the post. This is currently just the raw title. An amendment to support rendered title needs to be made.
+  """
+  title(
+    """Format of the field output"""
+    format: PostObjectFieldFormatEnum
+  ): String
+
+  """The unique resource identifier path"""
+  uri: String
+}
+
+"""
+A paginated collection of Sponsor Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of Sponsor Nodes
+"""
+interface SponsorConnection implements Connection {
+  """
+  A list of edges (relational context) between RootQuery and connected Sponsor Nodes
+  """
+  edges: [SponsorConnectionEdge!]!
+
+  """A list of connected Sponsor Nodes"""
+  nodes: [Sponsor!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: SponsorConnectionPageInfo!
+}
+
+"""
+Represents a connection to a Sponsor. Contains both the Sponsor Node and metadata about the relationship.
+"""
+interface SponsorConnectionEdge implements Edge {
+  """
+  Opaque reference to the nodes position in the connection. Value can be used with pagination args.
+  """
+  cursor: String
+
+  """The connected Sponsor Node"""
+  node: Sponsor!
+}
+
+"""
+Pagination metadata specific to &quot;SponsorConnectionEdge&quot; collections. Provides cursors and flags for navigating through sets of &quot;SponsorConnectionEdge&quot; Nodes.
+"""
+interface SponsorConnectionPageInfo implements PageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""EditorBlock Interface for Sponsor Block Type"""
+interface SponsorEditorBlock implements EditorBlock {
+  """The API version of the Gutenberg Block"""
+  apiVersion: Int
+
+  """The name of the category the Block belongs to"""
+  blockEditorCategoryName: String
+
+  """The id of the Block"""
+  clientId: String
+
+  """CSS Classnames to apply to the block"""
+  cssClassNames: [String]
+
+  """The inner blocks of the Block"""
+  innerBlocks: [EditorBlock]
+
+  """Whether the block is Dynamic (server rendered)"""
+  isDynamic: Boolean!
+
+  """The name of the Block"""
+  name: String
+
+  """The parent id of the Block"""
+  parentClientId: String
+
+  """The rendered HTML for the block"""
+  renderedHtml: String
+
+  """The (GraphQL) type of the block"""
+  type: String
+}
+
+"""
+Identifier types for retrieving a specific Sponsor. Specifies which unique attribute is used to find an exact Sponsor.
+"""
+enum SponsorIdType {
+  """Identify a resource by the Database ID."""
+  DATABASE_ID
+
+  """Identify a resource by the (hashed) Global ID."""
+  ID
+
+  """
+  Identify a resource by the slug. Available to non-hierarchcial Types where the slug is a unique identifier.
+  """
+  SLUG
+
+  """Identify a resource by the URI."""
+  URI
+}
+
+"""Connection between the Sponsor type and the Sponsor type"""
+type SponsorToParentConnectionEdge implements Edge & OneToOneConnection & SponsorConnectionEdge {
+  """
+  Opaque reference to the nodes position in the connection. Value can be used with pagination args.
+  """
+  cursor: String
+
+  """The node of the connection, without the edges"""
+  node: Sponsor! @deprecated(reason: "This content type is not hierarchical and typically will not have a parent")
+}
+
+"""Connection between the Sponsor type and the Sponsor type"""
+type SponsorToPreviewConnectionEdge implements Edge & OneToOneConnection & SponsorConnectionEdge {
+  """
+  Opaque reference to the nodes position in the connection. Value can be used with pagination args.
+  """
+  cursor: String
+
+  """The node of the connection, without the edges"""
+  node: Sponsor!
+}
+
+"""Connection between the Sponsor type and the Sponsor type"""
+type SponsorToRevisionConnection implements Connection & SponsorConnection {
+  """Edges for the SponsorToRevisionConnection connection"""
+  edges: [SponsorToRevisionConnectionEdge!]!
+
+  """The nodes of the connection, without the edges"""
+  nodes: [Sponsor!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: SponsorToRevisionConnectionPageInfo!
+}
+
+"""An edge in a connection"""
+type SponsorToRevisionConnectionEdge implements Edge & SponsorConnectionEdge {
+  """A cursor for use in pagination"""
+  cursor: String
+
+  """The item at the end of the edge"""
+  node: Sponsor!
+}
+
+"""
+Pagination metadata specific to &quot;SponsorToRevisionConnection&quot; collections. Provides cursors and flags for navigating through sets of SponsorToRevisionConnection Nodes.
+"""
+type SponsorToRevisionConnectionPageInfo implements PageInfo & SponsorConnectionPageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""Arguments for filtering the SponsorToRevisionConnection connection"""
+input SponsorToRevisionConnectionWhereArgs {
+  """Filter the connection based on dates"""
+  dateQuery: DateQueryInput
+
+  """
+  True for objects with passwords; False for objects without passwords; null for all objects with or without passwords
+  """
+  hasPassword: Boolean
+
+  """Specific database ID of the object"""
+  id: Int
+
+  """Array of IDs for the objects to retrieve"""
+  in: [ID]
+
+  """Get objects with a specific mimeType property"""
+  mimeType: MimeTypeEnum
+
+  """Slug / post_name of the object"""
+  name: String
+
+  """Specify objects to retrieve. Use slugs"""
+  nameIn: [String]
+
+  """
+  Specify IDs NOT to retrieve. If this is used in the same query as "in", it will be ignored
+  """
+  notIn: [ID]
+
+  """What parameter to use to order the objects by."""
+  orderby: [PostObjectsConnectionOrderbyInput]
+
+  """Use ID to return only children. Use 0 to return only top-level items"""
+  parent: ID
+
+  """Specify objects whose parent is in an array"""
+  parentIn: [ID]
+
+  """Specify posts whose parent is not in an array"""
+  parentNotIn: [ID]
+
+  """Show posts with a specific password."""
+  password: String
+
+  """Show Posts based on a keyword search"""
+  search: String
+
+  """Retrieve posts where post status is in an array."""
+  stati: [PostStatusEnum]
+
+  """Show posts with a specific status."""
+  status: PostStatusEnum
+
+  """Title of the object"""
+  title: String
+}
+
+"""Connection between the Sponsor type and the Sponsor type"""
+type SponsorToSponsorConnection implements Connection & SponsorConnection {
+  """Edges for the SponsorToSponsorConnection connection"""
+  edges: [SponsorToSponsorConnectionEdge!]!
+
+  """The nodes of the connection, without the edges"""
+  nodes: [Sponsor!]!
+
+  """Information about pagination in a connection."""
+  pageInfo: SponsorToSponsorConnectionPageInfo!
+}
+
+"""An edge in a connection"""
+type SponsorToSponsorConnectionEdge implements Edge & SponsorConnectionEdge {
+  """A cursor for use in pagination"""
+  cursor: String @deprecated(reason: "This content type is not hierarchical and typically will not have ancestors")
+
+  """The item at the end of the edge"""
+  node: Sponsor! @deprecated(reason: "This content type is not hierarchical and typically will not have ancestors")
+}
+
+"""
+Pagination metadata specific to &quot;SponsorToSponsorConnection&quot; collections. Provides cursors and flags for navigating through sets of SponsorToSponsorConnection Nodes.
+"""
+type SponsorToSponsorConnectionPageInfo implements PageInfo & SponsorConnectionPageInfo & WPPageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """Raw schema for page"""
+  seo: SEOPostTypePageInfo
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
 }
 
 """
@@ -27935,6 +28709,59 @@ type UpdateSettingsPayload {
   writingSettings: WritingSettings
 }
 
+"""Input for the updateSponsor mutation."""
+input UpdateSponsorInput {
+  """
+  This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The content of the object"""
+  content: String
+
+  """
+  The date of the object. Preferable to enter as year/month/day (e.g. 01/31/2017) as it will rearrange date as fit if it is not specified. Incomplete dates may have unintended results for example, "2017" as the input will use current date with timestamp 20:17 
+  """
+  date: String
+
+  """The excerpt of the object"""
+  excerpt: String
+
+  """The ID of the Sponsor object"""
+  id: ID!
+
+  """Override the edit lock when another user is editing the post"""
+  ignoreEditLock: Boolean
+
+  """
+  A field used for ordering posts. This is typically used with nav menu items or for special ordering of hierarchical content types.
+  """
+  menuOrder: Int
+
+  """The password used to protect the content of the object"""
+  password: String
+
+  """The slug of the object"""
+  slug: String
+
+  """The status of the object"""
+  status: PostStatusEnum
+
+  """The title of the object"""
+  title: String
+}
+
+"""The payload for the updateSponsor mutation."""
+type UpdateSponsorPayload {
+  """
+  If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+  """
+  clientMutationId: String
+
+  """The Post object mutation type."""
+  sponsor: Sponsor
+}
+
 """Input for the updateTag mutation."""
 input UpdateTagInput {
   """The slug that the post_tag will be an alias of"""
@@ -29361,7 +30188,7 @@ type WritingSettings {
 }
 
 """A block used for editing the site"""
-type YoastFaqBlock implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type YoastFaqBlock implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -29425,7 +30252,7 @@ type YoastFaqBlockAttributes {
 }
 
 """A block used for editing the site"""
-type YoastHowToBlock implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type YoastHowToBlock implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 
@@ -29534,7 +30361,7 @@ type YoastHowToBlockAttributes {
 }
 
 """A block used for editing the site"""
-type YoastSeoBreadcrumbs implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock {
+type YoastSeoBreadcrumbs implements EditorBlock & EventEditorBlock & PageEditorBlock & PostEditorBlock & SponsorEditorBlock {
   """The API version of the Gutenberg Block"""
   apiVersion: Int
 

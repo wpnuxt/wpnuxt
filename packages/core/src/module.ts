@@ -58,6 +58,11 @@ export default defineNuxtModule<WPNuxtConfig>({
       enabled: true,
       maxAge: 60 * 5, // 5 minutes
       swr: true
+    },
+    cpt: {
+      enabled: true,
+      exclude: [],
+      include: []
     }
   },
   async setup(options, nuxt) {
@@ -84,8 +89,6 @@ export default defineNuxtModule<WPNuxtConfig>({
     // This ensures both server-side and client-side URLs use trailing slashes
     configureTrailingSlash(nuxt, logger)
 
-    const mergedQueriesFolder = await mergeQueries(nuxt, wpNuxtConfig, resolver)
-
     // Register WPNuxt as a layer so nuxt-graphql-middleware 5.4+ auto-discovers
     // the default server/client options from the package directory.
     // Appended to _layers = lower priority than main app, so user files win.
@@ -103,39 +106,33 @@ export default defineNuxtModule<WPNuxtConfig>({
     })
     logger.debug('Registered WPNuxt layer for graphqlMiddleware options auto-discovery')
 
-    // Validate WordPress endpoint and download schema if needed
+    // Validate WordPress endpoint and (re)download schema. Runs before
+    // mergeQueries so CPT auto-generation reads the freshest schema — a
+    // cached schema would miss newly-registered CPTs. If the network call
+    // fails and we already have a local schema.graphql, fall back to it
+    // so a momentary WP outage doesn't break the build. Users who want to
+    // skip the network hop entirely (CI, offline dev) set
+    // `downloadSchema: false` and commit schema.graphql.
     const schemaPath = join(nuxt.options.rootDir, 'schema.graphql')
     const schemaExists = existsSync(schemaPath)
 
     if (wpNuxtConfig.downloadSchema) {
-      if (!schemaExists) {
-        // Schema doesn't exist - must download it (blocking, required for app to work)
-        logger.debug(`Downloading schema from: ${wpNuxtConfig.wordpressUrl}${wpNuxtConfig.graphqlEndpoint}`)
+      logger.debug(`Downloading schema from: ${wpNuxtConfig.wordpressUrl}${wpNuxtConfig.graphqlEndpoint}`)
+      try {
         await validateWordPressEndpoint(
           wpNuxtConfig.wordpressUrl!,
           wpNuxtConfig.graphqlEndpoint,
           { schemaPath, authToken: wpNuxtConfig.schemaAuthToken }
         )
         logger.debug('Schema downloaded successfully')
-      } else {
-        // Schema exists - defer validation to ready hook (non-blocking)
-        nuxt.hook('ready', async () => {
-          try {
-            await validateWordPressEndpoint(
-              wpNuxtConfig.wordpressUrl!,
-              wpNuxtConfig.graphqlEndpoint,
-              { authToken: wpNuxtConfig.schemaAuthToken }
-            )
-            logger.debug('WordPress endpoint validation passed')
-          } catch (error) {
-            // Log warning but don't block app - schema already exists
-            const message = error instanceof Error ? error.message : String(error)
-            logger.warn(`WordPress endpoint validation failed: ${message.split('\n')[0]}`)
-            logger.warn('App will continue with existing schema.graphql file')
-          }
-        })
+      } catch (error) {
+        if (!schemaExists) throw error
+        const message = error instanceof Error ? error.message : String(error)
+        logger.warn(`Schema refresh failed, using cached schema.graphql: ${message.split('\n')[0]}`)
       }
     }
+
+    const mergedQueriesFolder = await mergeQueries(nuxt, wpNuxtConfig, resolver, schemaPath)
 
     await registerModules(nuxt, resolver, wpNuxtConfig, mergedQueriesFolder)
 
