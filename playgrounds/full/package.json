@@ -16,19 +16,19 @@
     "@nuxt/icon": "^2.2.1",
     "@nuxt/ui": "4.6.1",
     "@tailwindcss/typography": "^0.5.19",
-    "tailwindcss": "^4.2.2",
     "@wpnuxt/auth": "workspace:*",
     "@wpnuxt/blocks": "workspace:*",
     "@wpnuxt/core": "workspace:*",
     "nuxt": "^4.4.2",
     "nuxt-easy-lightbox": "^1.1.0",
+    "tailwindcss": "^4.2.4",
     "vue-json-pretty": "^2.6.0"
   },
   "devDependencies": {
     "@iconify-json/logos": "^1.2.11",
     "@iconify-json/lucide": "^1.2.102",
-    "@iconify-json/simple-icons": "^1.2.78",
+    "@iconify-json/simple-icons": "^1.2.79",
     "@iconify-json/svg-spinners": "^1.2.4",
-    "vue-tsc": "^3.2.6"
+    "vue-tsc": "^3.2.7"
   }
 }

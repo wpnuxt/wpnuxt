@@ -11,7 +11,7 @@
     "nuxt": "4.0.0"
   },
   "devDependencies": {
-    "@nuxt/cli": "3.32.0",
-    "vue-tsc": "^3.2.6"
+    "@nuxt/cli": "3.34.0",
+    "vue-tsc": "^3.2.7"
   }
 }

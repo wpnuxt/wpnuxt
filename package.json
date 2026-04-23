@@ -24,8 +24,8 @@
     "@nuxt/eslint-config": "^1.15.2",
     "@release-it/bumper": "^7.0.5",
     "@release-it/conventional-changelog": "^10.0.6",
-    "eslint": "^10.2.0",
-    "release-it": "^19.2.4"
+    "eslint": "^10.2.1",
+    "release-it": "^20.0.0"
   },
   "packageManager": "pnpm@10.33.0",
   "engines": {
@@ -37,7 +37,10 @@
   "pnpm": {
     "overrides": {
       "typescript": "^5.9.3",
-      "listhen@1.9.1>crossws": "0.4.4"
+      "listhen@1.9.1>crossws": "0.4.4",
+      "nuxt": "^4.4.2",
+      "@nuxt/kit": "^4.4.2",
+      "@nuxt/schema": "^4.4.2"
     }
   }
 }
