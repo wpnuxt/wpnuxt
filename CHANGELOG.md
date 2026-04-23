@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.3.0](https://github.com/wpnuxt/wpnuxt/compare/v2.2.2...v2.3.0) (2026-04-23)
+
+### Features
+
+* **core:** auto-generate fragments + queries for Custom Post Types ([#268](https://github.com/wpnuxt/wpnuxt/issues/268)) ([606abf3](https://github.com/wpnuxt/wpnuxt/commit/606abf3bfc9a94da457a7431dbb3e813d5268a89)), closes [#246](https://github.com/wpnuxt/wpnuxt/issues/246) [#246](https://github.com/wpnuxt/wpnuxt/issues/246)
+* **core:** emit wpnuxt:query hook for runtime telemetry ([#266](https://github.com/wpnuxt/wpnuxt/issues/266)) ([7650244](https://github.com/wpnuxt/wpnuxt/commit/7650244594c2d3977e8fa0334b54f2376c22472c)), closes [#263](https://github.com/wpnuxt/wpnuxt/issues/263)
+
+### Refactoring
+
+* **core:** generate composable types via TypeScript AST with schema validation ([#267](https://github.com/wpnuxt/wpnuxt/issues/267)) ([7a3fd9c](https://github.com/wpnuxt/wpnuxt/commit/7a3fd9c595c0b1ff01a2b2807b41342f0d40f176)), closes [#264](https://github.com/wpnuxt/wpnuxt/issues/264)
+* **core:** introduce internal GraphQL client wrapper ([#265](https://github.com/wpnuxt/wpnuxt/issues/265)) ([8823f10](https://github.com/wpnuxt/wpnuxt/commit/8823f107e5ff8936cfa5a9f13a2a410f7b178b9d)), closes [#262](https://github.com/wpnuxt/wpnuxt/issues/262)
+
+### Documentation
+
+* note Twenty Twenty-One is the last classic default theme ([#261](https://github.com/wpnuxt/wpnuxt/issues/261)) ([54334fb](https://github.com/wpnuxt/wpnuxt/commit/54334fb97c5915e795765f4d24d9f4d5a7e2d8d8))
+
+### Maintenance
+
+* **deps:** bump dependencies and consolidate Nuxt resolution ([121fb59](https://github.com/wpnuxt/wpnuxt/commit/121fb5954794f2f5ce8e0188fbe0b008c3b76e17))
+
 ## [2.2.2](https://github.com/wpnuxt/wpnuxt/compare/v2.2.1...v2.2.2) (2026-04-14)
 
 ### Features
