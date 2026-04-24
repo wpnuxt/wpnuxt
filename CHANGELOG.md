@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/wpnuxt/wpnuxt/compare/v2.3.0...v2.3.1) (2026-04-24)
+
+### Bug Fixes
+
+* **core:** distinguish introspection-disabled from outdated WPGraphQL ([#260](https://github.com/wpnuxt/wpnuxt/issues/260)) ([#272](https://github.com/wpnuxt/wpnuxt/issues/272)) ([1a64a70](https://github.com/wpnuxt/wpnuxt/commit/1a64a7067aa6dfa7c0dc0380f8d55ee3e0312c08))
+* **core:** import useRoute from vue-router in clientOptions ([#269](https://github.com/wpnuxt/wpnuxt/issues/269)) ([#271](https://github.com/wpnuxt/wpnuxt/issues/271)) ([1a67dd7](https://github.com/wpnuxt/wpnuxt/commit/1a67dd7d79cb90c0e1450299ea2eaeb0143bc685))
+
 ## [2.3.0](https://github.com/wpnuxt/wpnuxt/compare/v2.2.2...v2.3.0) (2026-04-23)
 
 ### Features
