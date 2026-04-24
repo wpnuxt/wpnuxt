@@ -205,7 +205,33 @@ async function checkWPGraphQLVersion(
     if (!response.ok) return // Skip check if request fails — endpoint validation already handles this
 
     const data = await response.json()
-    const fields: Array<{ name: string }> = data?.data?.__type?.fields || []
+
+    // Detect "Public Introspection disabled" responses from WPGraphQL so we
+    // don't misreport them as an outdated plugin version.
+    const errorMessage: string = data?.errors?.[0]?.message || ''
+    if (/introspection/i.test(errorMessage)) {
+      throw new Error(
+        `[wpnuxt:core] WPGraphQL Public Introspection is disabled on this endpoint.
+
+URL: ${fullUrl}
+
+WPNuxt needs introspection to validate the schema and generate types.
+
+To fix:
+- Enable "Enable Public Introspection" under WPGraphQL → Settings in the WordPress admin.
+- Or provide authenticated credentials that are permitted to introspect the schema.
+
+WPGraphQL error: ${errorMessage}`
+      )
+    }
+
+    // If __type is missing without an introspection error, we can't reliably
+    // tell whether the plugin is outdated or introspection is otherwise
+    // blocked — skip rather than surface a misleading "too old" message.
+    const type = data?.data?.__type
+    if (!type) return
+
+    const fields: Array<{ name: string }> = type.fields || []
     const hasFilePath = fields.some(f => f.name === 'filePath')
 
     if (!hasFilePath) {
