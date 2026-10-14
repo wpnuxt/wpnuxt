@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url'
 import { describe, it, expect } from 'vitest'
-import { setup, $fetch } from '@nuxt/test-utils/e2e'
+import { setup, $fetch, useTestContext } from '@nuxt/test-utils/e2e'
 
 describe('ssr', async () => {
   await setup({
@@ -11,5 +11,10 @@ describe('ssr', async () => {
     // Get response to a server-rendered page with `$fetch`.
     const html = await $fetch('/')
     expect(html).toContain('<div>basic</div>')
+  })
+
+  it('names the query route cache so revalidate can purge it', () => {
+    const { nuxt } = useTestContext()
+    expect(nuxt!.options.nitro.routeRules?.['/api/wpnuxt/query/**']?.cache).toMatchObject({ name: 'wpnuxt' })
   })
 })

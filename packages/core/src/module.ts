@@ -189,9 +189,11 @@ export default defineNuxtModule<WPNuxtConfig>({
         }
         logger.debug(`Vercel CDN caching enabled for GraphQL queries (s-maxage: ${maxAge}s, SWR: ${swr})`)
       } else {
-        // On self-hosted (Node.js), use Nitro's built-in cachedEventHandler
+        // On self-hosted (Node.js), use Nitro's built-in cachedEventHandler.
+        // The name makes entries land under cache:nitro:routes:wpnuxt:*, which the revalidate endpoint purges.
         nitroOptions.nitro.routeRules['/api/wpnuxt/query/**'] = {
           cache: {
+            name: 'wpnuxt',
             maxAge,
             swr
           }
