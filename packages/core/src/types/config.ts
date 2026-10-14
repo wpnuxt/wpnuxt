@@ -131,7 +131,7 @@ export interface WPNuxtConfig {
      * When set, WPNuxt registers a POST endpoint at `/api/_wpnuxt/revalidate`
      * that WordPress can call to purge all cached GraphQL responses immediately.
      *
-     * On self-hosted (Node.js), purges Nitro's internal handler cache.
+     * On self-hosted (Node.js), purges Nitro's server-side route cache.
      * On Vercel, also purges the CDN cache when `VERCEL_TOKEN` and
      * `VERCEL_PROJECT_ID` environment variables are set.
      *

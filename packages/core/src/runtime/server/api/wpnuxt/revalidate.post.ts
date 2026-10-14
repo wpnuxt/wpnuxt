@@ -16,11 +16,15 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, statusMessage: 'Invalid secret' })
   }
 
-  // Purge Nitro's internal handler cache (works on Node.js/self-hosted)
-  const storage = useStorage('cache:nitro:handlers')
-  const keys: string[] = await storage.getKeys()
-  const wpnuxtKeys = keys.filter(k => k.includes('wpnuxt'))
-  await Promise.all(wpnuxtKeys.map(key => storage.removeItem(key)))
+  // Purge Nitro's server cache (works on Node.js/self-hosted).
+  // The /api/wpnuxt/query/** route rule caches under nitro:routes with name 'wpnuxt' (see module.ts).
+  const purgedPerGroup = await Promise.all(['cache:nitro:routes', 'cache:nitro:handlers'].map(async (base) => {
+    const storage = useStorage(base)
+    const keys: string[] = await storage.getKeys()
+    const wpnuxtKeys = keys.filter(k => k.includes('wpnuxt'))
+    await Promise.all(wpnuxtKeys.map(key => storage.removeItem(key)))
+    return wpnuxtKeys.length
+  }))
 
   // Purge Vercel CDN cache if running on Vercel
   // Uses the cache tag invalidation API — responses are tagged with 'wpnuxt' via Vercel-Cache-Tag header
@@ -45,7 +49,7 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const purged = wpnuxtKeys.length
+  const purged = purgedPerGroup.reduce((sum, count) => sum + count, 0)
   logger.info(`Cache revalidated: purged ${purged} Nitro entries${vercelPurged ? ', Vercel CDN cache purged' : ''}`)
 
   return { success: true, purged, vercelPurged }
