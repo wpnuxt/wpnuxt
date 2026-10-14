@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.4.1](https://github.com/wpnuxt/wpnuxt/compare/v2.4.0...v2.4.1) (2026-10-14)
+
+### Bug Fixes
+
+* **core:** purge the Nitro route cache on revalidate ([f081154](https://github.com/wpnuxt/wpnuxt/commit/f081154326e3bbd8250be8c63128240df496ac06)), closes [#304](https://github.com/wpnuxt/wpnuxt/issues/304)
+
 ## [2.4.0](https://github.com/wpnuxt/wpnuxt/compare/v2.3.3...v2.4.0) (2026-09-07)
 
 ### Features
