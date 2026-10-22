@@ -19,7 +19,7 @@
     "@wpnuxt/auth": "workspace:*",
     "@wpnuxt/blocks": "workspace:*",
     "@wpnuxt/core": "workspace:*",
-    "nuxt": "^4.5.2",
+    "nuxt": "^4.6.2",
     "nuxt-easy-lightbox": "^1.1.0",
     "tailwindcss": "^4.3.3",
     "vue-json-pretty": "^2.6.0"

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest'
-import type { ConsolaInstance } from 'consola'
+import type { NuxtLogger } from '@nuxt/kit'
 import { mkdirSync, writeFileSync, readFileSync, existsSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import { createResolver } from '@nuxt/kit'
@@ -44,7 +44,7 @@ function runMergeQueriesWithWarnings(contributedFolders: string[] = []) {
 }
 
 describe('mergeQueries', () => {
-  let logger: ConsolaInstance
+  let logger: NuxtLogger
 
   beforeAll(() => {
     logger = initLogger(false)

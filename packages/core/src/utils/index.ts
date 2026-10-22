@@ -2,8 +2,7 @@ import { existsSync, cpSync, mkdirSync, promises as fsp, readdirSync, statSync }
 import { rename, writeFile } from 'node:fs/promises'
 import { relative, join } from 'node:path'
 import { createResolver, useLogger } from '@nuxt/kit'
-import type { Resolver } from '@nuxt/kit'
-import type { ConsolaInstance } from 'consola'
+import type { Resolver, NuxtLogger } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
 import type { WPNuxtConfig } from '../types/config'
 import { discoverCpts } from './cptDiscovery'
@@ -69,13 +68,13 @@ export function randHashGenerator(length = 12) {
     .padEnd(length, '0')
 }
 
-let loggerInstance: ConsolaInstance | undefined
+let loggerInstance: NuxtLogger | undefined
 
 export const initLogger = (debug: boolean) => {
   loggerInstance = useLogger('wpnuxt', { level: debug ? 4 : 3 })
   return loggerInstance
 }
-export function getLogger(): ConsolaInstance {
+export function getLogger(): NuxtLogger {
   return loggerInstance!
 }
 
@@ -185,7 +184,7 @@ export interface ContentTypeFragment {
 export async function addCustomFragmentsToNodeQuery(
   queryOutputPath: string,
   userQueryPath: string,
-  logger: ConsolaInstance,
+  logger: NuxtLogger,
   preDiscovered: ContentTypeFragment[] = []
 ): Promise<void> {
   const byType = new Map<string, ContentTypeFragment>()

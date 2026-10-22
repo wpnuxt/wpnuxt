@@ -12,7 +12,7 @@ import { existsSync } from 'node:fs'
 import { mkdir, readFile } from 'node:fs/promises'
 import { join, relative } from 'node:path'
 import { consola } from 'consola'
-import type { ConsolaInstance } from 'consola'
+import type { NuxtLogger } from '@nuxt/kit'
 import { useLogger } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
 import { atomicWriteFile } from './utils/index'
@@ -71,7 +71,7 @@ export async function runInstall(nuxt: Nuxt): Promise<void> {
  * @param results - Array of SetupResult from each setup function
  * @param logger - Consola logger instance
  */
-function displayInstallSummary(results: SetupResult[], logger: ConsolaInstance): void {
+function displayInstallSummary(results: SetupResult[], logger: NuxtLogger): void {
   const successes = results.filter(r => r.success && !r.skipped)
   const skipped = results.filter(r => r.skipped)
   const failures = results.filter(r => !r.success)
@@ -169,7 +169,7 @@ async function checkExistingEnvConfig(nuxt: Nuxt, envPath: string): Promise<{
  * @param logger - Consola logger instance
  * @returns SetupResult indicating success/failure/skip status
  */
-async function setupEnvFiles(nuxt: Nuxt, logger: ConsolaInstance): Promise<SetupResult> {
+async function setupEnvFiles(nuxt: Nuxt, logger: NuxtLogger): Promise<SetupResult> {
   const envPath = join(nuxt.options.rootDir, '.env')
   const envExamplePath = join(nuxt.options.rootDir, '.env.example')
 
@@ -249,7 +249,7 @@ const MCP_CONFIG = {
   }
 }
 
-async function setupMcpConfig(nuxt: Nuxt, logger: ConsolaInstance): Promise<SetupResult> {
+async function setupMcpConfig(nuxt: Nuxt, logger: NuxtLogger): Promise<SetupResult> {
   const mcpPath = join(nuxt.options.rootDir, '.mcp.json')
 
   try {
@@ -304,7 +304,7 @@ async function setupMcpConfig(nuxt: Nuxt, logger: ConsolaInstance): Promise<Setu
  * @param logger - Consola logger instance
  * @returns SetupResult indicating success/failure/skip status
  */
-async function setupGitignore(nuxt: Nuxt, logger: ConsolaInstance): Promise<SetupResult> {
+async function setupGitignore(nuxt: Nuxt, logger: NuxtLogger): Promise<SetupResult> {
   const gitignorePath = join(nuxt.options.rootDir, '.gitignore')
 
   try {
@@ -353,7 +353,7 @@ async function setupGitignore(nuxt: Nuxt, logger: ConsolaInstance): Promise<Setu
  * @param logger - Consola logger instance
  * @returns SetupResult indicating success/failure/skip status
  */
-async function setupQueriesFolder(nuxt: Nuxt, logger: ConsolaInstance): Promise<SetupResult> {
+async function setupQueriesFolder(nuxt: Nuxt, logger: NuxtLogger): Promise<SetupResult> {
   const queriesPath = join(nuxt.options.srcDir || nuxt.options.rootDir, 'extend', 'queries')
   const displayPath = relative(nuxt.options.rootDir, queriesPath) || 'extend/queries'
 

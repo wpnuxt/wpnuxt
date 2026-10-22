@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url'
 import { describe, it, expect } from 'vitest'
-import { setup, $fetch } from '@nuxt/test-utils/e2e'
+import { setup, $fetch, fetch } from '@nuxt/test-utils/e2e'
 
 describe('auth e2e', async () => {
   await setup({
@@ -155,9 +155,9 @@ describe('auth e2e', async () => {
       const pages = ['/', '/login', '/protected', '/user-profile']
 
       for (const page of pages) {
-        const html = await $fetch(page)
-        expect(html).toContain('<!DOCTYPE html>')
-        expect(html).not.toContain('500')
+        const res = await fetch(page)
+        expect(res.status).toBe(200)
+        expect(await res.text()).toContain('<!DOCTYPE html>')
       }
     })
   })
