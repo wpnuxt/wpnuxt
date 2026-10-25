@@ -3454,6 +3454,11 @@ type CoreButtonAttributes implements BlockWithSupportsAnchor {
   text: String
 
   """
+  The &quot;textAlign&quot; field on the &quot;CoreButtonAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
   The &quot;textColor&quot; field on the &quot;CoreButtonAttributes&quot; block or block attributes
   """
   textColor: String
@@ -4278,6 +4283,11 @@ type CoreCommentAuthorNameAttributes implements BlockWithSupportsAnchor {
   style: BlockAttributesObject
 
   """
+  The &quot;textAlign&quot; field on the &quot;CoreCommentAuthorNameAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
   The &quot;textColor&quot; field on the &quot;CoreCommentAuthorNameAttributes&quot; block or block attributes
   """
   textColor: String
@@ -4373,6 +4383,11 @@ type CoreCommentContentAttributes implements BlockWithSupportsAnchor {
   The &quot;style&quot; field on the &quot;CoreCommentContentAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CoreCommentContentAttributes&quot; block or block attributes
+  """
+  textAlign: String
 
   """
   The &quot;textColor&quot; field on the &quot;CoreCommentContentAttributes&quot; block or block attributes
@@ -4482,6 +4497,11 @@ type CoreCommentDateAttributes implements BlockWithSupportsAnchor {
   style: BlockAttributesObject
 
   """
+  The &quot;textAlign&quot; field on the &quot;CoreCommentDateAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
   The &quot;textColor&quot; field on the &quot;CoreCommentDateAttributes&quot; block or block attributes
   """
   textColor: String
@@ -4582,6 +4602,11 @@ type CoreCommentEditLinkAttributes implements BlockWithSupportsAnchor {
   The &quot;style&quot; field on the &quot;CoreCommentEditLinkAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CoreCommentEditLinkAttributes&quot; block or block attributes
+  """
+  textAlign: String
 }
 
 """A block used for editing the site"""
@@ -4674,6 +4699,11 @@ type CoreCommentReplyLinkAttributes implements BlockWithSupportsAnchor {
   The &quot;style&quot; field on the &quot;CoreCommentReplyLinkAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CoreCommentReplyLinkAttributes&quot; block or block attributes
+  """
+  textAlign: String
 }
 
 """A block used for editing the site"""
@@ -5368,6 +5398,11 @@ type CoreCommentsTitleAttributes implements BlockWithSupportsAnchor {
   The &quot;style&quot; field on the &quot;CoreCommentsTitleAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CoreCommentsTitleAttributes&quot; block or block attributes
+  """
+  textAlign: String
 
   """
   The &quot;textColor&quot; field on the &quot;CoreCommentsTitleAttributes&quot; block or block attributes
@@ -6548,6 +6583,11 @@ type CoreHeadingAttributes implements BlockWithSupportsAnchor {
   The &quot;style&quot; field on the &quot;CoreHeadingAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CoreHeadingAttributes&quot; block or block attributes
+  """
+  textAlign: String
 
   """
   The &quot;textColor&quot; field on the &quot;CoreHeadingAttributes&quot; block or block attributes
@@ -9029,6 +9069,11 @@ type CoreParagraphAttributes implements BlockWithSupportsAnchor {
   style: BlockAttributesObject
 
   """
+  The &quot;textAlign&quot; field on the &quot;CoreParagraphAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
   The &quot;textColor&quot; field on the &quot;CoreParagraphAttributes&quot; block or block attributes
   """
   textColor: String
@@ -9598,6 +9643,11 @@ type CorePostAuthorBiographyAttributes implements BlockWithSupportsAnchor {
   style: BlockAttributesObject
 
   """
+  The &quot;textAlign&quot; field on the &quot;CorePostAuthorBiographyAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
   The &quot;textColor&quot; field on the &quot;CorePostAuthorBiographyAttributes&quot; block or block attributes
   """
   textColor: String
@@ -9703,6 +9753,11 @@ type CorePostAuthorNameAttributes implements BlockWithSupportsAnchor {
   The &quot;style&quot; field on the &quot;CorePostAuthorNameAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CorePostAuthorNameAttributes&quot; block or block attributes
+  """
+  textAlign: String
 
   """
   The &quot;textColor&quot; field on the &quot;CorePostAuthorNameAttributes&quot; block or block attributes
@@ -9891,6 +9946,11 @@ type CorePostCommentsCountAttributes implements BlockWithSupportsAnchor {
   style: BlockAttributesObject
 
   """
+  The &quot;textAlign&quot; field on the &quot;CorePostCommentsCountAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
   The &quot;textColor&quot; field on the &quot;CorePostCommentsCountAttributes&quot; block or block attributes
   """
   textColor: String
@@ -9983,6 +10043,11 @@ type CorePostCommentsFormAttributes implements BlockWithSupportsAnchor {
   style: BlockAttributesObject
 
   """
+  The &quot;textAlign&quot; field on the &quot;CorePostCommentsFormAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
   The &quot;textColor&quot; field on the &quot;CorePostCommentsFormAttributes&quot; block or block attributes
   """
   textColor: String
@@ -10073,6 +10138,11 @@ type CorePostCommentsLinkAttributes implements BlockWithSupportsAnchor {
   The &quot;style&quot; field on the &quot;CorePostCommentsLinkAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CorePostCommentsLinkAttributes&quot; block or block attributes
+  """
+  textAlign: String
 }
 
 """A block used for editing the site"""
@@ -10294,6 +10364,11 @@ type CorePostDateAttributes implements BlockWithSupportsAnchor {
   style: BlockAttributesObject
 
   """
+  The &quot;textAlign&quot; field on the &quot;CorePostDateAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
   The &quot;textColor&quot; field on the &quot;CorePostDateAttributes&quot; block or block attributes
   """
   textColor: String
@@ -10404,6 +10479,11 @@ type CorePostExcerptAttributes implements BlockWithSupportsAnchor {
   The &quot;style&quot; field on the &quot;CorePostExcerptAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CorePostExcerptAttributes&quot; block or block attributes
+  """
+  textAlign: String
 
   """
   The &quot;textColor&quot; field on the &quot;CorePostExcerptAttributes&quot; block or block attributes
@@ -10665,6 +10745,11 @@ type CorePostNavigationLinkAttributes implements BlockWithSupportsAnchor {
   taxonomy: String!
 
   """
+  The &quot;textAlign&quot; field on the &quot;CorePostNavigationLinkAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
   The &quot;textColor&quot; field on the &quot;CorePostNavigationLinkAttributes&quot; block or block attributes
   """
   textColor: String
@@ -10922,6 +11007,11 @@ type CorePostTermsAttributes implements BlockWithSupportsAnchor {
   term: String
 
   """
+  The &quot;textAlign&quot; field on the &quot;CorePostTermsAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
   The &quot;textColor&quot; field on the &quot;CorePostTermsAttributes&quot; block or block attributes
   """
   textColor: String
@@ -11086,6 +11176,11 @@ type CorePostTimeToReadAttributes implements BlockWithSupportsAnchor {
   style: BlockAttributesObject
 
   """
+  The &quot;textAlign&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
   The &quot;textColor&quot; field on the &quot;CorePostTimeToReadAttributes&quot; block or block attributes
   """
   textColor: String
@@ -11216,6 +11311,11 @@ type CorePostTitleAttributes implements BlockWithSupportsAnchor {
   The &quot;style&quot; field on the &quot;CorePostTitleAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CorePostTitleAttributes&quot; block or block attributes
+  """
+  textAlign: String
 
   """
   The &quot;textColor&quot; field on the &quot;CorePostTitleAttributes&quot; block or block attributes
@@ -11425,6 +11525,11 @@ type CorePullquoteAttributes implements BlockWithSupportsAnchor {
   The &quot;style&quot; field on the &quot;CorePullquoteAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CorePullquoteAttributes&quot; block or block attributes
+  """
+  textAlign: String
 
   """
   The &quot;textColor&quot; field on the &quot;CorePullquoteAttributes&quot; block or block attributes
@@ -12139,6 +12244,11 @@ type CoreQueryTitleAttributes implements BlockWithSupportsAnchor {
   The &quot;style&quot; field on the &quot;CoreQueryTitleAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CoreQueryTitleAttributes&quot; block or block attributes
+  """
+  textAlign: String
 
   """
   The &quot;textColor&quot; field on the &quot;CoreQueryTitleAttributes&quot; block or block attributes
@@ -13136,6 +13246,11 @@ type CoreSiteTaglineAttributes implements BlockWithSupportsAnchor {
   style: BlockAttributesObject
 
   """
+  The &quot;textAlign&quot; field on the &quot;CoreSiteTaglineAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
   The &quot;textColor&quot; field on the &quot;CoreSiteTaglineAttributes&quot; block or block attributes
   """
   textColor: String
@@ -13256,6 +13371,11 @@ type CoreSiteTitleAttributes implements BlockWithSupportsAnchor {
   The &quot;style&quot; field on the &quot;CoreSiteTitleAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CoreSiteTitleAttributes&quot; block or block attributes
+  """
+  textAlign: String
 
   """
   The &quot;textColor&quot; field on the &quot;CoreSiteTitleAttributes&quot; block or block attributes
@@ -14608,6 +14728,11 @@ type CoreTermDescriptionAttributes implements BlockWithSupportsAnchor {
   style: BlockAttributesObject
 
   """
+  The &quot;textAlign&quot; field on the &quot;CoreTermDescriptionAttributes&quot; block or block attributes
+  """
+  textAlign: String
+
+  """
   The &quot;textColor&quot; field on the &quot;CoreTermDescriptionAttributes&quot; block or block attributes
   """
   textColor: String
@@ -14723,6 +14848,11 @@ type CoreTermNameAttributes implements BlockWithSupportsAnchor {
   The &quot;style&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
+  """
+  textAlign: String
 
   """
   The &quot;textColor&quot; field on the &quot;CoreTermNameAttributes&quot; block or block attributes
@@ -15103,6 +15233,11 @@ type CoreVerseAttributes implements BlockWithSupportsAnchor {
   The &quot;style&quot; field on the &quot;CoreVerseAttributes&quot; block or block attributes
   """
   style: BlockAttributesObject
+
+  """
+  The &quot;textAlign&quot; field on the &quot;CoreVerseAttributes&quot; block or block attributes
+  """
+  textAlign: String
 
   """
   The &quot;textColor&quot; field on the &quot;CoreVerseAttributes&quot; block or block attributes
@@ -29739,8 +29874,15 @@ type Taxonomy implements Node {
   """The display name of the taxonomy."""
   name: String
 
-  """Whether the taxonomy is publicly queryable"""
+  """
+  Whether the taxonomy is intended for public use. This is a broad statement of intent rather than a behavior of its own: the more specific settings, such as publiclyQueryable, showUi and showInNavMenus, follow it unless they are given their own value.
+  """
   public: Boolean
+
+  """
+  Whether terms in this taxonomy can be queried from the front end of the site.
+  """
+  publiclyQueryable: Boolean
 
   """
   Name of content type to display in REST API &quot;wp/v2&quot; namespace.
