@@ -215,12 +215,17 @@ export default defineNuxtModule<WPNuxtConfig>({
     }
 
     // Proxy /wp-content/uploads/ to WordPress for plain <img> tags and v-sanitize-html content
+    // Upstream redirects are passed to the client instead of followed: a headless redirect plugin
+    // (e.g. FaustWP) can point a missing upload back at the frontend, which would loop through this proxy
     {
       const nitroOptions = nuxt.options as unknown as NuxtOptionsWithNitro
       nitroOptions.nitro = nitroOptions.nitro || {}
       nitroOptions.nitro.routeRules = nitroOptions.nitro.routeRules || {}
       nitroOptions.nitro.routeRules['/wp-content/uploads/**'] = {
-        proxy: `${wpNuxtConfig.wordpressUrl}/wp-content/uploads/**`
+        proxy: {
+          to: `${wpNuxtConfig.wordpressUrl}/wp-content/uploads/**`,
+          fetchOptions: { redirect: 'manual' }
+        }
       }
       logger.debug(`Configured WordPress uploads proxy: /wp-content/uploads/** → ${wpNuxtConfig.wordpressUrl}/wp-content/uploads/**`)
     }
