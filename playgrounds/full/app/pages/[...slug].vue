@@ -3,7 +3,7 @@ const route = useRoute()
 
 const { data: node, pending, refresh, clear } = await useNodeByUri(
   { uri: route.path },
-  { watch: [() => route.path] }
+  { watch: [() => route.path], throwOnNotFound: true }
 )
 
 // nodeByUri can also resolve to a Category/Tag archive, which this page

@@ -3,7 +3,7 @@ const route = useRoute()
 
 const { data: node, pending } = await useNodeByUri(
   { uri: route.path },
-  { watch: [() => route.path] }
+  { watch: [() => route.path], throwOnNotFound: true }
 )
 </script>
 

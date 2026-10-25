@@ -3,7 +3,7 @@ const route = useRoute()
 // Use route.path directly - it's already normalized and consistent between prerender and hydration
 const uri = route.path.endsWith('/') ? route.path : `${route.path}/`
 
-const { data: node } = await useNodeByUri({ uri })
+const { data: node } = await useNodeByUri({ uri }, { throwOnNotFound: true })
 
 // nodeByUri can also resolve to a Category/Tag archive, which has `name`
 // instead of `title` and no `content` field.

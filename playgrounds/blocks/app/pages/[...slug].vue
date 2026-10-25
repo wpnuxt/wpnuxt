@@ -3,7 +3,7 @@ const route = useRoute()
 
 const { data: page, pending } = await usePageByUri(
   { uri: route.path },
-  { watch: [() => route.path] }
+  { watch: [() => route.path], throwOnNotFound: true }
 )
 </script>
 
