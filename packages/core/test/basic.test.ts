@@ -18,10 +18,8 @@ describe('ssr', async () => {
     expect(nuxt!.options.nitro.routeRules?.['/api/wpnuxt/query/**']?.cache).toMatchObject({ name: 'wpnuxt' })
   })
 
-  it('passes upstream redirects of the uploads proxy through instead of following them', () => {
+  it('registers the uploads proxy handler', () => {
     const { nuxt } = useTestContext()
-    expect(nuxt!.options.nitro.routeRules?.['/wp-content/uploads/**']?.proxy).toMatchObject({
-      fetchOptions: { redirect: 'manual' }
-    })
+    expect(nuxt!.options.serverHandlers).toContainEqual(expect.objectContaining({ route: '/wp-content/uploads/**' }))
   })
 })

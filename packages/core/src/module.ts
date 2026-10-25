@@ -214,19 +214,14 @@ export default defineNuxtModule<WPNuxtConfig>({
       logger.info('Cache revalidation endpoint registered at POST /api/_wpnuxt/revalidate')
     }
 
-    // Proxy /wp-content/uploads/ to WordPress for plain <img> tags and v-sanitize-html content
-    // Upstream redirects are passed to the client instead of followed: a headless redirect plugin
-    // (e.g. FaustWP) can point a missing upload back at the frontend, which would loop through this proxy
+    // Proxy /wp-content/uploads/ to WordPress for plain <img> tags and v-sanitize-html content.
+    // A handler instead of a proxy route rule, so a redirect back to the requested URL becomes a 404.
+    // User route rules for these paths still take precedence (Nitro applies them before handlers).
     {
-      const nitroOptions = nuxt.options as unknown as NuxtOptionsWithNitro
-      nitroOptions.nitro = nitroOptions.nitro || {}
-      nitroOptions.nitro.routeRules = nitroOptions.nitro.routeRules || {}
-      nitroOptions.nitro.routeRules['/wp-content/uploads/**'] = {
-        proxy: {
-          to: `${wpNuxtConfig.wordpressUrl}/wp-content/uploads/**`,
-          fetchOptions: { redirect: 'manual' }
-        }
-      }
+      addServerHandler({
+        route: '/wp-content/uploads/**',
+        handler: resolver.resolve('./runtime/server/routes/uploads')
+      })
       logger.debug(`Configured WordPress uploads proxy: /wp-content/uploads/** → ${wpNuxtConfig.wordpressUrl}/wp-content/uploads/**`)
     }
 
