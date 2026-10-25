@@ -261,6 +261,8 @@ export async function prepareContext(ctx: WPNuxtContext) {
       '  retryDelay?: number',
       '  /** Request timeout in milliseconds. Default: 0 (disabled). Set to e.g. 30000 for 30 seconds. */',
       '  timeout?: number',
+      '  /** Throw a 404 error when the query succeeds but returns no content (for single-node lookups in catch-all routes). Default: false */',
+      '  throwOnNotFound?: boolean',
       '  /** Additional options to pass to useAsyncData */',
       '  [key: string]: unknown',
       '}',

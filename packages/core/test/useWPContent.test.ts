@@ -35,6 +35,7 @@ describe('useWPContent', () => {
   let mockUseAsyncGraphqlQuery: ReturnType<typeof vi.fn>
   let mockWatch: ReturnType<typeof vi.fn>
   let mockRef: ReturnType<typeof vi.fn>
+  let mockShowError: ReturnType<typeof vi.fn>
 
   beforeEach(async () => {
     vi.resetModules()
@@ -47,6 +48,7 @@ describe('useWPContent', () => {
     })
 
     mockWatch = vi.fn()
+    mockShowError = vi.fn()
 
     mockUseAsyncGraphqlQuery = vi.fn(() => {
       const result = {
@@ -76,6 +78,8 @@ describe('useWPContent', () => {
       }),
       ref: mockRef,
       watch: mockWatch,
+      createError: vi.fn((input: { statusCode: number, statusMessage: string, fatal?: boolean }) => Object.assign(new Error(input.statusMessage), input)),
+      showError: mockShowError,
       toValue: vi.fn(val => val),
       useAsyncGraphqlQuery: mockUseAsyncGraphqlQuery,
       useGraphqlMutation: vi.fn(),
@@ -432,6 +436,82 @@ describe('useWPContent', () => {
         $graphqlCache: { get: (key: string) => key === 'testKey' ? cachedValue : undefined }
       }
       expect(getCachedData('testKey', mockApp, { cause: 'initial' })).toBe(cachedValue)
+    })
+  })
+
+  describe('throwOnNotFound', () => {
+    // Make the next query return the given response and error
+    const mockQueryResult = (response: unknown, error: unknown = null) => {
+      mockUseAsyncGraphqlQuery.mockImplementationOnce(() => {
+        const result = {
+          data: ref(response),
+          pending: ref(false),
+          refresh: vi.fn().mockResolvedValue(undefined),
+          execute: vi.fn().mockResolvedValue(undefined),
+          clear: vi.fn(),
+          error: ref(error),
+          status: ref(error ? 'error' : 'success'),
+          then: (fn?: (v: unknown) => unknown) => Promise.resolve().then(() => fn?.(result))
+        }
+        return result
+      })
+    }
+
+    it('should throw a 404 when the query returns no content', async () => {
+      const { useWPContent } = await import('../src/runtime/composables/useWPContent')
+      mockQueryResult({ data: { nodeByUri: null } })
+
+      await expect(useWPContent('NodeByUri', ['nodeByUri'], false, { uri: '/.env' }, { throwOnNotFound: true }))
+        .rejects.toMatchObject({ statusCode: 404, fatal: true })
+    })
+
+    it('should resolve when the query returns content', async () => {
+      const { useWPContent } = await import('../src/runtime/composables/useWPContent')
+      mockQueryResult({ data: { nodeByUri: { id: 'abc' } } })
+
+      const result = await useWPContent('NodeByUri', ['nodeByUri'], false, { uri: '/hello' }, { throwOnNotFound: true })
+
+      expect(result.data.value).toEqual({ id: 'abc' })
+    })
+
+    it('should not turn a fetch error into a 404', async () => {
+      const { useWPContent } = await import('../src/runtime/composables/useWPContent')
+      mockQueryResult(null, new Error('403 Forbidden'))
+
+      const result = await useWPContent('NodeByUri', ['nodeByUri'], false, { uri: '/hello' }, { throwOnNotFound: true })
+
+      expect(result.data.value).toBeUndefined()
+      expect(result.error.value).toBeInstanceOf(Error)
+    })
+
+    it('should not throw when the option is not set', async () => {
+      const { useWPContent } = await import('../src/runtime/composables/useWPContent')
+      mockQueryResult({ data: { nodeByUri: null } })
+
+      const result = await useWPContent('NodeByUri', ['nodeByUri'], false, { uri: '/.env' })
+
+      expect(result.data.value).toBeFalsy()
+    })
+
+    it('should not pass the option to useAsyncGraphqlQuery', async () => {
+      const { useWPContent } = await import('../src/runtime/composables/useWPContent')
+
+      useWPContent('Posts', ['posts', 'nodes'], false, {}, { throwOnNotFound: true })
+
+      expect(getCallArgs().options).not.toHaveProperty('throwOnNotFound')
+    })
+
+    it('should show a 404 when a client re-fetch returns no content', async () => {
+      const { useWPContent } = await import('../src/runtime/composables/useWPContent')
+      mockQueryResult({ data: { nodeByUri: null } })
+
+      const result = useWPContent('NodeByUri', ['nodeByUri'], false, { uri: '/.env' }, { throwOnNotFound: true })
+      // wpQuery also watches pending (for query hooks); ours is registered last
+      const pendingWatch = mockWatch.mock.calls.findLast(call => call[0] === result.pending)
+      expect(pendingWatch).toBeDefined()
+      pendingWatch![1](false)
+
+      expect(mockShowError).toHaveBeenCalledWith(expect.objectContaining({ statusCode: 404 }))
     })
   })
 })

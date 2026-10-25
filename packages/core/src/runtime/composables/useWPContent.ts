@@ -2,7 +2,7 @@ import { transformData, normalizeUriParam } from '../util/content'
 import type { Query } from '#nuxt-graphql-middleware/operation-types'
 import type { MaybeRefOrGetter, WatchSource, Ref } from 'vue'
 import type { NuxtApp } from 'nuxt/app'
-import { computed, ref, toValue, watch as vueWatch, useRuntimeConfig } from '#imports'
+import { computed, createError, ref, showError, toValue, watch as vueWatch, useRuntimeConfig } from '#imports'
 import { wpQuery } from '../internal/graphql-client'
 
 /** Extended NuxtApp with nuxt-graphql-middleware internals */
@@ -52,6 +52,12 @@ export interface WPContentOptions {
   retryDelay?: number
   /** Request timeout in milliseconds. Default: 0 (disabled). Set to e.g. 30000 for 30 seconds. */
   timeout?: number
+  /**
+   * Throw a 404 error when the query succeeds but returns no content. Default: false.
+   * Meant for single-node lookups in catch-all routes (e.g. `useNodeByUri`). Fetch errors
+   * are never turned into a 404. Await the composable so SSR responds with status 404.
+   */
+  throwOnNotFound?: boolean
   /** Additional options to pass to useAsyncData */
   [key: string]: unknown
 }
@@ -139,6 +145,7 @@ export const useWPContent = <T>(
     retry: retryOption,
     retryDelay: retryDelayOption,
     timeout: timeoutOption,
+    throwOnNotFound,
     ...restOptions
   } = options ?? {}
 
@@ -286,6 +293,20 @@ export const useWPContent = <T>(
     }
   })
 
+  const notFoundError = () => createError({ statusCode: 404, statusMessage: 'Page Not Found', fatal: true })
+  const isNotFound = () => !pending.value && !error.value && !transformedData.value
+
+  // Re-fetches in the same component instance (e.g. `watch: [() => route.path]`)
+  // don't pass through the awaited promise below, so show the error page here.
+  // Vue doesn't fire watchers during SSR, so this only acts on the client.
+  if (throwOnNotFound) {
+    vueWatch(pending, (isPending) => {
+      if (!isPending && isNotFound()) {
+        showError(notFoundError())
+      }
+    })
+  }
+
   const returnValue = {
     data: transformedData,
     pending,
@@ -306,8 +327,15 @@ export const useWPContent = <T>(
   // until data is fetched, matching useAsyncData behavior.
   // useAsyncGraphqlQuery returns a thenable (like useAsyncData) but the type doesn't expose .then
   const thenable = asyncResult as typeof asyncResult & PromiseLike<typeof asyncResult>
-  return Object.assign(
-    thenable.then(() => returnValue),
-    returnValue
-  )
+  const promise = thenable.then(() => {
+    if (throwOnNotFound && isNotFound()) {
+      throw notFoundError()
+    }
+    return returnValue
+  })
+  // Without `await` nobody handles the 404 rejection; keep it from surfacing as unhandled
+  if (throwOnNotFound) {
+    promise.then(undefined, () => {})
+  }
+  return Object.assign(promise, returnValue)
 }

@@ -5,7 +5,7 @@
  */
 
 import type { Ref, ComputedRef, Component, WatchSource, WatchCallback, WatchOptions } from 'vue'
-import type { NuxtApp } from 'nuxt/app'
+import type { NuxtApp, NuxtError } from 'nuxt/app'
 
 // Stub for #imports - Vue reactivity & lifecycle
 export function computed<T>(getter: () => T): ComputedRef<T>
@@ -26,6 +26,8 @@ export function useNuxtApp(): NuxtApp
 export function useRuntimeConfig(): Record<string, unknown>
 export function useRoute(): { path: string, params: Record<string, string>, query: Record<string, string> }
 export function navigateTo(to: string): Promise<void>
+export function createError(input: { statusCode: number, statusMessage?: string, fatal?: boolean }): NuxtError
+export function showError(error: NuxtError): NuxtError
 
 // Stub for #imports - nuxt-graphql-middleware
 export function useAsyncGraphqlQuery<T = unknown>(
