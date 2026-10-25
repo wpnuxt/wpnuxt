@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.4.2](https://github.com/wpnuxt/wpnuxt/compare/v2.4.1...v2.4.2) (2026-10-25)
+
+### Features
+
+* **ci:** add demo deployment workflow to GitHub Actions ([016e664](https://github.com/wpnuxt/wpnuxt/commit/016e6648aa4a2889c0194b20e46564043e3c37bb))
+* **ci:** add GitHub Actions workflow for demo image build and deployment ([fc74104](https://github.com/wpnuxt/wpnuxt/commit/fc7410487e6c5539f0298ce09ac92505741b5600))
+* **core:** add throwOnNotFound option to return a real 404 ([0c422af](https://github.com/wpnuxt/wpnuxt/commit/0c422af77532cb57a6e6406e055db814da61da7d))
+* **graphql:** add textAlign field to multiple Core block attributes ([01aeb95](https://github.com/wpnuxt/wpnuxt/commit/01aeb951291fe2cc8d0577c4a4e502113a79f4de))
+
+### Maintenance
+
+* **ci:** remove demo workflow from GitHub Actions ([da1745c](https://github.com/wpnuxt/wpnuxt/commit/da1745cae75a10b1087c56cd9e334643b100a96b))
+* update dependencies to version 4.6.2 across multiple packages ([36e8729](https://github.com/wpnuxt/wpnuxt/commit/36e87297c349c6856ce7a6640aed63a75a033f7b))
+
 ## [2.4.1](https://github.com/wpnuxt/wpnuxt/compare/v2.4.0...v2.4.1) (2026-10-14)
 
 ### Bug Fixes
