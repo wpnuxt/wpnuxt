@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.4.3](https://github.com/wpnuxt/wpnuxt/compare/v2.4.2...v2.4.3) (2026-10-25)
+
+### Bug Fixes
+
+* **core:** don't follow upstream redirects in the uploads proxy ([c388271](https://github.com/wpnuxt/wpnuxt/commit/c3882719e821c25dace7694ace8e17afc24a9a09))
+* **core:** return 404 when an upload redirects back to itself ([022bc0d](https://github.com/wpnuxt/wpnuxt/commit/022bc0dd02f6014bb6d46b60d4160477c6b88150))
+
+### Maintenance
+
+* **playgrounds:** return a real 404 for unknown URIs ([8365c51](https://github.com/wpnuxt/wpnuxt/commit/8365c515e47f3c3593946b794551f27d89873a00))
+
 ## [2.4.2](https://github.com/wpnuxt/wpnuxt/compare/v2.4.1...v2.4.2) (2026-10-25)
 
 ### Features
