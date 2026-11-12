@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 env:
-  WPNUXT_WORDPRESS_URL: ${{ secrets.WPNUXT_WORDPRESS_URL }}
+  WPNUXT_WORDPRESS_URL: ${{ vars.WPNUXT_WORDPRESS_URL }}
 
 jobs:
   # Lint runs independently (no dev:prepare needed)
