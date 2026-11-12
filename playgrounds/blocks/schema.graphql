@@ -5,14 +5,14 @@ schema {
 
 """A Field Group managed by ACF"""
 interface AcfFieldGroup {
-  """The name of the field group"""
-  fieldGroupName: String @deprecated(reason: "Use __typename instead")
+  """The name of the GraphQL Type that represents this field group"""
+  fieldGroupName: String
 }
 
 """Fields associated with an ACF Field Group"""
 interface AcfFieldGroupFields {
-  """The name of the field group"""
-  fieldGroupName: String @deprecated(reason: "Use __typename instead")
+  """The name of the GraphQL Type that represents this field group"""
+  fieldGroupName: String
 }
 
 """The Headless Login authentication data."""
@@ -1126,7 +1126,9 @@ type CommentToCommentConnectionPageInfo implements CommentConnectionPageInfo & P
 
 """Arguments for filtering the CommentToCommentConnection connection"""
 input CommentToCommentConnectionWhereArgs {
-  """Comment author email address."""
+  """
+  Comment author email address. Only users who can moderate comments can filter by this; for other users it matches no comments.
+  """
   authorEmail: String
 
   """Array of author IDs to include comments for."""
@@ -1146,10 +1148,14 @@ input CommentToCommentConnectionWhereArgs {
   """
   commentNotIn: [ID]
 
-  """Include comments of a given type."""
+  """
+  Include comments of a given type. Notes are only returned to users who can edit them.
+  """
   commentType: String
 
-  """Include comments from a given array of comment types."""
+  """
+  Include comments from a given array of comment types. Notes are only returned to users who can edit them.
+  """
   commentTypeIn: [String]
 
   """Exclude comments from a given array of comment types."""
@@ -1164,10 +1170,14 @@ input CommentToCommentConnectionWhereArgs {
   """Array of author IDs *not* to retrieve comments for."""
   contentAuthorNotIn: [ID]
 
-  """Limit results to those affiliated with a given content object ID."""
+  """
+  Limit results to those affiliated with a given content object ID. For users who cannot moderate comments, content they cannot see matches no comments.
+  """
   contentId: ID
 
-  """Array of content object IDs to include affiliated comments for."""
+  """
+  Array of content object IDs to include affiliated comments for. For users who cannot moderate comments, content they cannot see is ignored.
+  """
   contentIdIn: [ID]
 
   """Array of content object IDs to exclude affiliated comments for."""
@@ -1180,7 +1190,7 @@ input CommentToCommentConnectionWhereArgs {
   contentParent: Int
 
   """
-  Array of content object statuses to retrieve affiliated comments for. Pass 'any' to match any value.
+  Array of content object statuses to retrieve affiliated comments for. Users who cannot moderate comments can only filter by published statuses: other statuses are ignored, and when none remain no comments are returned.
   """
   contentStatus: [PostStatusEnum]
 
@@ -1200,7 +1210,9 @@ input CommentToCommentConnectionWhereArgs {
   """The cardinality of the order of the connection"""
   order: OrderEnum
 
-  """Field to order the comments by."""
+  """
+  Field to order the comments by. Ordering by the author email, the author IP address or the user agent requires permission to moderate comments; for other users, comments are ordered by date instead.
+  """
   orderby: CommentsConnectionOrderbyEnum
 
   """Parent ID of comment to retrieve children of."""
@@ -1212,13 +1224,19 @@ input CommentToCommentConnectionWhereArgs {
   """Array of parent IDs of comments *not* to retrieve children for."""
   parentNotIn: [ID]
 
-  """Search term(s) to retrieve matching comments for."""
+  """
+  Search term(s) to retrieve matching comments for. For users who cannot moderate comments, only the comment content and the author name and URL are searched.
+  """
   search: String
 
-  """Comment status to limit results by."""
+  """
+  Comment status to limit results by. Users who cannot moderate comments can only filter by approved comments.
+  """
   status: String @deprecated(reason: "Deprecated in favor of statusIn which accepts a list of one or more CommentStatusEnum values instead of a string")
 
-  """One or more Comment Statuses to limit results by"""
+  """
+  One or more Comment Statuses to limit results by. Users who cannot moderate comments can only filter by APPROVE: other statuses are ignored, and when none remain no comments are returned.
+  """
   statusIn: [CommentStatusEnum]
 
   """Include comments for a specific user ID."""
@@ -1274,7 +1292,9 @@ type CommentToParentCommentConnectionEdge implements CommentConnectionEdge & Edg
 Arguments for filtering the CommentToParentCommentConnection connection
 """
 input CommentToParentCommentConnectionWhereArgs {
-  """Comment author email address."""
+  """
+  Comment author email address. Only users who can moderate comments can filter by this; for other users it matches no comments.
+  """
   authorEmail: String
 
   """Array of author IDs to include comments for."""
@@ -1294,10 +1314,14 @@ input CommentToParentCommentConnectionWhereArgs {
   """
   commentNotIn: [ID]
 
-  """Include comments of a given type."""
+  """
+  Include comments of a given type. Notes are only returned to users who can edit them.
+  """
   commentType: String
 
-  """Include comments from a given array of comment types."""
+  """
+  Include comments from a given array of comment types. Notes are only returned to users who can edit them.
+  """
   commentTypeIn: [String]
 
   """Exclude comments from a given array of comment types."""
@@ -1312,10 +1336,14 @@ input CommentToParentCommentConnectionWhereArgs {
   """Array of author IDs *not* to retrieve comments for."""
   contentAuthorNotIn: [ID]
 
-  """Limit results to those affiliated with a given content object ID."""
+  """
+  Limit results to those affiliated with a given content object ID. For users who cannot moderate comments, content they cannot see matches no comments.
+  """
   contentId: ID
 
-  """Array of content object IDs to include affiliated comments for."""
+  """
+  Array of content object IDs to include affiliated comments for. For users who cannot moderate comments, content they cannot see is ignored.
+  """
   contentIdIn: [ID]
 
   """Array of content object IDs to exclude affiliated comments for."""
@@ -1328,7 +1356,7 @@ input CommentToParentCommentConnectionWhereArgs {
   contentParent: Int
 
   """
-  Array of content object statuses to retrieve affiliated comments for. Pass 'any' to match any value.
+  Array of content object statuses to retrieve affiliated comments for. Users who cannot moderate comments can only filter by published statuses: other statuses are ignored, and when none remain no comments are returned.
   """
   contentStatus: [PostStatusEnum]
 
@@ -1348,7 +1376,9 @@ input CommentToParentCommentConnectionWhereArgs {
   """The cardinality of the order of the connection"""
   order: OrderEnum
 
-  """Field to order the comments by."""
+  """
+  Field to order the comments by. Ordering by the author email, the author IP address or the user agent requires permission to moderate comments; for other users, comments are ordered by date instead.
+  """
   orderby: CommentsConnectionOrderbyEnum
 
   """Parent ID of comment to retrieve children of."""
@@ -1360,13 +1390,19 @@ input CommentToParentCommentConnectionWhereArgs {
   """Array of parent IDs of comments *not* to retrieve children for."""
   parentNotIn: [ID]
 
-  """Search term(s) to retrieve matching comments for."""
+  """
+  Search term(s) to retrieve matching comments for. For users who cannot moderate comments, only the comment content and the author name and URL are searched.
+  """
   search: String
 
-  """Comment status to limit results by."""
+  """
+  Comment status to limit results by. Users who cannot moderate comments can only filter by approved comments.
+  """
   status: String @deprecated(reason: "Deprecated in favor of statusIn which accepts a list of one or more CommentStatusEnum values instead of a string")
 
-  """One or more Comment Statuses to limit results by"""
+  """
+  One or more Comment Statuses to limit results by. Users who cannot moderate comments can only filter by APPROVE: other statuses are ignored, and when none remain no comments are returned.
+  """
   statusIn: [CommentStatusEnum]
 
   """Include comments for a specific user ID."""
@@ -1420,7 +1456,9 @@ interface CommenterConnectionEdge implements Edge {
 Sorting attributes for comment collections. Specifies which comment property determines the order of results.
 """
 enum CommentsConnectionOrderbyEnum {
-  """Order by browser user agent of the commenter."""
+  """
+  Order by browser user agent of the commenter. Requires permission to moderate comments; for other users, comments are ordered by date instead.
+  """
   COMMENT_AGENT
 
   """Order by approval status of the comment."""
@@ -1429,10 +1467,14 @@ enum CommentsConnectionOrderbyEnum {
   """Order by name of the comment author."""
   COMMENT_AUTHOR
 
-  """Order by e-mail of the comment author."""
+  """
+  Order by e-mail of the comment author. Requires permission to moderate comments; for other users, comments are ordered by date instead.
+  """
   COMMENT_AUTHOR_EMAIL
 
-  """Order by IP address of the comment author."""
+  """
+  Order by IP address of the comment author. Requires permission to moderate comments; for other users, comments are ordered by date instead.
+  """
   COMMENT_AUTHOR_IP
 
   """Order by URL address of the comment author."""
@@ -17798,8 +17840,8 @@ type EventDetails implements AcfFieldGroup & AcfFieldGroupFields & EventDetails_
   """
   eventTicketPrice: String
 
-  """The name of the field group"""
-  fieldGroupName: String @deprecated(reason: "Use __typename instead")
+  """The name of the GraphQL Type that represents this field group"""
+  fieldGroupName: String
 }
 
 """
@@ -17836,8 +17878,8 @@ interface EventDetails_Fields implements AcfFieldGroup & AcfFieldGroupFields {
   """
   eventTicketPrice: String
 
-  """The name of the field group"""
-  fieldGroupName: String @deprecated(reason: "Use __typename instead")
+  """The name of the GraphQL Type that represents this field group"""
+  fieldGroupName: String
 }
 
 """EditorBlock Interface for Event Block Type"""
@@ -19972,7 +20014,9 @@ type MediaItemToCommentConnectionPageInfo implements CommentConnectionPageInfo &
 
 """Arguments for filtering the MediaItemToCommentConnection connection"""
 input MediaItemToCommentConnectionWhereArgs {
-  """Comment author email address."""
+  """
+  Comment author email address. Only users who can moderate comments can filter by this; for other users it matches no comments.
+  """
   authorEmail: String
 
   """Array of author IDs to include comments for."""
@@ -19992,10 +20036,14 @@ input MediaItemToCommentConnectionWhereArgs {
   """
   commentNotIn: [ID]
 
-  """Include comments of a given type."""
+  """
+  Include comments of a given type. Notes are only returned to users who can edit them.
+  """
   commentType: String
 
-  """Include comments from a given array of comment types."""
+  """
+  Include comments from a given array of comment types. Notes are only returned to users who can edit them.
+  """
   commentTypeIn: [String]
 
   """Exclude comments from a given array of comment types."""
@@ -20010,10 +20058,14 @@ input MediaItemToCommentConnectionWhereArgs {
   """Array of author IDs *not* to retrieve comments for."""
   contentAuthorNotIn: [ID]
 
-  """Limit results to those affiliated with a given content object ID."""
+  """
+  Limit results to those affiliated with a given content object ID. For users who cannot moderate comments, content they cannot see matches no comments.
+  """
   contentId: ID
 
-  """Array of content object IDs to include affiliated comments for."""
+  """
+  Array of content object IDs to include affiliated comments for. For users who cannot moderate comments, content they cannot see is ignored.
+  """
   contentIdIn: [ID]
 
   """Array of content object IDs to exclude affiliated comments for."""
@@ -20026,7 +20078,7 @@ input MediaItemToCommentConnectionWhereArgs {
   contentParent: Int
 
   """
-  Array of content object statuses to retrieve affiliated comments for. Pass 'any' to match any value.
+  Array of content object statuses to retrieve affiliated comments for. Users who cannot moderate comments can only filter by published statuses: other statuses are ignored, and when none remain no comments are returned.
   """
   contentStatus: [PostStatusEnum]
 
@@ -20046,7 +20098,9 @@ input MediaItemToCommentConnectionWhereArgs {
   """The cardinality of the order of the connection"""
   order: OrderEnum
 
-  """Field to order the comments by."""
+  """
+  Field to order the comments by. Ordering by the author email, the author IP address or the user agent requires permission to moderate comments; for other users, comments are ordered by date instead.
+  """
   orderby: CommentsConnectionOrderbyEnum
 
   """Parent ID of comment to retrieve children of."""
@@ -20058,13 +20112,19 @@ input MediaItemToCommentConnectionWhereArgs {
   """Array of parent IDs of comments *not* to retrieve children for."""
   parentNotIn: [ID]
 
-  """Search term(s) to retrieve matching comments for."""
+  """
+  Search term(s) to retrieve matching comments for. For users who cannot moderate comments, only the comment content and the author name and URL are searched.
+  """
   search: String
 
-  """Comment status to limit results by."""
+  """
+  Comment status to limit results by. Users who cannot moderate comments can only filter by approved comments.
+  """
   status: String @deprecated(reason: "Deprecated in favor of statusIn which accepts a list of one or more CommentStatusEnum values instead of a string")
 
-  """One or more Comment Statuses to limit results by"""
+  """
+  One or more Comment Statuses to limit results by. Users who cannot moderate comments can only filter by APPROVE: other statuses are ignored, and when none remain no comments are returned.
+  """
   statusIn: [CommentStatusEnum]
 
   """Include comments for a specific user ID."""
@@ -21680,7 +21740,9 @@ type PageToCommentConnectionPageInfo implements CommentConnectionPageInfo & Page
 
 """Arguments for filtering the PageToCommentConnection connection"""
 input PageToCommentConnectionWhereArgs {
-  """Comment author email address."""
+  """
+  Comment author email address. Only users who can moderate comments can filter by this; for other users it matches no comments.
+  """
   authorEmail: String
 
   """Array of author IDs to include comments for."""
@@ -21700,10 +21762,14 @@ input PageToCommentConnectionWhereArgs {
   """
   commentNotIn: [ID]
 
-  """Include comments of a given type."""
+  """
+  Include comments of a given type. Notes are only returned to users who can edit them.
+  """
   commentType: String
 
-  """Include comments from a given array of comment types."""
+  """
+  Include comments from a given array of comment types. Notes are only returned to users who can edit them.
+  """
   commentTypeIn: [String]
 
   """Exclude comments from a given array of comment types."""
@@ -21718,10 +21784,14 @@ input PageToCommentConnectionWhereArgs {
   """Array of author IDs *not* to retrieve comments for."""
   contentAuthorNotIn: [ID]
 
-  """Limit results to those affiliated with a given content object ID."""
+  """
+  Limit results to those affiliated with a given content object ID. For users who cannot moderate comments, content they cannot see matches no comments.
+  """
   contentId: ID
 
-  """Array of content object IDs to include affiliated comments for."""
+  """
+  Array of content object IDs to include affiliated comments for. For users who cannot moderate comments, content they cannot see is ignored.
+  """
   contentIdIn: [ID]
 
   """Array of content object IDs to exclude affiliated comments for."""
@@ -21734,7 +21804,7 @@ input PageToCommentConnectionWhereArgs {
   contentParent: Int
 
   """
-  Array of content object statuses to retrieve affiliated comments for. Pass 'any' to match any value.
+  Array of content object statuses to retrieve affiliated comments for. Users who cannot moderate comments can only filter by published statuses: other statuses are ignored, and when none remain no comments are returned.
   """
   contentStatus: [PostStatusEnum]
 
@@ -21754,7 +21824,9 @@ input PageToCommentConnectionWhereArgs {
   """The cardinality of the order of the connection"""
   order: OrderEnum
 
-  """Field to order the comments by."""
+  """
+  Field to order the comments by. Ordering by the author email, the author IP address or the user agent requires permission to moderate comments; for other users, comments are ordered by date instead.
+  """
   orderby: CommentsConnectionOrderbyEnum
 
   """Parent ID of comment to retrieve children of."""
@@ -21766,13 +21838,19 @@ input PageToCommentConnectionWhereArgs {
   """Array of parent IDs of comments *not* to retrieve children for."""
   parentNotIn: [ID]
 
-  """Search term(s) to retrieve matching comments for."""
+  """
+  Search term(s) to retrieve matching comments for. For users who cannot moderate comments, only the comment content and the author name and URL are searched.
+  """
   search: String
 
-  """Comment status to limit results by."""
+  """
+  Comment status to limit results by. Users who cannot moderate comments can only filter by approved comments.
+  """
   status: String @deprecated(reason: "Deprecated in favor of statusIn which accepts a list of one or more CommentStatusEnum values instead of a string")
 
-  """One or more Comment Statuses to limit results by"""
+  """
+  One or more Comment Statuses to limit results by. Users who cannot moderate comments can only filter by APPROVE: other statuses are ignored, and when none remain no comments are returned.
+  """
   statusIn: [CommentStatusEnum]
 
   """Include comments for a specific user ID."""
@@ -23461,7 +23539,9 @@ type PostToCommentConnectionPageInfo implements CommentConnectionPageInfo & Page
 
 """Arguments for filtering the PostToCommentConnection connection"""
 input PostToCommentConnectionWhereArgs {
-  """Comment author email address."""
+  """
+  Comment author email address. Only users who can moderate comments can filter by this; for other users it matches no comments.
+  """
   authorEmail: String
 
   """Array of author IDs to include comments for."""
@@ -23481,10 +23561,14 @@ input PostToCommentConnectionWhereArgs {
   """
   commentNotIn: [ID]
 
-  """Include comments of a given type."""
+  """
+  Include comments of a given type. Notes are only returned to users who can edit them.
+  """
   commentType: String
 
-  """Include comments from a given array of comment types."""
+  """
+  Include comments from a given array of comment types. Notes are only returned to users who can edit them.
+  """
   commentTypeIn: [String]
 
   """Exclude comments from a given array of comment types."""
@@ -23499,10 +23583,14 @@ input PostToCommentConnectionWhereArgs {
   """Array of author IDs *not* to retrieve comments for."""
   contentAuthorNotIn: [ID]
 
-  """Limit results to those affiliated with a given content object ID."""
+  """
+  Limit results to those affiliated with a given content object ID. For users who cannot moderate comments, content they cannot see matches no comments.
+  """
   contentId: ID
 
-  """Array of content object IDs to include affiliated comments for."""
+  """
+  Array of content object IDs to include affiliated comments for. For users who cannot moderate comments, content they cannot see is ignored.
+  """
   contentIdIn: [ID]
 
   """Array of content object IDs to exclude affiliated comments for."""
@@ -23515,7 +23603,7 @@ input PostToCommentConnectionWhereArgs {
   contentParent: Int
 
   """
-  Array of content object statuses to retrieve affiliated comments for. Pass 'any' to match any value.
+  Array of content object statuses to retrieve affiliated comments for. Users who cannot moderate comments can only filter by published statuses: other statuses are ignored, and when none remain no comments are returned.
   """
   contentStatus: [PostStatusEnum]
 
@@ -23535,7 +23623,9 @@ input PostToCommentConnectionWhereArgs {
   """The cardinality of the order of the connection"""
   order: OrderEnum
 
-  """Field to order the comments by."""
+  """
+  Field to order the comments by. Ordering by the author email, the author IP address or the user agent requires permission to moderate comments; for other users, comments are ordered by date instead.
+  """
   orderby: CommentsConnectionOrderbyEnum
 
   """Parent ID of comment to retrieve children of."""
@@ -23547,13 +23637,19 @@ input PostToCommentConnectionWhereArgs {
   """Array of parent IDs of comments *not* to retrieve children for."""
   parentNotIn: [ID]
 
-  """Search term(s) to retrieve matching comments for."""
+  """
+  Search term(s) to retrieve matching comments for. For users who cannot moderate comments, only the comment content and the author name and URL are searched.
+  """
   search: String
 
-  """Comment status to limit results by."""
+  """
+  Comment status to limit results by. Users who cannot moderate comments can only filter by approved comments.
+  """
   status: String @deprecated(reason: "Deprecated in favor of statusIn which accepts a list of one or more CommentStatusEnum values instead of a string")
 
-  """One or more Comment Statuses to limit results by"""
+  """
+  One or more Comment Statuses to limit results by. Users who cannot moderate comments can only filter by APPROVE: other statuses are ignored, and when none remain no comments are returned.
+  """
   statusIn: [CommentStatusEnum]
 
   """Include comments for a specific user ID."""
@@ -25934,7 +26030,9 @@ type RootQueryToCommentConnectionPageInfo implements CommentConnectionPageInfo &
 
 """Arguments for filtering the RootQueryToCommentConnection connection"""
 input RootQueryToCommentConnectionWhereArgs {
-  """Comment author email address."""
+  """
+  Comment author email address. Only users who can moderate comments can filter by this; for other users it matches no comments.
+  """
   authorEmail: String
 
   """Array of author IDs to include comments for."""
@@ -25954,10 +26052,14 @@ input RootQueryToCommentConnectionWhereArgs {
   """
   commentNotIn: [ID]
 
-  """Include comments of a given type."""
+  """
+  Include comments of a given type. Notes are only returned to users who can edit them.
+  """
   commentType: String
 
-  """Include comments from a given array of comment types."""
+  """
+  Include comments from a given array of comment types. Notes are only returned to users who can edit them.
+  """
   commentTypeIn: [String]
 
   """Exclude comments from a given array of comment types."""
@@ -25972,10 +26074,14 @@ input RootQueryToCommentConnectionWhereArgs {
   """Array of author IDs *not* to retrieve comments for."""
   contentAuthorNotIn: [ID]
 
-  """Limit results to those affiliated with a given content object ID."""
+  """
+  Limit results to those affiliated with a given content object ID. For users who cannot moderate comments, content they cannot see matches no comments.
+  """
   contentId: ID
 
-  """Array of content object IDs to include affiliated comments for."""
+  """
+  Array of content object IDs to include affiliated comments for. For users who cannot moderate comments, content they cannot see is ignored.
+  """
   contentIdIn: [ID]
 
   """Array of content object IDs to exclude affiliated comments for."""
@@ -25988,7 +26094,7 @@ input RootQueryToCommentConnectionWhereArgs {
   contentParent: Int
 
   """
-  Array of content object statuses to retrieve affiliated comments for. Pass 'any' to match any value.
+  Array of content object statuses to retrieve affiliated comments for. Users who cannot moderate comments can only filter by published statuses: other statuses are ignored, and when none remain no comments are returned.
   """
   contentStatus: [PostStatusEnum]
 
@@ -26008,7 +26114,9 @@ input RootQueryToCommentConnectionWhereArgs {
   """The cardinality of the order of the connection"""
   order: OrderEnum
 
-  """Field to order the comments by."""
+  """
+  Field to order the comments by. Ordering by the author email, the author IP address or the user agent requires permission to moderate comments; for other users, comments are ordered by date instead.
+  """
   orderby: CommentsConnectionOrderbyEnum
 
   """Parent ID of comment to retrieve children of."""
@@ -26020,13 +26128,19 @@ input RootQueryToCommentConnectionWhereArgs {
   """Array of parent IDs of comments *not* to retrieve children for."""
   parentNotIn: [ID]
 
-  """Search term(s) to retrieve matching comments for."""
+  """
+  Search term(s) to retrieve matching comments for. For users who cannot moderate comments, only the comment content and the author name and URL are searched.
+  """
   search: String
 
-  """Comment status to limit results by."""
+  """
+  Comment status to limit results by. Users who cannot moderate comments can only filter by approved comments.
+  """
   status: String @deprecated(reason: "Deprecated in favor of statusIn which accepts a list of one or more CommentStatusEnum values instead of a string")
 
-  """One or more Comment Statuses to limit results by"""
+  """
+  One or more Comment Statuses to limit results by. Users who cannot moderate comments can only filter by APPROVE: other statuses are ignored, and when none remain no comments are returned.
+  """
   statusIn: [CommentStatusEnum]
 
   """Include comments for a specific user ID."""
@@ -31876,7 +31990,9 @@ type UserToCommentConnectionPageInfo implements CommentConnectionPageInfo & Page
 
 """Arguments for filtering the UserToCommentConnection connection"""
 input UserToCommentConnectionWhereArgs {
-  """Comment author email address."""
+  """
+  Comment author email address. Only users who can moderate comments can filter by this; for other users it matches no comments.
+  """
   authorEmail: String
 
   """Array of author IDs to include comments for."""
@@ -31896,10 +32012,14 @@ input UserToCommentConnectionWhereArgs {
   """
   commentNotIn: [ID]
 
-  """Include comments of a given type."""
+  """
+  Include comments of a given type. Notes are only returned to users who can edit them.
+  """
   commentType: String
 
-  """Include comments from a given array of comment types."""
+  """
+  Include comments from a given array of comment types. Notes are only returned to users who can edit them.
+  """
   commentTypeIn: [String]
 
   """Exclude comments from a given array of comment types."""
@@ -31914,10 +32034,14 @@ input UserToCommentConnectionWhereArgs {
   """Array of author IDs *not* to retrieve comments for."""
   contentAuthorNotIn: [ID]
 
-  """Limit results to those affiliated with a given content object ID."""
+  """
+  Limit results to those affiliated with a given content object ID. For users who cannot moderate comments, content they cannot see matches no comments.
+  """
   contentId: ID
 
-  """Array of content object IDs to include affiliated comments for."""
+  """
+  Array of content object IDs to include affiliated comments for. For users who cannot moderate comments, content they cannot see is ignored.
+  """
   contentIdIn: [ID]
 
   """Array of content object IDs to exclude affiliated comments for."""
@@ -31930,7 +32054,7 @@ input UserToCommentConnectionWhereArgs {
   contentParent: Int
 
   """
-  Array of content object statuses to retrieve affiliated comments for. Pass 'any' to match any value.
+  Array of content object statuses to retrieve affiliated comments for. Users who cannot moderate comments can only filter by published statuses: other statuses are ignored, and when none remain no comments are returned.
   """
   contentStatus: [PostStatusEnum]
 
@@ -31950,7 +32074,9 @@ input UserToCommentConnectionWhereArgs {
   """The cardinality of the order of the connection"""
   order: OrderEnum
 
-  """Field to order the comments by."""
+  """
+  Field to order the comments by. Ordering by the author email, the author IP address or the user agent requires permission to moderate comments; for other users, comments are ordered by date instead.
+  """
   orderby: CommentsConnectionOrderbyEnum
 
   """Parent ID of comment to retrieve children of."""
@@ -31962,13 +32088,19 @@ input UserToCommentConnectionWhereArgs {
   """Array of parent IDs of comments *not* to retrieve children for."""
   parentNotIn: [ID]
 
-  """Search term(s) to retrieve matching comments for."""
+  """
+  Search term(s) to retrieve matching comments for. For users who cannot moderate comments, only the comment content and the author name and URL are searched.
+  """
   search: String
 
-  """Comment status to limit results by."""
+  """
+  Comment status to limit results by. Users who cannot moderate comments can only filter by approved comments.
+  """
   status: String @deprecated(reason: "Deprecated in favor of statusIn which accepts a list of one or more CommentStatusEnum values instead of a string")
 
-  """One or more Comment Statuses to limit results by"""
+  """
+  One or more Comment Statuses to limit results by. Users who cannot moderate comments can only filter by APPROVE: other statuses are ignored, and when none remain no comments are returned.
+  """
   statusIn: [CommentStatusEnum]
 
   """Include comments for a specific user ID."""
