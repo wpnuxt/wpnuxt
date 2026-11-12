@@ -19,7 +19,7 @@
     "docker:setup:all": "docker-compose -f docker/docker-compose.wp-6.9.yml exec -T wordpress /setup.sh && docker-compose -f docker/docker-compose.wp-7.0.yml exec -T wordpress /setup.sh && docker-compose -f docker/docker-compose.wp-7.1.yml exec -T wordpress /setup.sh && docker-compose -f docker/docker-compose.wp-beta.yml exec -T wordpress /setup.sh"
   },
   "dependencies": {
-    "@playwright/test": "^1.60.0",
+    "@playwright/test": "^1.65.0",
     "@wpnuxt/core": "file:../packages/core"
   },
   "devDependencies": {
