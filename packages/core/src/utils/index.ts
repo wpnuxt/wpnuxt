@@ -125,7 +125,7 @@ export async function mergeQueries(
     })
     for (const cpt of cpts) {
       await writeCptArtifacts(cpt, queryOutputPath)
-      cptSpreads.push({ name: cpt.typeName, type: cpt.typeName })
+      cptSpreads.push({ name: cpt.typeName, type: cpt.typeName, isContentNode: true })
     }
     if (cpts.length) {
       logger.debug(`Auto-generated fragments + queries for CPTs: ${cpts.map(c => c.typeName).join(', ')}`)
@@ -149,7 +149,7 @@ export async function mergeQueries(
     copyGraphqlFiles(userQueryPath, queryOutputPath)
   }
 
-  // Auto-add custom content type fragments to NodeByUri query. The CPT
+  // Auto-add custom content type fragments to the Node queries. The CPT
   // spreads are merged with any content-type fragments the user may have
   // added manually in extend/queries/fragments/.
   await addCustomFragmentsToNodeQuery(queryOutputPath, userQueryPath, logger, cptSpreads)
@@ -164,6 +164,12 @@ const FRAGMENT_DEF_PATTERN = /fragment\s+(\w+)\s+on\s+(\w+)/
 export interface ContentTypeFragment {
   name: string
   type: string
+  /**
+   * True when the type is known to be a post type (a WPGraphQL `ContentNode`).
+   * Only these are spread into `ContentNodeById`: a taxonomy term such as
+   * Category can't be spread on `contentNode` and would fail validation.
+   */
+  isContentNode?: boolean
 }
 
 /**
@@ -174,6 +180,10 @@ export interface ContentTypeFragment {
  *
  * A fragment is considered a content type fragment when its name matches its
  * type condition (e.g., `fragment Event on Event`).
+ *
+ * The ContentNodeById query only gets the fragments flagged `isContentNode`
+ * (the post types discovered in the schema), because a fragment scanned from
+ * the user folder may belong to a taxonomy.
  *
  * @param queryOutputPath Merged queries folder where Node.gql lives.
  * @param userQueryPath User extend/queries folder scanned for content-type fragments.
@@ -203,7 +213,7 @@ export async function addCustomFragmentsToNodeQuery(
       const type = match[2]
       // Content type fragments have name === type (e.g., fragment Event on Event)
       if (name && type && name === type) {
-        byType.set(type, { name, type })
+        byType.set(type, { name, type, isContentNode: byType.get(type)?.isContentNode })
       }
     }
   }
@@ -211,26 +221,32 @@ export async function addCustomFragmentsToNodeQuery(
   const customFragments = [...byType.values()]
   if (customFragments.length === 0) return
 
-  // Add custom fragment spreads to Node.gql
   const nodeGqlPath = join(queryOutputPath, 'Node.gql')
   if (!existsSync(nodeGqlPath)) return
 
   let nodeGql = await fsp.readFile(nodeGqlPath, 'utf-8')
 
-  const spreads = customFragments
+  const toSpreads = (fragments: ContentTypeFragment[]) => fragments
     .map(f => `    ... on ${f.type} { ...${f.name} }`)
     .join('\n')
+  const spreadsByQuery: Record<string, string> = {
+    NodeByUri: toSpreads(customFragments),
+    ContentNodeById: toSpreads(customFragments.filter(f => f.isContentNode))
+  }
 
-  // Insert before the closing braces
+  // Insert before the closing braces of each query
   nodeGql = nodeGql.replace(
-    /(\s+\.\.\.Post)\n(\s+\}\n\})/,
-    `$1\n${spreads}\n$2`
+    /(query (\w+)\([^{]*\{[^}]*?\.\.\.Post)\n(\s+\}\n\})/g,
+    (match, head: string, queryName: string, tail: string) => {
+      const spreads = spreadsByQuery[queryName]
+      return spreads ? `${head}\n${spreads}\n${tail}` : match
+    }
   )
 
   await fsp.writeFile(nodeGqlPath, nodeGql, 'utf-8')
 
   logger.debug(
-    `Added custom content type fragments to NodeByUri: ${customFragments.map(f => f.name).join(', ')}`
+    `Added custom content type fragments to the Node queries: ${customFragments.map(f => f.name).join(', ')}`
   )
 }
 

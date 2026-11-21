@@ -5,3 +5,11 @@ query NodeByUri($uri: String!) {
     ...Post
   }
 }
+
+query ContentNodeById($id: ID!) {
+  contentNode(id: $id, idType: DATABASE_ID) {
+    __typename
+    ...Page
+    ...Post
+  }
+}

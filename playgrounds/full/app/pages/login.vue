@@ -18,10 +18,15 @@ const {
   fetchHeadlessLoginProviders
 } = useWPAuth()
 const router = useRouter()
+const route = useRoute()
 
-// Get configured redirect path
+// Return to the page that sent the visitor here (e.g. a preview link), or to
+// the configured redirect path. Only local paths are accepted.
 const config = useRuntimeConfig().public.wpNuxtAuth
-const redirectPath = config.redirectOnLogin || '/'
+const requestedRedirect = route.query.redirect
+const redirectPath = typeof requestedRedirect === 'string' && /^\/(?!\/)/.test(requestedRedirect)
+  ? requestedRedirect
+  : config.redirectOnLogin || '/'
 
 // Get available auth providers
 const authProviders = getProviders()

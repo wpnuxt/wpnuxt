@@ -24,7 +24,7 @@ export function watch<T>(
 export function defineNuxtPlugin(plugin: (nuxtApp: NuxtApp) => void | Promise<void>): unknown
 export function useNuxtApp(): NuxtApp
 export function useRuntimeConfig(): Record<string, unknown>
-export function useRoute(): { path: string, params: Record<string, string>, query: Record<string, string> }
+export function useRoute(): { path: string, params: Record<string, string>, query: Record<string, unknown> }
 export function navigateTo(to: string): Promise<void>
 export function createError(input: { statusCode: number, statusMessage?: string, fatal?: boolean }): NuxtError
 export function showError(error: NuxtError): NuxtError
@@ -57,3 +57,14 @@ export type Query = Record<string, unknown>
 export type PostFragment = Record<string, unknown>
 export type PageFragment = Record<string, unknown>
 export type MenuItemFragment = Record<string, unknown>
+
+// Stub for #wpnuxt - generated composables
+export function useNodeByUri(params?: unknown, options?: unknown): {
+  data: ComputedRef<unknown>
+  pending: Ref<boolean>
+  refresh: () => Promise<void>
+  execute: () => Promise<void>
+  clear: () => void
+  error: Ref<Error | undefined>
+  status: Ref<string>
+}

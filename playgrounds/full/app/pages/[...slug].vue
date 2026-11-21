@@ -1,10 +1,12 @@
 <script setup lang="ts">
 const route = useRoute()
+const { isAuthenticated } = useWPAuth()
 
-const { data: node, pending, refresh, clear } = await useNodeByUri(
-  { uri: route.path },
-  { watch: [() => route.path], throwOnNotFound: true }
-)
+// Fetches by route path, or by database ID for a WordPress preview link
+// (a draft has no URI yet, so it can't be found by path)
+const { data: node, pending, refresh, clear, isPreview } = await useNodeByRoute({ throwOnNotFound: true })
+
+const loginLink = computed(() => ({ path: '/login', query: { redirect: route.fullPath } }))
 
 // nodeByUri can also resolve to a Category/Tag archive, which this page
 // doesn't render — narrow to content types (Page/Post/CPTs) only.
@@ -46,11 +48,36 @@ const nextPost = computed(() => {
         :refresh-content="() => { clear(); refresh(); }"
         :previous-post="previousPost"
         :next-post="nextPost"
-        composable-name="useNodeByUri"
-        composable-script="const { data: post, pending, refresh, clear } = await useNodeByUri({ uri: route.path })"
+        composable-name="useNodeByRoute"
+        composable-script="const { data: post, pending, refresh, clear, isPreview } = await useNodeByRoute({ throwOnNotFound: true })"
       />
       <UPageBody>
-        <UPageCard description="Rendered Content from WordPress">
+        <template v-if="isPreview && !pending">
+          <UAlert
+            v-if="!post"
+            color="warning"
+            variant="subtle"
+            icon="i-lucide-lock"
+            title="Log in to see the preview"
+            description="WordPress only returns a preview to a logged-in editor."
+            :actions="isAuthenticated ? [] : [{ label: 'Log in', to: loginLink }]"
+          />
+          <UAlert
+            v-else
+            color="info"
+            variant="subtle"
+            icon="i-lucide-eye"
+            title="Preview mode"
+            :description="isAuthenticated
+              ? 'This content is not published yet.'
+              : 'You are not logged in, so this may be the published version.'"
+            :actions="isAuthenticated ? [] : [{ label: 'Log in', to: loginLink }]"
+          />
+        </template>
+        <UPageCard
+          v-if="post || pending || !isPreview"
+          description="Rendered Content from WordPress"
+        >
           <template v-if="!pending && post">
             <WPContent
               :node="post as { content?: string | null }"

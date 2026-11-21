@@ -162,9 +162,6 @@ type Category implements DatabaseIdentifier & HierarchicalNode & HierarchicalTer
     where: CategoryToCategoryConnectionWhereArgs
   ): CategoryToCategoryConnection
 
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """Connection between the Category type and the ContentNode type"""
   contentNodes(
     """
@@ -309,9 +306,6 @@ type Category implements DatabaseIdentifier & HierarchicalNode & HierarchicalTer
 
   """The name of the taxonomy that the object is associated with"""
   taxonomyName: String
-
-  """"""
-  templates: [String]
 
   """The ID of the term group that this term object belongs to"""
   termGroupId: Int
@@ -873,9 +867,6 @@ type Comment implements DatabaseIdentifier & Node & UniformResourceIdentifiable 
   """Connection between the Comment type and the ContentNode type"""
   commentedOn: CommentToContentNodeConnectionEdge
 
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """Content of the comment."""
   content(
     """Format of the field output"""
@@ -956,9 +947,6 @@ type Comment implements DatabaseIdentifier & Node & UniformResourceIdentifiable 
 
   """The approval status of the comment."""
   status: CommentStatusEnum
-
-  """"""
-  templates: [String]
 
   """Type of comment."""
   type: String
@@ -1515,81 +1503,6 @@ enum CommentsConnectionOrderbyEnum {
   USER_ID
 }
 
-"""GraphQL representation of WordPress Conditional Tags."""
-type ConditionalTags {
-  """Determines whether the query is for an existing archive page."""
-  isArchive: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether the query is for an existing attachment page."""
-  isAttachment: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether the query is for an existing author archive page."""
-  isAuthor: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether the query is for an existing category archive page."""
-  isCategory: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether the query is for an existing date archive."""
-  isDate: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether the query is for an existing day archive."""
-  isDay: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether the query is for the front page of the site."""
-  isFrontPage: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether the query is for the blog homepage."""
-  isHome: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether the query is for an existing month archive."""
-  isMonth: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether this site has more than one author."""
-  isMultiAuthor: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether the query is for an existing single page."""
-  isPage: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether currently in a page template."""
-  isPageTemplate: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """
-  Determines whether the query is for an existing post type archive page.
-  """
-  isPostTypeArchive: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether the query is for a post or page preview."""
-  isPreview: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether the query is for the Privacy Policy page."""
-  isPrivacyPolicy: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether the query is for a search."""
-  isSearch: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether the query is for an existing single post."""
-  isSingle: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """
-  Determines whether the query is for an existing single post of any post type (post, attachment, page, custom post types).
-  """
-  isSingular: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether a post is sticky."""
-  isSticky: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether the query is for an existing tag archive page."""
-  isTag: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """
-  Determines whether the query is for an existing custom taxonomy archive page.
-  """
-  isTax: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
-  """Determines whether the query is for an existing year archive."""
-  isYear: Boolean @deprecated(reason: "Deprecated in favor of using Next.js pages")
-}
-
 """
 A paginated relationship between objects. Supports cursor-based pagination with edges containing relationship metadata and nodes containing the related objects.
 """
@@ -1617,9 +1530,6 @@ type ConnectorsSettings implements Node {
 Base interface for content objects like posts, pages, and media items. Provides common fields available across these content types.
 """
 interface ContentNode implements Node & UniformResourceIdentifiable {
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """Connection between the ContentNode type and the ContentType type"""
   contentType: ContentNodeToContentTypeConnectionEdge
 
@@ -1756,9 +1666,6 @@ interface ContentNode implements Node & UniformResourceIdentifiable {
 
   """The template assigned to a node of content"""
   template: ContentTemplate
-
-  """"""
-  templates: [String]
 
   """The unique resource identifier path"""
   uri: String
@@ -1988,9 +1895,6 @@ type ContentType implements Node & UniformResourceIdentifiable {
   """Whether this content type should can be exported."""
   canExport: Boolean
 
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """Connection between the ContentType type and the Taxonomy type"""
   connectedTaxonomies(
     """
@@ -2140,9 +2044,6 @@ type ContentType implements Node & UniformResourceIdentifiable {
   Whether to generate and allow a UI for managing this content type in the admin.
   """
   showUi: Boolean
-
-  """"""
-  templates: [String]
 
   """The unique resource identifier path"""
   uri: String
@@ -16782,9 +16683,6 @@ type Event implements ContentNode & DatabaseIdentifier & MenuItemLinkable & Node
     last: Int
   ): EventToEventConnection @deprecated(reason: "This content type is not hierarchical and typically will not have ancestors")
 
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """The content of the post."""
   content(
     """Format of the field output"""
@@ -17023,9 +16921,6 @@ type Event implements ContentNode & DatabaseIdentifier & MenuItemLinkable & Node
   """The template assigned to the node"""
   template: ContentTemplate
 
-  """"""
-  templates: [String]
-
   """Connection between the Event type and the TermNode type"""
   terms(
     """
@@ -17106,9 +17001,6 @@ type EventCategory implements DatabaseIdentifier & HierarchicalNode & Hierarchic
     """Arguments for filtering the connection"""
     where: EventCategoryToEventCategoryConnectionWhereArgs
   ): EventCategoryToEventCategoryConnection
-
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
 
   """Connection between the EventCategory type and the ContentNode type"""
   contentNodes(
@@ -17259,9 +17151,6 @@ type EventCategory implements DatabaseIdentifier & HierarchicalNode & Hierarchic
 
   """The name of the taxonomy that the object is associated with"""
   taxonomyName: String
-
-  """"""
-  templates: [String]
 
   """The ID of the term group that this term object belongs to"""
   termGroupId: Int
@@ -18506,37 +18395,6 @@ type GeneralSettingsToMediaItemConnectionEdge implements Edge & MediaItemConnect
   node: MediaItem!
 }
 
-"""Input for the generateAuthorizationCode mutation."""
-input GenerateAuthorizationCodeInput {
-  """
-  This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.
-  """
-  clientMutationId: String
-
-  """Email for WordPress user"""
-  email: String
-
-  """Password for WordPress user"""
-  password: String
-
-  """Username for WordPress user"""
-  username: String
-}
-
-"""The payload for the generateAuthorizationCode mutation."""
-type GenerateAuthorizationCodePayload {
-  """
-  If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
-  """
-  clientMutationId: String
-
-  """Authorization code used for requesting refresh/access tokens"""
-  code: String
-
-  """Error encountered during user authentication, if any"""
-  error: String
-}
-
 """The Login client options for the github provider."""
 type GithubClientOptions implements LoginClientOptions {
   """The client ID."""
@@ -18569,21 +18427,6 @@ type GithubLoginOptions implements LoginOptions {
 
   """Whether to set a WordPress authentication cookie on successful login."""
   useAuthenticationCookie: Boolean
-}
-
-"""Types of styles to load"""
-enum GlobalStylesheetTypesEnum {
-  """"""
-  BASE_LAYOUT_STYLES
-
-  """"""
-  PRESETS
-
-  """"""
-  STYLES
-
-  """"""
-  VARIABLES
 }
 
 """The Login client options for the google provider."""
@@ -18697,9 +18540,6 @@ interface HierarchicalContentNode implements ContentNode & DatabaseIdentifier & 
     """Arguments for filtering the connection"""
     where: HierarchicalContentNodeToContentNodeChildrenConnectionWhereArgs
   ): HierarchicalContentNodeToContentNodeChildrenConnection
-
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
 
   """Connection between the ContentNode type and the ContentType type"""
   contentType: ContentNodeToContentTypeConnectionEdge
@@ -18846,9 +18686,6 @@ interface HierarchicalContentNode implements ContentNode & DatabaseIdentifier & 
 
   """The template assigned to a node of content"""
   template: ContentTemplate
-
-  """"""
-  templates: [String]
 
   """The unique resource identifier path"""
   uri: String
@@ -19118,9 +18955,6 @@ interface HierarchicalNode implements DatabaseIdentifier & Node {
 
 """Term node with hierarchical (parent/child) relationships"""
 interface HierarchicalTermNode implements DatabaseIdentifier & HierarchicalNode & Node & TermNode & UniformResourceIdentifiable {
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """The number of objects connected to the object"""
   count: Int
 
@@ -19212,9 +19046,6 @@ interface HierarchicalTermNode implements DatabaseIdentifier & HierarchicalNode 
 
   """The name of the taxonomy that the object is associated with"""
   taxonomyName: String
-
-  """"""
-  templates: [String]
 
   """The ID of the term group that this term object belongs to"""
   termGroupId: Int
@@ -19581,9 +19412,6 @@ type MediaItem implements ContentNode & DatabaseIdentifier & HierarchicalContent
     where: MediaItemToCommentConnectionWhereArgs
   ): MediaItemToCommentConnection
 
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """Connection between the ContentNode type and the ContentType type"""
   contentType: ContentNodeToContentTypeConnectionEdge
 
@@ -19796,9 +19624,6 @@ type MediaItem implements ContentNode & DatabaseIdentifier & HierarchicalContent
 
   """The template assigned to a node of content"""
   template: ContentTemplate
-
-  """"""
-  templates: [String]
 
   """
   The title of the post. This is currently just the raw title. An amendment to support rendered title needs to be made.
@@ -20400,9 +20225,6 @@ interface MenuItemConnectionPageInfo implements PageInfo & WPPageInfo {
 Content that can be referenced by navigation menu items. Provides the essential fields needed to create links within navigation structures.
 """
 interface MenuItemLinkable implements DatabaseIdentifier & Node & UniformResourceIdentifiable {
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """The unique identifier stored in the database"""
   databaseId: Int!
 
@@ -20423,9 +20245,6 @@ interface MenuItemLinkable implements DatabaseIdentifier & Node & UniformResourc
 
   """Whether the node is a Term"""
   isTermNode: Boolean!
-
-  """"""
-  templates: [String]
 
   """The unique resource identifier path"""
   uri: String
@@ -21345,9 +21164,6 @@ type Page implements ContentNode & DatabaseIdentifier & HierarchicalContentNode 
     where: PageToCommentConnectionWhereArgs
   ): PageToCommentConnection
 
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """The content of the post."""
   content(
     """Format of the field output"""
@@ -21568,9 +21384,6 @@ type Page implements ContentNode & DatabaseIdentifier & HierarchicalContentNode 
 
   """The template assigned to a node of content"""
   template: ContentTemplate
-
-  """"""
-  templates: [String]
 
   """
   The title of the post. This is currently just the raw title. An amendment to support rendered title needs to be made.
@@ -22220,9 +22033,6 @@ type Post implements ContentNode & DatabaseIdentifier & MenuItemLinkable & Node 
     where: PostToCommentConnectionWhereArgs
   ): PostToCommentConnection
 
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """The content of the post."""
   content(
     """Format of the field output"""
@@ -22489,9 +22299,6 @@ type Post implements ContentNode & DatabaseIdentifier & MenuItemLinkable & Node 
   """The template assigned to the node"""
   template: ContentTemplate
 
-  """"""
-  templates: [String]
-
   """Connection between the Post type and the TermNode type"""
   terms(
     """
@@ -22651,9 +22458,6 @@ interface PostEditorBlock implements EditorBlock {
 A standardized classification system for content presentation styles. These formats can be used to display content differently based on type, such as &quot;standard&quot;, &quot;gallery&quot;, &quot;video&quot;, etc.
 """
 type PostFormat implements DatabaseIdentifier & MenuItemLinkable & Node & TermNode & UniformResourceIdentifiable {
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """Connection between the PostFormat type and the ContentNode type"""
   contentNodes(
     """
@@ -22792,9 +22596,6 @@ type PostFormat implements DatabaseIdentifier & MenuItemLinkable & Node & TermNo
 
   """The name of the taxonomy that the object is associated with"""
   taxonomyName: String
-
-  """"""
-  templates: [String]
 
   """The ID of the term group that this term object belongs to"""
   termGroupId: Int
@@ -24489,6 +24290,23 @@ interface Previewable {
   previewRevisionId: ID
 }
 
+"""
+Content types that can have published content. Unlike ContentTypeEnum, media items are excluded since they are never published.
+"""
+enum PublishableContentTypeEnum {
+  """The Type of Content object"""
+  EVENT
+
+  """The Type of Content object"""
+  PAGE
+
+  """The Type of Content object"""
+  POST
+
+  """The Type of Content object"""
+  SPONSOR
+}
+
 """The reading setting type"""
 type ReadingSettings implements Node {
   """The globally unique identifier of the settings group."""
@@ -24867,12 +24685,6 @@ type RootMutation {
     input: DeleteUserInput!
   ): DeleteUserPayload
 
-  """The generateAuthorizationCode mutation"""
-  generateAuthorizationCode(
-    """Input for the generateAuthorizationCode mutation"""
-    input: GenerateAuthorizationCodeInput!
-  ): GenerateAuthorizationCodePayload
-
   """Increase the count."""
   increaseCount(
     """The count to increase"""
@@ -25238,14 +25050,6 @@ type RootQuery {
 
   """Fields of the &#039;GeneralSettings&#039; settings group"""
   generalSettings: GeneralSettings
-
-  """
-  Returns the stylesheet resulting of merging core, theme, and user data.
-  """
-  globalStylesheet(
-    """Types of styles to load."""
-    types: [GlobalStylesheetTypesEnum]
-  ): String
 
   """The Headless Login client for the provided client ID."""
   loginClient(
@@ -27944,9 +27748,14 @@ input RootQueryToUserConnectionWhereArgs {
   exclude: [Int]
 
   """
+  Limit results to users who have published content of at least one of the given content types.
+  """
+  hasPublishedContent: [PublishableContentTypeEnum]
+
+  """
   Pass an array of post types to filter results to users who have published posts in those post types.
   """
-  hasPublishedPosts: [ContentTypeEnum]
+  hasPublishedPosts: [ContentTypeEnum] @deprecated(reason: "Deprecated in favor of hasPublishedContent, which does not accept media items since they are never published.")
 
   """Array of userIds to include."""
   include: [Int]
@@ -28916,9 +28725,6 @@ type Sponsor implements ContentNode & DatabaseIdentifier & MenuItemLinkable & No
     last: Int
   ): SponsorToSponsorConnection @deprecated(reason: "This content type is not hierarchical and typically will not have ancestors")
 
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """The content of the post."""
   content(
     """Format of the field output"""
@@ -29131,9 +28937,6 @@ type Sponsor implements ContentNode & DatabaseIdentifier & MenuItemLinkable & No
 
   """The template assigned to the node"""
   template: ContentTemplate
-
-  """"""
-  templates: [String]
 
   """
   The title of the post. This is currently just the raw title. An amendment to support rendered title needs to be made.
@@ -29422,9 +29225,6 @@ type SponsorToSponsorConnectionPageInfo implements PageInfo & SponsorConnectionP
 A taxonomy term used to organize and classify content. Tags do not have a hierarchy and are generally used for more specific classifications.
 """
 type Tag implements DatabaseIdentifier & MenuItemLinkable & Node & TermNode & UniformResourceIdentifiable {
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """Connection between the Tag type and the ContentNode type"""
   contentNodes(
     """
@@ -29563,9 +29363,6 @@ type Tag implements DatabaseIdentifier & MenuItemLinkable & Node & TermNode & Un
 
   """The name of the taxonomy that the object is associated with"""
   taxonomyName: String
-
-  """"""
-  templates: [String]
 
   """The ID of the term group that this term object belongs to"""
   termGroupId: Int
@@ -30322,9 +30119,6 @@ type TaxonomyToTermNodeConnectionPageInfo implements PageInfo & TermNodeConnecti
 Base interface for taxonomy terms such as categories and tags. Terms are used to organize and classify content.
 """
 interface TermNode implements Node & UniformResourceIdentifiable {
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """The number of objects connected to the object"""
   count: Int
 
@@ -30410,9 +30204,6 @@ interface TermNode implements Node & UniformResourceIdentifiable {
 
   """The name of the taxonomy that the object is associated with"""
   taxonomyName: String
-
-  """"""
-  templates: [String]
 
   """The ID of the term group that this term object belongs to"""
   termGroupId: Int
@@ -30718,9 +30509,6 @@ interface ThemeConnectionPageInfo implements PageInfo & WPPageInfo {
 An interface for content that can be accessed via a unique URI/URL path. Implemented by content types that have their own permalinks.
 """
 interface UniformResourceIdentifiable implements Node {
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """The globally unique ID for the object"""
   id: ID!
 
@@ -30738,9 +30526,6 @@ interface UniformResourceIdentifiable implements Node {
 
   """Whether the node is a Term"""
   isTermNode: Boolean!
-
-  """"""
-  templates: [String]
 
   """The unique resource identifier path"""
   uri: String
@@ -31510,9 +31295,6 @@ type User implements Commenter & DatabaseIdentifier & Node & UniformResourceIden
     where: UserToCommentConnectionWhereArgs
   ): UserToCommentConnection
 
-  """"""
-  conditionalTags: ConditionalTags @deprecated(reason: "Deprecated in favor of using Next.js pages")
-
   """Identifies the primary key from the database."""
   databaseId: Int!
 
@@ -31749,14 +31531,8 @@ type User implements Commenter & DatabaseIdentifier & Node & UniformResourceIden
   """
   shouldShowAdminToolbar: Boolean
 
-  """"""
-  shouldShowFaustToolbar: Boolean
-
   """The url friendly identifier for the user."""
   slug: String
-
-  """"""
-  templates: [String]
 
   """The unique resource identifier path"""
   uri: String
