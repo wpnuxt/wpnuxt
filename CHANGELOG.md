@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.5.0](https://github.com/wpnuxt/wpnuxt/compare/v2.4.3...v2.5.0) (2026-11-21)
+
+### Features
+
+* **core:** add getWPEditUrl for an edit link to wp-admin ([#308](https://github.com/wpnuxt/wpnuxt/issues/308)) ([86816dd](https://github.com/wpnuxt/wpnuxt/commit/86816dd50fba2c8f4c1ce9fb92f3116fef664d98))
+* **core:** add WordPress URLs to @nuxtjs/sitemap automatically ([#313](https://github.com/wpnuxt/wpnuxt/issues/313)) ([10da6b2](https://github.com/wpnuxt/wpnuxt/commit/10da6b25b3fc9092e25b2e1179b8036c7db2bd88))
+* **core:** render draft previews with useNodeByRoute ([#307](https://github.com/wpnuxt/wpnuxt/issues/307)) ([6ae9ae8](https://github.com/wpnuxt/wpnuxt/commit/6ae9ae8364a7279e3591df3763d22a18164956d6))
+
+### Bug Fixes
+
+* **core:** run preview and authenticated queries outside the server cache ([#317](https://github.com/wpnuxt/wpnuxt/issues/317)) ([f9490f6](https://github.com/wpnuxt/wpnuxt/commit/f9490f64b3a4da06fbe87d4d5ecaa400f2b90143))
+
+### Refactoring
+
+* **graphql:** update comments and field descriptions for clarity ([4c907c8](https://github.com/wpnuxt/wpnuxt/commit/4c907c85b2eec8539c16e6975da5ce353691b34f))
+
+### Documentation
+
+* don't list usePrevNextPost and WPContent as removed in the migrate tool ([#315](https://github.com/wpnuxt/wpnuxt/issues/315)) ([9357f3d](https://github.com/wpnuxt/wpnuxt/commit/9357f3d7a4b8fa901eb85db27690b9dfedb2c4e6))
+
+### Maintenance
+
+* **playground:** add robots.txt pointing to the WordPress sitemap ([#309](https://github.com/wpnuxt/wpnuxt/issues/309)) ([b307710](https://github.com/wpnuxt/wpnuxt/commit/b30771069a1c464f2125b9dc87dd4138debd0d71))
+
 ## [2.4.3](https://github.com/wpnuxt/wpnuxt/compare/v2.4.2...v2.4.3) (2026-10-25)
 
 ### Bug Fixes
