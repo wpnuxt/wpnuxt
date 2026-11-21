@@ -68,6 +68,7 @@ pnpm run release               # Lint, test, build, create changelog, publish, a
 
 **Auto-imported Utilities**
 - `isInternalLink()`, `toRelativePath()` — link detection and conversion (`src/runtime/util/links.ts`)
+- `getWPEditUrl()` — WordPress admin edit URL for a node's `databaseId` (`src/runtime/util/edit-url.ts`)
 - `getRelativeImagePath()` — WordPress image URL to relative path (`src/runtime/util/images.ts`)
 - `isPage()`, `isPost()`, `isContentType()` — type guards for narrowing `NodeByUri` union types (`src/runtime/util/content-type.ts`)
 - `unwrapScalar()`, `unwrapConnection()` — ACF field normalization helpers (`src/runtime/util/acf.ts`)

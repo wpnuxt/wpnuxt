@@ -144,7 +144,7 @@ The following composables were **intentionally removed** from 2.x:
 |---------|-------------|
 | `useFeaturedImage()` | Access `featuredImage` directly from post data |
 | `isStaging()` | Use environment variables: `process.env.NODE_ENV` |
-| `useWPUri()` | Use `useRoute().params` directly |
+| `useWPUri()` | Use `useRoute().params` directly. For `postEdit()`, use `getWPEditUrl(databaseId)` |
 
 > **Note:** `usePrevNextPost()` is available in v2 and works out of the box.
 
@@ -174,9 +174,8 @@ const { mutate } = useMutationLogin()
 
 | Removed | Alternative |
 |---------|-------------|
-| `<WPContent>` | Use `<BlockRenderer>` from @wpnuxt/blocks or `<div v-sanitize-html class="prose">` |
 | `<ContentRenderer>` | Use `<BlockRenderer>` or prose-styled HTML with `v-sanitize-html` |
-| `<StagingBanner>` | Implement in your app if needed |
+| `<StagingBanner>` | Implement in your app if needed. For its "Edit" link, use `getWPEditUrl(databaseId)` |
 | `<WordPressLogo>` | Use your own SVG or `<WPNuxtLogo>` |
 
 ### Available Components (2.x)
