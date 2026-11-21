@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { version } from '../package.json'
-import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports, addServerHandler } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports, addServerHandler, addServerPlugin } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
 import type { NitroConfig } from 'nitropack'
@@ -147,6 +147,22 @@ export default defineNuxtModule<WPNuxtConfig>({
         // Suppress the override warning: the setup-time merge already emitted it
         const remergeConfig = { ...wpNuxtConfig, queries: { ...wpNuxtConfig.queries, warnOnOverride: false } }
         await mergeQueries(nuxt, remergeConfig, resolver, schemaPath, contributedFolders)
+      }
+
+      // Add the WordPress URLs to @nuxtjs/sitemap. Checked at modules:done so it also
+      // works when another module (e.g. @nuxtjs/seo) installs the sitemap module.
+      if (wpNuxtConfig.sitemap !== false && hasNuxtModule('@nuxtjs/sitemap')) {
+        nuxt.options.runtimeConfig.public.wpNuxt!.sitemap = {
+          postTypes: wpNuxtConfig.sitemap?.postTypes ?? [],
+          exclude: wpNuxtConfig.sitemap?.exclude ?? [],
+          taxonomies: wpNuxtConfig.sitemap?.taxonomies ?? false
+        }
+        addServerHandler({
+          route: '/api/_wpnuxt/sitemap',
+          handler: resolver.resolve('./runtime/server/api/wpnuxt/sitemap.get')
+        })
+        addServerPlugin(resolver.resolve('./runtime/server/plugins/sitemap'))
+        logger.debug('WordPress URLs added to @nuxtjs/sitemap (source: /api/_wpnuxt/sitemap)')
       }
     })
 

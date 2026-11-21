@@ -91,6 +91,36 @@ export interface WPNuxtConfig {
   imageRelativePaths?: boolean
 
   /**
+   * WordPress URLs for `@nuxtjs/sitemap`
+   *
+   * When `@nuxtjs/sitemap` is installed, WPNuxt adds all published WordPress
+   * content to the sitemap. Without that module this option does nothing.
+   * Set to `false` to turn it off.
+   *
+   * @default enabled when `@nuxtjs/sitemap` is installed
+   */
+  sitemap?: false | {
+    /**
+     * WPGraphQL content types to list, e.g. `['POST', 'PAGE']`
+     *
+     * @default all public content types
+     */
+    postTypes?: string[]
+
+    /**
+     * URIs to leave out. A trailing `*` matches a prefix, e.g. `'/sponsors/*'`
+     */
+    exclude?: string[]
+
+    /**
+     * Also list category, tag and custom taxonomy archives
+     *
+     * @default false
+     */
+    taxonomies?: boolean
+  }
+
+  /**
    * Whether to enable debug mode
    *
    * @default false

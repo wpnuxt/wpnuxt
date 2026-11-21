@@ -22,6 +22,11 @@ declare module 'nuxt/schema' {
       replaceLinks?: boolean
       imageRelativePaths?: boolean
       hasBlocks?: boolean
+      sitemap?: {
+        postTypes?: string[]
+        exclude?: string[]
+        taxonomies?: boolean
+      }
       cache?: {
         enabled?: boolean
         maxAge?: number
