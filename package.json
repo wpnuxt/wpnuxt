@@ -18,6 +18,7 @@
     "typecheck": "pnpm -r --if-present typecheck",
     "check": "pnpm run dev:prepare && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build",
     "release": "release-it",
+    "release:publish": "sh scripts/release-publish.sh",
     "update": "pnpm update --interactive --latest --recursive --filter=!@wpnuxt/e2e-fixture-*"
   },
   "devDependencies": {

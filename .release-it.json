@@ -3,21 +3,23 @@
     "commitMessage": "chore: release v${version}",
     "tagName": "v${version}",
     "requireCleanWorkingDir": true,
-    "requireBranch": "main"
+    "requireBranch": "main",
+    "tag": false,
+    "push": false
   },
   "npm": {
     "publish": false
   },
-  "github": {
-    "release": true,
-    "draft": true,
-    "releaseName": "v${version}",
-    "web": true
-  },
   "hooks": {
     "before:init": ["pnpm lint", "pnpm typecheck", "pnpm test"],
-    "after:bump": "pnpm check",
-    "after:release": "echo Successfully released ${name} v${version} to GitHub! && pnpm publish -r --access public --no-git-checks"
+    "after:bump": [
+      "git switch -c chore/release-v${version} --no-track",
+      "pnpm check"
+    ],
+    "after:release": [
+      "git push -u origin chore/release-v${version}",
+      "gh pr create --fill --base main --reviewer vernaillen"
+    ]
   },
   "plugins": {
     "@release-it/bumper": {
