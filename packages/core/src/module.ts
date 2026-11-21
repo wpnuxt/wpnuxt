@@ -260,6 +260,7 @@ export default defineNuxtModule<WPNuxtConfig>({
       { name: 'getRelativeImagePath', as: 'getRelativeImagePath', from: resolver.resolve('./runtime/util/images') },
       { name: 'isInternalLink', as: 'isInternalLink', from: resolver.resolve('./runtime/util/links') },
       { name: 'toRelativePath', as: 'toRelativePath', from: resolver.resolve('./runtime/util/links') },
+      { name: 'getWPEditUrl', as: 'getWPEditUrl', from: resolver.resolve('./runtime/util/edit-url') },
       { name: 'usePrevNextPost', as: 'usePrevNextPost', from: resolver.resolve('./runtime/composables/usePrevNextPost') },
       { name: 'useNodeByRoute', as: 'useNodeByRoute', from: resolver.resolve('./runtime/composables/useNodeByRoute') },
       { name: 'isPage', as: 'isPage', from: resolver.resolve('./runtime/util/content-type') },

@@ -16,6 +16,9 @@ const props = defineProps<{
   nextPost?: AdjacentPost | null
 }>()
 
+const { isAuthenticated } = useWPAuth()
+const editUrl = computed(() => isAuthenticated.value ? getWPEditUrl(props.post?.databaseId) : undefined)
+
 const items = computed(() => [
   {
     label: `Fetched ${props.post?.contentTypeName === 'post' ? 'post' : 'page'} content using ${props.composableName}('${props.post?.uri}')`,
@@ -85,6 +88,17 @@ const items = computed(() => [
           size="sm"
         >
           Next
+        </UButton>
+        <UButton
+          v-if="editUrl"
+          :to="editUrl"
+          target="_blank"
+          icon="i-lucide-pencil"
+          color="neutral"
+          variant="outline"
+          size="sm"
+        >
+          Edit
         </UButton>
       </div>
     </template>
