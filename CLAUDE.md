@@ -34,7 +34,8 @@ pnpm run lint                  # Run ESLint
 ### Build & Release
 ```bash
 pnpm run prepack               # Build the module for distribution
-pnpm run release               # Lint, test, build, create changelog, publish, and push tags
+pnpm run release               # On main: bump, changelog, check, commit on chore/release-v<version>, push and open a PR
+pnpm run release:publish       # On main after that PR is merged: tag, draft GitHub release, publish to npm
 ```
 
 ## Architecture
