@@ -72,6 +72,7 @@ pnpm run release               # Lint, test, build, create changelog, publish, a
 - `isPage()`, `isPost()`, `isContentType()` — type guards for narrowing `NodeByUri` union types (`src/runtime/util/content-type.ts`)
 - `unwrapScalar()`, `unwrapConnection()` — ACF field normalization helpers (`src/runtime/util/acf.ts`)
 - `usePrevNextPost()` — previous/next post navigation (`src/runtime/composables/usePrevNextPost.ts`)
+- `useNodeByRoute()` — node for the current route in a catch-all page: by URI, or by database ID for a WordPress preview link (`src/runtime/composables/useNodeByRoute.ts`)
 
 ### Query System
 

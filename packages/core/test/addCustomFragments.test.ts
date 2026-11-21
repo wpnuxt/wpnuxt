@@ -50,6 +50,36 @@ describe('addCustomFragmentsToNodeQuery', () => {
     expect(result).toContain('...Post')
   })
 
+  it('should add only known post types to ContentNodeById', async () => {
+    const contentNodeQuery = `
+query ContentNodeById($id: ID!) {
+  contentNode(id: $id, idType: DATABASE_ID) {
+    __typename
+    ...Page
+    ...Post
+  }
+}
+`
+    writeFileSync(join(QUERIES_DIR, 'Node.gql'), NODE_GQL_CONTENT + contentNodeQuery)
+    // Scanned from the user folder: may be a taxonomy, so NodeByUri only
+    writeFragment(USER_DIR, 'Genre.fragment.gql', 'fragment Genre on Genre {\n  name\n}\n')
+    // Also discovered as a post type: the user fragment keeps the flag
+    writeFragment(USER_DIR, 'Event.fragment.gql', 'fragment Event on Event {\n  title\n}\n')
+
+    await addCustomFragmentsToNodeQuery(QUERIES_DIR, USER_DIR, logger, [
+      { name: 'Category', type: 'Category' },
+      { name: 'Event', type: 'Event', isContentNode: true }
+    ])
+
+    const [nodeByUri, contentNodeById] = readNodeGql().split('query ContentNodeById')
+    expect(nodeByUri).toContain('... on Category { ...Category }')
+    expect(nodeByUri).toContain('... on Genre { ...Genre }')
+    expect(nodeByUri).toContain('... on Event { ...Event }')
+    expect(contentNodeById).toContain('... on Event { ...Event }')
+    expect(contentNodeById).not.toContain('Category')
+    expect(contentNodeById).not.toContain('Genre')
+  })
+
   it('should add multiple custom content type fragments', async () => {
     writeFragment(USER_DIR, 'Event.fragment.gql', 'fragment Event on Event {\n  title\n}\n')
     writeFragment(USER_DIR, 'Artist.fragment.gql', 'fragment Artist on Artist {\n  name\n}\n')

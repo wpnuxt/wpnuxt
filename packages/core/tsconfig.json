@@ -10,6 +10,7 @@
     "resolveJsonModule": true,
     "paths": {
       "#imports": ["./src/runtime/types/stub.d.ts"],
+      "#wpnuxt": ["./src/runtime/types/stub.d.ts"],
       "#nuxt-graphql-middleware/*": ["./src/runtime/types/stub.d.ts"],
       "#build/*": ["./src/runtime/types/stub.d.ts"]
     }

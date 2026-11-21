@@ -261,6 +261,7 @@ export default defineNuxtModule<WPNuxtConfig>({
       { name: 'isInternalLink', as: 'isInternalLink', from: resolver.resolve('./runtime/util/links') },
       { name: 'toRelativePath', as: 'toRelativePath', from: resolver.resolve('./runtime/util/links') },
       { name: 'usePrevNextPost', as: 'usePrevNextPost', from: resolver.resolve('./runtime/composables/usePrevNextPost') },
+      { name: 'useNodeByRoute', as: 'useNodeByRoute', from: resolver.resolve('./runtime/composables/useNodeByRoute') },
       { name: 'isPage', as: 'isPage', from: resolver.resolve('./runtime/util/content-type') },
       { name: 'isPost', as: 'isPost', from: resolver.resolve('./runtime/util/content-type') },
       { name: 'isContentType', as: 'isContentType', from: resolver.resolve('./runtime/util/content-type') },
