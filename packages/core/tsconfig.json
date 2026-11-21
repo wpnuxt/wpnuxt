@@ -12,7 +12,8 @@
       "#imports": ["./src/runtime/types/stub.d.ts"],
       "#wpnuxt": ["./src/runtime/types/stub.d.ts"],
       "#nuxt-graphql-middleware/*": ["./src/runtime/types/stub.d.ts"],
-      "#build/*": ["./src/runtime/types/stub.d.ts"]
+      "#build/*": ["./src/runtime/types/stub.d.ts"],
+      "#wpnuxt-graphql-query-handler": ["./node_modules/nuxt-graphql-middleware/dist/runtime/server/api/query.d.ts"]
     }
   },
   "include": ["src/**/*.ts"],

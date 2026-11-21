@@ -24,6 +24,7 @@ export function watch<T>(
 export function defineNuxtPlugin(plugin: (nuxtApp: NuxtApp) => void | Promise<void>): unknown
 export function useNuxtApp(): NuxtApp
 export function useRuntimeConfig(): Record<string, unknown>
+export function useRequestHeaders(include?: string[]): Record<string, string>
 export function useRoute(): { path: string, params: Record<string, string>, query: Record<string, unknown> }
 export function navigateTo(to: string): Promise<void>
 export function createError(input: { statusCode: number, statusMessage?: string, fatal?: boolean }): NuxtError
