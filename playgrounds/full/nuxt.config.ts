@@ -20,6 +20,7 @@ export default defineNuxtConfig({
     '@wpnuxt/blocks',
     '@nuxt/image',
     '@nuxt/ui',
+    '@nuxtjs/sitemap',
     'nuxt-easy-lightbox'
   ],
 
@@ -29,6 +30,12 @@ export default defineNuxtConfig({
     '~/assets/css/main.css',
     'vue-json-pretty/lib/styles.css'
   ],
+
+  // Used by @nuxtjs/sitemap (canonical URL, sitemap title). Override with NUXT_SITE_URL / NUXT_SITE_NAME.
+  site: {
+    url: 'https://demo.wpnuxt.com',
+    name: 'WPNuxt Demo'
+  },
 
   compatibilityDate: '2026-08-27',
 

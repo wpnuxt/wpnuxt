@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://wordpress.wpnuxt.com/sitemap_index.xml
+Sitemap: https://demo.wpnuxt.com/sitemap.xml

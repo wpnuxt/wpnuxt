@@ -123,6 +123,11 @@ wpNuxt: {
   }
   replaceLinks: boolean             // Default: true (intercept internal links in <WPContent>)
   imageRelativePaths: boolean       // Default: false (convert featured image URLs to relative paths)
+  sitemap: false | {                // Default: on when @nuxtjs/sitemap is installed (adds the WordPress URLs to it)
+    postTypes: string[]             // Default: all (WPGraphQL content types, e.g. ['POST', 'PAGE'])
+    exclude: string[]               // URIs to leave out; a trailing * matches a prefix
+    taxonomies: boolean             // Default: false (also list taxonomy archives)
+  }
   downloadSchema: boolean           // Default: true (downloads schema.graphql from WP)
   debug: boolean                    // Default: false (enables debug logging)
 }
