@@ -12,6 +12,13 @@ const loginLink = computed(() => ({ path: '/login', query: { redirect: route.ful
 // doesn't render — narrow to content types (Page/Post/CPTs) only.
 const post = computed(() => (node.value && 'contentTypeName' in node.value) ? node.value : undefined)
 
+const previewDescription = computed(() => {
+  if (!isAuthenticated.value) return 'You are not logged in, so this may be the published version.'
+  return post.value && 'status' in post.value && post.value.status === 'publish'
+    ? 'You are seeing the unsaved changes of published content.'
+    : 'This content is not published yet.'
+})
+
 // Fetch all posts once for prev/next navigation (cached)
 const { data: allPosts } = await usePosts({ limit: 100 })
 
@@ -68,9 +75,7 @@ const nextPost = computed(() => {
             variant="subtle"
             icon="i-lucide-eye"
             title="Preview mode"
-            :description="isAuthenticated
-              ? 'This content is not published yet.'
-              : 'You are not logged in, so this may be the published version.'"
+            :description="previewDescription"
             :actions="isAuthenticated ? [] : [{ label: 'Log in', to: loginLink }]"
           />
         </template>

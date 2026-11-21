@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { version } from '../package.json'
-import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports, addServerHandler, addServerPlugin } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, createResolver, installModule, hasNuxtModule, addComponentsDir, addTemplate, addTypeTemplate, addImports, addServerHandler, addServerPlugin, tryResolveModule } from '@nuxt/kit'
 import type { Resolver } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
 import type { NitroConfig } from 'nitropack'
@@ -215,6 +215,23 @@ export default defineNuxtModule<WPNuxtConfig>({
           }
         }
         logger.debug(`Server-side caching enabled for GraphQL queries (maxAge: ${maxAge}s, SWR: ${swr})`)
+      }
+
+      // Preview and authenticated queries skip the cache: it drops their auth headers and shares their response
+      const graphqlMiddlewareEntry = await tryResolveModule('nuxt-graphql-middleware', import.meta.url)
+      if (graphqlMiddlewareEntry) {
+        nitroOptions.nitro.alias = nitroOptions.nitro.alias || {}
+        nitroOptions.nitro.alias['#wpnuxt-graphql-query-handler'] = join(dirname(graphqlMiddlewareEntry), 'runtime/server/api/query.js')
+        addTypeTemplate({
+          filename: 'types/wpnuxt-graphql-query-handler.d.ts',
+          getContents: () => `declare module '#wpnuxt-graphql-query-handler' {\n  const handler: import('h3').EventHandler\n  export default handler\n}\n`
+        }, { nitro: true, nuxt: true })
+        addServerHandler({
+          middleware: true,
+          handler: resolver.resolve('./runtime/server/middleware/uncachedQuery')
+        })
+      } else {
+        logger.warn('Could not resolve nuxt-graphql-middleware: preview and authenticated queries will go through the server cache')
       }
     }
 
