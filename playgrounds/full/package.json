@@ -12,24 +12,24 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/fonts": "^0.14.0",
-    "@nuxt/icon": "^2.5.1",
-    "@nuxt/ui": "4.11.0",
+    "@nuxt/fonts": "^1.2.1",
+    "@nuxt/icon": "^2.6.3",
+    "@nuxt/ui": "4.13.1",
     "@tailwindcss/typography": "^0.5.20",
     "@wpnuxt/auth": "workspace:*",
     "@wpnuxt/blocks": "workspace:*",
     "@wpnuxt/core": "workspace:*",
-    "nuxt": "^4.6.2",
+    "nuxt": "^4.7.0",
     "nuxt-easy-lightbox": "^1.1.0",
-    "tailwindcss": "^4.3.3",
+    "tailwindcss": "^4.3.5",
     "vue-json-pretty": "^2.6.0"
   },
   "devDependencies": {
-    "@iconify-json/logos": "^1.2.13",
-    "@iconify-json/lucide": "^1.2.126",
-    "@iconify-json/simple-icons": "^1.2.93",
+    "@iconify-json/logos": "^1.2.21",
+    "@iconify-json/lucide": "^1.2.160",
+    "@iconify-json/simple-icons": "^1.2.104",
     "@iconify-json/svg-spinners": "^1.2.4",
-    "@nuxtjs/sitemap": "^9.1.0",
-    "vue-tsc": "^3.3.11"
+    "@nuxtjs/sitemap": "^9.2.0",
+    "vue-tsc": "^3.3.14"
   }
 }

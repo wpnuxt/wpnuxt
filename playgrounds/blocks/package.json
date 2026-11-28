@@ -11,17 +11,17 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/icon": "^2.5.1",
-    "@nuxt/ui": "4.11.0",
+    "@nuxt/icon": "^2.6.3",
+    "@nuxt/ui": "4.13.1",
     "@tailwindcss/typography": "^0.5.20",
     "@wpnuxt/blocks": "workspace:*",
     "@wpnuxt/core": "workspace:*",
-    "nuxt": "^4.6.2",
+    "nuxt": "^4.7.0",
     "nuxt-easy-lightbox": "^1.1.0",
-    "tailwindcss": "^4.3.3"
+    "tailwindcss": "^4.3.5"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.2.126",
-    "vue-tsc": "^3.3.11"
+    "@iconify-json/lucide": "^1.2.160",
+    "vue-tsc": "^3.3.14"
   }
 }

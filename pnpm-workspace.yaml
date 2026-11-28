@@ -15,7 +15,7 @@ strictPeerDependencies: false
 
 # Moved from the package.json "pnpm" field, which pnpm 10 no longer reads
 overrides:
-  # Follow whatever nuxt-graphql-middleware peers on: 5.4.0 wants graphql ^16.0.0 and its
+  # Follow whatever nuxt-graphql-middleware peers on: 5.5.1 wants graphql ^16.14.2 and its
   # graphql-typescript-deluxe hard-deps ^16.12.0. graphql 17 loads a second instance, every
   # instanceof check fails, and type gen dies with a misleading "Cannot build selection set
   # for type: X". Re-check this pin whenever nuxt-graphql-middleware is updated.
@@ -29,11 +29,6 @@ overrides:
   # renderSlot, which crashes hydration with "Cannot read properties of null (reading 'ce')".
   vue: 3.5.41
   '@vue/server-renderer': 3.5.41
-
-packageExtensions:
-  nuxt-graphql-middleware@5.4.0:
-    dependencies:
-      h3: 1.15.11
 
 onlyBuiltDependencies:
   - '@parcel/watcher'
