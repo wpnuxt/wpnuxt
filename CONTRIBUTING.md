@@ -6,7 +6,7 @@ Thanks for your interest in contributing to WPNuxt!
 
 ### Prerequisites
 
-- Node.js 20+
+- Node.js 22+
 - pnpm 9+
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for local WordPress)
 

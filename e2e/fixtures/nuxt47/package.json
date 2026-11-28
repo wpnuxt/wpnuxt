@@ -1,17 +1,17 @@
 {
-  "name": "@wpnuxt/e2e-fixture-nuxt42",
+  "name": "@wpnuxt/e2e-fixture-nuxt47",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "nuxi dev",
-    "test:serve": "PORT=3042 nuxt preview"
+    "test:serve": "PORT=3047 nuxt preview"
   },
   "dependencies": {
     "@wpnuxt/core": "file:../../../packages/core",
-    "nuxt": "4.2.0"
+    "nuxt": "4.7.0",
+    "vue": "3.5.46"
   },
   "devDependencies": {
-    "@nuxt/cli": "3.35.2",
     "vue-tsc": "^3.3.2"
   }
 }

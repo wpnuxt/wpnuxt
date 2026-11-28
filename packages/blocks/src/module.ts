@@ -44,7 +44,7 @@ export default defineNuxtModule<WPNuxtBlocksConfig>({
     name: '@wpnuxt/blocks',
     configKey: 'wpNuxtBlocks',
     compatibility: {
-      nuxt: '>=4.0.0'
+      nuxt: '>=4.4.0'
     }
   },
   defaults: {

@@ -228,9 +228,9 @@ components/
 
 ## Requirements
 
-- **Nuxt 4.1+** (for Nuxt 3, use WPNuxt 1.x)
+- **Nuxt 4.4+** (for Nuxt 3, use WPNuxt 1.x)
 - **WordPress** with [WPGraphQL](https://www.wpgraphql.com/) plugin installed
-- **Node.js 20+**
+- **Node.js 22+**
 
 ## Development
 
@@ -265,7 +265,7 @@ pnpm run lint
 See the [Migration Guide](/MIGRATION.md) for detailed instructions on upgrading from WPNuxt 1.x.
 
 Key changes:
-- Nuxt 4.1+ required (was Nuxt 3)
+- Nuxt 4.4+ required (was Nuxt 3)
 - Composables renamed: `useWPPosts` → `usePosts`
 - Single composable pattern: `usePosts(undefined, { lazy: true })` for non-blocking
 - Directive changed: `v-sanitize` → `v-sanitize-html`

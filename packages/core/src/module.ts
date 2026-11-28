@@ -39,7 +39,7 @@ export default defineNuxtModule<WPNuxtConfig>({
     version,
     configKey: 'wpNuxt',
     compatibility: {
-      nuxt: '>=4.0.0'
+      nuxt: '>=4.4.0'
     }
   },
   defaults: {

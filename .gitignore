@@ -65,6 +65,7 @@ docs/plans/
 # AI agent tooling (local, per-developer)
 .agents/
 .claude/
+.cursor/
 .kiro/
 skills-lock.json
 AGENTS.md

@@ -141,10 +141,10 @@ jobs:
       - name: Build module
         run: pnpm run build
 
-  # E2E tests on every commit - latest WP (7.1) + Nuxt 4.4 using Docker
+  # E2E tests on every commit - latest WP (7.1) + Nuxt 4.7 using Docker
   e2e:
     runs-on: ubuntu-latest
-    name: E2E (WP 7.1 + Nuxt 4.4)
+    name: E2E (WP 7.1 + Nuxt 4.7)
     needs: [build]
     steps:
       - name: Checkout
@@ -154,7 +154,7 @@ jobs:
         uses: ./.github/actions/setup-wp-e2e
         with:
           wp_version: '7.1'
-          nuxt_fixture: nuxt44
+          nuxt_fixture: nuxt47
 
   # Last step: only after every check above passed, and only on main (push or manual run).
   # Builds playgrounds/full (demo.wpnuxt.com) into an image, smoke-tests it, pushes it to the
