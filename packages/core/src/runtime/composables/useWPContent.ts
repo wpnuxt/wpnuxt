@@ -6,7 +6,7 @@ import { computed, createError, ref, showError, toValue, watch as vueWatch, useR
 import { wpQuery } from '../internal/graphql-client'
 
 /** Extended NuxtApp with nuxt-graphql-middleware internals */
-interface NuxtAppWithGraphqlCache extends NuxtApp {
+type NuxtAppWithGraphqlCache = NuxtApp & {
   $graphqlCache?: {
     get: (key: string) => unknown
   }
