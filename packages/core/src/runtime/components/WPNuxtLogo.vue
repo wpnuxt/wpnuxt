@@ -15,6 +15,7 @@ const wpDark = props.wpColor ? props.wpColor : 'white'
 <style scoped>
 .wpnuxt-logo {
   display: inline-flex;
+  align-items: baseline;
   font-weight: 700;
   font-size: 2rem;
   line-height: 2rem;
@@ -22,6 +23,7 @@ const wpDark = props.wpColor ? props.wpColor : 'white'
 .wpnuxt-logo-wp {
   color: v-bind(wpLight);
   font-family: ui-serif, Times, serif;
+  font-size: 1.05em;
 }
 html.dark .wpnuxt-logo-wp {
   color: v-bind(wpDark);
