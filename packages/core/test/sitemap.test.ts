@@ -4,6 +4,16 @@ import type { EventHandler } from 'h3'
 import { fetchSitemapUrls, isExcluded, toSitemapUrls } from '../src/runtime/server/api/wpnuxt/sitemap.get'
 import sitemapPlugin from '../src/runtime/server/plugins/sitemap'
 
+// The handlers import these from Nitro; forward them to the globals each test stubs
+vi.mock('nitropack/runtime', () => {
+  const globals = globalThis as unknown as Record<string, ((...args: unknown[]) => unknown) | undefined>
+  return {
+    useRuntimeConfig: (...args: unknown[]) => globals.useRuntimeConfig!(...args),
+    defineCachedEventHandler: (...args: unknown[]) => globals.defineCachedEventHandler!(...args),
+    defineNitroPlugin: (...args: unknown[]) => globals.defineNitroPlugin!(...args)
+  }
+})
+
 const cacheOptions = vi.hoisted(() => {
   const captured: { current?: { name: string, maxAge: number, shouldBypassCache: () => boolean } } = {}
   const globals = globalThis as Record<string, unknown>

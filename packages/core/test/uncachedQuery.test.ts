@@ -2,6 +2,14 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { createApp, defineEventHandler, getRouterParam, setResponseHeader, toWebHandler } from 'h3'
 import uncachedQuery from '../src/runtime/server/middleware/uncachedQuery'
 
+// The handlers import these from Nitro; forward them to the globals each test stubs
+vi.mock('nitropack/runtime', () => {
+  const globals = globalThis as unknown as Record<string, ((...args: unknown[]) => unknown) | undefined>
+  return {
+    useRuntimeConfig: (...args: unknown[]) => globals.useRuntimeConfig!(...args)
+  }
+})
+
 vi.mock('#wpnuxt-graphql-query-handler', () => ({
   default: defineEventHandler(event => ({ source: 'uncached', name: getRouterParam(event, 'name') }))
 }))

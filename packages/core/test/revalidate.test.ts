@@ -3,6 +3,15 @@ import { createApp, toWebHandler } from 'h3'
 import { createStorage, prefixStorage } from 'unstorage'
 import revalidateHandler from '../src/runtime/server/api/wpnuxt/revalidate.post'
 
+// The handlers import these from Nitro; forward them to the globals each test stubs
+vi.mock('nitropack/runtime', () => {
+  const globals = globalThis as unknown as Record<string, ((...args: unknown[]) => unknown) | undefined>
+  return {
+    useRuntimeConfig: (...args: unknown[]) => globals.useRuntimeConfig!(...args),
+    useStorage: (...args: unknown[]) => globals.useStorage!(...args)
+  }
+})
+
 const SECRET = 'test-secret'
 
 // Keys in the format Nitro's cachedEventHandler writes them:

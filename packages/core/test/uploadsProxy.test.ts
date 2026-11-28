@@ -2,6 +2,14 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { createApp, toWebHandler } from 'h3'
 import uploadsHandler, { isSelfRedirect } from '../src/runtime/server/routes/uploads'
 
+// The handlers import these from Nitro; forward them to the globals each test stubs
+vi.mock('nitropack/runtime', () => {
+  const globals = globalThis as unknown as Record<string, ((...args: unknown[]) => unknown) | undefined>
+  return {
+    useRuntimeConfig: (...args: unknown[]) => globals.useRuntimeConfig!(...args)
+  }
+})
+
 const WORDPRESS_URL = 'https://wordpress.example.com'
 const FILE_PATH = '/wp-content/uploads/2026/10/missing.jpg'
 

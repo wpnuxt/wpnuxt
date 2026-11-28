@@ -1,7 +1,5 @@
 import { defineEventHandler, getRequestURL, proxyRequest, removeResponseHeader, setResponseStatus } from 'h3'
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare const useRuntimeConfig: (event?: any) => any
+import { useRuntimeConfig } from 'nitropack/runtime'
 
 /**
  * Whether an upstream redirect points back at the URL that was requested.
@@ -16,7 +14,7 @@ export function isSelfRedirect(requestUrl: URL, status: number, location: string
 
 // Proxies /wp-content/uploads/** to WordPress for plain <img> tags and v-sanitize-html content
 export default defineEventHandler((event) => {
-  const { wordpressUrl } = useRuntimeConfig(event).public.wpNuxt
+  const { wordpressUrl } = useRuntimeConfig(event).public.wpNuxt ?? {}
   const requestUrl = getRequestURL(event, { xForwardedHost: true, xForwardedProto: true })
 
   return proxyRequest(event, `${wordpressUrl}${event.path}`, {
