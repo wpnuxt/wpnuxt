@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.0.0](https://github.com/wpnuxt/wpnuxt/compare/v2.5.0...v3.0.0) (2026-11-28)
+
+### ⚠ BREAKING CHANGES
+
+* require Nuxt 4.4+ and Node 22+
+
+### Features
+
+* require Nuxt 4.4+ and Node 22+ ([d859887](https://github.com/wpnuxt/wpnuxt/commit/d8598879ac908a3df84070aad0ef4a5f187e67d3))
+
+### Bug Fixes
+
+* **core:** align WPNuxtLogo words on baseline and cap height ([16c3f8c](https://github.com/wpnuxt/wpnuxt/commit/16c3f8c5176ab405a404255447ac77c04f99cb5e))
+* **core:** import Nitro utils explicitly instead of relying on bundled globals ([e63a5d0](https://github.com/wpnuxt/wpnuxt/commit/e63a5d03277efc0fe77b58fbbb8e3689b03b2dec))
+
+### Maintenance
+
+* **deps:** update package versions in pnpm-lock.yaml for @wpnuxt/core and nuxt ([362b186](https://github.com/wpnuxt/wpnuxt/commit/362b186fb5ea2712401e3435ce01754a0e4733bf))
+* **deps:** update to nuxt 4.7, nuxt-graphql-middleware 5.5.1 and vitest 5 ([11a779e](https://github.com/wpnuxt/wpnuxt/commit/11a779e8cab919976fab9e1a9fe4c4403f5915fd))
+* release through a PR, since main only accepts pull requests ([a58c7aa](https://github.com/wpnuxt/wpnuxt/commit/a58c7aa0ce42ceaa4482057198f5e896b2fa9715))
+
 ## [2.5.0](https://github.com/wpnuxt/wpnuxt/compare/v2.4.3...v2.5.0) (2026-11-21)
 
 ### Features
