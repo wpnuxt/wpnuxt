@@ -44,6 +44,9 @@
     "server",
     "app"
   ],
+  "engines": {
+    "node": ">=22"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -76,6 +79,6 @@
     "vue-tsc": "^3.3.14"
   },
   "peerDependencies": {
-    "nuxt": "^4.1.0"
+    "nuxt": "^4.4.0"
   }
 }

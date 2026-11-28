@@ -21,23 +21,13 @@ overrides:
   # for type: X". Re-check this pin whenever nuxt-graphql-middleware is updated.
   graphql: ^16
   typescript: ^5.9.3
-  listhen@1.9.1>crossws: 0.4.4
   # Pin exactly, do not loosen to a range. A range override only constrains resolutions, it
   # does not collapse them: @nuxt/test-utils hard-deps vue 3.5.40, so pnpm kept a second copy
   # and publicHoistPattern hoisted it to node_modules/vue, while nuxt and reka-ui resolved
   # 3.5.41. Two @vue/runtime-core instances means currentRenderingInstance is null in
   # renderSlot, which crashes hydration with "Cannot read properties of null (reading 'ce')".
-  vue: 3.5.41
-  '@vue/server-renderer': 3.5.41
-
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@tailwindcss/oxide'
-  - better-sqlite3
-  - esbuild
-  - sharp
-  - unrs-resolver
-  - vue-demi
+  vue: 3.5.46
+  '@vue/server-renderer': 3.5.46
 
 allowBuilds:
   '@parcel/watcher': true
@@ -45,3 +35,10 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
   vue-demi: true
+permissions:
+  '@nuxtjs/sitemap':
+    skills: true
+skills:
+  dirs:
+    - .claude/skills
+    - .cursor/skills

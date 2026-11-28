@@ -90,7 +90,7 @@ $posts = [
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p>You will need Node.js 18+, pnpm, and a WordPress instance with the WPGraphQL plugin installed.</p>
+<p>You will need Node.js 22+, pnpm, and a WordPress instance with the WPGraphQL plugin installed.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading -->

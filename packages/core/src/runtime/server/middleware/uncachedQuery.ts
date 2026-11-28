@@ -1,8 +1,6 @@
 import { defineEventHandler, getCookie, getHeader, getQuery, removeResponseHeader, setResponseHeader } from 'h3'
 import type { H3Event } from 'h3'
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare const useRuntimeConfig: (event?: any) => any
+import { useRuntimeConfig } from 'nitropack/runtime'
 
 const QUERY_ROUTE = /\/api\/wpnuxt\/query\/([^/?]+)/
 
@@ -24,7 +22,7 @@ export default defineEventHandler(async (event) => {
   const name = event.method === 'GET' ? event.path.match(QUERY_ROUTE)?.[1] : undefined
   if (!name) return
 
-  const cookieName = useRuntimeConfig(event).public.wpNuxtAuth?.cookieName || 'wpnuxt-auth-token'
+  const cookieName = (useRuntimeConfig(event).public as { wpNuxtAuth?: { cookieName?: string } }).wpNuxtAuth?.cookieName || 'wpnuxt-auth-token'
   if (!needsUncachedQuery(event, cookieName)) return
 
   event.context.params = { ...event.context.params, name: decodeURIComponent(name) }

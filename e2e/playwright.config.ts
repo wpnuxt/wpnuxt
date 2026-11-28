@@ -1,14 +1,12 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const nuxtFixture = process.env.NUXT_FIXTURE || 'nuxt43'
+const nuxtFixture = process.env.NUXT_FIXTURE || 'nuxt47'
 const nuxtPorts: Record<string, number> = {
-  'nuxt41': 3041,
-  'nuxt42': 3042,
-  'nuxt43': 3043,
   'nuxt44': 3045,
+  'nuxt47': 3047,
   'nuxt-srcdir': 3044
 }
-const nuxtPort = nuxtPorts[nuxtFixture] || 3043
+const nuxtPort = nuxtPorts[nuxtFixture] || 3047
 
 const wpPort = process.env.WPNUXT_WORDPRESS_URL?.match(/:(\d+)/)?.[1] || 'local'
 const blobSubDir = `blob-report/${nuxtFixture}-wp${wpPort}`

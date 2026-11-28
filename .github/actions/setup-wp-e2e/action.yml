@@ -8,7 +8,7 @@ inputs:
     required: true
     type: string
   nuxt_fixture:
-    description: 'Nuxt fixture (nuxt3, nuxt43, etc.)'
+    description: 'Nuxt fixture (nuxt44, nuxt47, etc.)'
     required: true
     type: string
   wpgraphql_version:

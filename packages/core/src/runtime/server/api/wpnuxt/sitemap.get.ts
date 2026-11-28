@@ -1,12 +1,5 @@
 import { createError } from 'h3'
-import type { EventHandler, H3Event } from 'h3'
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare const useRuntimeConfig: (event?: any) => any
-declare const defineCachedEventHandler: (
-  handler: EventHandler,
-  options: { name: string, maxAge: number, swr: boolean, shouldBypassCache: (event: H3Event) => boolean }
-) => EventHandler
+import { defineCachedEventHandler, useRuntimeConfig } from 'nitropack/runtime'
 
 export interface SitemapOptions {
   postTypes?: string[]
@@ -109,13 +102,14 @@ export async function fetchSitemapUrls(endpoint: string, options: SitemapOptions
   return toSitemapUrls(nodes, options.exclude)
 }
 
-const cacheConfig = useRuntimeConfig().public.wpNuxt.cache
+const cacheConfig = useRuntimeConfig().public.wpNuxt?.cache
 const maxAge: number = cacheConfig?.maxAge ?? 300
 
 // A source for @nuxtjs/sitemap. No auth or preview header is sent, so WordPress only returns published content.
 // The cache name contains 'wpnuxt', so the revalidate endpoint purges it too.
 export default defineCachedEventHandler((event) => {
-  const { wordpressUrl, graphqlEndpoint, sitemap } = useRuntimeConfig(event).public.wpNuxt
+  const config: { wordpressUrl?: string, graphqlEndpoint?: string, sitemap?: SitemapOptions } = useRuntimeConfig(event).public.wpNuxt ?? {}
+  const { wordpressUrl, graphqlEndpoint, sitemap } = config
   return fetchSitemapUrls(`${wordpressUrl}${graphqlEndpoint}`, sitemap)
 }, {
   name: 'wpnuxt-sitemap',

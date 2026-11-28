@@ -5,7 +5,7 @@ End-to-end tests for WPNuxt using Playwright. Tests run against real WordPress i
 ## Prerequisites
 
 - Docker and Docker Compose
-- Node.js 20+
+- Node.js 22+
 - pnpm
 
 ## Quick Start
@@ -15,7 +15,7 @@ End-to-end tests for WPNuxt using Playwright. Tests run against real WordPress i
 pnpm install
 pnpm run dev:prepare
 
-# Run default tests (WP 7.1 + Nuxt 4.4)
+# Run default tests (WP 7.1 + Nuxt 4.7)
 cd e2e
 node run-tests.mjs
 ```
@@ -29,7 +29,7 @@ node run-tests.mjs
 | Flag | Description | Default |
 |------|-------------|---------|
 | `--wp=VERSION` | WordPress version | `7.1` |
-| `--nuxt=FIXTURE` | Nuxt fixture | `nuxt44` |
+| `--nuxt=FIXTURE` | Nuxt fixture | `nuxt47` |
 | `--wp-only` | Run only WordPress tests (skips Nuxt web server) | `false` |
 | `--nuxt-only` | Run only Nuxt tests | `false` |
 | `--all` | Run full matrix (all WP × Nuxt combinations) | `false` |
@@ -52,10 +52,8 @@ versions above are accepted by the runner and covered by the CI matrix.
 
 | Fixture | Nuxt Version | Dev Port |
 |---------|-------------|----------|
-| `nuxt41` | 4.1 | 3041 |
-| `nuxt42` | 4.2 | 3042 |
-| `nuxt43` | 4.3 | 3043 |
 | `nuxt44` | 4.4 | 3045 |
+| `nuxt47` | 4.7 | 3047 |
 | `nuxt-srcdir` | 4.x (srcDir layout) | 3044 |
 
 ### Examples
@@ -68,7 +66,7 @@ node run-tests.mjs --wp=7.0
 node run-tests.mjs --wp-only --wp=7.1
 
 # Nuxt-only tests with a specific fixture
-node run-tests.mjs --nuxt-only --nuxt=nuxt41
+node run-tests.mjs --nuxt-only --nuxt=nuxt44
 
 # Full compatibility matrix (all WP × Nuxt combinations)
 node run-tests.mjs --all
@@ -113,7 +111,7 @@ e2e/
 │   ├── wordpress.spec.ts  # Tests against WordPress directly (GraphQL API)
 │   └── nuxt.spec.ts       # Tests against Nuxt app (SSR, pages, composables)
 ├── fixtures/              # Nuxt app fixtures (one per version)
-│   ├── nuxt41/ ... nuxt44/
+│   ├── nuxt44/, nuxt47/
 │   └── nuxt-srcdir/
 └── docker/
     ├── setup.sh           # WordPress setup script (plugins, test content)

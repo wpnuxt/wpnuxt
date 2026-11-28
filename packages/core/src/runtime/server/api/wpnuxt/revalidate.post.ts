@@ -1,12 +1,8 @@
 import { createConsola } from 'consola'
 import { defineEventHandler, readBody, createError } from 'h3'
+import { useRuntimeConfig, useStorage } from 'nitropack/runtime'
 
 const logger = createConsola().withTag('wpnuxt')
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare const useRuntimeConfig: (event?: any) => any
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare const useStorage: (base?: string) => any
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<{ secret?: string }>(event)
